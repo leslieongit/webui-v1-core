@@ -23,7 +23,7 @@ app.constant( 'API_URL', {
 //define the default and prefered language
 app.constant( 'LANG', {
   DEFAULT_LANG : "en",
-  PREFERRED_LANG :"en"
+  PREFERRED_LANG : "en"
 } );
 
 // CDN settings
