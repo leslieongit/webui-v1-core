@@ -27,8 +27,14 @@ app.constant( 'LANG', {
 } );
 
 // CDN settings
-app.constant('CDN', {
+app.constant( 'CDN', {
   APP_URL : "https://cdn5.thrinacia.com/**"
+} );
+
+// Widget settings
+app.constant( 'SEDRA', {
+ url : "https://your.website.com",
+ loc: ''
 } );
 ```
 
