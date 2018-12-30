@@ -1,4 +1,4 @@
-(function () {
+(function() {
   var ERROR_CODE = 'You are using old version of the widget code, please make sure to get the latest version from your campaign page. Alternatively you can manually rename any references to "atlas-widget" or "reach-widget" to "sedra-widget" instead in your widget code. Thank you.';
 
   if (!document.querySelector("sedra-widget")) {
@@ -26,10 +26,10 @@
 
   function setLoaderDom() {
     var loaderLink = document.createElement("link");
-      loaderLink.rel = "stylesheet";
-      loaderLink.href = loadercss;
-      loaderLink.className = "sedraloadercss";
-      document.querySelector("head").appendChild(loaderLink);
+    loaderLink.rel = "stylesheet";
+    loaderLink.href = loadercss;
+    loaderLink.className = "sedraloadercss";
+    document.querySelector("head").appendChild(loaderLink);
     var widgetLoaderDom = document.createElement("div");
     widgetLoaderDom.className = "sedra-widget-loader";
     document.querySelector("sedra-widget").appendChild(widgetLoaderDom);
@@ -55,7 +55,7 @@
     var xhr = new XMLHttpRequest();
     xhr.open("GET", appLocalUrl);
     xhr.withCredentials = false;
-    xhr.onreadystatechange = function () {
+    xhr.onreadystatechange = function() {
       if (xhr.readyState == 4) {
         if (xhr.status >= 200 && xhr.status < 400) {
           getUrlFromString(xhr.responseText);
@@ -70,7 +70,7 @@
   };
 
   function getUrlFromString(successString) {
-    
+    //Get api url
     var apiUrlStart = successString.indexOf("app.constant('API_URL',");
     var apiUrlLocEnd = successString.indexOf("loc");
     var tempString = successString.substr(apiUrlStart, apiUrlLocEnd - apiUrlStart);
@@ -79,30 +79,43 @@
     if (httpsStart != -1 && urlEnd != -1) {
       window.widgetHost = tempString.substr(httpsStart, urlEnd - httpsStart - 1);
     }
+
+    //Get site url 
+    var sedraUrlStart = successString.indexOf("app.constant('SEDRA',");
+    if (sedraUrlStart != -1) {
+      var sedraUrlLocEnd = successString.lastIndexOf("loc");
+      var sedratempString = successString.substr(sedraUrlStart, sedraUrlLocEnd - sedraUrlStart);
+      var sedraHttpsStart = sedratempString.indexOf("http");
+      var sedraUrlEnd = sedratempString.indexOf(",", sedraHttpsStart);
+      if (sedraHttpsStart != -1 && sedraUrlEnd != -1) {
+        window.widgetUrl = sedratempString.substr(sedraHttpsStart, sedraUrlEnd - sedraHttpsStart - 1);
+      }
+    }
+
     //Grab Default lang
     var defaultLangIndex = successString.indexOf("DEFAULT_LANG");
     var lang = {};
-    if(defaultLangIndex != -1){
-      var defaultLangSubString = successString.substr(defaultLangIndex + 13, successString.length-defaultLangIndex);
-      if(defaultLangSubString.indexOf('\"') < 5 && defaultLangSubString.indexOf('\"') != -1){
+    if (defaultLangIndex != -1) {
+      var defaultLangSubString = successString.substr(defaultLangIndex + 13, successString.length - defaultLangIndex);
+      if (defaultLangSubString.indexOf('\"') < 5 && defaultLangSubString.indexOf('\"') != -1) {
         var defaultLang = defaultLangSubString.substr(defaultLangSubString.indexOf('\"') + 1, 2);
-      }else{
+      } else {
         var defaultLang = defaultLangSubString.substr(defaultLangSubString.indexOf('\'') + 1, 2);
       }
       lang.defaultLang = defaultLang;
     }
     //Grab Preferred lang
     var preferredLangIndex = successString.indexOf("PREFERRED_LANG");
-    if(preferredLangIndex != -1){
-      var preferredLangSubString = successString.substr(preferredLangIndex + 15, successString.length-preferredLangIndex);
-      if(preferredLangSubString.indexOf('\"') < 5 && preferredLangSubString.indexOf('\"') != -1){
+    if (preferredLangIndex != -1) {
+      var preferredLangSubString = successString.substr(preferredLangIndex + 15, successString.length - preferredLangIndex);
+      if (preferredLangSubString.indexOf('\"') < 5 && preferredLangSubString.indexOf('\"') != -1) {
         var preferredLang = preferredLangSubString.substr(preferredLangSubString.indexOf('\"') + 1, 2);
-      }else{
+      } else {
         var preferredLang = preferredLangSubString.substr(preferredLangSubString.indexOf('\'') + 1, 2);
       }
       lang.preferredLang = preferredLang;
     }
-    window.DefaultPreferredLang = lang ; 
+    window.DefaultPreferredLang = lang;
   }
 
   function initWidget() {
@@ -145,7 +158,7 @@
     script.id = tagId;
 
     if (script.readyState) {
-      script.onreadystatechange = function () {
+      script.onreadystatechange = function() {
         if (script.readyState == "loaded" ||
           script.readyState == "complete") {
           script.onreadystatechange = null;
@@ -155,7 +168,7 @@
         }
       };
     } else {
-      script.onload = function () {
+      script.onload = function() {
         if (callback !== null) {
           callback();
         }
@@ -178,7 +191,7 @@
     var isSemanticExist = false;
 
     var $script = jQuery("script");
-    $script.each(function (index) {
+    $script.each(function(index) {
       var attr = jQuery(this).attr("src");
       if (attr && attr.indexOf("semantic") != -1) {
         isSemanticExist = true;
@@ -188,7 +201,7 @@
 
     if (!isSemanticExist) {
       jQuery.getScript(semanticjs)
-        .success(function (data) {
+        .success(function(data) {
           loadWidget();
         });
     } else {

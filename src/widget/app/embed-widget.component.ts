@@ -16,7 +16,10 @@ import { RegisterComponent } from "./components/modules/Register.component";
 import { LoginComponent } from "./components/modules/Login.component";
 import { ProfileComponent } from "./components/modules/Profile.component";
 import { TranslationService } from './service/Translation.service';
+import { StripeElement } from './model/StripeElement';
+import { CurrencyPipe } from '@angular/common';
 
+declare var Stripe: any;
 declare let jQuery: any;
 
 export class GeneralLocalization extends NgLocalization {
@@ -31,7 +34,7 @@ export class GeneralLocalization extends NgLocalization {
 @Component({
   selector: "sedra-widget",
   template: require("raw-loader!./embed-widget.component.html"),
-  providers: [{ provide: NgLocalization, useClass: GeneralLocalization }]
+  providers: [{ provide: NgLocalization, useClass: GeneralLocalization }, CurrencyPipe]
 })
 
 export class AppComponent implements OnInit {
@@ -43,6 +46,7 @@ export class AppComponent implements OnInit {
   CONTRIBUTION_TYPE_LOGIN: string = "login";
   CONTRIBUTION_TYPE_REGISTER: string = "register";
   CONTRIBUTION_TYPE_GUEST: string = "guest";
+  CONTRIBUTION_TYPE_EXPRESS: string = "express";
   mCampaignService: CampaignService;
   mStripeService: StripeService;
   mUserService: UserService;
@@ -89,6 +93,15 @@ export class AppComponent implements OnInit {
     "password_confirm": ""
   };
 
+  expressRegisterInfo: any = {
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "password": "",
+    "password_confirm": "",
+    "inline_registration": true
+  };
+
   contribution: any = {
     "rewardName": "",
     "amount": 0
@@ -113,7 +126,9 @@ export class AppComponent implements OnInit {
     "city_id": 0,
     "street1": "",
     "street2": "",
-    "mail_code": ""
+    "mail_code": "",
+    "city": "",
+    "country": ""
   };
 
   addressID: number;
@@ -183,6 +198,8 @@ export class AppComponent implements OnInit {
   campaignErrorMessage: any = {};
   loginEmail: string;
   loginPassword: string;
+  
+  logginErrorMessage: string;
 
   isShippingFeeExcluded: boolean = false;
   isRegisterFormValid: boolean = false;
@@ -194,9 +211,19 @@ export class AppComponent implements OnInit {
   isLoggedInSuccessful: boolean = true;
   submitErrorMessage: string = "";
   isjQueryClicked: boolean = false;
+  isCampaignTab: boolean = true;
+  isFAQTab: boolean = false;
+  isBackersTab: boolean = false;
+  isStreamsTab: boolean = false;
   isCommentTab: boolean = false;
   isContactTab: boolean = false;
   isFormLogin: boolean = true;
+  isCreatorTab: boolean = true;
+  isCompanyTab: boolean = false;
+  isLoginTab: boolean = true;
+  isRegisterTab: boolean = false;
+  isGuestTab: boolean = false;
+  isExpressTab: boolean = false;
   isCustomCampaignPercentage: boolean = false;
   shouldCampaignAvatarImageShow: boolean = false;
   siteLogo: Object = {
@@ -206,7 +233,10 @@ export class AppComponent implements OnInit {
   settingDecimalOption: number = 1;
   isCampaignShown: boolean = true;
   isProfileShown: boolean = false;
+
   minContributionAmount: number = 1;
+  maxContributionAmount: number = 10000000000;
+  allowMax: boolean = false;
 
   urlTos: string;
   urlPrivacy: string;
@@ -216,9 +246,35 @@ export class AppComponent implements OnInit {
   isDropdownVisible: boolean = false;
   isMobile: boolean = false;
 
-  constructor( @Inject(CampaignService) campaignService: CampaignService, @Inject(TranslationService) private translationService: TranslationService, @Inject(UserService) userService: UserService, @Inject(StripeService) stripeService: StripeService, @Inject(SettingsService) settingsService: SettingsService, private elementRef: ElementRef, private domSanitization: DomSanitizer, private http: Http) {
+  stripeTokenOn: Boolean = false;
+  stripePublicKey: String = '';
+  stripeElement: StripeElement;
+  extraStripeDetails: Object = {
+    address_city: '',
+    address_country: '',
+    address_line1: '',
+    name: ''
+  };
+  stripeElementError: Boolean = true;
+  isSubmitting: Boolean = false;
+
+  currentTab: string = 'campaign';
+  currentCreatorTab: string = 'creator';
+  currentPaymentLoginTab: string = 'login';
+  requireRewardAttributes: boolean = false;
+  pledgeAttributes: any = [];
+  tippingOptions: any;
+  tipType: string = null;
+  tip: any = {value: null, dollar_amount: 0, type: 'Dollar', name: ''};
+  tipError: boolean = false;
+  lowestAmount: any;
+  tipInfo: any;
+  contributeBehaviour: any;
+  expressRegisterError: string;
+
+  constructor( @Inject(CampaignService) campaignService: CampaignService, @Inject(TranslationService) private translationService: TranslationService, @Inject(UserService) userService: UserService, @Inject(StripeService) stripeService: StripeService, @Inject(SettingsService) settingsService: SettingsService, private elementRef: ElementRef, private domSanitization: DomSanitizer, private http: Http, private cPipe: CurrencyPipe) {
     if (process.env.ENV == "development") {
-      window["widgetHost"] = "https://cascade.thrinacia.com/api";
+      window["widgetHost"] = "https://sansar.thrinacia.com";
       window["DefaultPreferredLang"] = {
         "defaultLang": "en",
         "preferredLang": "en"
@@ -227,6 +283,10 @@ export class AppComponent implements OnInit {
     //getting new Default and preferred lang
     if (window["widgetHost"] && window["DefaultPreferredLang"]) {
       UtilService.setWidgetHost(window["widgetHost"]);
+
+      if(window["widgetUrl"]) {
+        UtilService.setWidgetURLHost(window["widgetUrl"]);
+      }
       UtilService.setLanguageHost(window["DefaultPreferredLang"]);
 
       this.API_HOST = ConstantsGlobal.getApiHost();
@@ -284,6 +344,38 @@ export class AppComponent implements OnInit {
               if (this.siteSettings.hasOwnProperty("site_theme_campaign_min_contribute_amount")) {
                 this.minContributionAmount = this.siteSettings["site_theme_campaign_min_contribute_amount"];
               }
+              if (this.siteSettings.hasOwnProperty("site_theme_campaign_max_contribute_amount")) {
+                this.maxContributionAmount = this.siteSettings["site_theme_campaign_max_contribute_amount"];
+              }
+              if (this.siteSettings.hasOwnProperty("site_campaign_reward_attributes_required")) {
+                this.requireRewardAttributes = this.siteSettings["site_campaign_reward_attributes_required"];
+              } else {
+                this.requireRewardAttributes = false;
+              }
+              if (this.siteSettings.hasOwnProperty("site_tipping")) {
+                this.tippingOptions = this.siteSettings["site_tipping"];
+              } else {
+                this.tippingOptions = { toggle: false };
+              }
+              if (this.siteSettings.hasOwnProperty("site_contribute_behaviour")) {
+                this.contributeBehaviour = this.siteSettings["site_contribute_behaviour"].default;
+              } else {
+                this.contributeBehaviour = 1;
+              }
+              if (this.contributeBehaviour == 2 || this.contributeBehaviour == 7) {
+                this.currentPaymentLoginTab = 'guest';
+                this.setContributeType(this.CONTRIBUTION_TYPE_GUEST); 
+                this.setCurrentLoginTab('guest');
+              } else if (this.contributeBehaviour == 5) {
+                this.currentPaymentLoginTab = 'express';
+                this.setContributeType(this.CONTRIBUTION_TYPE_EXPRESS); 
+                this.setCurrentLoginTab('express');
+              }
+              if (this.siteSettings.hasOwnProperty("site_stripe_tokenization")) {
+                this.stripePublicKey = this.siteSettings["site_stripe_tokenization"]['public_stripe_key'];
+                this.stripeTokenOn = this.siteSettings["site_stripe_tokenization"]['toggle'];
+                this.stripeElement = new StripeElement(this.stripeTokenOn, this.stripePublicKey);
+              }
               this.getCampaign(this.authToken);
             }
           },
@@ -291,6 +383,20 @@ export class AppComponent implements OnInit {
             this.getCampaign(this.authToken);
             UtilService.logError(error);
           }
+        );
+        this.mStripeService.getStripeChargeAmount().subscribe(
+          res => {
+            if(res[0]) {
+              this.lowestAmount = parseFloat(res[0].minimum_charge_amount);
+              this.tipInfo = res[0];
+            } else {
+              this.lowestAmount = 0.5;
+              if(this.mCampaign) {
+                this.tipInfo = this.mCampaign.currencies[0];
+              }
+            }
+          },
+          error => UtilService.logError(error)
         );
         if (this.personId) {
           this.getProfile();
@@ -328,6 +434,33 @@ export class AppComponent implements OnInit {
           }
         });
       });
+    }
+  }
+
+  setUpTipping() {
+    if(this.tippingOptions.toggle_dynamic && !this.tippingOptions.toggle_tiers) {
+      this.tip = {value: null, dollar_amount: 0, type: 'Dollar', name: ''};
+      if(this.tippingOptions.toggle_dynamic_min_max && this.tippingOptions.dynamic_min) {
+        this.tip.value = this.tippingOptions.dynamic_min;
+        this.tip.dollar_amount = this.tippingOptions.dynamic_min;
+      }
+      this.tipType = 'dynamic';
+    } else if(this.tippingOptions.toggle_tiers) {
+      this.tip = {value: null, dollar_amount: 0, type: 'Dollar', name: ''};
+      if(this.tippingOptions.tiers[0]) {
+        this.updateTierValues();
+        var dollarAmount = this.tippingOptions.tiers[0].value;
+        if(this.tippingOptions.tiers[0].type == "Percent"){
+          dollarAmount = (this.tippingOptions.tiers[0].value / 100) * this.contribution["amount"];
+          if(dollarAmount < this.lowestAmount) {
+            dollarAmount = this.lowestAmount;
+          }
+        }
+        this.tip = {value: this.tippingOptions.tiers[0].value, dollar_amount: dollarAmount, type: this.tippingOptions.tiers[0].type, name: this.tippingOptions.tiers[0].name};
+      }
+      this.tipType = 'tiers';
+    } else if (!this.tippingOptions.toggle_dynamic && !this.tippingOptions.toggle_tiers && this.tippingOptions.toggle_no_tip) {
+      this.tipType = 'no_tip';
     }
   }
 
@@ -504,7 +637,19 @@ export class AppComponent implements OnInit {
       };
     }
 
+    if (this.siteSettings.hasOwnProperty("site_theme_campaign_min_contribute_amount")) {
+            this.minContributionAmount = this.siteSettings["site_theme_campaign_min_contribute_amount"];
+          }
+          if (this.siteSettings.hasOwnProperty("site_theme_campaign_max_contribute_amount")) {
+            this.maxContributionAmount = this.siteSettings["site_theme_campaign_max_contribute_amount"];
+              }
 
+    if (this.siteSettings.hasOwnProperty("site_theme_campaign_per_min") && this.siteSettings["site_theme_campaign_per_min"] && this.mCampaign.settingsObject.hasOwnProperty("min_contribution")) {
+      this.minContributionAmount = this.mCampaign.settingsObject.min_contribution;
+    }
+    if (this.siteSettings.hasOwnProperty("site_theme_campaign_per_max") && this.siteSettings["site_theme_campaign_per_max"] && this.mCampaign.settingsObject.hasOwnProperty("min_contribution")) {
+      this.maxContributionAmount = this.mCampaign.settingsObject.max_contribution;
+    }
   }
 
   getCampaignStatus() {
@@ -580,6 +725,9 @@ export class AppComponent implements OnInit {
       // Show both individual user and organization
       if (this.profileTypeId == 0 || this.profileTypeId == undefined) {
         this.setCampaignManagerInfo();
+        this.currentCreatorTab = "creator";
+        this.isCreatorTab = true;
+        this.isCompanyTab = false;
         if (this.mCampaign.business_organizations != null && this.mCampaign.business_organizations.length) {
           this.setCampaignBusinessInfo();
           this.mCampaignShowSlash = true;
@@ -588,18 +736,30 @@ export class AppComponent implements OnInit {
       // Show bussiness organization only
       else if (this.profileTypeId == 1) {
         if (this.mCampaign.business_organizations != null && this.mCampaign.business_organizations.length) {
+          this.currentCreatorTab = "company";
+          this.isCreatorTab = false;
+          this.isCompanyTab = true;
           this.setCampaignBusinessInfo();
         }
         else {
+          this.currentCreatorTab = "creator";
+          this.isCreatorTab = true;
+          this.isCompanyTab = false;
           this.setCampaignManagerInfo();
         }
       }
       // Show individual user only
       else if (this.profileTypeId == 2) {
+        this.currentCreatorTab = "creator";
+        this.isCreatorTab = true;
+        this.isCompanyTab = false;
         this.setCampaignManagerInfo();
       }
     }
     else {
+      this.currentCreatorTab = "creator";
+      this.isCreatorTab = true;
+      this.isCompanyTab = false;
       this.setCampaignManagerInfo();
       if (this.mCampaign.business_organizations != null && this.mCampaign.business_organizations.length) {
         this.setCampaignBusinessInfo();
@@ -887,12 +1047,29 @@ export class AppComponent implements OnInit {
    * @param  {boolean} openAccordion optional, open accordion or not
    */
   selectReward(rewardIndex: number, openAccordion?: boolean) {
+    if (rewardIndex === 0) {
+      if (this.siteSettings.hasOwnProperty("site_theme_campaign_max_pledge_enabled") && this.siteSettings["site_theme_campaign_max_pledge_enabled"]) {
+        this.allowMax = true;
+      }
+    } else {
+      this.allowMax = false;
+    }
+    jQuery(".contribution-input.ui.form").form("reset");
     this.changeView(true);
     this.rewardIndex = rewardIndex > 0 ? rewardIndex + (this.rewardContributionPageConfig.currentPage - 1) * this.rewardContributionPageConfig.itemsPerPage : 0;
     if (this.rewardIndex > 0) {
       let reward = this.mCampaign.pledges[this.rewardIndex - 1];
       this.contribution["amount"] = reward.amount;
       this.contribution["rewardName"] = reward.name;
+      this.contribution["attributes"] = reward.attributes;
+      if (reward.attributes) {
+        if (reward.attributes.variation) {
+          let variationArray = [];
+          reward.attributes.variation.forEach((value, index) => {
+            this.pledgeAttributes.push({ choice: null, name: value.name });
+          });
+        }
+      }
       this.pledgeParam["pledge_level_id"] = reward.pledge_level_id;
       this.guestPledgeParam["pledge_level_id"] = reward.pledge_level_id;
       if (reward.shipping && reward.shipping.length) {
@@ -924,6 +1101,7 @@ export class AppComponent implements OnInit {
     else {
       this.contribution["amount"] = this.minContributionAmount;
       this.contribution["rewardName"] = "Contribution";
+      this.contribution["attributes"] = null;
       this.isRewardShipping = false;
       this.isAddingAddress = false;
       this.isAddingPhone = false;
@@ -932,6 +1110,9 @@ export class AppComponent implements OnInit {
       this.pledgeParam["pledge_level_id"] = null;
       this.shippingFee = 0;
       this.calculateTotalPayment();
+    }
+    if(this.tippingOptions.toggle) {
+      this.setUpTipping();
     }
     if (openAccordion) {
       if (this.rewardIndex > this.rewardContributionPageConfig.currentPage) {
@@ -1030,37 +1211,118 @@ export class AppComponent implements OnInit {
         exp_year = this.cardInfo["cardDate"].split(" / ")[1];
       }
       this.pledgeParam["inline_token"] = data["inline_token"];
-      this.mStripeService.setStripeAccount(exp_month, this.cardInfo["cardNumber"], exp_year, this.cardInfo["cardCVC"], data["inline_token"]).subscribe(
-        res => {
-          StripeService.stripe_account_id = res["stripe_account_id"];
-          this.pledgeParam["stripe_account_card_id"] = res.cards[0]["stripe_account_card_id"];
-          if (this.isAddingAddress) {
-            this.addressInfo["inline_token"] = data["inline_token"];
-            this.phoneInfo["inline_token"] = data["inline_token"];
-            this.mUserService.setNewAddress(this.addressInfo).subscribe(
+      if (this.stripeElement.toggle) {
+        let card_token = '';
+        let widget = this;
+        this.extraStripeDetails['name'] = this.cardInfo['cardName'];
+        if (this.addressInfo) {
+          this.extraStripeDetails['address_city'] = this.addressInfo['city'];
+          this.extraStripeDetails['address_country'] = this.addressInfo['country'];
+          this.extraStripeDetails['address_line1'] = this.addressInfo['street1'];
+        }
+        // this.extraStripeDetails['address'] = this.addressInfo["street1"] + ', ' + this.addressInfo["city_id"];
+        this.stripeElement.getStripe().createToken(this.stripeElement.cardNumber, this.extraStripeDetails).then(function (result) {
+          if(!result.error) {
+            // Send the token to your server
+            card_token = result.token.id;
+            widget.mStripeService.setStripeAccount(exp_month, widget.cardInfo["cardNumber"], exp_year, widget.cardInfo["cardCVC"], data["inline_token"], card_token).subscribe(
               res => {
-                this.pledgeParam["shipping_address_id"] = res.address_id;
-                this.mUserService.setNewPhone(this.phoneInfo).subscribe(
-                  res => {
-                    this.pledgeParam["phone_number_id"] = res.phone_number_id;
-                    this.pledge();
+                StripeService.stripe_account_id = res["stripe_account_id"];
+                widget.pledgeParam["stripe_account_card_id"] = res.cards[0]["stripe_account_card_id"];
+                if (widget.isAddingAddress) {
+                  widget.addressInfo["inline_token"] = data["inline_token"];
+                  widget.phoneInfo["inline_token"] = data["inline_token"];
+                  widget.mUserService.setNewAddress(widget.addressInfo).subscribe(
+                    res => {
+                      widget.pledgeParam["shipping_address_id"] = res.address_id;
+                      widget.mUserService.setNewPhone(widget.phoneInfo).subscribe(
+                        res => {
+                          widget.pledgeParam["phone_number_id"] = res.phone_number_id;
+                          widget.pledge();
+                        }
+                      );
+                    }
+                  );
+                }
+                else {
+                  widget.pledge();
+                }
+              },
+              error => {
+                widget.submitErrorMessage = UtilService.logError(error);
+
+                //Check for extra errors 
+                let errorJson = error.json();
+                if(errorJson.code == 'entity_not_found') {
+                  widget.submitErrorMessage = this.translate("campaign_page_entity_not_found_error");
+                }
+                if(errorJson.code == 'account_profile_stripe_pledge_direct_off_missing_connected') {
+                  widget.submitErrorMessage = this.translate("campaign_page_missing_connect");
+                }
+
+                widget.isContributionSubmitting = false;
+                if (!widget.authToken) {
+                  // widget.switchToLogin();
+                }
+                widget.mUserService.disableUser(data).subscribe(
+                  data => {
+                    widget.isContributionSubmitting = false;
+                    if(!widget.submitErrorMessage) {
+                      widget.submitErrorMessage = widget.translate("campaign_page_stripe_elements_error");;
+                    }
+                  },
+                  error => {
+                    let jsonError = error.json();
                   }
                 );
               }
             );
+          } else {
+            widget.mUserService.disableUser(data).subscribe(
+              data => {
+                widget.isContributionSubmitting = false;
+                if(!widget.submitErrorMessage) {
+                  widget.submitErrorMessage = widget.translate("campaign_page_stripe_elements_error");;
+                }              },
+              error => {
+                let jsonError = error.json();
+              }
+            );
           }
-          else {
-            this.pledge();
+        });
+      } else {
+        this.mStripeService.setStripeAccount(exp_month, this.cardInfo["cardNumber"], exp_year, this.cardInfo["cardCVC"], data["inline_token"]).subscribe(
+          res => {
+            StripeService.stripe_account_id = res["stripe_account_id"];
+            this.pledgeParam["stripe_account_card_id"] = res.cards[0]["stripe_account_card_id"];
+            if (this.isAddingAddress) {
+              this.addressInfo["inline_token"] = data["inline_token"];
+              this.phoneInfo["inline_token"] = data["inline_token"];
+              this.mUserService.setNewAddress(this.addressInfo).subscribe(
+                res => {
+                  this.pledgeParam["shipping_address_id"] = res.address_id;
+                  this.mUserService.setNewPhone(this.phoneInfo).subscribe(
+                    res => {
+                      this.pledgeParam["phone_number_id"] = res.phone_number_id;
+                      this.pledge();
+                    }
+                  );
+                }
+              );
+            }
+            else {
+              this.pledge();
+            }
+          },
+          error => {
+            this.submitErrorMessage = UtilService.logError(error);
+            this.isContributionSubmitting = false;
+            if (!this.authToken) {
+              this.switchToLogin();
+            }
           }
-        },
-        error => {
-          this.submitErrorMessage = UtilService.logError(error);
-          this.isContributionSubmitting = false;
-          if (!this.authToken) {
-            this.switchToLogin();
-          }
-        }
-      );
+        );
+      }
     }
   }
 
@@ -1069,15 +1331,11 @@ export class AppComponent implements OnInit {
   }
 
   switchToLogin() {
-    let tempInfo = {
-      "email": this.registerComponent.registerInfo.email,
-      "password": this.registerComponent.registerInfo.password
-    };
+    this.setContributeType(this.CONTRIBUTION_TYPE_LOGIN); 
+    this.setCurrentLoginTab('login')
     jQuery(".account-info-tab-menu").find(".item").tab("change tab", "login");
-    this.loginComponent.loginEmail = tempInfo.email;
-    this.loginComponent.loginPassword = tempInfo.password;
-    this.loginComponent.logginErrorMessage = "You have successfully created your account. However there was a problem with your payment. Please correct your payment details and click Login and Contribute button.";
-    this.loginComponent.isLoggedInSuccessful = false;
+    this.logginErrorMessage = this.translate("created_account_bad_payment");
+    this.isLoggedInSuccessful = false;
     this.setContributeType(this.CONTRIBUTION_TYPE_LOGIN);
   }
 
@@ -1085,9 +1343,37 @@ export class AppComponent implements OnInit {
    * Calculate total amount to be pledged
    */
   calculateTotalPayment() {
-    this.totalAmount = parseInt(this.contribution["amount"]) + parseInt(this.shippingFee);
+    this.totalAmount = parseFloat(this.contribution["amount"]) + parseFloat(this.shippingFee);
     if (isNaN(this.totalAmount)) {
       this.totalAmount = 0;
+    }
+    if (this.tip.value && this.tip.value != 0 && this.tip.type == 'Percent') {
+      var tipAmount = (parseFloat(this.tip.value) / 100) * this.contribution["amount"];
+      var percentString = this.mCampaign.currencies[0]["code_iso4217_alpha"] + tipAmount.toFixed(2);
+      jQuery('.tip-tiers').dropdown('set text', percentString)
+    }
+    if(this.tipType == 'tiers') {
+      this.updateTierValues();
+    }
+    if(this.tip.value && this.tip.value != 0 && this.tip.type == 'Percent') {
+      var tipAmount: number;
+      if(((this.tippingOptions.tiers[0].value / 100) * this.contribution["amount"]) < this.lowestAmount) {
+        if(this.tip.value == this.tippingOptions.tiers[0].value) {
+          tipAmount = this.lowestAmount;
+        } else {
+          tipAmount = ((parseFloat(this.tip.value) / 100) * this.contribution["amount"]) + this.lowestAmount;
+        }
+      } else {
+        tipAmount = ((parseFloat(this.tip.value) / 100) * this.contribution["amount"])
+      }
+      this.tip.dollar_amount = tipAmount;
+      if(this.tippingOptions.toggle_tier_names) {
+        var percentString = this.tip.name + ' - ';
+      } else {
+        var percentString = ''
+      }
+      percentString = percentString + this.cPipe.transform(tipAmount.toFixed(2), this.tipInfo.code_iso4217_alpha, true);
+      jQuery('.tip-tiers').dropdown('set text', percentString)
     }
     this.pledgeParam["amount"] = this.totalAmount;
   }
@@ -1146,8 +1432,8 @@ export class AppComponent implements OnInit {
    * @param  {number} exp_month parsed month
    * @param  {number} exp_year  parsed year
    */
-  addStripeCard(exp_month: number, exp_year: number, inlineToken?: string) {
-    this.mStripeService.setStripeAccountCard(this.cardInfo["cardName"], exp_month, this.cardInfo["cardNumber"], exp_year, this.cardInfo["cardCVC"], inlineToken).subscribe(
+  addStripeCard(exp_month: number, exp_year: number, inlineToken?: string, card_token?: string) {
+    this.mStripeService.setStripeAccountCard(this.cardInfo["cardName"], exp_month, this.cardInfo["cardNumber"], exp_year, this.cardInfo["cardCVC"], inlineToken, card_token).subscribe(
       res => {
         StripeService.stripe_account_card_id = res["stripe_account_card_id"];
         this.pledgeParam["stripe_account_card_id"] = StripeService.stripe_account_card_id;
@@ -1273,7 +1559,7 @@ export class AppComponent implements OnInit {
       inline: true,
       fields: {
         GuestEmail: {
-          identifier: "GuestEmail",
+          identifier: "guestEmail",
           rules: [
             {
               type: "empty",
@@ -1313,7 +1599,7 @@ export class AppComponent implements OnInit {
           rules: [
             {
               type: "empty",
-              prompt: "please enter your last name"
+              prompt: "Please enter your last name"
             }
           ]
         },
@@ -1353,6 +1639,51 @@ export class AppComponent implements OnInit {
             {
               type: "match[Pass]",
               prompt: "Your password doesn't match"
+            }
+          ]
+        }
+      }
+    }).form("validate form");
+  }
+
+  formValidationExpress() {
+    jQuery("#express-form").form({
+      inline: true,
+      onSuccess: () => {
+        this.isRegisterFormValid = true;
+      },
+      onFailure: () => {
+        this.isRegisterFormValid = false;
+      },
+      fields: {
+        expressFirstName: {
+          identifier: "expressFirstName",
+          rules: [
+            {
+              type: "empty",
+              prompt: "Please enter your first name"
+            }
+          ]
+        },
+        expressLastName: {
+          identifier: "expressLastName",
+          rules: [
+            {
+              type: "empty",
+              prompt: "Please enter your last name"
+            }
+          ]
+        },
+        expressEmail: {
+          identifier: "expressEmail",
+          rules: [
+            {
+              type: "empty",
+              prompt: "Please enter your email"
+            },
+            {
+              type: "email",
+              prompt: "Please enter a valid email"
             }
           ]
         }
@@ -1469,6 +1800,117 @@ export class AppComponent implements OnInit {
     }).form("validate form");
   }
 
+  formValidationAttributes() {
+    jQuery(".attributes-info.ui.form").form({
+      inline: true,
+      fields: {
+        attribute: {
+          identifier: "attribute",
+          rules: [
+            {
+              type: "empty"
+            }
+          ]
+        }
+      }
+    }).form("validate form");
+  }
+
+  formValidationTip() {
+    if (!this.tipType) {
+      this.tipError = true;
+      return;
+    }
+
+    jQuery.fn.form.settings.rules.tip_zero = (value) => {
+      if (this.tip.dollar_amount == 0) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    jQuery.fn.form.settings.rules.tip_under_minimum = (value) => {
+      if (!this.tippingOptions.dynamic_min) {
+        return true;
+      }
+      if (this.tip.dollar_amount < parseFloat(this.tippingOptions.dynamic_min)) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    jQuery.fn.form.settings.rules.tip_over_maximum = (value) => {
+      if (!this.tippingOptions.dynamic_max) {
+        return true;
+      }
+      if (this.tip.dollar_amount > parseFloat(this.tippingOptions.dynamic_max)) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    if (this.tipType == "dynamic") {
+      if (this.tippingOptions.toggle_dynamic_min_max) {
+        jQuery(".dynamic-tipping-form.ui.form").form({
+          on: "blur",
+          inline: true,
+          fields: {
+            dynamic_tip: {
+              identifier: "dynamic_tip",
+              rules: [
+                {
+                  type: "empty",
+                  prompt: this.translate("please_enter_tip_amount")
+                },
+                {
+                  type: "number",
+                  prompt: this.translate("enter_valid_number")
+                },
+                {
+                  type: "tip_zero",
+                  prompt: this.translate("tip_cant_zero")
+                },
+                {
+                  type: "tip_under_minimum",
+                  prompt: this.translate("tip_under_min")
+                },
+                {
+                  type: "tip_over_maximum",
+                  prompt: this.translate("tip_over_max")
+                }
+              ]
+            }
+          }
+        }).form("validate form");
+      } else {
+        jQuery(".dynamic-tipping-form.ui.form").form({
+          on: "blur",
+          inline: true,
+          fields: {
+            dynamic_tip: {
+              identifier: "dynamic_tip",
+              rules: [
+                {
+                  type: "empty",
+                  prompt: this.translate("please_enter_tip_amount")
+                },
+                {
+                  type: "number",
+                  prompt: this.translate("enter_valid_number")
+                },
+                {
+                  type: "tip_zero",
+                  prompt: this.translate("tip_cant_zero")
+                }
+              ]
+            }
+          }
+        }).form("validate form");
+      }
+    }
+  }
+
   formValidation() {
     if (this.contributionType == this.CONTRIBUTION_TYPE_LOGIN) {
       this.formValidationLogin();
@@ -1479,6 +1921,25 @@ export class AppComponent implements OnInit {
     else if (this.contributionType == this.CONTRIBUTION_TYPE_REGISTER) {
       this.isAddingCard = true;
       this.formValidationRegister();
+    } else if (this.contributionType == this.CONTRIBUTION_TYPE_EXPRESS) {
+      this.formValidationExpress();
+    }
+    jQuery.fn.form.settings.rules.amount_under_minimum = (value) => {
+      if (this.contribution["amount"] < this.minContributionAmount) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    jQuery.fn.form.settings.rules.amount_over_maximum = (value) => {
+      if (!this.allowMax) {
+        return true;
+      }
+      if (this.contribution["amount"] > this.maxContributionAmount) {
+        return false;
+      } else {
+        return true;
+      }
     }
     jQuery(".contribution-input.ui.form").form({
       on: "blur",
@@ -1494,12 +1955,20 @@ export class AppComponent implements OnInit {
             {
               type: "number",
               prompt: "Please enter a valid number"
+            },
+            {
+              type: "amount_under_minimum",
+              prompt: "Amount has to be higher or equal to " + this.minContributionAmount
+            },
+            {
+              type: "amount_over_maximum",
+              prompt: "Amount has to be low or equal to " + this.maxContributionAmount
             }
           ]
         }
       }
     }).form("validate form");
-
+    
     if (this.isAddingCard) {
       this.formValidationCard();
     }
@@ -1509,6 +1978,14 @@ export class AppComponent implements OnInit {
     }
     if (this.isAddingPhone) {
       this.formValidationPhone();
+    }
+
+    if (this.requireRewardAttributes) {
+      this.formValidationAttributes();
+    }
+
+    if (this.tippingOptions.toggle) {
+      this.formValidationTip();
     }
   }
 
@@ -1565,6 +2042,12 @@ export class AppComponent implements OnInit {
     }
   }
 
+  chooseAttribute(choice, variationIndex) {
+    this.pledgeAttributes[variationIndex].choice = choice;
+    let variationObject = { variation: this.pledgeAttributes };
+    this.pledgeParam["attributes"] = JSON.stringify(variationObject);
+  }
+
 
   /**
    * Translate Function
@@ -1574,15 +2057,100 @@ export class AppComponent implements OnInit {
   }
 
   /**
+     * Get Stripe Token
+     */
+  getStripeRegisterToken(exp_month, exp_year, data: any, inline_token?: string) {
+    let card_token = '';
+    let widget = this;
+    this.extraStripeDetails['name'] = this.cardInfo["cardName"];
+    // this.extraStripeDetails['address'] = this.addressInfo["street1"] + ', ' + this.addressInfo["city_id"];
+    this.stripeElement.getStripe().createToken(this.stripeElement.cardNumber, this.extraStripeDetails).then(function (result) {
+      // Send the token to your server
+      card_token = result.token.id;
+      this.mStripeService.setStripeAccount(exp_month, this.cardInfo["cardNumber"], exp_year, this.cardInfo["cardCVC"], data["inline_token"], card_token).subscribe(
+        res => {
+          StripeService.stripe_account_id = res["stripe_account_id"];
+          this.pledgeParam["stripe_account_card_id"] = res.cards[0]["stripe_account_card_id"];
+          if (this.isAddingAddress) {
+            this.addressInfo["inline_token"] = data["inline_token"];
+            this.phoneInfo["inline_token"] = data["inline_token"];
+            this.mUserService.setNewAddress(this.addressInfo).subscribe(
+              res => {
+                this.pledgeParam["shipping_address_id"] = res.address_id;
+                this.mUserService.setNewPhone(this.phoneInfo).subscribe(
+                  res => {
+                    this.pledgeParam["phone_number_id"] = res.phone_number_id;
+                    this.pledge();
+                  }
+                );
+              }
+            );
+          }
+          else {
+            this.pledge();
+          }
+        },
+        error => {
+          this.submitErrorMessage = UtilService.logError(error);
+          this.isContributionSubmitting = false;
+          if (!this.authToken) {
+            this.switchToLogin();
+          }
+        }
+      );
+    });
+  }
+
+
+  /**
+   * Get Stripe Token
+   */
+  getStripeToken(exp_month, exp_year) {
+    var card_token = '';
+    this.extraStripeDetails['name'] = this.cardInfo["cardName"];
+    this.extraStripeDetails['address'] = this.addressInfo["street1"] + ', ' + this.addressInfo["city_id"];
+    this.stripeElement.getStripe().createToken(this.stripeElement.cardNumber, this.extraStripeDetails).then(function (result) {
+      // Send the token to your server
+      card_token = result.token.id;
+      this.mStripeService.setStripeAccount(null, null, null, null, null, card_token).subscribe(
+        res => {
+          StripeService.stripe_account_id = res["stripe_account_id"];
+          this.addStripeCard(exp_month, exp_year, null, card_token);
+        },
+        error => {
+          UtilService.logError(error);
+        }
+      );
+    });
+  }
+
+  public stripeElementValidation(error: any): void {
+    this.stripeElementError = error;
+  }
+
+  /**
    * Submit and process existing info to make contribution
    * There must be a better way to deal with this Rx
    */
   submitContribution() {
     this.submitErrorMessage = "";
+    this.isSubmitting = true;
     this.formValidation();
-    if (!jQuery(".form .field.error").length && !this.isContributionSubmitting) {
+
+    if (this.isAddingCard && this.stripeElement.toggle && this.stripeElementError) {
+      this.scrollToError();
+      return;
+    } else if (!this.authToken && this.stripeElement.toggle && this.stripeElementError) {
+      this.scrollToError();
+      return;
+    }
+
+    if (!jQuery(".form .field.error").length && !this.isContributionSubmitting && !this.tipError) {
       this.isContributionSubmitting = true;
       this.pledgeParam["amount"] = this.totalAmount;
+      if (this.tip.dollar_amount && this.tip.dollar_amount != 0) {
+        this.pledgeParam["amount_tip"] = parseFloat(this.tip.dollar_amount).toFixed(2);
+      }
       let exp_month, exp_year;
       if (this.cardInfo["cardDate"]) {
         exp_month = this.cardInfo["cardDate"].split(" / ")[0];
@@ -1590,19 +2158,65 @@ export class AppComponent implements OnInit {
       }
       if (this.contributionType == this.CONTRIBUTION_TYPE_LOGIN) {
         if (this.isAddingCard && !StripeService.stripe_account_id) {
-          this.mStripeService.setStripeAccount(exp_month, this.cardInfo["cardNumber"], exp_year, this.cardInfo["cardCVC"]).subscribe(
-            res => {
-              StripeService.stripe_account_id = res["stripe_account_id"];
-              this.addStripeCard(exp_month, exp_year);
-            },
-            error => {
-              UtilService.logError(error);
+          var card_token = '';
+          if (this.stripeElement.toggle) {
+            let widget = this;
+            let card_token = '';
+            this.extraStripeDetails['name'] = this.cardInfo["cardName"];
+
+            this.extraStripeDetails['name'] = this.cardInfo['cardName'];
+            if (this.addressInfo) {
+              this.extraStripeDetails['address_city'] = this.addressInfo['city'];
+              this.extraStripeDetails['address_country'] = this.addressInfo['country'];
+              this.extraStripeDetails['address_line1'] = this.addressInfo['street1'];
             }
-          );
+
+            this.stripeElement.getStripe().createToken(this.stripeElement.cardNumber, this.extraStripeDetails).then(function (result) {
+              // Send the token to your server
+              card_token = result.token.id;
+              widget.mStripeService.setStripeAccount(null, null, null, null, null, card_token).subscribe(
+                res => {
+                  StripeService.stripe_account_id = res["stripe_account_id"];
+                  widget.addStripeCard(exp_month, exp_year, null, card_token);
+                },
+                error => {
+                  UtilService.logError(error);
+                }
+              );
+            });
+          } else {
+            this.mStripeService.setStripeAccount(exp_month, this.cardInfo["cardNumber"], exp_year, this.cardInfo["cardCVC"]).subscribe(
+              res => {
+                StripeService.stripe_account_id = res["stripe_account_id"];
+                this.addStripeCard(exp_month, exp_year);
+              },
+              error => {
+                UtilService.logError(error);
+              }
+            );
+          }
         }
         else {
           if (this.isAddingCard) {
-            this.addStripeCard(exp_month, exp_year);
+
+            if (this.stripeElement.toggle) {
+              let widget = this;
+
+              this.extraStripeDetails['name'] = this.cardInfo['cardName'];
+              if (this.addressInfo) {
+                this.extraStripeDetails['address_city'] = this.addressInfo['city'];
+                this.extraStripeDetails['address_country'] = this.addressInfo['country'];
+                this.extraStripeDetails['address_line1'] = this.addressInfo['street1'];
+              }
+
+              this.stripeElement.getStripe().createToken(this.stripeElement.cardNumber, this.extraStripeDetails).then(function (result) {
+                // Send the token to your server
+                card_token = result.token.id;
+                widget.addStripeCard(exp_month, exp_year, null, card_token);
+              });
+            } else {
+              this.addStripeCard(exp_month, exp_year);
+            }
           }
           else {
             if (this.isAddingAddress) {
@@ -1645,46 +2259,117 @@ export class AppComponent implements OnInit {
         }
       }
       else if (this.contributionType == this.CONTRIBUTION_TYPE_GUEST) {
-        this.mStripeService.setGuestStripeAccount(
-          this.cardInfo["cardName"],
-          exp_month,
-          this.cardInfo["cardNumber"],
-          exp_year,
-          this.cardInfo["cardCVC"],
-          this.cardInfo["email"]
-        ).subscribe(
-          res => {
-            this.guestPledgeParam = {
-              "card_id": res.card_id,
-              "email": this.cardInfo["email"],
-              "amount": this.totalAmount,
-              "fingerprint": res.fingerprint
-            };
-            this.pledgeParam["card_id"] = res.card_id;
-            if (this.isAddingAddress) {
-              this.mUserService.setGuestAddress(this.addressInfo).subscribe(
-                res => {
-                  this.guestPledgeParam["shipping_address_id"] = res.id;
-                  this.pledgeAsGuest();
+        if (this.stripeElement.toggle) {
+          let card_token = '';
+          let widget = this;
+          this.extraStripeDetails["name"] = this.cardInfo["cardName"];
+          this.stripeElement.getStripe().createToken(this.stripeElement.cardNumber, this.extraStripeDetails).then(function (result) {
+            // Send the token to your server
+            card_token = result.token.id;
+            widget.mStripeService.setGuestStripeAccount(
+              widget.cardInfo["cardName"],
+              exp_month,
+              widget.cardInfo["cardNumber"],
+              exp_year,
+              widget.cardInfo["cardCVC"],
+              widget.cardInfo["email"],
+              card_token
+            ).subscribe(
+              res => {
+                widget.guestPledgeParam = {
+                  "card_id": res.card_id,
+                  "email": widget.cardInfo["email"],
+                  "amount": widget.totalAmount,
+                  "fingerprint": res.fingerprint
+                };
+                widget.pledgeParam["card_id"] = res.card_id;
+                if (widget.isAddingAddress) {
+                  widget.mUserService.setGuestAddress(widget.addressInfo).subscribe(
+                    res => {
+                      widget.guestPledgeParam["shipping_address_id"] = res.id;
+                      widget.pledgeAsGuest();
+                    }
+                  );
                 }
+                else {
+                  widget.pledgeAsGuest();
+                }
+              },
+              error => {
+                widget.isContributionSubmitting = false;
+                UtilService.logError(error);
+              }
               );
+          });
+        } else {
+          this.mStripeService.setGuestStripeAccount(
+            this.cardInfo["cardName"],
+            exp_month,
+            this.cardInfo["cardNumber"],
+            exp_year,
+            this.cardInfo["cardCVC"],
+            this.cardInfo["email"]
+          ).subscribe(
+            res => {
+              this.guestPledgeParam = {
+                "card_id": res.card_id,
+                "email": this.cardInfo["email"],
+                "amount": this.totalAmount,
+                "fingerprint": res.fingerprint
+              };
+              this.pledgeParam["card_id"] = res.card_id;
+              if (this.isAddingAddress) {
+                this.mUserService.setGuestAddress(this.addressInfo).subscribe(
+                  res => {
+                    this.guestPledgeParam["shipping_address_id"] = res.id;
+                    this.pledgeAsGuest();
+                  }
+                );
+              }
+              else {
+                this.pledgeAsGuest();
+              }
+            },
+            error => {
+              this.isContributionSubmitting = false;
+              UtilService.logError(error);
             }
-            else {
-              this.pledgeAsGuest();
-            }
+            );
+        }
+      } else if(this.contributionType == this.CONTRIBUTION_TYPE_EXPRESS) {
+        const randomPassword = UtilService.generatePassword();
+        this.expressRegisterInfo.password = randomPassword;
+        this.expressRegisterInfo.password_confirm = randomPassword;
+        this.expressRegisterInfo.express_checkout = true;
+        this.mUserService.register(this.expressRegisterInfo).subscribe(
+          data => {
+            var eventData = {
+              "email": this.expressRegisterInfo.email,
+              "password": this.expressRegisterInfo.password,
+              "inline_token": data.inline_token,
+              "user_id": data.id
+            };
+            this.expressRegisterError = "";
+            this.onRegisterContributionSuccess(eventData);
           },
           error => {
+            let jsonError = error.json();
+            this.expressRegisterError = "campaign_express_register_api_" + jsonError.errors.email[0].code;
             this.isContributionSubmitting = false;
-            UtilService.logError(error);
           }
-          );
+        );
       }
+    } else {
+      this.scrollToError();
     }
   }
 
   pledge() {
     this.mCampaignService.pledge(ConstantsGlobal.CAMPAIGN_ID, this.pledgeParam).subscribe(
       res => {
+        if (typeof this.stripeElement.cardNumber !== 'undefined' && this.stripeElement.toggle) {
+          this.stripeElement.clearElements();
+        }
         this.getCampaign();
         if (this.authToken) {
           this.getStripeAccountCard();
@@ -1692,14 +2377,20 @@ export class AppComponent implements OnInit {
           this.getUserPhone();
         }
         else {
-          this.mUserService.login(this.loginEmail, this.loginPassword).subscribe(
-            data => {
-              this.onLoginSuccess(data);
-            },
-            error => {
-              this.onLoginFailed(error);
-            }
-          );
+          //Dont log in user if they express
+          if (this.contributionType != this.CONTRIBUTION_TYPE_EXPRESS) { 
+            this.mUserService.login(this.loginEmail, this.loginPassword).subscribe(
+              data => {
+                this.onLoginSuccess(data);
+              },
+              error => {
+                this.onLoginFailed(error);
+              }
+            );
+          } else {
+            //Clear express
+            this.clearExpressForm();
+          }
         }
         this.isPledgingSuccess = true;
         this.isContributionSubmitting = false;
@@ -1719,9 +2410,13 @@ export class AppComponent implements OnInit {
     this.mCampaignService.pledgeAsGuest(ConstantsGlobal.CAMPAIGN_ID, this.guestPledgeParam)
       .subscribe(
       res => {
+        if (typeof this.stripeElement.cardNumber !== 'undefined' && this.stripeElement.toggle) {
+          this.stripeElement.clearElements();
+        }
         this.getCampaign();
         this.isPledgingSuccess = true;
         this.isContributionSubmitting = false;
+        this.isContributionView = false;
         this.resetPledgeParam();
       },
       error => {
@@ -1812,11 +2507,57 @@ export class AppComponent implements OnInit {
   }
 
   setCurrentTab(value: string) {
-    if (value == "comments") {
+    if (value == "campaign") {
+      this.currentTab = value;
+      this.isCampaignTab = true;
+      this.isFAQTab = false;
+      this.isBackersTab = false;
+      this.isStreamsTab = false;
+      this.isCommentTab = false;
+      this.isContactTab = false;
+    }
+    else if (value == "faq") {
+      this.currentTab = value;
+      this.isCampaignTab = false;
+      this.isFAQTab = true;
+      this.isBackersTab = false;
+      this.isStreamsTab = false;
+      this.isCommentTab = false;
+      this.isContactTab = false;
+    }
+    else if (value == "backers") {
+      this.currentTab = value;
+      this.isCampaignTab = false;
+      this.isFAQTab = false;
+      this.isBackersTab = true;
+      this.isStreamsTab = false;
+      this.isCommentTab = false;
+      this.isContactTab = false;
+    }
+    else if (value == "streams") {
+      this.currentTab = value;
+      this.isCampaignTab = false;
+      this.isFAQTab = false;
+      this.isBackersTab = false;
+      this.isStreamsTab = true;
+      this.isCommentTab = false;
+      this.isContactTab = false;
+    }
+    else if (value == "comments") {
+      this.currentTab = value;
+      this.isCampaignTab = false;
+      this.isFAQTab = false;
+      this.isBackersTab = false;
+      this.isStreamsTab = false;
       this.isCommentTab = true;
       this.isContactTab = false;
     }
     else if (value == "contact") {
+      this.currentTab = value;
+      this.isCampaignTab = false;
+      this.isFAQTab = false;
+      this.isBackersTab = false;
+      this.isStreamsTab = false;
       this.isCommentTab = false;
       this.isContactTab = true;
     }
@@ -1970,6 +2711,8 @@ export class AppComponent implements OnInit {
       "number": null,
       "phone_number_type_id": null
     };
+
+    this.pledgeAttributes = [];
   }
 
   onBackToCampaignPage(evt: any) {
@@ -1984,5 +2727,107 @@ export class AppComponent implements OnInit {
 
   onUpdateProfileResourceId(evt: any) {
     this.profileResourceId = evt;
+  }
+
+  setCurrentCreatorTab(name) {
+    this.currentCreatorTab = name;
+    if (name == 'creator') {
+      this.isCreatorTab = true;
+      this.isCompanyTab = false;
+    } else {
+      this.isCreatorTab = false;
+      this.isCompanyTab = true;
+    }
+  }
+
+  setCurrentLoginTab(name) {
+    this.currentPaymentLoginTab = name;
+    if (name == 'login') {
+      this.isLoginTab = true;
+      this.isRegisterTab = false;
+      this.isGuestTab = false;
+      this.isExpressTab = false;
+    } else if(name == 'guest'){
+      this.isLoginTab = false;
+      this.isRegisterTab = false;
+      this.isGuestTab = true;
+      this.isExpressTab = false;
+    } else if(name == 'express'){
+      this.isLoginTab = false;
+      this.isRegisterTab = false;
+      this.isGuestTab = false;
+      this.isExpressTab = true;
+    } else {
+      this.isLoginTab = false;
+      this.isRegisterTab = true;
+      this.isGuestTab = false;
+      this.isExpressTab = false;
+    }
+  }
+
+  setTipType(type) {
+    this.tipError = false;
+    this.tip = {value: null, dollar_amount: 0, type: 'Dollar'};
+    if (type == 'tiers') {
+      if (this.tippingOptions.tiers[0]) {
+        this.updateTierValues();
+        this.tip =  {value: this.tippingOptions.tiers[0].value, dollar_amount: this.tippingOptions.tiers[0].dollar_amount, type: this.tippingOptions.tiers[0].type, name: this.tippingOptions.tiers[0].name};
+      }
+    } else if (type == 'dynamic') {
+      if (this.tippingOptions.toggle_dynamic_min_max && this.tippingOptions.dynamic_min) {
+        this.tip.value = this.tippingOptions.dynamic_min;
+        this.tip.dollar_amount = this.tippingOptions.dynamic_min;
+      }
+    }
+    this.tipType = type;
+  }
+
+  tipTierSelection(value, type, dollarAmount, name) {
+    this.tip = {value: parseFloat(value), dollar_amount: parseFloat(dollarAmount), type: type, name: name};
+  }
+
+  total() {
+    var total = this.totalAmount;
+    return total;
+  }
+
+  // Scroll to validation error
+  scrollToError() {
+    setTimeout(() => {
+      jQuery("html, body").animate({
+        scrollTop: jQuery(".error").offset().top - 15
+      }, "fast");
+    });
+  }
+
+  updateTierValues() {
+    this.tippingOptions.tiers.forEach((value, index) => {
+      if(value.type == "Percent") {
+        value.dollar_amount = ((value.value / 100) * this.contribution["amount"]);
+      } else {
+        value.dollar_amount = value.value;
+      }
+    });
+
+    this.tippingOptions.tiers.sort(function(a, b) {
+      return parseFloat(a.dollar_amount) - parseFloat(b.dollar_amount);
+    });
+
+    if(this.tippingOptions.tiers[0].type == "Percent" && this.tippingOptions.tiers[0].dollar_amount < this.lowestAmount) {
+      this.tippingOptions.tiers[0].dollar_amount = this.lowestAmount;
+      this.tippingOptions.tiers.forEach((value, index) => {
+        if(index != 0 && value.type == "Percent") {
+          value.dollar_amount += this.lowestAmount;
+        }
+      });
+    }
+  }
+
+  clearExpressForm() {
+
+    this.expressRegisterInfo.first_name = "";
+    this.expressRegisterInfo.last_name = "";
+    this.expressRegisterInfo.email = "";
+    jQuery('input[name=CardName').val("");
   }
 }

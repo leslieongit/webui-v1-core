@@ -24,7 +24,7 @@
 
         <div class="item collapsible" ng-controller="NavSearchCtrl">
           <div class="ui icon input" on-enter="navSearchCampaign()">
-            <input id="main-nav-campaign-search" ng-change="search()" type="text" ng-model="searchingCampaign" ng-attr-placeholder=" {{'navbar_search' | translate}} ">
+            <input id="main-nav-campaign-search" ng-change="search()" type="text" ng-model="searchingCampaign" ng-attr-placeholder=" {{'navbar_search' | translate}} " autocomplete="off">
             <i class="search link icon" ng-click="navSearchCampaign()"></i>
           </div>
         </div>

@@ -28,6 +28,22 @@ import { CardTypeDirective } from "./directives/CardType.directive";
 import { SemanticDirective } from "./directives/semantic.directive";
 import { ThemeColorDirective } from "./directives/ThemeColor.directive";
 import { FontColorDirective } from "./directives/FontColor.directive";
+import { BackersFontColorDirective } from "./directives/BackersFontColor.directive";
+import { BlurbFontColorDirective } from "./directives/BlurbFontColor.directive";
+import { CampaignFontColorDirective } from "./directives/CampaignFontColor.directive";
+import { CommentsFontColorDirective } from "./directives/CommentsFontColor.directive";
+import { ContactFontColorDirective } from "./directives/ContactFontColor.directive";
+import { CreatorFontColorDirective } from "./directives/CreatorFontColor.directive";
+import { FaqFontColorDirective } from "./directives/FaqFontColor.directive";
+import { FundingFontColorDirective } from "./directives/FundingFontColor.directive";
+import { PaymentFontColorDirective } from "./directives/PaymentFontColor.directive";
+import { ProfileFontColorDirective } from "./directives/ProfileFontColor.directive";
+import { RewardsFontColorDirective } from "./directives/RewardsFontColor.directive";
+import { StreamsFontColorDirective } from "./directives/StreamsFontColor.directive";
+import { TabBackgroundColorDirective } from "./directives/TabBackgroundColor.directive";
+import { TabSelectedFontColorDirective } from "./directives/TabSelectedFontColor.directive";
+import { TabUnselectedFontColorDirective } from "./directives/TabUnselectedFontColor.directive";
+import { TopFontColorDirective } from "./directives/TopFontColor.directive";
 import { VideoEmbedDirective } from "./directives/VideoEmbed.directive";
 import { FileSelectDirective } from 'ng2-file-upload/ng2-file-upload';
 
@@ -55,6 +71,22 @@ import 'rxjs/add/operator/map';
     SemanticDirective,
     ThemeColorDirective,
     FontColorDirective,
+    BackersFontColorDirective,
+    BlurbFontColorDirective,
+    CampaignFontColorDirective,
+    CommentsFontColorDirective,
+    ContactFontColorDirective,
+    CreatorFontColorDirective,
+    FaqFontColorDirective,
+    FundingFontColorDirective,
+    PaymentFontColorDirective,
+    ProfileFontColorDirective,
+    RewardsFontColorDirective,
+    StreamsFontColorDirective,
+    TabBackgroundColorDirective,
+    TabSelectedFontColorDirective,
+    TabUnselectedFontColorDirective,
+    TopFontColorDirective,
     VideoEmbedDirective,
     FileSelectDirective,
     ProgressComponent,

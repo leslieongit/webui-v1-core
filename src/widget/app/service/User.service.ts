@@ -190,4 +190,21 @@ export class UserService {
       .map(res => res.json());
   }
 
+  disableUser(data: any) {
+    let param = {
+      person_id: data['user_id'],
+      inline_token: data['inline_token']
+    };
+
+    let headers = new Headers();
+
+    let options = new RequestOptions({
+      headers: headers
+    });
+    // { person_id: $scope.registering_user.id, inline_token: $scope.registering_user.inline_token}
+    return this.http.put(ConstantsGlobal.getApiUrlInlineDisableUser(), JSON.stringify(param), options)
+      .map(res => res.json());
+      
+  }
+
 }

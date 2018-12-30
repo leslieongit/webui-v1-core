@@ -28,7 +28,11 @@ export class TranslationService {
         this.translationPath = "/translations/";
         break;
       case "production":
-        this.translationPath = ConstantsGlobal.getSiteHost() + "widget/translations/";
+        if(!ConstantsGlobal.getSiteURL()) {
+          this.translationPath = ConstantsGlobal.getSiteHost() + "/widget/translations/";
+        } else {
+          this.translationPath = ConstantsGlobal.getSiteURL() + "/widget/translations/";
+        }
         break;
       default:
         this.translationPath = "/translations/";

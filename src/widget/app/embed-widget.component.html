@@ -18,12 +18,12 @@
                 </div>
               </div>
             </div>
-            <h1 id="campaign-header-title" FontColor class="ui header">{{mCampaign.name}}</h1>
-            <span class="by-label">by</span>
+            <h1 id="campaign-header-title" TopFontColor class="ui header">{{mCampaign.name}}</h1>
+            <span class="by-label" TopFontColor>by</span>
             <span class="campaign-info-span">
-              <span class="campaign-manager-popup" *ngIf="mCampaignManagerInfo.name" ngSemantic>{{mCampaignManagerInfo.name}}</span>
-            <span *ngIf="mCampaignShowSlash">/</span>
-            <span class="campaign-business-popup" *ngIf="mCampaignBusinessInfo.name" ngSemantic>{{mCampaignBusinessInfo.name}}</span>
+              <span class="campaign-manager-popup" *ngIf="mCampaignManagerInfo.name" ngSemantic TopFontColor>{{mCampaignManagerInfo.name}}</span>
+              <span *ngIf="mCampaignShowSlash" TopFontColor>/</span>
+              <span class="campaign-business-popup" *ngIf="mCampaignBusinessInfo.name" ngSemantic TopFontColor>{{mCampaignBusinessInfo.name}}</span>
             </span>
           </div>
         </div>
@@ -43,40 +43,40 @@
                   <div class="item r-mode">
                     <strong class="c-raise-mode">
                       <div class="ui label black">{{translate("campaign_page_raise_mode_title")}}</div>
-                      <span *ngIf="mCampaign.raise_mode_id == 1">{{translate("campaign_page_raise_mode_allnothing")}}</span>
-                      <span *ngIf="mCampaign.raise_mode_id == 2">{{translate("campaign_page_raise_mode_keep")}}</span>
+                      <span *ngIf="mCampaign.raise_mode_id == 1" FundingFontColor>{{translate("campaign_page_raise_mode_allnothing")}}</span>
+                      <span *ngIf="mCampaign.raise_mode_id == 2" FundingFontColor>{{translate("campaign_page_raise_mode_keep")}}</span>
                     </strong>
                   </div>
                   <div class="total-raised item">
-                    <div class="value" FontColor *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2">
+                    <div class="value" FontColor *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2" FundingFontColor>
                       {{mCampaign.funded_amount | currency:mCampaign.currencies[0].code_iso4217_alpha:true}} {{mCampaign.currencies[0].code_iso4217_alpha}}</div>
-                    <div class="value" FontColor *ngIf="settingDecimalOption == 3">
+                    <div class="value" FontColor *ngIf="settingDecimalOption == 3" FundingFontColor>
                       {{mCampaign.funded_amount | currency:mCampaign.currencies[0].code_iso4217_alpha:true:'1.0-0'}} {{mCampaign.currencies[0].code_iso4217_alpha}}</div>
-                    <div class="val-label" *ngIf="mCampaign.campaign_started == 't'">
+                    <div class="val-label" *ngIf="mCampaign.campaign_started == 't'" FundingFontColor>
                       <span>{{translate("campaign_page_raise_in_text")}}
                       </span>
-                      <span>{{getRaisedInPeriod().elapsed}} {{translate(getRaisedInPeriod().unit)}}</span>
+                      <span FundingFontColor>{{getRaisedInPeriod().elapsed}} {{translate(getRaisedInPeriod().unit)}}</span>
                     </div>
                   </div>
                   <div class="total-progress-funded item">
                     <ng-prog [progressValue]="campaignPercentage" [progressID]="mCampaign.progressID"></ng-prog>
-                    <div class="value" FontColor *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2">{{mCampaign.funded_amount / (mCampaign.funding_goal || 1)| percent:'1.1-2'}}</div>
-                    <div class="value" FontColor *ngIf="settingDecimalOption == 3">{{mCampaign.funded_amount / (mCampaign.funding_goal || 1)| percent:'1.0-0'}}</div>
-                    <div class="val-label">{{translate("campaign_page_fund_of_text")}}
-                      <span class="funded_goal" *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2">
+                    <div class="value" FontColor *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2" FundingFontColor>{{mCampaign.funded_amount / (mCampaign.funding_goal || 1)| percent:'1.1-2'}}</div>
+                    <div class="value" FontColor *ngIf="settingDecimalOption == 3" FundingFontColor>{{mCampaign.funded_amount / (mCampaign.funding_goal || 1)| percent:'1.0-0'}}</div>
+                    <div class="val-label" FundingFontColor>{{translate("campaign_page_fund_of_text")}}
+                      <span class="funded_goal" *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2" FundingFontColor>
                         {{mCampaign.funding_goal | currency:mCampaign.currencies[0].code_iso4217_alpha:true}} {{mCampaign.currencies[0].code_iso4217_alpha}}
                       </span>
-                      <span class="funded_goal" *ngIf="settingDecimalOption == 3">
+                      <span class="funded_goal" *ngIf="settingDecimalOption == 3" FundingFontColor>
                         {{mCampaign.funding_goal | currency:mCampaign.currencies[0].code_iso4217_alpha:true:'1.0-0'}} {{mCampaign.currencies[0].code_iso4217_alpha}}
                       </span> {{translate("campaign_page_goal_text")}}
                     </div>
                   </div>
                   <div class="total-backers item">
-                    <div class="value" FontColor>{{mCampaign.total_backers}}</div>
-                    <div class="val-label">{{translate(mCampaign.backers_text)}}</div>
+                    <div class="value" FontColor FundingFontColor>{{mCampaign.total_backers}}</div>
+                    <div class="val-label" FundingFontColor>{{translate(mCampaign.backers_text)}}</div>
                   </div>
                   <div class="funding-duration item">
-                    <div class="value" FontColor>
+                    <div class="value" FontColor FundingFontColor>
                       <div *ngIf="mCampaign.campaign_started == 't'">
                         <div>
                           <div *ngIf="mCampaign.remaining >= 1">{{mCampaign.remaining}} {{translate(mCampaign.remaining_text)}}</div>
@@ -132,7 +132,7 @@
           <div class="ui basic segment center aligned">
             <div class="ui grid stackable">
               <div class="eleven wide column">
-                <div id="campaign-header-blurb" [innerHTML]="mCampaign.blurb"></div>
+                <div id="campaign-header-blurb" BlurbFontColor [innerHTML]="mCampaign.blurb"></div>
               </div>
               <div class="five wide column"></div>
             </div>
@@ -156,21 +156,32 @@
               <div class="campaign-tab-content eleven wide column">
                 <div id="campaign-tabs-wrap">
                   <div id="campaign-tabs" class="ui menu" ngSemantic [ngClass]="{'tabular': !isMobile, 'secondary pointing': isMobile}">
-                    <a class="item active" data-tab="campaign-tab">{{translate("campaign_page_campaign_tab")}}</a>
-                    <a class="item" data-tab="campaign-faq" [hidden]="!mCampaignFAQs.length">{{translate("campaign_page_faq_tab")}}</a>
-                    <a class="item" data-tab="campaign-backers" [hidden]="!mCampaignBackers.length">{{translate("campaign_page_backers_tab")}}</a>
-                    <a class="item" data-tab="streams-tab" [hidden]="!mCampaignStreams.length">{{translate("campaign_page_streams_tab")}}</a>
-                    <a class="item" data-tab="campaign-comment" (click)="setCurrentTab('comments')">{{translate("campaign_page_comments_tab")}}</a>
-                    <a class="item" data-tab="contact-manager" (click)="setCurrentTab('contact')">{{translate("campaign_page_contact_tab")}}</a>
+                    <a class="item active" (click)="setCurrentTab('campaign')" *ngIf="currentTab == 'campaign'" TabBackgroundColor TabSelectedFontColor>{{translate("campaign_page_campaign_tab")}}</a>
+                    <a class="item" (click)="setCurrentTab('campaign')" *ngIf="currentTab != 'campaign'" TabUnselectedFontColor>{{translate("campaign_page_campaign_tab")}}</a>
+                    <a class="item active" [hidden]="!mCampaignFAQs.length" (click)="setCurrentTab('faq')" *ngIf="currentTab == 'faq'" TabBackgroundColor
+                      TabSelectedFontColor>{{translate("campaign_page_faq_tab")}}</a>
+                    <a class="item" [hidden]="!mCampaignFAQs.length" (click)="setCurrentTab('faq')" *ngIf="currentTab != 'faq'" TabUnselectedFontColor>{{translate("campaign_page_faq_tab")}}</a>
+                    <a class="item active" [hidden]="!mCampaignBackers.length" (click)="setCurrentTab('backers')" *ngIf="currentTab == 'backers'"
+                      TabBackgroundColor TabSelectedFontColor>{{translate("campaign_page_backers_tab")}}</a>
+                    <a class="item" [hidden]="!mCampaignBackers.length" (click)="setCurrentTab('backers')" *ngIf="currentTab != 'backers'" TabUnselectedFontColor>{{translate("campaign_page_backers_tab")}}</a>
+                    <a class="item active" [hidden]="!mCampaignStreams.length" (click)="setCurrentTab('streams')" *ngIf="currentTab == 'streams'"
+                      TabBackgroundColor TabSelectedFontColor>{{translate("campaign_page_streams_tab")}}</a>
+                    <a class="item" [hidden]="!mCampaignStreams.length" (click)="setCurrentTab('streams')" *ngIf="currentTab != 'streams'" TabUnselectedFontColor>{{translate("campaign_page_streams_tab")}}</a>
+                    <a class="item active" (click)="setCurrentTab('comments')" *ngIf="currentTab == 'comments'" TabBackgroundColor TabSelectedFontColor>{{translate("campaign_page_comments_tab")}}</a>
+                    <a class="item" (click)="setCurrentTab('comments')" *ngIf="currentTab != 'comments'" TabUnselectedFontColor>{{translate("campaign_page_comments_tab")}}</a>
+                    <a class="item active" (click)="setCurrentTab('contact')" *ngIf="currentTab == 'contact'" TabBackgroundColor TabSelectedFontColor>{{translate("campaign_page_contact_tab")}}</a>
+                    <a class="item" (click)="setCurrentTab('contact')" *ngIf="currentTab != 'contact'" TabUnselectedFontColor>{{translate("campaign_page_contact_tab")}}</a>
                   </div>
                 </div>
-                <div id="campaign-tab-body" class="ui tab active fr-view" data-tab="campaign-tab">
-                  <span [innerHTML]="mCampaign.description"></span>
+                <div id="campaign-tab-body" class="ui" *ngIf="isCampaignTab">
+                  <div CampaignFontColor>
+                    <span [innerHTML]="mCampaign.description"></span>
+                  </div>
                 </div>
-                <div id="faq-tab-body" class="ui tab" data-tab="campaign-faq" [hidden]="!mCampaignFAQs.length">
+                <div id="faq-tab-body" class="ui" *ngIf="isFAQTab" [hidden]="!mCampaignFAQs.length" FaqFontColor>
                   <div class="faq-info" *ngFor="let faq of mCampaign.faqs">
                     <div class="campaign-faq-header">
-                      <h2 class="ui header">
+                      <h2 class="ui header" FaqFontColor>
                         {{faq.name}}
                       </h2>
                       <p>
@@ -180,11 +191,11 @@
                     <div class="ui accordion" *ngIf="faq.faq_pairs && faq.faq_pairs.length" ngSemantic>
                       <div class="faq-content" *ngFor="let pair of faq.faq_pairs | paginate: campaignFaqsConfig">
                         <div class="title">
-                          <h3 class="ui header">
+                          <h3 class="ui header" FaqFontColor>
                             <i class="dropdown icon"></i> {{pair.question}}
                           </h3>
                         </div>
-                        <div class="content">
+                        <div class="content" FaqFontColor>
                           {{pair.answer}}
                         </div>
                       </div>
@@ -193,7 +204,7 @@
                     </div>
                   </div>
                 </div>
-                <div id="backers-tab-body" class="ui tab" data-tab="campaign-backers" [hidden]="!mCampaignBackers.length">
+                <div id="backers-tab-body" class="ui" *ngIf="isBackersTab" [hidden]="!mCampaignBackers.length" BackersFontColor>
                   <div *ngIf="mCampaignBackers.length">
                     <div class="campaign-backer ui basic segment" *ngFor="let backer of mCampaignBackers | paginate: campaignBackersConfig">
                       <div class="ui column stackable grid">
@@ -326,8 +337,8 @@
                               cJ+MYJ/aooe7jWUAEgx3AIQ7wMhFsYSv+D13TzABxRLFk5WF77lnVx1JAKmFOwDCHQDhDnB2jUYE
                               r1Et/A3VihuqAMmFe9079gDSC3cAhDsAwh1AuAMwUPxdf4U7wDnCvei7/gp3gAQVPdyLf3kEEO7n
                               CPeaDwngrP5fgAEAIM/y6bOfIqoAAAAASUVORK5CYII=" class="ui avatar image pp_placeholder" *ngIf="!backer.person_files">
-                            <span>{{backer.first_name}}
-                            {{backer.last_name}}</span>
+                            <span>{{backer.first_name}} {{backer.last_name}}
+                            </span>
                             <span [hidden]="!backer.anonymous_contribution">{{translate("campaign_page_anonymous_text")}}</span>
                           </div>
                         </div>
@@ -341,12 +352,10 @@
                         </div>
                         <div class="five wide column">
                           <div *ngIf="backer.total_backed < 2">
-                            <i class="certificate icon"></i>{{translate("campaign_page_backed_text")}} {{backer.total_backed}}
-                            {{translate("campaign_page_campaign_text")}}
+                            <i class="certificate icon"></i>{{translate("campaign_page_backed_text")}} {{backer.total_backed}} {{translate("campaign_page_campaign_text")}}
                           </div>
                           <div *ngIf="backer.total_backed > 1">
-                            <i class="certificate icon"></i>{{translate("campaign_page_backed_text")}} {{backer.total_backed}}
-                            {{translate("campaign_page_campaigns_text")}}
+                            <i class="certificate icon"></i>{{translate("campaign_page_backed_text")}} {{backer.total_backed}} {{translate("campaign_page_campaigns_text")}}
                           </div>
                         </div>
                       </div>
@@ -355,7 +364,7 @@
                       directionLinks="false" maxSize="5" autoHide="true"></pagination-controls>
                   </div>
                 </div>
-                <div id="streams-tab-body" class="ui tab" data-tab="streams-tab" [hidden]="!mCampaignStreams.length">
+                <div id="streams-tab-body" class="ui" *ngIf="isStreamsTab" [hidden]="!mCampaignStreams.length" StreamsFontColor>
                   <div class="ui button black" (click)="isStreamSelected = !isStreamSelected" *ngIf="isStreamSelected">{{translate("campaign_page_back_text")}}</div>
                   <div [hidden]="isStreamSelected">
                     <div class="stream-content stream-list" *ngFor="let stream of mCampaignStreams | paginate: campaignStreamsConfig; let index = index">
@@ -367,12 +376,12 @@
                             </h4>
                           </div>-->
                           <div class="stream-date">
-                            <h4 class="ui header" FontColor>{{getDateForDisplay(stream.created) | amDateFormat:'lll'}} {{mCampaign.timezone_abbrev}}</h4>
+                            <h4 class="ui header" FontColor StreamsFontColor>{{getDateForDisplay(stream.created) | amDateFormat:'lll'}} {{mCampaign.timezone_abbrev}}</h4>
                           </div>
                         </div>
                         <div class="stream-middle">
-                          <h2 class="ui header">{{stream.title}}</h2>
-                          <div class="stream-description" [innerHTML]="stream.message | streamMessage"></div>
+                          <h2 class="ui header" StreamsFontColor>{{stream.title}}</h2>
+                          <div class="stream-description" [innerHTML]="stream.message | streamMessage" StreamsFontColor></div>
                         </div>
                       </div>
                     </div>
@@ -385,16 +394,16 @@
                         <h4 class="ui header" FontColor>{{translate("campaign_page_update_text")}} #{{selectedStream.index}}</h4>
                       </div>-->
                       <div class="stream-date">
-                        <h4 class="ui header" FontColor>{{getDateForDisplay(selectedStream.created) | amDateFormat:'lll'}}</h4>
+                        <h4 class="ui header" FontColor StreamsFontColor>{{getDateForDisplay(selectedStream.created) | amDateFormat:'lll'}}</h4>
                       </div>
                     </div>
                     <div class="stream-middle">
-                      <h2 class="ui header">{{selectedStream.title}}</h2>
-                      <div class="stream-description" [innerHTML]="selectedStream.message"></div>
+                      <h2 class="ui header" StreamsFontColor>{{selectedStream.title}}</h2>
+                      <div class="stream-description" [innerHTML]="selectedStream.message" StreamsFontColor></div>
                     </div>
                   </div>
                 </div>
-                <div id="comment-tab-body" class="ui tab" data-tab="campaign-comment">
+                <div id="comment-tab-body" class="ui" *ngIf="isCommentTab">
                   <comment [authToken]="authToken" [personId]="personId" [userInfo]="userInfo" (onLogOut)="logout()"></comment>
                   <div *ngIf="!authToken && !isContributionView && isCommentTab">
                     <div class="ui warning message">
@@ -411,7 +420,7 @@
                     </div>
                   </div>
                 </div>
-                <div id="contact-manager-tab-body" class="ui tab" data-tab="contact-manager">
+                <div id="contact-manager-tab-body" class="ui" *ngIf="isContactTab" ContactFontColor>
                   <div *ngIf="!authToken && !isContributionView && isContactTab">
                     <div class="ui warning message">
                       {{translate("campaign_page_must_be_logged_in_message")}}
@@ -430,7 +439,7 @@
                     <div class="fluid ui large form contact-form">
                       <div class="ui grid">
                         <div class="eight wide column">
-                          <h2 FontColor class="contact-header ui header">
+                          <h2 FontColor ContactFontColor class="contact-header ui header">
                             {{translate("campaign_page_contact_send_message_button")}}
                           </h2>
                         </div>
@@ -603,19 +612,24 @@
               <div class="campaign-tab-rewards five wide column">
                 <div class="campaign-bio-tab">
                   <div class="ui top attached tabular menu" ngSemantic>
-                    <a class="item" data-tab="tab-campaign-manager" [ngClass]="{'active': profileTypeId == 0 || profileTypeId == 2}" [hidden]="!mCampaignManagerInfo.name">{{translate("campaign_page_creator_text")}}</a>
-                    <a class="item" data-tab="tab-campaign-business" [ngClass]="{'active': profileTypeId == 1}" [hidden]="!mCampaignBusinessInfo.name">{{translate("campaign_page_company_text")}}</a>
+                    <a class="active item" (click)="setCurrentCreatorTab('creator')" *ngIf="currentCreatorTab == 'creator'" [hidden]="!mCampaignManagerInfo.name"
+                      TabBackgroundColor TabSelectedFontColor>{{translate("campaign_page_creator_text")}}</a>
+                    <a class="item" (click)="setCurrentCreatorTab('creator')" *ngIf="currentCreatorTab != 'creator'" [hidden]="!mCampaignManagerInfo.name"
+                      TabUnselectedFontColor>{{translate("campaign_page_creator_text")}}</a>
+                    <a class="active item" (click)="setCurrentCreatorTab('company')" *ngIf="currentCreatorTab == 'company'" [hidden]="!mCampaignBusinessInfo.name"
+                      TabBackgroundColor TabSelectedFontColor>{{translate("campaign_page_company_text")}}</a>
+                    <a class="item" (click)="setCurrentCreatorTab('company')" *ngIf="currentCreatorTab != 'company'" [hidden]="!mCampaignBusinessInfo.name"
+                      TabUnselectedFontColor>{{translate("campaign_page_company_text")}}</a>
                   </div>
-                  <div class="ui bottom attached tab segment" data-tab="tab-campaign-manager" [ngClass]="{'active': profileTypeId == 0 || profileTypeId == 2}"
-                    [hidden]="!mCampaignManagerInfo.name">
+                  <div class="ui bottom attached segment" *ngIf="isCreatorTab" [hidden]="!mCampaignManagerInfo.name">
                     <div class="campaign-profile-info ui two column stackable grid">
                       <div class="ten wide column">
-                        <h3 class="ui header">{{mCampaignManagerInfo.name}}</h3>
-                        <p>{{mCampaignManagerInfo.description}}</p>
-                        <strong *ngIf="mCampaignManagerInfo.links && mCampaignManagerInfo.links.length">{{translate("campaign_page_website_link_text")}}</strong>
+                        <h3 class="ui header" CreatorFontColor>{{mCampaignManagerInfo.name}}</h3>
+                        <p CreatorFontColor>{{mCampaignManagerInfo.description}}</p>
+                        <strong *ngIf="mCampaignManagerInfo.links && mCampaignManagerInfo.links.length" CreatorFontColor>{{translate("campaign_page_website_link_text")}}</strong>
                         <div class="ui divided vertical list">
                           <div class="item" *ngFor="let item of mCampaignManagerInfo.links">
-                            <a [href]="item.uri" class="item" target="_blank">{{item.uri_text}}</a>
+                            <a [href]="item.uri" class="item" target="_blank" CreatorFontColor>{{item.uri_text}}</a>
                           </div>
                         </div>
                       </div>
@@ -624,15 +638,15 @@
                       </div>
                     </div>
                   </div>
-                  <div class="ui bottom attached tab segment" data-tab="tab-campaign-business" [ngClass]="{'active': profileTypeId == 1}" [hidden]="!mCampaignBusinessInfo.name">
+                  <div class="ui bottom attached segment" *ngIf="isCompanyTab" [hidden]="!mCampaignBusinessInfo.name">
                     <div class="campaign-business-info ui two column stackable grid">
                       <div class="ten wide column">
-                        <h3 class="ui header">{{mCampaignBusinessInfo.name}}</h3>
-                        <p>{{mCampaignBusinessInfo.description}}</p>
-                        <strong *ngIf="mCampaignBusinessInfo.links && mCampaignBusinessInfo.links.length">{{translate("campaign_page_website_link_text")}}</strong>
+                        <h3 class="ui header" CreatorFontColor>{{mCampaignBusinessInfo.name}}</h3>
+                        <p CreatorFontColor>{{mCampaignBusinessInfo.description}}</p>
+                        <strong *ngIf="mCampaignBusinessInfo.links && mCampaignBusinessInfo.links.length" CreatorFontColor>{{translate("campaign_page_website_link_text")}}</strong>
                         <div class="ui divided vertical list">
                           <div class="item" *ngFor="let item of mCampaignBusinessInfo.links">
-                            <a [href]="item.uri" class="item" target="_blank">{{item.uri_text}}</a>
+                            <a [href]="item.uri" class="item" target="_blank" CreatorFontColor>{{item.uri_text}}</a>
                           </div>
                         </div>
                       </div>
@@ -643,41 +657,42 @@
                   </div>
                 </div>
                 <div *ngIf="mCampaign.pledges">
-                  <h2 class="campaign-reward-header ui center aligned header" FontColor>{{translate("campaign_page_contribute_reward")}}</h2>
+                  <h2 class="campaign-reward-header ui center aligned header" FontColor RewardsFontColor>{{translate("campaign_page_`ward")}}</h2>
                   <div class="campaign-rewards ui list">
                     <div class="campaign-reward item" *ngFor="let reward of mCampaign.pledges | paginate:rewardContributionPageConfig; let index = index"
                       [ngClass]="{'disabled': reward.total_pledges == reward.item_limit || isCampaignAvailable()}">
                       <div class="campaign-reward-content">
                         <h2 class="reward-amount">
-                          <span class="amount" *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2">
-                          {{reward.amount | currency:mCampaign.currencies[0].code_iso4217_alpha:true}}
-                        </span>
-                          <span class="amount" *ngIf="settingDecimalOption == 3">
-                          {{reward.amount | currency:mCampaign.currencies[0].code_iso4217_alpha:true:'1.0-0'}}
-                        </span>
-                          <span class="currency">{{mCampaign.currencies[0]["code_iso4217_alpha"]}}</span>
-                          <span class="shipping" *ngIf="reward.shipping != null && reward.shipping.length"> + {{translate("campaign_page_shipping_text")}}</span>
+                          <span class="amount" *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2" RewardsFontColor>
+                            {{reward.amount | currency:mCampaign.currencies[0].code_iso4217_alpha:true}}
+                          </span>
+                          <span class="amount" *ngIf="settingDecimalOption == 3" RewardsFontColor>
+                            {{reward.amount | currency:mCampaign.currencies[0].code_iso4217_alpha:true:'1.0-0'}}
+                          </span>
+                          <span class="currency" RewardsFontColor>{{mCampaign.currencies[0]["code_iso4217_alpha"]}}</span>
+                          <span class="shipping" *ngIf="reward.shipping != null && reward.shipping.length" RewardsFontColor> + {{translate("campaign_page_shipping_text")}}</span>
                         </h2>
-                        <h4 class="reward-title ui header" [ngClass]="{'disabled': reward.total_pledges == reward.item_limit || isCampaignAvailable()}">{{reward.name}}</h4>
-                        <div class="reward-description" [innerHTML]="reward.description"></div>
+                        <h4 class="reward-title ui header" [ngClass]="{'disabled': reward.total_pledges == reward.item_limit || isCampaignAvailable()}"
+                          RewardsFontColor>{{reward.name}}</h4>
+                        <div class="reward-description" [innerHTML]="reward.description" RewardsFontColor></div>
                         <div class="reward-meta-wrap">
                           <div class="reward-meta">
-                            <div class="reward-backer-count" *ngIf="!reward.total_backers">
+                            <div class="reward-backer-count" *ngIf="!reward.total_backers" RewardsFontColor>
                               <i class="users icon"></i>{{translate("campaign_page_no_backer_text")}}</div>
-                            <div class="reward-backer-count" *ngIf="reward.total_backers">
+                            <div class="reward-backer-count" *ngIf="reward.total_backers" RewardsFontColor>
                               <i class="users icon"></i>{{translate("backers")}}</div>
                             <div class="reward-limit" *ngIf="!reward.item_limit">
-                              <span>{{reward.total_pledges}}</span>
-                              <span>{{translate("campaign_page_claimed_text")}}</span>
+                              <span RewardsFontColor>{{reward.total_pledges}}</span>
+                              <span RewardsFontColor>{{translate("campaign_page_claimed_text")}}</span>
                             </div>
                             <div class="reward-limit" *ngIf="reward.item_limit">
-                              <span>{{reward.total_pledges}}</span>
-                              <span>{{translate("campaign_page_claimed_of_text")}}
-                              {{reward.item_limit}}</span>
+                              <span RewardsFontColor>{{reward.total_pledges}}</span>
+                              <span RewardsFontColor>{{translate("campaign_page_claimed_of_text")}} {{reward.item_limit}}
+                              </span>
                             </div>
                           </div>
-                          <div class="reward-meta reward-delivery-date" *ngIf="reward.estimated_delivery_time">{{translate("campaign_page_estimated_delivery_text")}}
-                            <span>{{getDateForDisplay(reward.estimated_delivery_time) | amDateFormat:'lll'}} {{mCampaign.timezone_abbrev}}</span>
+                          <div class="reward-meta reward-delivery-date" *ngIf="reward.estimated_delivery_time" RewardsFontColor>{{translate("campaign_page_estimated_delivery_text")}}
+                            <span RewardsFontColor>{{getDateForDisplay(reward.estimated_delivery_time) | amDateFormat:'lll'}} {{mCampaign.timezone_abbrev}}</span>
                           </div>
                         </div>
                         <div class="campaign-reward-hover" ThemeColor (click)="selectReward(index + 1, true)">
@@ -694,6 +709,26 @@
           </div>
         </div>
       </div>
+      <div class="message-container" *ngIf="isPledgingSuccess">
+        <div class="message-subcontainer">
+          <div class="message-content ui message" (click)="closeMessage()">
+            <h2 class="ui header center aligned">
+              {{translate("campaign_page_contribute_thank_you_text")}}
+            </h2>
+            <i class="large close icon"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="message-container" *ngIf="isPledgingSuccess">
+      <div class="message-subcontainer">
+        <div class="message-content ui message" (click)="closeMessage()">
+          <h2 class="ui header center aligned">
+            {{translate("campaign_page_contribute_thank_you_text")}}
+          </h2>
+          <i class="large close icon"></i>
+        </div>
+      </div>
     </div>
     <div id="contribution-view" [hidden]="!isContributionView">
       <div id="contribution-header-top">
@@ -703,14 +738,14 @@
               <img class="campaign-image ui small circular image" [src]="mCampaign.explore_image_full_path">
             </div>
             <div class="right-col twelve wide column">
-              <h1 class="ui header" id="contribution-header-title" FontColor>{{mCampaign.name}}</h1>
-              <span class="by-label">{{translate("campaign_page_by_text")}}</span>
+              <h1 class="ui header" id="contribution-header-title" FontColor TopFontColor>{{mCampaign.name}}</h1>
+              <span class="by-label" TopFontColor>{{translate("campaign_page_by_text")}}</span>
               <span class="campaign-info-span">
-                <span class="campaign-manager-popup" *ngIf="mCampaignManagerInfo.name" ngSemantic>{{mCampaignManagerInfo.name}}</span>
-              <span *ngIf="mCampaignShowSlash">
+                <span class="campaign-manager-popup" *ngIf="mCampaignManagerInfo.name" ngSemantic TopFontColor>{{mCampaignManagerInfo.name}}</span>
+                <span *ngIf="mCampaignShowSlash" TopFontColor>
                   /
                 </span>
-              <span class="campaign-business-popup" *ngIf="mCampaignBusinessInfo.name" ngSemantic>{{mCampaignBusinessInfo.name}}</span>
+                <span class="campaign-business-popup" *ngIf="mCampaignBusinessInfo.name" ngSemantic TopFontColor>{{mCampaignBusinessInfo.name}}</span>
               </span>
             </div>
           </div>
@@ -853,7 +888,7 @@
                           4sgshSzbUAJlUPEQ0/CG0uOpAMmFO0ChRLHKQ1sG4GwqlQg6M1bLACRIWwbgbKJY6l70cLexDFC4
                           cJ+MYJ/aooe7jWUAEgx3AIQ7wMhFsYSv+D13TzABxRLFk5WF77lnVx1JAKmFOwDCHQDhDnB2jUYE
                           r1Et/A3VihuqAMmFe9079gDSC3cAhDsAwh1AuAMwUPxdf4U7wDnCvei7/gp3gAQVPdyLf3kEEO7n
-                          CPeaDwngrP5fgAEAIM/y6bOfIqoAAAAASUVORK5CYII=" alt="" *ngIf="!userInfo.profile_image" class="ui circular image">                          {{userInfo.first_name}}
+                          CPeaDwngrP5fgAEAIM/y6bOfIqoAAAAASUVORK5CYII=" alt="" *ngIf="!userInfo.profile_image" class="ui circular image"> {{userInfo.first_name}}
                         </div>
                         <i class="dropdown icon"></i>
                         <div class="menu">
@@ -869,50 +904,119 @@
                   </div>
                 </div>
                 <div id="account-info" *ngIf="!authToken">
-                  <h2 class="ui dividing header" FontColor>{{translate("campaign_page_account_information_header")}}</h2>
+                  <h2 class="ui dividing header" FontColor PaymentFontColor>{{translate("campaign_page_account_information_header")}}</h2>
                   <div class="ui top attached tabular menu account-info-tab-menu" ngSemantic>
-                    <a class="active item" data-tab="login" (click)="setContributeType(CONTRIBUTION_TYPE_LOGIN)">{{translate("campaign_page_login_text")}}</a>
-                    <a class="item" data-tab="create-account" (click)="setCreatingAccount(); setContributeType(CONTRIBUTION_TYPE_REGISTER)">{{translate("campaign_page_create_account_tab")}}</a>
+                    <a class="active item" *ngIf="currentPaymentLoginTab == 'login' && (contributeBehaviour == 1 || contributeBehaviour == 3 || contributeBehaviour == 6 || contributeBehaviour == 8)" (click)="setContributeType(CONTRIBUTION_TYPE_LOGIN); setCurrentLoginTab('login')"
+                      TabBackgroundColor TabSelectedFontColor>{{translate("campaign_page_login_text")}}</a>
+                    <a class="item" *ngIf="currentPaymentLoginTab != 'login' && (contributeBehaviour == 1 || contributeBehaviour == 3 || contributeBehaviour == 6 || contributeBehaviour == 8)" (click)="setContributeType(CONTRIBUTION_TYPE_LOGIN); setCurrentLoginTab('login')"
+                      TabUnselectedFontColor>{{translate("campaign_page_login_text")}}</a>
+                    <a class="item active" *ngIf="currentPaymentLoginTab == 'register' && (contributeBehaviour == 1 || contributeBehaviour == 3 || contributeBehaviour == 6 || contributeBehaviour == 8)" (click)="setCreatingAccount(); setContributeType(CONTRIBUTION_TYPE_REGISTER); setCurrentLoginTab('register')"
+                      TabBackgroundColor TabSelectedFontColor>{{translate("campaign_page_create_account_tab")}}</a>
+                    <a class="item" *ngIf="currentPaymentLoginTab != 'register' && (contributeBehaviour == 1 || contributeBehaviour == 3 || contributeBehaviour == 6 || contributeBehaviour == 8)" (click)="setCreatingAccount(); setContributeType(CONTRIBUTION_TYPE_REGISTER); setCurrentLoginTab('register')"
+                      TabUnselectedFontColor>{{translate("campaign_page_create_account_tab")}}</a>
+                    <a class="item active" *ngIf="currentPaymentLoginTab == 'guest' && (contributeBehaviour == 2 || contributeBehaviour == 3 || contributeBehaviour == 7 || contributeBehaviour == 8)" (click)="setContributeType(CONTRIBUTION_TYPE_GUEST); setCurrentLoginTab('guest')"
+                      TabBackgroundColor TabSelectedFontColor>{{translate("campaign_page_guest_tab")}}</a>
+                    <a class="item" *ngIf="currentPaymentLoginTab != 'guest' && (contributeBehaviour == 2 || contributeBehaviour == 3 || contributeBehaviour == 7 || contributeBehaviour == 8)" (click)="setContributeType(CONTRIBUTION_TYPE_GUEST); setCurrentLoginTab('guest')"
+                      TabUnselectedFontColor>{{translate("campaign_page_guest_tab")}}</a>
+                    <a class="item active" *ngIf="currentPaymentLoginTab == 'express' && (contributeBehaviour == 5 || contributeBehaviour == 6 || contributeBehaviour == 7 || contributeBehaviour == 8)" (click)="setContributeType(CONTRIBUTION_TYPE_EXPRESS); setCurrentLoginTab('express')"
+                      TabBackgroundColor TabSelectedFontColor>{{translate("campaign_page_express_tab")}}</a>
+                    <a class="item" *ngIf="currentPaymentLoginTab != 'express' && (contributeBehaviour == 5 || contributeBehaviour == 6 || contributeBehaviour == 7 || contributeBehaviour == 8)" (click)="setContributeType(CONTRIBUTION_TYPE_EXPRESS); setCurrentLoginTab('express')"
+                      TabUnselectedFontColor>{{translate("campaign_page_express_tab")}}</a>
                   </div>
-                  <div class="account-info-tab ui active tab" data-tab="login">
+                  <div class="account-info-tab ui active" *ngIf="isLoginTab && (contributeBehaviour == 1 || contributeBehaviour == 3 || contributeBehaviour == 6 || contributeBehaviour == 8)">
                     <div *ngIf="contributionType == CONTRIBUTION_TYPE_LOGIN">
+                      <div class="ui negative message" *ngIf="!isLoggedInSuccessful">
+                        <div class="content">
+                          {{logginErrorMessage}}
+                        </div>
+                      </div>
                       <login-form *ngIf="isContributionView" (onSuccess)="onLoginSuccess($event)" (onFailed)="onLoginFailed($event)" [isContributePage]=true></login-form>
                     </div>
                   </div>
-                  <div class="account-info-tab ui tab" data-tab="create-account">
+                  <div class="account-info-tab ui" *ngIf="isRegisterTab && (contributeBehaviour == 1 || contributeBehaviour == 3 || contributeBehaviour == 6 || contributeBehaviour == 8)">
                     <div *ngIf="contributionType == CONTRIBUTION_TYPE_REGISTER">
                       <register-form (onSuccess)="onRegisterContributionSuccess($event)" (onFailed)="onRegisterFailed(data)" [isContributing]="true"
                         [isHiddingCreateAccountButton]=true></register-form>
-                      <h2 class="ui dividing header" FontColor>{{translate("campaign_page_card_information_header")}}</h2>
-                      <card [cardObj]="cardInfo"></card>
+                      <h2 class="ui dividing header" FontColor PaymentFontColor>{{translate("campaign_page_card_information_header")}}</h2>
+                      <card [ngClass]="{ 'error': stripeElementError }" [cardObj]="cardInfo" (error)="stripeElementValidation($event)" [isSubmitting]="isSubmitting" [stripeElement]="stripeElement"></card>
                       <div class="address-info" *ngIf="isRewardShipping">
-                        <h2 class="ui dividing header" FontColor>{{translate("campaign_page_shipping_information_header")}}</h2>
+                        <h2 class="ui dividing header" FontColor PaymentFontColor>{{translate("campaign_page_shipping_information_header")}}</h2>
                         <address-form [addressObj]="addressInfo" (selectedCity)="selectAddress($event)"></address-form>
                       </div>
                       <div class="phone-info" *ngIf="isRewardShipping">
-                        <h2 class="ui dividing header" FontColor>{{translate("campaign_page_phone_information_header")}}</h2>
+                        <h2 class="ui dividing header" FontColor PaymentFontColor>{{translate("campaign_page_phone_information_header")}}</h2>
+                        <phone-form [phoneObj]="phoneInfo"></phone-form>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="account-info-tab ui" *ngIf="isGuestTab && (contributeBehaviour == 2 || contributeBehaviour == 3 || contributeBehaviour == 7 || contributeBehaviour == 8)">
+                    <div *ngIf="contributionType == CONTRIBUTION_TYPE_GUEST">
+                      <div id="guest-form" class="ui large form">
+                        <div class="field">
+                          <input type="email" name="guestEmail" placeholder="{{translate('email')}}" [(ngModel)]="cardInfo.email">
+                        </div>
+                      </div>
+                      <h2 class="ui dividing header" FontColor PaymentFontColor>{{translate("campaign_page_card_information_header")}}</h2>
+                      <card [ngClass]="{ 'error': stripeElementError }" [cardObj]="cardInfo" (error)="stripeElementValidation($event)" [isSubmitting]="isSubmitting" [stripeElement]="stripeElement"></card>
+                      <div class="address-info" *ngIf="isRewardShipping">
+                        <h2 class="ui dividing header" FontColor PaymentFontColor>{{translate("campaign_page_shipping_information_header")}}</h2>
+                        <address-form [addressObj]="addressInfo" (selectedCity)="selectAddress($event)"></address-form>
+                      </div>
+                      <div class="phone-info" *ngIf="isRewardShipping">
+                        <h2 class="ui dividing header" FontColor PaymentFontColor>{{translate("campaign_page_phone_information_header")}}</h2>
+                        <phone-form [phoneObj]="phoneInfo"></phone-form>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="account-info-tab ui" *ngIf="isExpressTab && (contributeBehaviour == 5 || contributeBehaviour == 6 || contributeBehaviour == 7 || contributeBehaviour == 8)">
+                    <div *ngIf="contributionType == CONTRIBUTION_TYPE_EXPRESS">
+                      <div id="express-form" class="ui large form">
+                        <div class="two fields">
+                          <div class="field">
+                            <input type="text" name="expressFirstName" placeholder="{{translate('express_first_name')}}" [(ngModel)]="expressRegisterInfo.first_name">
+                          </div>
+                          <div class="field">
+                            <input type="text" name="expressLastName" placeholder="{{translate('express_last_name')}}" [(ngModel)]="expressRegisterInfo.last_name">
+                          </div>
+                        </div>
+                        <div class="field">
+                          <input type="email" name="expressEmail" placeholder="{{translate('email')}}" [(ngModel)]="expressRegisterInfo.email">
+                        </div>
+                      </div>
+                      <div class="ui negative message" *ngIf="expressRegisterError">
+                        {{translate(expressRegisterError)}}
+                      </div>
+                      <h2 class="ui dividing header" FontColor PaymentFontColor>{{translate("campaign_page_card_information_header")}}</h2>
+                      <card [ngClass]="{ 'error': stripeElementError }" [cardObj]="cardInfo" (error)="stripeElementValidation($event)" [isSubmitting]="isSubmitting" [stripeElement]="stripeElement"></card>
+                      <div class="address-info" *ngIf="isRewardShipping">
+                        <h2 class="ui dividing header" FontColor PaymentFontColor>{{translate("campaign_page_shipping_information_header")}}</h2>
+                        <address-form [addressObj]="addressInfo" (selectedCity)="selectAddress($event)"></address-form>
+                      </div>
+                      <div class="phone-info" *ngIf="isRewardShipping">
+                        <h2 class="ui dividing header" FontColor PaymentFontColor>{{translate("campaign_page_phone_information_header")}}</h2>
                         <phone-form [phoneObj]="phoneInfo"></phone-form>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="card-info" *ngIf="authToken">
-                  <h2 class="ui dividing header" FontColor>{{translate("campaign_page_card_information_header")}}</h2>
-                  <card [cardObj]="cardInfo" *ngIf="isAddingCard"></card>
+                  <h2 class="ui dividing header" FontColor PaymentFontColor>{{translate("campaign_page_card_information_header")}}</h2>
+                  <card [ngClass]="{ 'error': stripeElementError }" [cardObj]="cardInfo" (error)="stripeElementValidation($event)" [isSubmitting]="isSubmitting" [stripeElement]="stripeElement"
+                    *ngIf="isAddingCard"></card>
                   <div class="credit-card-dropdown" *ngIf="!isAddingCard">
                     <div class="ui selection dropdown fluid" *ngIf="stripeCards.length" ngSemantic>
                       <input type="hidden" name="cards">
                       <i class="dropdown icon"></i>
                       <div class="text">
                         <img [src]="getCardType(stripeCards[0].stripe_account_card_type_id)">
-                        <span>**** **** ****
-                        {{stripeCards[0].last4}}</span>
+                        <span>**** **** **** {{stripeCards[0].last4}}
+                        </span>
                       </div>
                       <div class="menu">
                         <div class="item" *ngFor="let card of stripeCards" (click)="selectCard(card)">
                           <img [src]="getCardType(card.stripe_account_card_type_id)">
-                          <span>**** **** ****
-                          {{card.last4}}</span>
+                          <span>**** **** **** {{card.last4}}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -929,7 +1033,7 @@
                   </div>
                 </div>
                 <div class="address-info" *ngIf="authToken && isRewardShipping">
-                  <h2 class="ui dividing header" FontColor>{{translate("campaign_page_shipping_information_header")}}</h2>
+                  <h2 class="ui dividing header" FontColor PaymentFontColor>{{translate("campaign_page_shipping_information_header")}}</h2>
                   <address-form [addressObj]="addressInfo" *ngIf="isAddingAddress" (selectedCity)="selectAddress($event)"></address-form>
                   <div class="address-dropdown" *ngIf="!isAddingAddress">
                     <div class="ui selection dropdown fluid" *ngIf="addressList.length" ngSemantic>
@@ -955,7 +1059,7 @@
                   </div>
                 </div>
                 <div class="phone-info" *ngIf="authToken && isRewardShipping">
-                  <h2 class="ui dividing header" FontColor>{{translate("campaign_page_phone_information_header")}}</h2>
+                  <h2 class="ui dividing header" FontColor PaymentFontColor>{{translate("campaign_page_phone_information_header")}}</h2>
                   <phone-form [phoneObj]="phoneInfo" *ngIf="isAddingPhone"></phone-form>
                   <div class="cards-dropdown" *ngIf="!isAddingPhone">
                     <div class="ui selection dropdown fluid" *ngIf="phoneList.length" ngSemantic>
@@ -980,37 +1084,112 @@
                     </div>
                   </div>
                 </div>
-                <div id="review-payment">
-                  <h2 class="ui dividing header" FontColor>{{translate("campaign_page_review_payment_text")}}</h2>
+                <div class="website-tip ui form" *ngIf="tippingOptions.toggle">
+                  <h2 class="ui dividing header" FontColor PaymentFontColor>{{translate("campaign_page_tipping_header")}}</h2>
+                  <div class="field">
+                    <div class="tip-option-selection-wrap">
+                      <div class="tip-option-selection ui buttons">
+                        <button class="choose-tip-button ui button green" ThemeColor *ngIf="tippingOptions.toggle_tiers" [hidden]="tipType != 'tiers'"
+                          (click)="setTipType('tiers')">{{translate("choose_tip")}}</button>
+                        <button class="choose-tip-button ui button" *ngIf="tippingOptions.toggle_tiers" [hidden]="tipType == 'tiers'" (click)="setTipType('tiers')">{{translate("choose_tip")}}</button>
+                        <div class="or" *ngIf="tippingOptions.toggle_tiers && tippingOptions.toggle_dynamic"></div>
+                        <button class="enter-tip-button ui button green" ThemeColor *ngIf="tippingOptions.toggle_dynamic" [hidden]="tipType != 'dynamic'"
+                          (click)="setTipType('dynamic')">{{translate("enter_tip_amount")}}</button>
+                        <button class="enter-tip-button ui button" *ngIf="tippingOptions.toggle_dynamic" [hidden]="tipType == 'dynamic'" (click)="setTipType('dynamic')">{{translate("enter_tip_amount")}}</button>
+                        <div class="or" *ngIf="tippingOptions.toggle_no_tip"></div>
+                        <button class="no-tip-button ui button green" ThemeColor *ngIf="tippingOptions.toggle_no_tip" [hidden]="tipType != 'no_tip'"
+                          (click)="setTipType('no_tip')">{{translate("no_tip")}}</button>
+                        <button class="no-tip-button ui button" *ngIf="tippingOptions.toggle_no_tip" [hidden]="tipType == 'no_tip'" (click)="setTipType('no_tip')">{{translate("no_tip")}}</button>
+                      </div>
+                    </div>
+                    <div class="ui basic red pointing prompt label transition visible" *ngIf="tipError">{{translate("select_tip_option")}}</div>
+                  </div>
+                  <div *ngIf="(!tippingOptions.toggle_dynamic && tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || tipType == 'tiers'"
+                    class="tipping-option">
+                    <div class="field" *ngIf="tippingOptions.tiers[0]">
+                      <div class="ui dropdown selection tip-tiers" ngSemantic>
+                        <input type="hidden" name="tipTiers">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">
+                          <span *ngIf="tippingOptions.toggle_tier_names">{{tippingOptions.tiers[0].name}} -</span>
+                          <span>{{tippingOptions.tiers[0].dollar_amount | currency:tipInfo.code_iso4217_alpha:true}}</span>
+                        </div>
+                        <div class="menu">
+                          <div class="item" *ngFor="let tier of tippingOptions.tiers; let tipI = tipIndex" (click)="tipTierSelection(tier.value, tier.type, tier.dollar_amount, tier.name)">
+                            <span *ngIf="tippingOptions.toggle_tier_names">{{tier.name}} -</span>
+                            <span>{{tier.dollar_amount | currency:tipInfo.code_iso4217_alpha:true}}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="(tippingOptions.toggle_dynamic && !tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || tipType == 'dynamic'"
+                    class="ui dynamic-tipping-form form tipping-option">
+                    <div class="field">
+                      <div class="ui left labeled input">
+                        <div class="ui label">{{tipInfo["code_iso4217_alpha"]}}</div>
+                        <input type="number" name="dynamic_tip" [(ngModel)]="tip.dollar_amount" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="attributes-info ui form" *ngIf="contribution.attributes">
+                  <div class="fields" *ngIf="contribution.attributes.variation">
+                    <div class="eight wide field" *ngFor="let attribute of contribution.attributes.variation; let vIndex = index">
+                      <label>{{attribute.name}}</label>
+                      <div class="ui dropdown selection fluid" ngSemantic>
+                        <input type="hidden" name="attribute">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">{{attribute.name}}</div>
+                        <div class="menu">
+                          <div class="item" *ngFor="let choice of attribute.choice; let cIndex = index" (click)="chooseAttribute(choice.value, vIndex)">{{choice.value}}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="review-payment" PaymentFontColor>
+                  <h2 class="ui dividing header" FontColor PaymentFontColor>{{translate("campaign_page_review_payment_text")}}</h2>
                   <table class="ui very basic table review-payment-table">
                     <tbody>
                       <tr>
-                        <td><strong>{{contribution.rewardName}}</strong></td>
-                        <td *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2">
+                        <td PaymentFontColor>
+                          <strong>{{contribution.rewardName}}</strong>
+                        </td>
+                        <td *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2" PaymentFontColor>
                           {{contribution.amount | currency:mCampaign.currencies[0].code_iso4217_alpha:true}} {{mCampaign.currencies[0]["code_iso4217_alpha"]}}
                         </td>
-                        <td *ngIf="settingDecimalOption == 3">
+                        <td *ngIf="settingDecimalOption == 3" PaymentFontColor>
                           {{contribution.amount | currency:mCampaign.currencies[0].code_iso4217_alpha:true:'1.0-0'}} {{mCampaign.currencies[0]["code_iso4217_alpha"]}}
                         </td>
                       </tr>
                       <tr>
-                        <td>{{translate("campaign_page_review_shipping_text")}}</td>
-                        <td *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2">
+                        <td PaymentFontColor>{{translate("campaign_page_review_shipping_text")}}</td>
+                        <td *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2" PaymentFontColor>
                           {{shippingFee | currency:mCampaign.currencies[0].code_iso4217_alpha:true}} {{mCampaign.currencies[0]["code_iso4217_alpha"]}}
                         </td>
-                        <td *ngIf="settingDecimalOption == 3">
+                        <td *ngIf="settingDecimalOption == 3" PaymentFontColor>
                           {{shippingFee | currency:mCampaign.currencies[0].code_iso4217_alpha:true:'1.0-0'}} {{mCampaign.currencies[0]["code_iso4217_alpha"]}}
                         </td>
                       </tr>
                     </tbody>
                     <tfoot>
                       <tr class="total-contribution">
-                        <td>{{translate("campaign_page_review_total_contribution_text")}}</td>
-                        <td *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2">
-                          {{totalAmount | currency:mCampaign.currencies[0].code_iso4217_alpha:true}} {{mCampaign.currencies[0]["code_iso4217_alpha"]}}
+                        <td PaymentFontColor>{{translate("campaign_page_review_total_contribution_text")}}</td>
+                        <td *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2" PaymentFontColor>
+                          {{total() | currency:mCampaign.currencies[0].code_iso4217_alpha:true}} {{mCampaign.currencies[0]["code_iso4217_alpha"]}}
                         </td>
-                        <td *ngIf="settingDecimalOption == 3">
-                          {{totalAmount | currency:mCampaign.currencies[0].code_iso4217_alpha:true:'1.0-0'}} {{mCampaign.currencies[0]["code_iso4217_alpha"]}}
+                        <td *ngIf="settingDecimalOption == 3" PaymentFontColor>
+                          {{total() | currency:mCampaign.currencies[0].code_iso4217_alpha:true:'1.0-0'}} {{mCampaign.currencies[0]["code_iso4217_alpha"]}}
+                        </td>
+                      </tr>
+                      <tr class="total-contribution" *ngIf="tip.dollar_amount">
+                        <td PaymentFontColor>{{translate("campaign_page_review_tip_text")}}</td>
+                        <td *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2" PaymentFontColor>
+                          <span>{{tip.dollar_amount | currency:tipInfo.code_iso4217_alpha:true}} {{tipInfo["code_iso4217_alpha"]}}</span>
+                        </td>
+                        <td *ngIf="settingDecimalOption == 3" PaymentFontColor>
+                          <span>{{tip.dollar_amount | currency:tipInfo.code_iso4217_alpha:true:'1.0-0'}} {{tipInfo["code_iso4217_alpha"]}}</span>
                         </td>
                       </tr>
                     </tfoot>
@@ -1040,22 +1219,22 @@
                     </div>
                   </div>
                   <div class="ui negative message" *ngIf="submitErrorMessage">
-                    <div class="content">{{translate(submitErrorMessage)}}</div>
+                    <div class="content">{{submitErrorMessage}}</div>
                   </div>
                 </div>
               </div>
               <div class="six wide column">
                 <div id="contribution-campaign-rewards" ngSemantic class="ui accordion">
-                  <h2 class="ui header" FontColor>{{translate("campaign_page_choose_your_reward_text")}}</h2>
+                  <h2 class="ui header" FontColor RewardsFontColor>{{translate("campaign_page_choose_your_reward_text")}}</h2>
                   <div class="campaign-reward" [ngClass]="{'selected': rewardIndex == 0}" [hidden]="!isCampaignShown">
                     <div class="campaign-reward-content">
                       <div class="reward-top title" (click)="selectReward(0)">
-                        <h3 class="no-reward-text ui header ">{{translate("campaign_page_no_reward_selected_text")}}</h3>
+                        <h3 class="no-reward-text ui header " RewardsFontColor>{{translate("campaign_page_no_reward_selected_text")}}</h3>
                       </div>
                       <div class="reward-bottom content">
                         <div class="contribution-input ui form">
                           <div class="field">
-                            <label>{{translate("campaign_page_contribute_amount_text")}}</label>
+                            <label RewardsFontColor>{{translate("campaign_page_contribute_amount_text")}}</label>
                             <div class="ui left labeled large input fluid">
                               <div class="ui label">{{mCampaign.currencies[0]["code_iso4217_alpha"]}}</div>
                               <input type="number" name="amount" [(ngModel)]="contribution.amount" (ngModelChange)="reCalcContributionAmount()" (keypress)="onContributionAmountPressed($event)"
@@ -1071,43 +1250,43 @@
                     <div class="campaign-reward-content">
                       <div class="reward-top title" (click)="selectReward(index + 1, true)">
                         <h2 class="reward-amount">
-                          <span class="amount" *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2">
-                          {{reward.amount | currency:mCampaign.currencies[0].code_iso4217_alpha:true}}
-                        </span>
-                          <span class="amount" *ngIf="settingDecimalOption == 3">
-                          {{reward.amount | currency:mCampaign.currencies[0].code_iso4217_alpha:true:'1.0-0'}}
-                        </span>
-                          <span class="currency">{{mCampaign.currencies[0]["code_iso4217_alpha"]}}</span>
-                          <span class="shipping" *ngIf="reward.shipping != null && reward.shipping.length"> + shipping</span>
+                          <span class="amount" *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2" RewardsFontColor>
+                            {{reward.amount | currency:mCampaign.currencies[0].code_iso4217_alpha:true}}
+                          </span>
+                          <span class="amount" *ngIf="settingDecimalOption == 3" RewardsFontColor>
+                            {{reward.amount | currency:mCampaign.currencies[0].code_iso4217_alpha:true:'1.0-0'}}
+                          </span>
+                          <span class="currency" RewardsFontColor>{{mCampaign.currencies[0]["code_iso4217_alpha"]}}</span>
+                          <span class="shipping" *ngIf="reward.shipping != null && reward.shipping.length" RewardsFontColor> + shipping</span>
                         </h2>
-                        <h4 class="reward-title ui header">{{reward.name}}</h4>
+                        <h4 class="reward-title ui header" RewardsFontColor>{{reward.name}}</h4>
                       </div>
                       <div class="reward-bottom content">
-                        <div class="reward-description" [innerHTML]="reward.description"></div>
+                        <div class="reward-description" [innerHTML]="reward.description" RewardsFontColor></div>
                         <div class="reward-meta-wrap">
                           <div class="reward-meta">
-                            <div class="reward-backer-count" *ngIf="!reward.total_backers">
+                            <div class="reward-backer-count" *ngIf="!reward.total_backers" RewardsFontColor>
                               <i class="users icon"></i>{{translate("campaign_page_no_backer_text")}}</div>
-                            <div class="reward-backer-count" *ngIf="reward.total_backers">
+                            <div class="reward-backer-count" *ngIf="reward.total_backers" RewardsFontColor>
                               <i class="users icon"></i>{{translate(backersMapping(reward.total_backers))}}
                             </div>
                             <div class="reward-limit" *ngIf="!reward.item_limit">
-                              <span>{{reward.total_pledges}}</span>
-                              <span>{{translate("campaign_page_claimed_text")}}</span>
+                              <span RewardsFontColor>{{reward.total_pledges}}</span>
+                              <span RewardsFontColor>{{translate("campaign_page_claimed_text")}}</span>
                             </div>
                             <div class="reward-limit" *ngIf="reward.item_limit">
-                              <span>{{reward.total_pledges}}</span>
-                              <span>{{translate("campaign_page_claimed_of_text")}}
-                              {{reward.item_limit}}</span>
+                              <span RewardsFontColor>{{reward.total_pledges}}</span>
+                              <span RewardsFontColor>{{translate("campaign_page_claimed_of_text")}} {{reward.item_limit}}
+                              </span>
                             </div>
                           </div>
-                          <div class="reward-meta reward-delivery-date" *ngIf="reward.estimated_delivery_time">{{translate("campaign_page_estimated_delivery_text")}}
-                            <span>{{getDateForDisplay(reward.estimated_delivery_time) | amDateFormat:"lll"}} {{mCampaign.timezone_abbrev}}</span>
+                          <div class="reward-meta reward-delivery-date" *ngIf="reward.estimated_delivery_time" RewardsFontColor>{{translate("campaign_page_estimated_delivery_text")}}
+                            <span RewardsFontColor>{{getDateForDisplay(reward.estimated_delivery_time) | amDateFormat:"lll"}} {{mCampaign.timezone_abbrev}}</span>
                           </div>
                         </div>
                         <div class="contribution-input ui form">
                           <div class="field" [ngClass]="{'disabled': reward.total_pledges == reward.item_limit || isCampaignAvailable()}">
-                            <label>{{translate("campaign_page_contribute_amount_text")}}</label>
+                            <label RewardsFontColor>{{translate("campaign_page_contribute_amount_text")}}</label>
                             <div class="ui labeled large input fluid">
                               <div class="ui label">{{mCampaign.currencies[0]["code_iso4217_alpha"]}}</div>
                               <input type="number" name="amount" [(ngModel)]="contribution.amount" (keypress)="onContributionAmountPressed($event)" (keyup)="calculateTotalPayment()">
@@ -1122,16 +1301,6 @@
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="message-container" *ngIf="isPledgingSuccess">
-        <div class="message-subcontainer">
-          <div class="message-content ui message" (click)="closeMessage()">
-            <h2 class="ui header center aligned">
-              {{translate("campaign_page_contribute_thank_you_text")}}
-            </h2>
-            <i class="large close icon"></i>
           </div>
         </div>
       </div>

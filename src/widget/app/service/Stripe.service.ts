@@ -8,7 +8,7 @@ export class StripeService {
   authToken: string;
   public static stripe_account_id: number;
   public static stripe_account_card_id: number;
-
+  
   constructor(private http: Http) {
     this.refreshAuthToken();
   }
@@ -38,12 +38,13 @@ export class StripeService {
    * Create Stripe pledger account and default card data
    * @return {Observable}
    */
-  setStripeAccount(exp_month: number, card_number: number, exp_year: number, cvc: number, inlineToken?: string) {
+  setStripeAccount(exp_month?: number, card_number?: number, exp_year?: number, cvc?: number, inlineToken?: string, card_token?: string) {
     var param = {
       "exp_month": exp_month,
       "number": card_number,
       "exp_year": exp_year,
-      "cvc": cvc
+      "cvc": cvc,
+      "card_token": card_token
     }
     if (inlineToken) {
       param["inline_token"] = inlineToken;
@@ -84,14 +85,15 @@ export class StripeService {
    * @param  {number} cvc               CVC
    * @return {Observable}
    */
-  setStripeAccountCard(name: string, exp_month: number, card_number: number, exp_year: number, cvc: number, inlineToken?: string) {
+  setStripeAccountCard(name?: string, exp_month?: number, card_number?: number, exp_year?: number, cvc?: number, inlineToken?: string, card_token?: string) {
     var API_URL_STRIPE_CARD = ConstantsGlobal.getApiUrlStripe() + StripeService.stripe_account_id + "/card/";
     var param = {
       "name": name,
       "exp_month": exp_month,
       "number": card_number,
       "exp_year": exp_year,
-      "cvc": cvc
+      "cvc": cvc,
+      "card_token": card_token
     };
     if (inlineToken) {
       param["inline_token"] = inlineToken;
@@ -106,7 +108,7 @@ export class StripeService {
       .map(res => res.json());
   }
 
-  setGuestStripeAccount(name: string, exp_month: number, card_number: number, exp_year: number, cvc: number, email: string) {
+  setGuestStripeAccount(name: string, exp_month: number, card_number: number, exp_year: number, cvc: number, email: string, card_token?: string) {
     var API_URL_GUEST_STRIPE = ConstantsGlobal.getApiUrlStripe() + "guest/";
     var param = {
       "name": name,
@@ -114,10 +116,21 @@ export class StripeService {
       "number": card_number,
       "exp_year": exp_year,
       "cvc": cvc,
-      "email": email
+      "email": email,
+      "card_token": card_token
     }
 
     return this.http.post(API_URL_GUEST_STRIPE, JSON.stringify(param), null)
+      .map(res => res.json());
+  }
+
+  getStripeChargeAmount() {
+    var headers = new Headers();
+    headers.append("X-Auth-Token", this.authToken);
+    var options = new RequestOptions({
+      headers: headers
+    });
+    return this.http.get(ConstantsGlobal.getApiUrlStripeChargeAmount(), options)
       .map(res => res.json());
   }
 

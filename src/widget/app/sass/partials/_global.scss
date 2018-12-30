@@ -7,6 +7,10 @@
 /*/////////////////////////////////////////////////////////////////////////////////////////*/
 
 sedra-widget {
+  img {
+    max-width: 100%;
+    height: auto;
+  }
   .widget-loader {
     min-height: 150px;
   }
@@ -215,12 +219,50 @@ sedra-widget {
           display: inline-block;
           background-color: rgba(0, 0, 0, 0.7);
           color: #fff;
+          -webkit-box-shadow: none;
           box-shadow: none;
           .header {
             margin-right: 20px !important;
             color: #fff;
           }
         }
+      }
+    }
+    .stripe-elements-form {
+      #card-number-element-wrap {
+        position: relative;
+      }
+      #brand-icon {
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAcCAYAAAAX4C3rAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAALNJREFUeNpinDlzpgADA8N6IHZgGJzgABAHMg1yRzJA3baeaZA7Eu5YJoYhAkYdSm3Agi6gq6vLwMbGRpZhv379Yrh8+TJ9HGppaUmRgW/fvmV49uzZaBoddeioQ0cdOtgc+vPnT/qUo2vXrmVgZ2cn25GgcpQuDqWVRaNpdNA3Ss6ePYtXg7GxMV41hORJUTMa9aMOBQJGYHf5/2iIjlSHHhgC7jwAcmjgIHcsyG2BAAEGANjdMoqS1DgpAAAAAElFTkSuQmCC');
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        width: 36px;
+        height: 24px;
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center center;
+      }
+      #card-number-element {
+        padding-left: 55px;
+      }
+      .StripeElement {
+        background: #ffffff;
+        padding: .67861em 1em;
+        border: 1px solid rgba(39, 41, 43, .15);
+        &.StripeElement--focus {
+          border-color: #BDBEBF;
+        }
+        &.StripeElement--invalid {
+          background: #FFF6F6;
+          border-color: #E0B4B4;
+          color: #9F3A38;
+        }
+      }
+      #card-errors {
+        color: #9F3A38 !important;
+        font-size: 12px;
+        font-weight: bold;
       }
     }
   }

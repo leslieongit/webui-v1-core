@@ -14,6 +14,7 @@
 
 
 /*/////////////////////////////*/
+
 #sedra-widget {
   position: relative;
   #campaign-header {
@@ -22,6 +23,9 @@
       padding: 35px 0;
       .campaign-info-span {
         font-weight: bold;
+      }
+      #campaign-header-title {
+        word-wrap: break-word;
       }
       @media screen and (min-width: 768px) {
         .profile-nav {
@@ -300,9 +304,11 @@
             padding: 3px 0;
             display: -webkit-box;
             display: -ms-flexbox;
+            display: -webkit-flex;
             display: flex;
             -webkit-box-align: center;
             -ms-flex-align: center;
+            -webkit-align-items: center;
             align-items: center;
             &:first-child {
               padding-top: 0;
@@ -326,9 +332,11 @@
         padding: 15px;
         display: -webkit-box;
         display: -ms-flexbox;
+        display: -webkit-flex;
         display: flex;
         -webkit-box-align: center;
         -ms-flex-align: center;
+        -webkit-align-items: center;
         align-items: center;
         text-align: center;
         .hover-label {
@@ -352,6 +360,9 @@
     .campaign-info-span {
       font-weight: bold;
     }
+    #contribution-header-title {
+      word-wrap: break-word;
+    }
   }
   #contribution-rewards {
     padding: 30px 0;
@@ -360,6 +371,33 @@
       .right-col {
         text-align: right;
       }
+    }
+    .website-tip {
+      padding-top: 40px;
+      .tip-option-selection-wrap {
+        .tip-option-selection {
+          .choose-tip-button {
+            border-top-left-radius: .28571429rem;
+            border-bottom-left-radius: .28571429rem;
+          }
+          .no-tip-button {
+            border-top-right-radius: .28571429rem;
+            border-bottom-right-radius: .28571429rem;
+          }
+        }
+      }
+      .tipping-option {
+        margin-top: 15px;
+        .field {
+          .ui.dropdown.selection,
+          input {
+            max-width: 100px;
+          }
+        }
+      }
+    }
+    .attributes-info {
+      padding-top: 40px;
     }
     #contribution-campaign-rewards {
       @extend .campaign-rewards;
@@ -396,9 +434,11 @@
         .text {
           display: -webkit-box;
           display: -ms-flexbox;
+          display: -webkit-flex;
           display: flex;
           -webkit-box-align: center;
           -ms-flex-align: center;
+          -webkit-align-items: center;
           align-items: center;
         }
         i.dropdown {
@@ -433,6 +473,25 @@
         font-size: 18px;
         font-weight: bold;
       }
+      tfoot {
+        tr {
+          &:first-child {
+            td {
+              padding-top: 15px;
+            }
+          }
+          &:last-child {
+            td {
+              padding-bottom: 0;
+            }
+          }
+          td {
+            padding-top: 0;
+            padding-bottom: 5px;
+            border: 0;
+          }
+        }
+      }
       .button-wrap {
         .submit-button.ui.button {
           &:disabled {
@@ -463,9 +522,11 @@
     bottom: 0;
     display: -webkit-box;
     display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
     -webkit-box-align: center;
     -ms-flex-align: center;
+    -webkit-align-items: center;
     align-items: center;
     .message-subcontainer {
       width: 100%;

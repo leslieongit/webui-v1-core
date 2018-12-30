@@ -6,6 +6,7 @@
 export class ConstantsGlobal {
   public static API_HOST: string = "";
   public static SITE_HOST: string = "";
+  public static SITE_URL: string = "";
   public static API_URL: string = ConstantsGlobal.API_HOST + "service/restv1/";
   public static CAMPAIGN_ID: number;
   public static DEFAULT_LANG: string = "en";
@@ -21,6 +22,10 @@ export class ConstantsGlobal {
 
   public static getSiteHost(): string {
     return ConstantsGlobal.SITE_HOST;
+  }
+
+  public static getSiteURL(): string {
+    return ConstantsGlobal.SITE_URL;
   }
 
   public static setLanguageHost(Lang_OBJECT: Object) {
@@ -96,6 +101,10 @@ export class ConstantsGlobal {
   public static getApiUrlCreditCardType() {
     return ConstantsGlobal.getApiUrl() + "account/credit-card-type/";
   }
+  public static API_URL_STRIPE_CHARGE_AMOUNT = ConstantsGlobal.getApiUrl() + "account/stripe/charge-amount/";
+  public static getApiUrlStripeChargeAmount() {
+    return ConstantsGlobal.getApiUrl() + "account/stripe/charge-amount/";
+  }
   // Guest
   public static API_LOCATION_ADDRESS_GUEST: string = "account/address/guest/";
   public static getApiUrlAddressGuest() {
@@ -109,6 +118,11 @@ export class ConstantsGlobal {
   public static API_LOCATION_DISQUS_SETTING: string = "portal/setting/site_disqus_code/";
   public static getApiUrlDisqusSetting() {
     return ConstantsGlobal.getApiUrl() + ConstantsGlobal.API_LOCATION_DISQUS_SETTING;
+  }
+  //Disable User
+  public static API_LOCATION_INLINE_DISABLE_USER = "account/person-inline-disable";
+  public static getApiUrlInlineDisableUser() {
+    return ConstantsGlobal.getApiUrl() + ConstantsGlobal.API_LOCATION_INLINE_DISABLE_USER;
   }
 
   // Error message

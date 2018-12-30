@@ -1,4 +1,5 @@
 import { ConstantsGlobal } from "../Constants-Global";
+import { TranslationService } from './Translation.service';
 
 declare var jQuery: any;
 
@@ -8,7 +9,23 @@ export class UtilService {
     campaignid: "",
     themecolor: "",
     fontcolor: "",
-    fontfamily: ""
+    fontfamily: "",
+    backersfontcolor: "",
+    blurbfontcolor: "",
+    campaignfontcolor: "",
+    commentsfontcolor: "",
+    contactfontcolor: "",
+    creatorfontcolor: "",
+    faqfontcolor: "",
+    fundingfontcolor: "",
+    paymentfontcolor: "",
+    profilefontcolor: "",
+    rewardsfontcolor: "",
+    streamsfontcolor: "",
+    tabbackgroundcolor: "",
+    tabselectedfontcolor: "",
+    tabunselectedfontcolor: "",
+    topfontcolor: ""
   }
 
   constructor() {
@@ -83,6 +100,10 @@ export class UtilService {
     }
   }
 
+  public static setWidgetURLHost(SITE_HOST: string) {
+      ConstantsGlobal.SITE_URL = SITE_HOST;
+  }
+
   public static checkAbsoluteUrl(url: string) {
     let pattern = /^http?:\/\//i;
     return pattern.test(url);
@@ -102,5 +123,15 @@ export class UtilService {
     } else {
       return date;
     }
+  }
+
+  public static generatePassword() {
+    let length = 8,
+        charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+        retVal = "";
+    for (var i = 0, n = charset.length; i < length; ++i) {
+      retVal += charset.charAt(Math.floor(Math.random() * n));
+    }
+    return retVal;
   }
 }

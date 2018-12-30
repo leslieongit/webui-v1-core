@@ -13,8 +13,8 @@
       </div>
     </div>
     <div class="profile-info-view" *ngIf="!isProfileEditing">
-      <h1>{{userInfo.first_name}} {{userInfo.last_name}}</h1>
-      <h4>{{userInfo.bio}}</h4>
+      <h1 ProfileFontColor>{{userInfo.first_name}} {{userInfo.last_name}}</h1>
+      <h4 ProfileFontColor>{{userInfo.bio}}</h4>
     </div>
     <form action="" class="ui form info-form" *ngIf="isProfileEditing">
       <div class="field">
@@ -106,10 +106,10 @@
       </div>
     </div>
   </div>
-  <h2 class="ui header center aligned">{{translate("user_profile_contributions")}}</h2>
+  <h2 class="ui header center aligned" ProfileFontColor>{{translate("user_profile_contributions")}}</h2>
   <div class="ui basic segment">
     <div class="ui active large loader" *ngIf="isContributionsLoading"></div>
-    <h2 class="ui header center aligned" *ngIf="!isContributionsLoading && !profileMyContributionsCampaigns.length">{{translate("user_profile_no_contributions")}}</h2>
+    <h2 class="ui header center aligned" *ngIf="!isContributionsLoading && !profileMyContributionsCampaigns.length" ProfileFontColor>{{translate("user_profile_no_contributions")}}</h2>
     <div class="ui stackable grid" *ngIf="!isContributionsLoading && profileMyContributionsCampaigns.length">
       <div class="sixteen wide column" *ngFor="let campaign of profileMyContributionsCampaigns | paginate: campaignsContributionsPageConfig; let last = last">
         <div class="ui grid stackable">
@@ -122,17 +122,17 @@
           </div>
           <div class="twelve wide column">
             <h2 class="ui header">
-              <div class="content">
+              <div class="content" ProfileFontColor>
                 {{campaign.name}}
-                <div class="sub header">
+                <div class="sub header" ProfileFontColor>
                   {{translate("user_profile_campaign_manager_by")}} {{campaign.managers[0].first_name}} {{campaign.managers[0].last_name}}
                 </div>
               </div>
             </h2>
             <ng-prog [progressValue]="campaign.funded_percentage_shipping_excluded" [progressID]="campaign.id" [isProfile]="true"></ng-prog>
-            <div *ngIf="campaign.currencies && campaign.currencies.length">
-              <span *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2">{{campaign.funded_amount | currency:campaign.currencies[0].code_iso4217_alpha:true}}</span>
-              <span *ngIf="settingDecimalOption == 3">{{campaign.funded_amount | currency:campaign.currencies[0].code_iso4217_alpha:true:'1.0-0'}}</span>
+            <div *ngIf="campaign.currencies && campaign.currencies.length" ProfileFontColor>
+              <span *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2" ProfileFontColor>{{campaign.funded_amount | currency:campaign.currencies[0].code_iso4217_alpha:true}}</span>
+              <span *ngIf="settingDecimalOption == 3" ProfileFontColor>{{campaign.funded_amount | currency:campaign.currencies[0].code_iso4217_alpha:true:'1.0-0'}}</span>
               {{translate("user_profile_amount_funded")}}
             </div>
             <div *ngIf="!campaign.currencies && campaign.currencies.length">
@@ -141,10 +141,10 @@
               </div>
             </div>
             <div class="transaction-wrap-content ui fluid accordion" ngSemantic *ngIf="campaign.pledge_history">
-              <div class="latest-pledge-content title">
+              <div class="latest-pledge-content title" ProfileFontColor>
                 {{translate("user_profile_latest_contribution")}}
-                <span *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2">{{campaign.pledge_history[campaign.pledge_history.length - 1].amount | currency:campaign.currencies[0].code_iso4217_alpha:true}}</span>
-                <span *ngIf="settingDecimalOption == 3">{{campaign.pledge_history[campaign.pledge_history.length - 1].amount | currency:campaign.currencies[0].code_iso4217_alpha:true:'1.0-0'}}</span>
+                <span *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2" ProfileFontColor>{{campaign.pledge_history[campaign.pledge_history.length - 1].amount | currency:campaign.currencies[0].code_iso4217_alpha:true}}</span>
+                <span *ngIf="settingDecimalOption == 3" ProfileFontColor>{{campaign.pledge_history[campaign.pledge_history.length - 1].amount | currency:campaign.currencies[0].code_iso4217_alpha:true:'1.0-0'}}</span>
                 <i class="angle down icon"></i>
               </div>
               <div class="content">
@@ -152,23 +152,23 @@
                   <table class="ui green striped table">
                     <thead>
                       <tr>
-                        <th>{{translate("user_profile_table_reward")}}</th>
-                        <th>{{translate("user_profile_table_date")}}</th>
-                        <th>{{translate("user_profile_table_amount")}}</th>
+                        <th ProfileFontColor>{{translate("user_profile_table_reward")}}</th>
+                        <th ProfileFontColor>{{translate("user_profile_table_date")}}</th>
+                        <th ProfileFontColor>{{translate("user_profile_table_amount")}}</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr *ngFor="let pledge of campaign.pledge_history | paginate: pledgeHistoryPaginationObjects['campaignid' + campaign.id]">
                         <td>
-                          <span *ngIf="pledge.pledge_levels">{{pledge.pledge_levels[0].name}}</span>
-                          <span *ngIf="!pledge.pledge_levels">Direct Contribution</span>
+                          <span *ngIf="pledge.pledge_levels" ProfileFontColor>{{pledge.pledge_levels[0].name}}</span>
+                          <span *ngIf="!pledge.pledge_levels" ProfileFontColor>Direct Contribution</span>
                         </td>
-                        <td>
+                        <td ProfileFontColor>
                           {{getDateForDisplay(pledge.created) | amDateFormat:'ll'}}
                         </td>
                         <td>
-                          <span *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2">{{pledge.amount | currency:campaign.currencies[0].code_iso4217_alpha:true}}</span>
-                          <span *ngIf="settingDecimalOption == 3">{{pledge.amount | currency:campaign.currencies[0].code_iso4217_alpha:true:'1.0-0'}}</span>
+                          <span *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2" ProfileFontColor>{{pledge.amount | currency:campaign.currencies[0].code_iso4217_alpha:true}}</span>
+                          <span *ngIf="settingDecimalOption == 3" ProfileFontColor>{{pledge.amount | currency:campaign.currencies[0].code_iso4217_alpha:true:'1.0-0'}}</span>
                         </td>
                       </tr>
                     </tbody>

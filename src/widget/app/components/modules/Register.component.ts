@@ -50,11 +50,14 @@ export class RegisterComponent {
           var eventData = {
             "email": this.registerInfo.email,
             "password": this.registerInfo.password,
-            "inline_token": data.inline_token
+            "inline_token": data.inline_token,
+            "user_id": data.id
           };
           this.registerError = "";
           this.onSuccess.emit(eventData);
-          this.registerSuccess = this.translate("campaign_register_success_text");
+          if(!data.inline_token) {
+            this.registerSuccess = this.translate("campaign_register_success_text");
+          }
         },
         error => {
           UtilService.logError(error);

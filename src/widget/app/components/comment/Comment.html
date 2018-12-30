@@ -1,7 +1,7 @@
 <div id="campaign-comment">
   <div class="comment-list" *ngIf="comments.length">
     <div class="ui comments">
-      <h2 class="ui header" FontColor>{{translate("campaign_comment_header")}}</h2>
+      <h2 class="ui header" FontColor CommentsFontColor>{{translate("campaign_comment_header")}}</h2>
       <div class="comment" *ngFor="let comment of comments | paginate: campaignCommentsConfig; let index = index">
         <div class="avatar">
           <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0CAIAAABEtEjdAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
@@ -133,20 +133,20 @@
           <img [src]="comment.comment_person[0].person_files[0].full_path" *ngIf="comment.comment_person[0].person_files != null && comment.comment_person[0].person_files.length">
         </div>
         <div class="content">
-          <span class="author">{{comment.comment_person[0].full_name}}</span>
+          <span class="author" CommentsFontColor>{{comment.comment_person[0].full_name}}</span>
           <div class="metadata">
             <!--<span class="date">{{translate("campaign_comment_on_text")}}
                 {{setDateObject(comment.created) | date:'medium'}}</span>-->
             <span class="date">{{translate("campaign_comment_on_text")}}
                 {{getDateForDisplay(comment.created) | amDateFormat:'lll'}}</span>
           </div>
-          <div class="comment-title" *ngIf="!comment.isEditing">
+          <div class="comment-title" *ngIf="!comment.isEditing" CommentsFontColor>
             {{comment.title}}
           </div>
           <div class="ui input edit-box">
             <input type="text" [(ngModel)]="comment.title" *ngIf="comment.isEditing">
           </div>
-          <div class="text" *ngIf="!comment.isEditing">
+          <div class="text" *ngIf="!comment.isEditing" CommentsFontColor>
             {{comment.message}}
           </div>
           <div class="ui input">
@@ -188,7 +188,7 @@
   <div class="ui large form" id="comment-form" *ngIf="authToken">
     <div class="ui grid">
       <div class="eight wide column">
-        <h2 class="ui header" FontColor>{{translate("campaign_comment_add_comment_header")}}</h2>
+        <h2 class="ui header" FontColor CommentsFontColor>{{translate("campaign_comment_add_comment_header")}}</h2>
       </div>
       <div class="eight wide column">
         <!--<div class="account-dropdown ui inline dropdown" *ngIf="authToken" ngSemantic>
@@ -331,11 +331,11 @@
       </div>
     </div>
     <div class="field">
-      <label>{{translate("campaign_comment_subject_text")}}</label>
+      <label CommentsFontColor>{{translate("campaign_comment_subject_text")}}</label>
       <input type="text" name="comment_title" [(ngModel)]="newComment.title">
     </div>
     <div class="field">
-      <label>{{translate("campaign_comment_comment_text")}}</label>
+      <label CommentsFontColor>{{translate("campaign_comment_comment_text")}}</label>
       <textarea id="comment_message" name="comment_message" [(ngModel)]="newComment.message" required></textarea>
     </div>
     <div class="button-wrap">

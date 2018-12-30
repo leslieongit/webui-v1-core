@@ -51,6 +51,9 @@ export class AddressComponent implements OnInit {
 
   onSelectAddress(city: any) {
     this.addressObj["city_id"] = city.city_id;
+    this.addressObj["city"] = city.city;
+    this.addressObj["country"] = city.country;
+
     this.selectedCity.emit(city);
   }
 

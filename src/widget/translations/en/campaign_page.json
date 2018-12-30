@@ -53,6 +53,9 @@
   "campaign_page_create_account_tab":"Create Account",
   "campaign_page_guest_tab":"Guest",
   "campaign_page_express_tab":"Express Checkout",
+  "campaign_page_stripe_elements_error": "There is a problem with your credit card or website payment configuration.",
+  "campaign_page_entity_not_found_error": "There was an internal error with mis-configured campaign or website. Please contact website administrator for more information.",
+  "campaign_page_missing_connect": "Pledge failed because campaign does not have connected account and Direct Transaction is turned off.",
   "campaign_page_add_new_address_button":"Add New Address",
   "campaign_page_existing_address_button":"Select Existing Address",
   "campaign_page_card_information_header":"Card Information",
@@ -123,8 +126,5 @@
   "select_tip_option":"Please select a tipping option",
   "no_tip":"No Tip",
   "enter_tip_amount":"Enter Tip Amount",
-  "choose_tip":"Choose Tip",
-  "campaign_social_media_text_cta":"Help us spread the word!",
-  "campaign_social_media_button_text_label":"Share on",
-  "campaign_or_share_text":"Or share via"
+  "choose_tip":"Choose Tip"
 }
