@@ -12,7 +12,9 @@ If you would like to try a demo version of this standalone Web UI with our origi
 
 1. Git clone this repository
 2. Setup webserver/vhost with web root pointed to <your-cloned-git-repo/angapp
-3. Inside the angapp directory add the following file called "app_local.js" with the contents below.
+3. Make sure there is rewrite rule setup for index.html (all non file paths should be rewritten to index.html)
+4. Inside the angapp directory add the following file called "app_local.js" with the contents below.
+5. You can use apache, nginx (with rewriting) or standalone dev server via gulp
 
 ```javascript
 // API settings
