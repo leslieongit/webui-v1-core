@@ -15,20 +15,27 @@ If you would like to try a demo version of this standalone Web UI with our origi
 3. Inside the angapp directory add the following file called "app_local.js" with the contents below.
 
 ```javascript
+// API settings
 app.constant( 'API_URL', {
   url : "https://origin.thrinacia.com/api",
   loc : "/service/restv1/"
 } );
 
-//define the default and prefered language
+// Translation settings
 app.constant( 'LANG', {
   DEFAULT_LANG : "en",
   PREFERRED_LANG : "en"
 } );
 
 // CDN settings
-app.constant('CDN', {
+app.constant( 'CDN', {
   APP_URL : "https://cdn5.thrinacia.com/**"
+} );
+
+// Widget settings
+app.constant( 'SEDRA', {
+ url : "https://your.website.com",
+ loc: ''
 } );
 ```
 
