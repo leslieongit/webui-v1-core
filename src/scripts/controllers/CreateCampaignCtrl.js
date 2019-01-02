@@ -2730,7 +2730,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   }
 
   $scope.removeFileFromSetting = function (fileObjIndex) {
-    if ($scope.enableCampaignRevisions && campaign.entry_status_id == 2) {
+    if ($scope.enableCampaignRevisions && $scope.campaign.entry_status_id == 2) {
       return false;
     } else {
       addToDeleteFileQueue($scope.campaign.settings.campaign_files[fileObjIndex].resourceId);
