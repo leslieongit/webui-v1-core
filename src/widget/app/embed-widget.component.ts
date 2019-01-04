@@ -1267,9 +1267,7 @@ export class AppComponent implements OnInit {
                 widget.mUserService.disableUser(data).subscribe(
                   data => {
                     widget.isContributionSubmitting = false;
-                    if(!widget.submitErrorMessage) {
-                      widget.submitErrorMessage = widget.translate("campaign_page_stripe_elements_error");;
-                    }
+                    widget.submitErrorMessage = widget.translate("campaign_page_stripe_elements_error");;
                   },
                   error => {
                     let jsonError = error.json();
@@ -1281,9 +1279,8 @@ export class AppComponent implements OnInit {
             widget.mUserService.disableUser(data).subscribe(
               data => {
                 widget.isContributionSubmitting = false;
-                if(!widget.submitErrorMessage) {
-                  widget.submitErrorMessage = widget.translate("campaign_page_stripe_elements_error");;
-                }              },
+                widget.submitErrorMessage = widget.translate("campaign_page_stripe_elements_error");;
+              },
               error => {
                 let jsonError = error.json();
               }

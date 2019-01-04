@@ -1,17 +1,12 @@
 /*/////////////////////////////////////////////////////////////////////////////////////////*/
 
-
 /* Stylesheet for the campaign page*/
-
 
 /*/////////////////////////////////////////////////////////////////////////////////////////*/
 
-
 /*/////////////////////////////*/
 
-
 /* Campaign Page START*/
-
 
 /*/////////////////////////////*/
 
@@ -136,6 +131,9 @@
   #campaign-body {
     #campaign-body-middle {
       padding: 40px 0;
+      iframe {
+        max-width: 100%;
+      }
       .campaign-tab-content {
         @media screen and (max-width: 767px) {
           #campaign-tabs {
@@ -249,6 +247,13 @@
       }
       .campaign-bio-tab {
         margin-bottom: 1em;
+        .campaign-profile-info,
+        .campaign-business-info {
+          text-align: center;
+          img {
+            margin: 0 auto;
+          }
+        }
       }
     }
   }
@@ -304,11 +309,9 @@
             padding: 3px 0;
             display: -webkit-box;
             display: -ms-flexbox;
-            display: -webkit-flex;
             display: flex;
             -webkit-box-align: center;
             -ms-flex-align: center;
-            -webkit-align-items: center;
             align-items: center;
             &:first-child {
               padding-top: 0;
@@ -332,11 +335,9 @@
         padding: 15px;
         display: -webkit-box;
         display: -ms-flexbox;
-        display: -webkit-flex;
         display: flex;
         -webkit-box-align: center;
         -ms-flex-align: center;
-        -webkit-align-items: center;
         align-items: center;
         text-align: center;
         .hover-label {
@@ -434,11 +435,9 @@
         .text {
           display: -webkit-box;
           display: -ms-flexbox;
-          display: -webkit-flex;
           display: flex;
           -webkit-box-align: center;
           -ms-flex-align: center;
-          -webkit-align-items: center;
           align-items: center;
         }
         i.dropdown {
@@ -522,11 +521,9 @@
     bottom: 0;
     display: -webkit-box;
     display: -ms-flexbox;
-    display: -webkit-flex;
     display: flex;
     -webkit-box-align: center;
     -ms-flex-align: center;
-    -webkit-align-items: center;
     align-items: center;
     .message-subcontainer {
       width: 100%;
@@ -544,11 +541,8 @@
   }
 }
 
-
 /*/////////////////////////////*/
 
-
 /* Contribution Page END*/
-
 
 /*/////////////////////////////*/
