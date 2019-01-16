@@ -684,6 +684,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
         $scope.crimson = $scope.private_settings.site_crimson_setting;
 
         $scope.selected_mode = $scope.public_settings.site_campaign_raise_modes.default - 1;
+        
         if ($scope.raise_modes) {
           $('#mode_dtext').text($scope.raise_modes[$scope.selected_mode].description);
         }
@@ -1827,6 +1828,28 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       $scope.public_settings.site_campaign_fixed_campaign_duration_start = null;
     }
 
+    //Check Raise Modes
+    //Check if only 1 raise mode selected
+    var raise_modes_selected = [];
+    $scope.raise_modes.forEach(function(v) {
+      if(v.allowed) {
+        raise_modes_selected.push(v);
+      }
+    });
+    //Only one selected
+    if(raise_modes_selected.length == 1) {
+      $scope.setRaiseMode(raise_modes_selected[0]);
+    } else if(raise_modes_selected.length == 0) {
+      //Show error message
+      var translate = $translate.instant(['tab_portalsetting_campaign_raise_mode_error_msg']);
+      msg = {
+        'header': translate.tab_portalsetting_campaign_raise_mode_error_msg
+      };
+      $rootScope.floatingMessage = msg;
+      $scope.hideFloatingMessage();
+      return;
+    }
+
     var publicSettings = {
       site_theme_no_campaign_message: $scope.public_settings.site_theme_no_campaign_message,
       site_theme_campaign_grid_display: $scope.public_settings.site_theme_campaign_grid_display,
@@ -2004,6 +2027,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
         return;
       }
     }
+  
     // Check if custom formatting toggle is enabled
     // Show fields if enabled then validate otherwise hide it
     if (typeof publicSettings.site_campaign_custom_button !== 'undefined') {

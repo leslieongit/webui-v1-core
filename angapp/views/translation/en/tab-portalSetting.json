@@ -635,6 +635,7 @@
   "tab_portalsetting_campaign_defaults_run_mode": "Campaign Run Mode",
   "tab_portalsetting_campaign_defaults_basic": "Basic",
   "tab_portalsetting_campaign_defaults_error_msg": "The Campaign Defaults setting requires valid dates",
+  "tab_portalsetting_campaign_raise_mode_error_msg": "You need at least one raise mode enabled before you can proceed.",
   "tab_portalsetting_campaign_custom_formatting_error_msg": "Please check required fields",
   "tab_portalsetting_campaign_defaults_currency_label": "Campaign Currency",
   "tab_portalsetting_campaign_defaults_basic_funding_goal": "Funding Goal",
