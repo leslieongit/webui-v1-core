@@ -240,14 +240,16 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
   // to generate the dropdown selection
 
   function getCompany() {
-    Restangular.one('account/').customGET('business', paramID).then(function (success) {
-      $scope.companies = success;
-      if ($scope.companies != 0) {
-        $scope.companyFormToggle = true;
-      } else {
-        $scope.companyFormToggle = false;
-      }
-    });
+    if(paramID.business_organization_id) {
+      Restangular.one('account/').customGET('business', paramID.business_organization_id).then(function (success) {
+        $scope.companies = success;
+        if ($scope.companies != 0) {
+          $scope.companyFormToggle = true;
+        } else {
+          $scope.companyFormToggle = false;
+        }
+      });
+    } 
   }
 
   $scope.profileTypeSelected = function (typeID) {
@@ -337,6 +339,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
 
       //prefill business (prefilling one for now)
       if ($scope.campaign.business_organizations) {
+        
         if ($scope.campaign.business_organizations.length) {
           $scope.companyFormToggle = true;
         }
@@ -1510,14 +1513,15 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
           params = {
             resource_content_type: 'image',
             business_organization_id: $scope.company_selected,
-            person_id: paramID.person_id
+            // person_id: paramID.person_id
           };
         } else {
           params = {
             resource_content_type: 'image',
-            person_id: paramID.person_id
+            // person_id: paramID.person_id
           }
         }
+        
         // If creating a new company
         if (!$scope.companyFormToggle) {
           $scope.company_selected = {};
@@ -1597,7 +1601,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     if ($scope.company_selected != null && $scope.company_selected != undefined) {
       var dataParam = {
         business_organization_id: $scope.company_selected,
-        person_id: paramID.person_id
+        // person_id: paramID.person_id
       }
       Restangular.one('account/resource').customGET('file', dataParam).then(function (success) {
         if (success.length) {

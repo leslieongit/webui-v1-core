@@ -1829,7 +1829,6 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
 
     //Check Raise Modes
-    //Check if only 1 raise mode selected
     var raise_modes_selected = [];
     $scope.raise_modes.forEach(function(v) {
       if(v.allowed) {

@@ -291,7 +291,7 @@ app.controller('AdminPagesCtrl', function ($scope, $rootScope, $timeout, $locati
     $scope.pageSectionTitle = "tab_pages_addpage";
     $scope.pageEditType = "add";
     $scope.isReservedPage = false;
-
+    $scope.page.content = '<div class="ui basic segment"> <div class="ui page grid"> <div class="column"> <h1>Lorem ipsum dolor sit amet, consectetur adipiscing elit</h1> <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam luctus neque sed ultrices imperdiet. Fusce egestas, dolor quis maximus condimentum, quam tellus porta nibh, a faucibus quam ligula facilisis neque. Maecenas pellentesque ex leo, vel laoreet dui pulvinar in. Donec nunc nisl, lacinia in pellentesque et, cursus a risus. Nullam at elit odio. Etiam venenatis id nisl non consectetur.</p> <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam luctus neque sed ultrices imperdiet. Fusce egestas, dolor quis maximus condimentum, quam tellus porta nibh, a faucibus quam ligula facilisis neque. Maecenas pellentesque ex leo, vel laoreet dui pulvinar in. Donec nunc nisl, lacinia in pellentesque et, cursus a risus. Nullam at elit odio. Etiam venenatis id nisl non consectetur.</p> </div> </div> </div>';
   }
 
   $scope.confirmPageAdd = function ($event) {
@@ -659,4 +659,11 @@ app.controller('AdminPagesCtrl', function ($scope, $rootScope, $timeout, $locati
     }
     return color;
   }
+
+  $scope.stripWords = function(path) {
+    path = path.replace(/^\/+/g, '');
+    path = path.replace(/^https?:\/\//,'')
+    angular.element('#page-path').val(path);
+  }
+
 });

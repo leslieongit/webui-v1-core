@@ -182,7 +182,7 @@ Edit Page START
 
 								<div class="field">
 									<label translate> tab_pages_editpage_path</label>
-									<input type="text" ng-model="page.path" name="page_path" ng-attr-placeholder="{{'tab_pages_editpage_pagepath_placeholder' | translate }} " ng-readonly="page.disable" ng-disabled='page.disable'>
+									<input type="text" id="page-path" ng-model="page.path" name="page_path" ng-attr-placeholder="{{'tab_pages_editpage_pagepath_placeholder' | translate }} " ng-readonly="page.disable" ng-disabled='page.disable'  ng-blur="stripWords(page.path)">
 								</div>
 							</div>
 
