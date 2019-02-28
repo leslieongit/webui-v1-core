@@ -240,16 +240,14 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
   // to generate the dropdown selection
 
   function getCompany() {
-    if(paramID.business_organization_id) {
-      Restangular.one('account/').customGET('business', paramID.business_organization_id).then(function (success) {
-        $scope.companies = success;
-        if ($scope.companies != 0) {
-          $scope.companyFormToggle = true;
-        } else {
-          $scope.companyFormToggle = false;
-        }
-      });
-    } 
+    Restangular.one('account/').customGET('business', paramID.business_organization_id).then(function (success) {
+      $scope.companies = success;
+      if ($scope.companies.length != 0) {
+        $scope.companyFormToggle = true;
+      } else {
+        $scope.companyFormToggle = false;
+      }
+    });
   }
 
   $scope.profileTypeSelected = function (typeID) {
@@ -1172,18 +1170,19 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
                 //checkNumber($scope.company_selected);
               });
             }
-
             var busParam = {
               description: $scope.company.description
             }
-
-            for (var i in $scope.companies) {
-              if ($scope.companies[i].id == $scope.company_selected) {
-                busParam.name = $scope.companies[i].name;
-                break;
-              }
-            }
-
+            busParam.name = $scope.company.name;
+            
+            //For some reason dropdown is removed from UI so this code is not needed anymore
+            // for (var i in $scope.companies) {
+            //   if ($scope.companies[i].id == $scope.company_selected) {
+            //     busParam.name = $scope.companies[i].name;
+            //     break;
+            //   }
+            // }
+            
             //Save Business Link
             saveBusinessLinks($scope.company_selected, selectedProtocols);
 
@@ -1525,7 +1524,14 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
         // If creating a new company
         if (!$scope.companyFormToggle) {
           $scope.company_selected = {};
-          $scope.company_selected.name = "Placeholder"
+          $scope.company_selected.name = "Placeholder";
+          if($scope.newCompany.hasOwnProperty('name')) {
+            $scope.company_selected.name = $scope.newCompany.name;
+          }
+          if($scope.newCompany.hasOwnProperty('description')) {
+            $scope.company_selected.description = $scope.newCompany.description;
+          }
+          
           Restangular.one('account/business').customPOST($scope.company_selected).then(function (success) {
             $scope.company_selected = success.id;
             params.business_organization_id = $scope.company_selected;

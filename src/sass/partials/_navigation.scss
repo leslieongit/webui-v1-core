@@ -27,6 +27,10 @@
 		}
 		.item {
 			padding: 1.8em 1em;
+			&.search-item {
+				padding-top: 0;
+				padding-bottom: 0;
+			}
 		}
 		.item.active,
 		a.item:hover {
@@ -40,11 +44,9 @@
 		}
 		#logo {
 			display: -webkit-box;
-			display: -webkit-flex;
 			display: -ms-flexbox;
 			display: flex;
 			-webkit-box-align: center;
-			-webkit-align-items: center;
 			-ms-flex-align: center;
 			align-items: center;
 			height: 65px;
