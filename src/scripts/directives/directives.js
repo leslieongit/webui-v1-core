@@ -1,16 +1,16 @@
 // Match directive, sets $error.match validity based on whether it matches a model
-app.directive('match', function () {
+app.directive('match', function() {
   return {
     require: 'ngModel',
     restrict: 'A',
     scope: {
       match: '='
     },
-    link: function (scope, elem, attrs, ctrl) {
-      scope.$watch('match', function (pass) {
+    link: function(scope, elem, attrs, ctrl) {
+      scope.$watch('match', function(pass) {
         ctrl.$validate();
       });
-      ctrl.$validators.match = function (modelValue) {
+      ctrl.$validators.match = function(modelValue) {
         return (ctrl.$pristine && (angular.isUndefined(modelValue) || modelValue === "")) || modelValue === scope.match;
       };
     }
@@ -18,11 +18,11 @@ app.directive('match', function () {
 });
 
 // Validate Email field
-app.directive('validateEmail', function () {
+app.directive('validateEmail', function() {
   var EMAIL_REGEXP = /^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
   return {
-    link: function (scope, elm) {
-      elm.on("keyup", function () {
+    link: function(scope, elm) {
+      elm.on("keyup", function() {
         var isMatchRegex = EMAIL_REGEXP.test(elm.val());
         if (isMatchRegex && elm.hasClass('email-error') || elm.val() == '') {
           elm.removeClass('email-error');
@@ -35,27 +35,27 @@ app.directive('validateEmail', function () {
 });
 
 // Dropdown directive for SemanticUI dropdowns
-app.directive('dropdown', function ($timeout) {
+app.directive('dropdown', function($timeout) {
   return {
     restrict: "C",
     require: "?ngModel",
-    link: function (scope, elm, attr, modelCtrl) {
+    link: function(scope, elm, attr, modelCtrl) {
       if (elm.hasClass('ui')) {
         // if ngModel is used
         // set dropdown value as the same as ngModel
         if (modelCtrl) {
-          scope.$watch(function () {
+          scope.$watch(function() {
             return modelCtrl.$modelValue;
-          }, function (value) {
+          }, function(value) {
             if (value) {
-              $timeout(function () {
+              $timeout(function() {
                 elm.dropdown('set selected', value);
               });
             }
           });
           // set ngModel onChange
           elm.dropdown({
-            onChange: function (value, text) {
+            onChange: function(value, text) {
               modelCtrl.$setViewValue(value);
             }
           });
@@ -76,23 +76,23 @@ app.directive('dropdown', function ($timeout) {
 });
 
 //  directive for SemanticUI checkboxes
-app.directive('checkbox', function ($timeout) {
+app.directive('checkbox', function($timeout) {
   return {
     restrict: "C",
     require: "?ngModel",
-    link: function (scope, elm, attr, modelCtrl) {
+    link: function(scope, elm, attr, modelCtrl) {
       if (elm.hasClass('ui')) {
         // if elememt has class radio
         if (elm.hasClass('radio')) {
           if (modelCtrl) {
             var radio_value = elm.find('input').attr('value');
 
-            scope.$watch(function () {
+            scope.$watch(function() {
               return modelCtrl.$modelValue;
-            }, function (value) {
+            }, function(value) {
               if (value) {
                 if (value == radio_value) {
-                  $timeout(function () {
+                  $timeout(function() {
                     elm.checkbox('check');
                   });
                 }
@@ -101,7 +101,7 @@ app.directive('checkbox', function ($timeout) {
 
             // update ngModel onChange
             elm.checkbox({
-              onChange: function () {
+              onChange: function() {
                 var temp = elm.checkbox('is checked') ? true : false;
                 if (temp) {
                   modelCtrl.$setViewValue(radio_value);
@@ -115,11 +115,11 @@ app.directive('checkbox', function ($timeout) {
           // if ngModel is used
           if (modelCtrl) {
             // set default value
-            scope.$watch(function () {
+            scope.$watch(function() {
               return modelCtrl.$modelValue;
-            }, function (value) {
+            }, function(value) {
               if (value) {
-                $timeout(function () {
+                $timeout(function() {
                   elm.checkbox('check');
 
                 });
@@ -127,7 +127,7 @@ app.directive('checkbox', function ($timeout) {
             });
             // update ngModel onChange
             elm.checkbox({
-              onChange: function () {
+              onChange: function() {
                 var temp = elm.checkbox('is checked') ? true : false;
                 modelCtrl.$setViewValue(temp);
               }
@@ -143,14 +143,14 @@ app.directive('checkbox', function ($timeout) {
 });
 
 // Dropdown directive for SemanticUI progress bar
-app.directive('progress', function ($timeout) {
+app.directive('progress', function($timeout) {
   return {
     restrict: "C",
-    link: function (scope, elm, attr) {
+    link: function(scope, elm, attr) {
       if (elm.hasClass('ui')) {
-        scope.$watch(function () {
+        scope.$watch(function() {
           return attr.percent;
-        }, function (value) {
+        }, function(value) {
           if (!isNaN(value)) {
             elm.progress();
           }
@@ -162,20 +162,22 @@ app.directive('progress', function ($timeout) {
 });
 
 // Dropdown directive for SemanticUI pop up
-app.directive('suiPopup', function ($timeout) {
+app.directive('suiPopup', function($timeout) {
   return {
     restrict: "A",
-    link: function (scope, elm, attr) {
-      elm.popup();
+    link: function(scope, elm, attr) {
+      elm.popup({
+        context: 'body .pusher'
+      });
     }
   };
 });
 
 //  directive for SemanticUI accordion
-app.directive('ngAccord', function ($timeout) {
+app.directive('ngAccord', function($timeout) {
   return {
     restrict: "A",
-    link: function (scope, elm, attr) {
+    link: function(scope, elm, attr) {
       if (elm.hasClass('sort-cat')) {
         elm.accordion({
           selector: {
@@ -192,13 +194,13 @@ app.directive('ngAccord', function ($timeout) {
   };
 });
 
-app.directive('phoneNumberOnly', function () {
+app.directive('phoneNumberOnly', function() {
   return {
     require: 'ngModel',
-    link: function (scope, element, attr, modelCtrl) {
+    link: function(scope, element, attr, modelCtrl) {
       var regex = /[^0-9 ]+/g;
-      
-      modelCtrl.$parsers.push(function (inputValue) {
+
+      modelCtrl.$parsers.push(function(inputValue) {
         if (inputValue == undefined) return '';
         var res = inputValue.match(regex);
         var transformedInput = inputValue.replace(res, '');
@@ -217,10 +219,10 @@ app.directive('phoneNumberOnly', function () {
 });
 
 // Limits the input field to only contain numbers. If anything else is input, it will be removed.
-app.directive('numbersOnly', function () {
+app.directive('numbersOnly', function() {
   return {
     require: 'ngModel',
-    link: function (scope, element, attrs, modelCtrl) {
+    link: function(scope, element, attrs, modelCtrl) {
       var regex = /[^0-9]/g;
       if (attrs.allowDecimal) {
         regex = /[^0-9]+(\.[0-9]{1,2})/g;
@@ -228,7 +230,7 @@ app.directive('numbersOnly', function () {
       }
 
 
-      modelCtrl.$parsers.push(function (inputValue) {
+      modelCtrl.$parsers.push(function(inputValue) {
         if (inputValue == undefined) return '';
         var res = inputValue.match(regex);
         var transformedInput = inputValue.replace(res, '');
@@ -249,17 +251,17 @@ app.directive('numbersOnly', function () {
   };
 });
 
-app.directive('numberWithDecimals', function () {
+app.directive('numberWithDecimals', function() {
   return {
     require: 'ngModel',
-    link: function (scope, element, attrs, modelCtrl) {
+    link: function(scope, element, attrs, modelCtrl) {
       var regex = /[^0-9]/g;
       if (attrs.allowDecimal) {
         regex = /[0-9]+(\.[0-9]{1,2})/g;
       }
 
 
-      modelCtrl.$parsers.push(function (inputValue) {
+      modelCtrl.$parsers.push(function(inputValue) {
         if (inputValue == undefined) return '';
         var res = inputValue.match(regex);
         if (regex == /[^0-9]/g) {
@@ -297,11 +299,11 @@ app.directive('numberWithDecimals', function () {
   };
 });
 // Same as numbersOnly directive, but also limits the number to up to 365 only. If it's any more, set to 365
-app.directive('365Only', function () {
+app.directive('365Only', function() {
   return {
     require: 'ngModel',
-    link: function (scope, element, attrs, modelCtrl) {
-      modelCtrl.$parsers.push(function (inputValue) {
+    link: function(scope, element, attrs, modelCtrl) {
+      modelCtrl.$parsers.push(function(inputValue) {
         // this next if is necessary for when using ng-required on your input.
         // In such cases, when a letter is typed first, this parser will be called
         // again, and the 2nd time, the value will be undefined
@@ -318,20 +320,20 @@ app.directive('365Only', function () {
 });
 
 // Sends keystrokes to a designated endpoint
-app.directive('keyboardPoster', function ($parse, $timeout) {
+app.directive('keyboardPoster', function($parse, $timeout) {
   var DELAY_BEFORE_FIRING = 300;
-  return function (scope, elem, attrs) {
+  return function(scope, elem, attrs) {
 
     var element = angular.element(elem)[0];
     var currentTimeout = null;
-    element.oninput = function () {
+    element.oninput = function() {
       var model = $parse(attrs.postFunction);
       var poster = model(scope);
 
       if (currentTimeout) {
         $timeout.cancel(currentTimeout)
       }
-      currentTimeout = $timeout(function () {
+      currentTimeout = $timeout(function() {
         poster(angular.element(element).val());
       }, DELAY_BEFORE_FIRING)
     }
@@ -339,19 +341,19 @@ app.directive('keyboardPoster', function ($parse, $timeout) {
 });
 
 // Cancels form submission if the form is not valid
-app.directive('validateSubmit', ['$parse', function ($parse) {
+app.directive('validateSubmit', ['$parse', function($parse) {
   return {
     restrict: 'A',
     require: 'form',
-    link: function (scope, formElement, attributes, formController) {
+    link: function(scope, formElement, attributes, formController) {
 
       var fn = $parse(attributes.rcSubmit);
 
-      formElement.bind('submit', function (event) {
+      formElement.bind('submit', function(event) {
         // if form is not valid cancel it.
         if (!formController.$valid) return false;
 
-        scope.$apply(function () {
+        scope.$apply(function() {
           fn(scope, {
             $event: event
           });
@@ -362,13 +364,13 @@ app.directive('validateSubmit', ['$parse', function ($parse) {
 }]);
 
 // On button click, check if the nearest form has any fields that are invalid, then scrolls and focuses the first of those fields
-app.directive('accessibleForm', function () {
+app.directive('accessibleForm', function() {
   return {
     scope: true,
-    link: function (scope, element, attrs) {
+    link: function(scope, element, attrs) {
       var form = scope[attrs.name];
 
-      element.bind('click', function (event) {
+      element.bind('click', function(event) {
         var field = null;
         for (field in form) {
           if (form[field].hasOwnProperty('$pristine') && form[field].$pristine) {
@@ -381,7 +383,7 @@ app.directive('accessibleForm', function () {
           // element.attr('disabled', true);
           $('html,body').animate({
             scrollTop: $(invalid_elements[0]).offset().top
-          }, 500, function () {
+          }, 500, function() {
             invalid_elements[0].focus();
           });
         }
@@ -390,10 +392,10 @@ app.directive('accessibleForm', function () {
   };
 });
 
-app.directive('myMaxlength', function () {
+app.directive('myMaxlength', function() {
   return {
     require: 'ngModel',
-    link: function (scope, element, attrs, ngModelCtrl) {
+    link: function(scope, element, attrs, ngModelCtrl) {
       var maxlength = Number(attrs.myMaxlength);
 
       function fromUser(text) {
@@ -423,14 +425,14 @@ app.directive('myMaxlength', function () {
  *   </div>
  */
 
-app.directive('addthisToolbox', ['$timeout', function ($timeout) {
+app.directive('addthisToolbox', ['$timeout', function($timeout) {
   return {
     restrict: 'A',
     transclude: true,
     replace: true,
     template: '<div ng-transclude></div>',
-    link: function ($scope, element, attrs) {
-      $timeout(function () {
+    link: function($scope, element, attrs) {
+      $timeout(function() {
         // Dynamically init for performance reason
         // Safe for multiple calls, only first call will be processed (loaded css/images, popup injected)
         // http://support.addthis.com/customer/portal/articles/381263-addthis-client-api#configuration-url
@@ -447,21 +449,21 @@ app.directive('addthisToolbox', ['$timeout', function ($timeout) {
   }
 }]);
 
-app.directive('dragDropList', function () {
-  return function (scope, element, attrs) {
+app.directive('dragDropList', function() {
+  return function(scope, element, attrs) {
     var toUpdate;
     var startIndex = -1;
 
-    scope.$watch(attrs.dragDropList, function (value) {
+    scope.$watch(attrs.dragDropList, function(value) {
       toUpdate = value;
     }, true);
 
     $(element[0]).sortable({
       items: 'li',
-      start: function (event, ui) {
+      start: function(event, ui) {
         startIndex = ($(ui.item).index());
       },
-      stop: function (event, ui) {
+      stop: function(event, ui) {
         var newIndex = ($(ui.item).index());
         var toMove = toUpdate[startIndex];
         toUpdate.splice(startIndex, 1);
@@ -474,15 +476,15 @@ app.directive('dragDropList', function () {
   }
 });
 
-app.directive('loading', function ($http) {
+app.directive('loading', function($http) {
   return {
     restrict: 'A',
-    link: function (scope, elm, attrs) {
-      scope.isLoading = function () {
+    link: function(scope, elm, attrs) {
+      scope.isLoading = function() {
         return $http.pendingRequests.length > 0;
       };
 
-      scope.$watch(scope.isLoading, function (v) {
+      scope.$watch(scope.isLoading, function(v) {
         if (v) {
           elm.show();
         } else {
@@ -493,17 +495,23 @@ app.directive('loading', function ($http) {
   };
 });
 
-app.directive('htmlRender', function ($compile) {
+app.directive('htmlRender', function($compile) {
   return {
     restrict: 'EA',
     scope: {
       html: '=html'
     },
-    link: function (scope, element, attrs) {
-      scope.$watch('html', function (value) {
+    link: function(scope, element, attrs) {
+      scope.$watch('html', function(value) {
         if (value) {
           //value = value.replace(/'/g , "&#39;");
           value = "<div>" + value + "</div>";
+          
+          //Search all string with iframe - search for src, see if its youtube, remove string
+          if(element.hasClass('reward-desc')) {
+            value = value.replace(/<\/?iframe[^>]*>/g, "");
+          }
+
           var markup = $compile(value)(scope);
           element.empty();
           element.append(markup);
@@ -512,13 +520,13 @@ app.directive('htmlRender', function ($compile) {
     }
   }
 });
-app.directive('webuiPgwslider', function ($timeout) {
+app.directive('webuiPgwslider', function($timeout) {
   return {
     scope: {
       options: '=options',
     },
-    link: function (scope, element, attrs) {
-      if (scope.listPosition == true) { }
+    link: function(scope, element, attrs) {
+      if (scope.listPosition == true) {}
       var options = {
         "displayList": false,
         "transitionEffect": 'sliding',
@@ -530,12 +538,12 @@ app.directive('webuiPgwslider', function ($timeout) {
       }
       if (attrs && attrs.length > 0) {
         var lst = $.parseJSON(attrs.webuiPgwslider);
-        $.each(lst, function (key, value) {
+        $.each(lst, function(key, value) {
           options[key] = value;
         });
       }
       // var lst = $.parseJSON('{ "name": "John" }');
-      $timeout(function () {
+      $timeout(function() {
         var slider = $('.pgwSlider').pgwSlider(options);
         $(".fr-view:first").height(options["maxHeight"]);
       })
@@ -553,8 +561,8 @@ app.directive('webuiPgwslider', function ($timeout) {
 // 	}
 // });
 
-app.directive('sticky', function ($window, $compile, $timeout) {
-  return function (scope, element, attrs) {
+app.directive('sticky', function($window, $compile, $timeout) {
+  return function(scope, element, attrs) {
     // declare variables
     var stickyClass = scope.stickyClass || null,
       $elem = element,
@@ -568,13 +576,13 @@ app.directive('sticky', function ($window, $compile, $timeout) {
     createClone($elem);
 
     // watcher
-    scope.$watch(function () {
+    scope.$watch(function() {
       // if is sticking, return original elemtop value(prevent changing)
       if (isSticking) return elemTop;
       // get element top value
       elemTop = getElementTop(elem);
       return elemTop;
-    }, function (newVal, oldVal) {
+    }, function(newVal, oldVal) {
       // if value changes
       if (newVal !== oldVal) {
         // re-assign value
@@ -584,7 +592,7 @@ app.directive('sticky', function ($window, $compile, $timeout) {
     });
 
     // on window scroll function
-    $(window).scroll(function () {
+    $(window).scroll(function() {
       // track window top
       var windowTop = $(window).scrollTop();
       // check if should stick
@@ -640,7 +648,7 @@ app.directive('sticky', function ($window, $compile, $timeout) {
       var clone = $elem.removeAttr('sticky');
       clone = clone[0];
       // compile the clone
-      $compile(clone)(scope, function (cloned, scope) {
+      $compile(clone)(scope, function(cloned, scope) {
         // attach to the bottom of element
         cloned.insertAfter($elem).addClass('cloned').removeClass('stackable').hide();
       });
@@ -648,31 +656,31 @@ app.directive('sticky', function ($window, $compile, $timeout) {
   }
 });
 //jscolor directive
-app.directive('jsColor', function ($timeout) {
-  return function (scope, element, attrs) {
-    $timeout(function () {
+app.directive('jsColor', function($timeout) {
+  return function(scope, element, attrs) {
+    $timeout(function() {
       jscolor.init();
     }, 200);
   };
 });
 
-app.directive('autoLink', function ($location) {
+app.directive('autoLink', function($location) {
   return {
     require: "?ngModel",
-    link: function (scope, element, attrs, ngModel) {
+    link: function(scope, element, attrs, ngModel) {
       var $elem = element,
         elem = $elem[0],
         //protocol = $location.protocol();
         protocol = "https";
 
-      elem.onblur = function () {
+      elem.onblur = function() {
         var input = $elem.val().trim();
         if (input) {
           var chek_http = new RegExp("http");
           if (input.match(chek_http)) {
             var check = hasProtocol(input);
             if (!check) {
-              scope.$apply(function () {
+              scope.$apply(function() {
                 var inp = input.substring(7);
                 $elem.val(protocol + "://" + inp);
                 ngModel.$setViewValue(protocol + "://" + inp);
@@ -680,7 +688,7 @@ app.directive('autoLink', function ($location) {
             }
 
           } else {
-            scope.$apply(function () {
+            scope.$apply(function() {
               $elem.val(protocol + "://" + input);
               ngModel.$setViewValue(protocol + "://" + input);
             });
@@ -700,19 +708,19 @@ app.directive('autoLink', function ($location) {
   }
 });
 
-app.directive('checkLink', function ($location) {
+app.directive('checkLink', function($location) {
   return {
     require: "?ngModel",
-    link: function (scope, element, attrs, ngModel) {
+    link: function(scope, element, attrs, ngModel) {
       var $elem = element,
         elem = $elem[0],
         protocol = "http";
-      elem.onblur = function () {
+      elem.onblur = function() {
         var input = $elem.val().trim();
         if (input) {
           var check_http = hasProtocol(input);
-          if (check_http) { } else {
-            scope.$apply(function () {
+          if (check_http) {} else {
+            scope.$apply(function() {
               $elem.val(protocol + "://" + input);
               ngModel.$setViewValue(protocol + "://" + input);
             });
@@ -733,16 +741,16 @@ app.directive('checkLink', function ($location) {
 });
 
 //wordpress post directive, post list in footer
-app.directive('wpPost', function (API_URL, Restangular, $http, $sce, wpService) {
+app.directive('wpPost', function(API_URL, Restangular, $http, $sce, wpService) {
   return {
     restrict: 'E',
     scope: {
       options: '@'
     },
-    link: function (scope, element, attrs) {
+    link: function(scope, element, attrs) {
       scope.list_limit = 2;
       scope.posts = [];
-      wpService.getPosts([], function () {
+      wpService.getPosts([], function() {
         scope.posts = wpService.posts;
       }, [], 2);
     },
@@ -750,11 +758,11 @@ app.directive('wpPost', function (API_URL, Restangular, $http, $sce, wpService) 
   }
 });
 
-app.directive('wpIndividualPost', function () {
+app.directive('wpIndividualPost', function() {
   return {
     restrict: 'E',
     scope: {},
-    link: function (scope, element, attrs) {
+    link: function(scope, element, attrs) {
 
     },
     templateUrl: 'views/templates/wp-post.html',
@@ -762,11 +770,11 @@ app.directive('wpIndividualPost', function () {
   }
 });
 
-app.directive('wpPostList', function (API_URL, Restangular, $http, $sce, wpService, $location, BLOG_SETTINGS, $routeParams) {
+app.directive('wpPostList', function(API_URL, Restangular, $http, $sce, wpService, $location, BLOG_SETTINGS, $routeParams) {
   return {
     restrict: 'E',
     scope: {},
-    link: function (scope, element, attrs) {
+    link: function(scope, element, attrs) {
       var para = $location.search();
       scope.category_filter = [];
       scope.tag_filter = [];
@@ -784,14 +792,14 @@ app.directive('wpPostList', function (API_URL, Restangular, $http, $sce, wpServi
         scope.current_page = $location.search().page;
       }
       scope.list_limit = BLOG_SETTINGS.posts_per_page;
-      wpService.getPosts(scope.category_filter, function () {
+      wpService.getPosts(scope.category_filter, function() {
         scope.posts = wpService.posts;
         scope.totalPage = wpService.totalPage;
       }, scope.tag_filter, scope.list_limit, scope.current_page, scope.s);
       if (wpService.categories && wpService.categories.length) {
         scope.categories = wpService.categories;
       } else {
-        wpService.getCategories(function () {
+        wpService.getCategories(function() {
           scope.categories = wpService.categories;
         });
       }
@@ -802,7 +810,7 @@ app.directive('wpPostList', function (API_URL, Restangular, $http, $sce, wpServi
   }
 });
 
-app.directive('semanticPagination', function () {
+app.directive('semanticPagination', function() {
   return {
     restrict: 'EA',
     require: '?ngModel',
@@ -810,7 +818,7 @@ app.directive('semanticPagination', function () {
       pageUpdate: '&updateFunction',
       totalPages: '='
     },
-    link: function (scope, element, attrs, ngModel) {
+    link: function(scope, element, attrs, ngModel) {
       // set current page and get pages
       function render() {
         scope.currentPage = parseInt(ngModel.$viewValue) || 1;
@@ -818,7 +826,7 @@ app.directive('semanticPagination', function () {
       }
 
       // once the totalPages has a value, run render function
-      scope.$watch('totalPages', function (value) {
+      scope.$watch('totalPages', function(value) {
         if (value) {
           render();
         }
@@ -861,7 +869,7 @@ app.directive('semanticPagination', function () {
       }
 
       // select a page
-      scope.selectPage = function (page) {
+      scope.selectPage = function(page) {
         if (page < 1) {
           page = 1;
         }
@@ -901,10 +909,10 @@ app.directive('semanticPagination', function () {
 });
 
 //twitter widget directive
-app.directive('twitterTimeline', function (twitterWidgetService, $sce, $timeout) {
+app.directive('twitterTimeline', function(twitterWidgetService, $sce, $timeout) {
   return {
     restrict: "E",
-    link: function (scope, elm, attr) {
+    link: function(scope, elm, attr) {
       // var script = function() {
       // 	$('#twitter-wjs').remove();
       // 	$timeout(function() {
@@ -921,7 +929,7 @@ app.directive('twitterTimeline', function (twitterWidgetService, $sce, $timeout)
       // 	}, 500);
       // }
 
-      var init = function () {
+      var init = function() {
         scope.widget = twitterWidgetService.widget_code;
         // script();
         scope.widget = $sce.trustAsHtml(scope.widget);
@@ -938,14 +946,14 @@ app.directive('twitterTimeline', function (twitterWidgetService, $sce, $timeout)
   }
 });
 
-app.directive('htmlConvertToText', function () {
+app.directive('htmlConvertToText', function() {
   return {
     restrict: "A",
     scope: {
       html: '=htmlConvertToText',
       max_char: '=maxChar',
     },
-    link: function (scope, elm, attr) {
+    link: function(scope, elm, attr) {
 
       var sourceStr = scope.html;
       var max_char = scope.max_char;
@@ -987,15 +995,15 @@ app.directive('htmlConvertToText', function () {
   }
 });
 
-app.directive('onEnter', function () {
+app.directive('onEnter', function() {
   return {
     restrict: "A",
-    link: function (scope, elem, attrs) {
-      elem.bind("keydown keypress", function (event) {
+    link: function(scope, elem, attrs) {
+      elem.bind("keydown keypress", function(event) {
         // check enter key
         if (event.which === 13) {
           // apply function when key pressed
-          scope.$apply(function () {
+          scope.$apply(function() {
             scope.$eval(attrs.onEnter);
           });
 
@@ -1006,11 +1014,11 @@ app.directive('onEnter', function () {
   };
 });
 
-app.directive('imageonload', function () {
+app.directive('imageonload', function() {
   return {
     restrict: "A",
-    link: function (scope, element, attrs) {
-      element.bind('load', function () {
+    link: function(scope, element, attrs) {
+      element.bind('load', function() {
         // Original states
         $('.ui.loader.download-loader').fadeOut();
         $('.ui.progress.upload-bar').fadeOut();
@@ -1021,9 +1029,9 @@ app.directive('imageonload', function () {
   }
 });
 
-app.directive('campaignPlaceHolder', function () {
+app.directive('campaignPlaceHolder', function() {
   return {
-    link: function (scope, element, attrs) {
+    link: function(scope, element, attrs) {
       $(element).next().css({
         'opacity': 0,
         'visibility': 'hidden',
@@ -1035,17 +1043,17 @@ app.directive('campaignPlaceHolder', function () {
 });
 
 // Initial Semanitc UI tabular menu
-app.directive('semanticUiTabs', function () {
+app.directive('semanticUiTabs', function() {
   return {
-    link: function (scope, element, attrs) {
+    link: function(scope, element, attrs) {
       $(element).find('.tabular .item').tab();
     }
   }
 });
 
-app.directive('mediaElement', function () {
+app.directive('mediaElement', function() {
   return {
-    link: function (scope, element, attrs) {
+    link: function(scope, element, attrs) {
       $(element).mediaelementplayer({
         alwaysShowControls: false,
       });
@@ -1053,9 +1061,9 @@ app.directive('mediaElement', function () {
   }
 });
 
-app.directive('mediaElement', function () {
+app.directive('mediaElement', function() {
   return {
-    link: function (scope, element, attrs) {
+    link: function(scope, element, attrs) {
       $(element).mediaelementplayer({
         alwaysShowControls: false,
       });
@@ -1063,20 +1071,20 @@ app.directive('mediaElement', function () {
   }
 });
 
-app.directive('youtubeVideo', function ($window, $q, $timeout) {
+app.directive('youtubeVideo', function($window, $q, $timeout) {
   return {
     restrict: "AE",
-    link: function (scope, element, attrs) {
+    link: function(scope, element, attrs) {
 
       scope.$watch(
-        function () {
+        function() {
           return element[0].childNodes.length;
         },
-        function (newValue, oldValue) {
+        function(newValue, oldValue) {
 
-          var onReady = function (event) { };
+          var onReady = function(event) {};
           if ((attrs.mute && attrs.mute == "true") ? 1 : 0) {
-            onReady = function (event) {
+            onReady = function(event) {
               event.target.mute();
             };
           }
@@ -1084,7 +1092,7 @@ app.directive('youtubeVideo', function ($window, $q, $timeout) {
           var maxTries = 5;
           for (var count = 0; count < maxTries; count++) {
             try {
-              setTimeout(function () {
+              setTimeout(function() {
                 var ytPlayer = new YT.Player(attrs.id, {
                   playerVars: {
                     autoplay: (attrs.autoplay && attrs.autoplay == "true") ? 1 : 0,
@@ -1115,10 +1123,10 @@ app.directive('youtubeVideo', function ($window, $q, $timeout) {
   }
 });
 
-app.directive('myTarget', function () {
+app.directive('myTarget', function() {
   return {
     restrict: 'A',
-    link: function ($scope, $element, $attrs) {
+    link: function($scope, $element, $attrs) {
       var linkid = $attrs["myTarget"];
       if (!linkid) {
         $element.attr('target', '_blank');
@@ -1127,12 +1135,12 @@ app.directive('myTarget', function () {
   }
 });
 
-app.directive('setVideoThumbHeight', function ($timeout) {
+app.directive('setVideoThumbHeight', function($timeout) {
   return {
     restrict: 'A',
-    link: function (scope, element, attrs) {
-      $timeout(function () {
-        var VidThumbResize = function () {
+    link: function(scope, element, attrs) {
+      $timeout(function() {
+        var VidThumbResize = function() {
 
           var screenSize = $(window).width();
           var imgHeight = element.find('.placeholder-img').height();
@@ -1145,7 +1153,7 @@ app.directive('setVideoThumbHeight', function ($timeout) {
 
         VidThumbResize();
 
-        $(window).resize(function () {
+        $(window).resize(function() {
           VidThumbResize();
         });
       });
@@ -1154,11 +1162,11 @@ app.directive('setVideoThumbHeight', function ($timeout) {
 });
 
 // Calls the function on attribute on-scroll-bottom when the scroll has reached the bottom.
-app.directive('onScrollBottom', function () {
+app.directive('onScrollBottom', function() {
   return {
     restrict: 'A',
-    link: function (scope, element, attrs) {
-      element.bind('scroll', function () {
+    link: function(scope, element, attrs) {
+      element.bind('scroll', function() {
         var current_scroll = element[0].scrollTop + element[0].offsetHeight;
         if (current_scroll > element[0].scrollHeight) {
           scope.$apply(attrs.onScrollBottom);
@@ -1169,11 +1177,11 @@ app.directive('onScrollBottom', function () {
 });
 
 // Calls when enter key is pressed on input element
-app.directive('enterKeyPress', function () {
-  return function (scope, element, attrs) {
-    element.bind("keydown keypress", function (event) {
+app.directive('enterKeyPress', function() {
+  return function(scope, element, attrs) {
+    element.bind("keydown keypress", function(event) {
       if (event.which === 13) {
-        scope.$apply(function () {
+        scope.$apply(function() {
           if (typeof attrs.enterKeyPress === "function") {
             scope.$eval(attrs.enterKeyPress);
           }
@@ -1185,13 +1193,13 @@ app.directive('enterKeyPress', function () {
   };
 });
 
-app.directive("inputColor", function ($timeout) {
+app.directive("inputColor", function($timeout) {
   return {
     restrict: "A",
-    link: function (scope, element, attribute) {
-      scope.$watch(function () {
+    link: function(scope, element, attribute) {
+      scope.$watch(function() {
         return $(element).val();
-      }, function (newValue, oldValue) {
+      }, function(newValue, oldValue) {
         if (newValue != oldValue && newValue) {
           $(element).css("background-color", "#" + $(element).val());
 
@@ -1219,15 +1227,15 @@ app.directive("inputColor", function ($timeout) {
   };
 });
 
-app.directive("widgetCodeSelect", function ($timeout) {
+app.directive("widgetCodeSelect", function($timeout) {
   return {
     restrict: "A",
-    link: function (scope, element, attribute) {
-      $timeout(function () {
+    link: function(scope, element, attribute) {
+      $timeout(function() {
         $('#embed-code br').remove();
         // $('#embed-code').click();
         selectEmbedCode();
-        $('#embed-code').click(function () {
+        $('#embed-code').click(function() {
           selectEmbedCode();
         });
 
@@ -1241,7 +1249,7 @@ app.directive("widgetCodeSelect", function ($timeout) {
           $('#embed-code').val($('#embed-code').text()).show();
           $('#selectable-code').hide();
         }
-        $('#selectable-code').blur(function () {
+        $('#selectable-code').blur(function() {
           deselectEmbedCode();
         });
       });
@@ -1249,22 +1257,22 @@ app.directive("widgetCodeSelect", function ($timeout) {
   };
 });
 
-app.directive('scrollTo', ['ScrollTo', function (ScrollTo) {
-  return {
-    restrict: "AC",
-    compile: function () {
+app.directive('scrollTo', ['ScrollTo', function(ScrollTo) {
+    return {
+      restrict: "AC",
+      compile: function() {
 
-      return function (scope, element, attr) {
-        element.bind("click", function (event) {
-          ScrollTo.idOrName(attr.scrollTo, attr.offset);
-        });
-      };
-    }
-  };
-}])
-  .service('ScrollTo', ['$window', 'ngScrollToOptions', function ($window, ngScrollToOptions) {
+        return function(scope, element, attr) {
+          element.bind("click", function(event) {
+            ScrollTo.idOrName(attr.scrollTo, attr.offset);
+          });
+        };
+      }
+    };
+  }])
+  .service('ScrollTo', ['$window', 'ngScrollToOptions', function($window, ngScrollToOptions) {
 
-    this.idOrName = function (idOrName, offset, focus) { //find element with the given id or name and scroll to the first element it finds
+    this.idOrName = function(idOrName, offset, focus) { //find element with the given id or name and scroll to the first element it finds
       var document = $window.document;
 
       if (!idOrName) { //move to top if idOrName is not provided
@@ -1298,9 +1306,9 @@ app.directive('scrollTo', ['ScrollTo', function (ScrollTo) {
     }
 
   }])
-  .provider("ngScrollToOptions", function () {
+  .provider("ngScrollToOptions", function() {
     this.options = {
-      handler: function (el, offset) {
+      handler: function(el, offset) {
         if (offset) {
           var top = $(el).offset().top - offset;
           window.scrollTo(0, top);
@@ -1309,22 +1317,22 @@ app.directive('scrollTo', ['ScrollTo', function (ScrollTo) {
         }
       }
     };
-    this.$get = function () {
+    this.$get = function() {
       return this.options;
     };
-    this.extend = function (options) {
+    this.extend = function(options) {
       this.options = angular.extend(this.options, options);
     };
   });
 
-app.directive('disableLink', function () {
+app.directive('disableLink', function() {
   return {
     restrict: 'A',
     scope: {
       enabled: '=disableLink'
     },
-    link: function (scope, elem, attr) {
-      elem.click(function (event) {
+    link: function(scope, elem, attr) {
+      elem.click(function(event) {
         if (scope.enabled) {
           event.preventDefault();
         }
@@ -1333,7 +1341,7 @@ app.directive('disableLink', function () {
   }
 });
 
-app.directive('dynFbCommentBox', function () {
+app.directive('dynFbCommentBox', function() {
   function createHTML(href, numposts, colorscheme) {
     return '<div class="fb-comments" ' +
       'data-href="' + href + '" ' +
@@ -1346,7 +1354,7 @@ app.directive('dynFbCommentBox', function () {
     restrict: 'A',
     scope: {},
     link: function postLink(scope, elem, attrs) {
-      attrs.$observe('pageHref', function (newValue) {
+      attrs.$observe('pageHref', function(newValue) {
         var href = newValue;
         var numposts = attrs.numposts || 5;
         var colorscheme = attrs.colorscheme || 'light';
@@ -1358,7 +1366,7 @@ app.directive('dynFbCommentBox', function () {
   };
 });
 
-app.directive('thrinaciaFileUpload', function () {
+app.directive('thrinaciaFileUpload', function() {
   return {
     restrict: 'E',
     scope: { uploadFile: '&', uploadId: '=' },
@@ -1366,7 +1374,7 @@ app.directive('thrinaciaFileUpload', function () {
       '<i class="upload icon"></i> {{uploadTranslate|translate}}' +
       '</label>' +
       '<input id="{{uploadId}}_{{index}}" type="file" data-index="{{index}}" onchange="angular.element(this).scope().fileNameChanged()" style="display:none" {{disabled}}/>',
-    link: function (scope, elem, attr) {
+    link: function(scope, elem, attr) {
       scope.uploadId = attr.uploadId;
       scope.uploadTranslate = attr.uploadTranslate;
       scope.index = attr.uploadIndex;
@@ -1380,7 +1388,7 @@ app.directive('thrinaciaFileUpload', function () {
       } else {
         scope.additionalClasses = "";
       }
-      scope.fileNameChanged = function (event) {
+      scope.fileNameChanged = function(event) {
         if (scope.index) {
           var file = angular.element('#' + attr.uploadId + '_' + scope.index)[0].files;
           var index = angular.element('#' + attr.uploadId + '_' + scope.index)[0].getAttribute('data-index');

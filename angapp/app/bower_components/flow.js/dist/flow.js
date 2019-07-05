@@ -2,6 +2,10 @@
  * @license MIT
  */
 (function(window, document, undefined) {'use strict';
+  if (!window || !document) {
+    console.warn('Flowjs needs window and document objects to work');
+    return;
+  }
   // ie10+
   var ie10plus = window.navigator.msPointerEnabled;
   /**
@@ -57,7 +61,11 @@
      * Check if directory upload is supported
      * @type {boolean}
      */
-    this.supportDirectory = /Chrome/.test(window.navigator.userAgent);
+    this.supportDirectory = (
+        /Chrome/.test(window.navigator.userAgent) ||
+        /Firefox/.test(window.navigator.userAgent) ||
+        /Edge/.test(window.navigator.userAgent)
+    );
 
     /**
      * List of FlowFile objects
@@ -97,7 +105,7 @@
       initFileFn: null,
       readFileFn: webAPIFileRead
     };
-    
+
     /**
      * Current options
      * @type {Object}
@@ -155,7 +163,7 @@
     /**
      * Set a callback for an event, possible events:
      * fileSuccess(file), fileProgress(file), fileAdded(file, event),
-     * fileRemoved(file), fileRetry(file), fileError(file, message), 
+     * fileRemoved(file), fileRetry(file), fileError(file, message),
      * complete(), progress(), error(message, file), pause()
      * @function
      * @param {string} event
@@ -518,7 +526,9 @@
      */
     resume: function () {
       each(this.files, function (file) {
-        file.resume();
+        if (!file.isComplete()) {
+          file.resume();
+        }
       });
     },
 
@@ -579,11 +589,13 @@
       var files = [];
       each(fileList, function (file) {
         // https://github.com/flowjs/flow.js/issues/55
-        if ((!ie10plus || ie10plus && file.size > 0) && !(file.size % 4096 === 0 && (file.name === '.' || file.fileName === '.')) &&
-          (this.opts.allowDuplicateUploads || !this.getFromUniqueIdentifier(this.generateUniqueIdentifier(file)))) {
-          var f = new FlowFile(this, file);
-          if (this.fire('fileAdded', f, event)) {
-            files.push(f);
+        if ((!ie10plus || ie10plus && file.size > 0) && !(file.size % 4096 === 0 && (file.name === '.' || file.fileName === '.'))) {
+          var uniqueIdentifier = this.generateUniqueIdentifier(file);
+          if (this.opts.allowDuplicateUploads || !this.getFromUniqueIdentifier(uniqueIdentifier)) {
+            var f = new FlowFile(this, file, uniqueIdentifier);
+            if (this.fire('fileAdded', f, event)) {
+              files.push(f);
+            }
           }
         }
       }, this);
@@ -691,16 +703,17 @@
    * @name FlowFile
    * @param {Flow} flowObj
    * @param {File} file
+   * @param {string} uniqueIdentifier
    * @constructor
    */
-  function FlowFile(flowObj, file) {
+  function FlowFile(flowObj, file, uniqueIdentifier) {
 
     /**
      * Reference to parent Flow instance
      * @type {Flow}
      */
     this.flowObj = flowObj;
-    
+
     /**
      * Used to store the bytes read
      * @type {Blob|string}
@@ -735,7 +748,7 @@
      * File unique identifier
      * @type {string}
      */
-    this.uniqueIdentifier = flowObj.generateUniqueIdentifier(file);
+    this.uniqueIdentifier = (uniqueIdentifier === undefined ? flowObj.generateUniqueIdentifier(file) : uniqueIdentifier);
 
     /**
      * List of chunks
@@ -1464,7 +1477,7 @@
     prepareXhrRequest: function(method, isTest, paramsMethod, blob) {
       // Add data from the query options
       var query = evalOpts(this.flowObj.opts.query, this.fileObj, this, isTest);
-      query = extend(query, this.getParams());
+      query = extend(query || {}, this.getParams());
 
       var target = evalOpts(this.flowObj.opts.target, this.fileObj, this, isTest);
       var data = null;
@@ -1482,7 +1495,7 @@
         each(query, function (v, k) {
           data.append(k, v);
         });
-        data.append(this.flowObj.opts.fileParameterName, blob, this.fileObj.file.name);
+        if (typeof blob !== "undefined") data.append(this.flowObj.opts.fileParameterName, blob, this.fileObj.file.name);
       }
 
       this.xhr.open(method, target, true);
@@ -1600,7 +1613,7 @@
    * Library version
    * @type {string}
    */
-  Flow.version = '2.11.2';
+  Flow.version = '2.13.1';
 
   if ( typeof module === "object" && module && typeof module.exports === "object" ) {
     // Expose Flow as module.exports in loaders that implement the Node
@@ -1623,4 +1636,4 @@
       define( "flow", [], function () { return Flow; } );
     }
   }
-})(window, document);
+})(typeof window !== 'undefined' && window, typeof document !== 'undefined' && document);

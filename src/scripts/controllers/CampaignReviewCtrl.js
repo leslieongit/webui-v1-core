@@ -1,11 +1,11 @@
-app.controller('campaignReviewCtrl', function($location, $scope, $rootScope, $routeParams, CreateCampaignService, Restangular, RESOURCE_REGIONS, API_URL, $translate, $translatePartialLoader, CampaignSettingsService, VideoLinkService, PortalSettingsService, $timeout, SOCIAL_SHARING_OPTIONS, RestFullResponse, $filter, UserService, $anchorScroll) {
+app.controller('campaignReviewCtrl', function ($timeout, $interval, $location, $scope, $filter, $browser, $translatePartialLoader, $translate, $routeParams, Restangular, RESOURCE_REGIONS, API_URL, PortalSettingsService, $rootScope, CampaignSettingsService, UserService, RestFullResponse, DisqusShortnameService, VideoLinkService, SOCIAL_SHARING_OPTIONS, $anchorScroll) {
   $scope.RESOURCE_REGIONS = RESOURCE_REGIONS;
   $scope.duration = "";
   $scope.campaign = {};
   var msg;
   $scope.featuredMedia = true;
   $scope.campaignTab = true;
-  
+
   $scope.campaign_id = $routeParams.campaign_id;
   $scope.user = UserService;
   $scope.$location = $location;
@@ -30,8 +30,8 @@ app.controller('campaignReviewCtrl', function($location, $scope, $rootScope, $ro
   $scope.stream = {};
   $scope.duration = "";
   $scope.dtype = "";
-  
-  $timeout(function(){
+
+  $timeout(function () {
     // initiate semantic tabs
     $('#campaign-tabs .menu-tabs .item').tab({
       context: $('#campaign-tabs')
@@ -53,7 +53,7 @@ app.controller('campaignReviewCtrl', function($location, $scope, $rootScope, $ro
   var guestContribDisabled = false;
   $scope.note = {};
 
-  
+
   // load portal settings
   PortalSettingsService.getSettingsObj().then(function (success) {
     $scope.public_settings = success.public_setting;
@@ -87,7 +87,7 @@ app.controller('campaignReviewCtrl', function($location, $scope, $rootScope, $ro
     $scope.showShareHeaderAfterCampaignCreation = success.public_setting.site_campaign_page_show_share_header;
     $scope.isRemoveCampaignLinks = $scope.public_settings.site_campaign_remove_campaign_links;
     $scope.hideRaiseMode = $scope.public_settings.site_campaign_remove_raise_mode;
-    
+
     //Inititialize min contribution amount if valid else == 1 
     $scope.pledge_amount = 1;
     if ($scope.minContributionAmount) {
@@ -138,11 +138,13 @@ app.controller('campaignReviewCtrl', function($location, $scope, $rootScope, $ro
     }
     // If comment system == disqus, get disqus shortname
     if ($scope.comment_system == "disqus") {
+      $scope.hasDisqusShortname;
       DisqusShortnameService.getDisqusShortname().then(function (shortname) {
-        var disqus_shortname;
+        $scope.disqus_shortname;
+
         angular.forEach(shortname, function (value) {
           if (value.setting_type_id == 3) {
-            disqus_shortname = value.value; // required: replace example with your forum shortname
+            $scope.disqus_shortname = value.value; // required: replace example with your forum shortname
           }
         });
         var disqus_identifier = $scope.campaign_id;
@@ -160,19 +162,18 @@ app.controller('campaignReviewCtrl', function($location, $scope, $rootScope, $ro
             }
           });
         } else {
-          if (disqus_shortname) {
+          if ($scope.disqus_shortname) {
             $('<div id="disqus_thread"></div>').insertAfter('#insert_disqus');
-            $scope.disqus_shortname = shortname.value;
             window.disqus_identifier = disqus_identifier;
             window.disqus_url = disqus_url;
             var dsq = document.createElement('script');
             dsq.type = 'text/javascript';
             dsq.async = true;
-            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            dsq.src = '//' + $scope.disqus_shortname + '.disqus.com/embed.js';
             $('head').append(dsq);
           }
         }
-      })
+      });
     } else if ($scope.comment_system == "custom") {
       // If comment system == custom
       $scope.comments_show_comment_picture = success.public_setting.custom_comment_show_comment_picture;
@@ -199,8 +200,8 @@ app.controller('campaignReviewCtrl', function($location, $scope, $rootScope, $ro
     getCampaign();
   });
 
-   // Default comment parameters
-   $scope.sortOrFiltersComments = {
+  // Default comment parameters
+  $scope.sortOrFiltersComments = {
     "sort": '-created',
     "page_entries": 5,
     "page_limit": 100,
@@ -769,39 +770,60 @@ app.controller('campaignReviewCtrl', function($location, $scope, $rootScope, $ro
 
       // check for hash and making the tab active
       $scope.checklink = function () {
+        var translate = $translate.instant(['campaign_page_campaigntitle', 'campaign_page_faq', 'campaign_page_rewardstitle', 'campaign_page_backers', 'campaign_page_streams', 'campaign_page_comments', 'campaign_page_files']);
+
         if ($location.hash()) {
           $('#campaign').removeClass('active');
           $('#campaign-seg').removeClass('active');
 
           var hash = $location.hash();
-          if (hash == 'FAQ') {
-            $('#faq').addClass('active');
-            $('#faq-seg').addClass('active');
-            $('#default-text').text(hash);
-          } else if (hash == 'Backers') {
-            $('#backer').addClass('active');
-            $('#backer-seg').addClass('active');
-            $('#default-text').html(hash + '<span class="count-label ui label" >' + $scope.backer_length + '</span>');
-          } else if (hash == 'Streams') {
-            $('#stream').addClass('active');
-            $('#stream-seg').addClass('active');
-            $('#default-text').html(hash + '<span class="count-label ui label" >' + $scope.campaign.streams.length + '</span>');
-          } else if (hash == 'Comments') {
-            $('#comment').addClass('active');
-            $('#comment-seg').addClass('active');
-            $('#default-text').html(hash + '<span class="count-label ui label" >' + $scope.sortOrFiltersComments.pagination.totalentries + '</span>');
-          } else if (hash == 'Campaign') {
-            $('#campaign').addClass('active');
-            $('#campaign-seg').addClass('active');
-            $('#default-text').text(hash);
-          } else if (hash == 'Rewards') {
-            $('#rewards').addClass('active');
-            $('#rewards-seg').addClass('active');
-            $('#default-text').text(hash);
-          } else if (hash == "Files") {
-            $('#file').addClass('active');
-            $('#file-seg').addClass('active');
-            $('#default-text').text(hash);
+          switch (hash) {
+            case translate.campaign_page_faq:
+              var faqLength = 0;
+              if ($scope.campaign.faqs && typeof $scope.campaign.faqs[0] != 'undefined') {
+                faqLength = $scope.campaign.faqs[0].faq_pairs.length;
+              }
+              $('.menu-tabs .item').removeClass('active');
+              $('#faq').addClass('active');
+              $('#mobile-faq').addClass('active');
+              $('#faq-seg').addClass('active');
+              break;
+            case translate.campaign_page_backers:
+              $('.menu-tabs .item').removeClass('active');
+              $('#backer').addClass('active');
+              $('#mobile-backer').addClass('active');
+              $('#backer-seg').addClass('active');
+              break;
+            case translate.campaign_page_streams:
+              $('.menu-tabs .item').removeClass('active');
+              $('#stream').addClass('active');
+              $('#mobile-stream').addClass('active');
+              $('#stream-seg').addClass('active');
+              break;
+            case translate.campaign_page_comments:
+              $('.menu-tabs .item').removeClass('active');
+              $('#comment').addClass('active');
+              $('#mobile-comment').addClass('active');
+              $('#comment-seg').addClass('active');
+              break;
+            case translate.campaign_page_campaigntitle:
+              $('.menu-tabs .item').removeClass('active');
+              $('#campaign').addClass('active');
+              $('#mobile-campaign').addClass('active');
+              $('#campaign-seg').addClass('active');
+              break;
+            case translate.campaign_page_rewardstitle:
+              $('.menu-tabs .item').removeClass('active');
+              $('#rewards').addClass('active');
+              $('#mobile-rewards').addClass('active');
+              $('#rewards-seg').addClass('active');
+              break;
+            case translate.campaign_page_files:
+              $('.menu-tabs .item').removeClass('active');
+              $('#file').addClass('active');
+              $('#mobile-file').addClass('active');
+              $('#file-seg').addClass('active');
+              break;
           }
         }
       }
@@ -810,63 +832,19 @@ app.controller('campaignReviewCtrl', function($location, $scope, $rootScope, $ro
         $scope.checklink();
       }, 500);
 
-      $scope.tabactive = function (id) {
+      // setting hash for the link
+      $scope.makeLink = function (id) {
+        var linkpath = $location.path();
+        $location.path(linkpath).hash(id).replace();
+        $scope.hashcheck = $location.hash();
+      }
 
-        if (id == 'Campaign') {
-          $('#default-text').text(id);
-          $('#campaign-seg').addClass('active');
-          $('#rewards-seg').removeClass('active');
-          $('#backer-seg').removeClass('active');
-          $('#faq-seg').removeClass('active');
-          $('#comment-seg').removeClass('active');
-          $('#stream-seg').removeClass('active');
-        }
-        if (id == 'Rewards') {
-          $('#default-text').text(id);
-          $('#rewards-seg').addClass('active');
-          $('#campaign-seg').removeClass('active');
-          $('#backer-seg').removeClass('active');
-          $('#faq-seg').removeClass('active');
-          $('#comment-seg').removeClass('active');
-          $('#stream-seg').removeClass('active');
-        }
-        if (id == 'FAQ') {
-          $('#default-text').text(id);
-          $('#rewards-seg').removeClass('active');
-          $('#faq-seg').addClass('active');
-          $('#campaign-seg').removeClass('active');
-          $('#backer-seg').removeClass('active');
-          $('#comment-seg').removeClass('active');
-          $('#stream-seg').removeClass('active');
-        }
-        if (id == 'Backers') {
-          $('#default-text').html(id + '<span class="count-label ui label" >' + $scope.backer_length + '</span>');
-          $('#rewards-seg').removeClass('active');
-          $('#backer-seg').addClass('active');
-          $('#faq-seg').removeClass('active');
-          $('#stream-seg').removeClass('active');
-          $('#campaign-seg').removeClass('active');
-          $('#comment-seg').removeClass('active');
-        }
-        if (id == 'Streams') {
-          $('#default-text').html(id + '<span class="count-label ui label" >' + $scope.campaign.streams.length + '</span>');
-          $('#rewards-seg').removeClass('active');
-          $('#stream-seg').addClass('active');
-          $('#backer-seg').removeClass('active');
-          $('#faq-seg').removeClass('active');
-          $('#campaign-seg').removeClass('active');
-          $('#comment-seg').removeClass('active');
-        }
-        if (id == 'Comments') {
-          $('#default-text').html(id + '<span class="count-label ui label" >' + $scope.sortOrFiltersComments.pagination.totalentries + '</span>');
-          $('#rewards-seg').removeClass('active');
-          $('#comment-seg').addClass('active');
-          $('#backer-seg').removeClass('active');
-          $('#faq-seg').removeClass('active');
-          $('#stream-seg').removeClass('active');
-          $('#campaign-seg').removeClass('active');
-        }
-
+      // Toggle campaign dropdown items using url hash
+      $scope.toggleHash = function (selectedItemKey) {
+        var translatedKey = $translate.instant(selectedItemKey);
+        $location.search('').replace();
+        $scope.makeLink(translatedKey);
+        $scope.checklink();
       }
 
       // Override original page title once we get campaign name back
@@ -1024,8 +1002,8 @@ app.controller('campaignReviewCtrl', function($location, $scope, $rootScope, $ro
       $scope.$emit("loading_finished");
 
       if ($location.search().scroll_to_reward == 1) {
-        
-        if ($scope.displayRewardsMobileTab && $(window).width() < 767){
+
+        if ($scope.displayRewardsMobileTab && $(window).width() < 767) {
           $scope.scrollToMobileRewardsTab();
         } else {
           $scope.scrollToRewards();
@@ -1042,15 +1020,17 @@ app.controller('campaignReviewCtrl', function($location, $scope, $rootScope, $ro
   $scope.$emit("loading_finished");
 
   /* this will open a modal for the admin to type in the note */
-  $scope.addNotes = function($event, fieldName) {
-    $scope.noteFieldName = fieldName;
-    $scope.noteFieldTitle = $event.currentTarget.getAttribute('title');
+  $scope.addNotes = function (fieldName, key) {
+    $translate(fieldName).then(function(value) {
+      $scope.noteFieldName = value;
+    });
+    $scope.noteFieldKey = key; 
     $('.ui.modal.admin-notes').modal('show');
   };
 
   function getNote() {
     // server request to get admin note
-    Restangular.one('campaign', $scope.campaign_id).one('note').customGET().then(function(success) {
+    Restangular.one('campaign', $scope.campaign_id).one('note').customGET().then(function (success) {
       if (success && success.length) {
         $scope.note = success[0].value;
         $scope.note.id = success[0].id;
@@ -1059,7 +1039,7 @@ app.controller('campaignReviewCtrl', function($location, $scope, $rootScope, $ro
   }
 
   /* this function is called when admin wants to save the note */
-  $scope.saveNote = function() {
+  $scope.saveNote = function () {
     var data = {
       value: $scope.note,
     };
@@ -1071,7 +1051,7 @@ app.controller('campaignReviewCtrl', function($location, $scope, $rootScope, $ro
     }
   };
 
-  $scope.action = function(actionName) {
+  $scope.action = function (actionName) {
     var data = {
       entry_status_id: '',
     }
@@ -1082,14 +1062,14 @@ app.controller('campaignReviewCtrl', function($location, $scope, $rootScope, $ro
     $rootScope.floatingMessage = msg;
     if (actionName == 'approve') {
       data.entry_status_id = 2;
-      Restangular.one('campaign', $scope.campaign_id).customPUT(data).then(function(success) {
+      Restangular.one('campaign', $scope.campaign_id).customPUT(data).then(function (success) {
         msg = {
           'header': "approve_campaign"
         };
         $rootScope.floatingMessage = msg;
         $scope.hideFloatingMessage();
-        
-      }, function(failure) {
+
+      }, function (failure) {
         msg = {
           'header': failure.data.message,
         }
@@ -1098,13 +1078,13 @@ app.controller('campaignReviewCtrl', function($location, $scope, $rootScope, $ro
       });
     } else if (actionName == 'disapprove') {
       data.entry_status_id = 3;
-      Restangular.one('campaign', $scope.campaign_id).customPUT(data).then(function(success) {
+      Restangular.one('campaign', $scope.campaign_id).customPUT(data).then(function (success) {
         msg = {
           'header': "disapprove_campaign"
         };
         $rootScope.floatingMessage = msg;
         //$location.path('/admin/dashboard');
-      }, function(failure) {
+      }, function (failure) {
         msg = {
           'header': failure.data.message,
         }
@@ -1114,12 +1094,12 @@ app.controller('campaignReviewCtrl', function($location, $scope, $rootScope, $ro
     }
   };
 
-  $scope.removeNote = function(fieldName) {
+  $scope.removeNote = function (fieldName) {
     $scope.note[fieldName] = "";
     $scope.saveNote();
   }
 
-  $scope.dateInPast = function(value, sec) {
+  $scope.dateInPast = function (value, sec) {
     //return moment(value) < moment(new Date());
     if (sec == 0 || sec == "00" || sec < 0) {
       return true;
@@ -1127,7 +1107,7 @@ app.controller('campaignReviewCtrl', function($location, $scope, $rootScope, $ro
       return false;
     }
   }
-  $scope.toggleFeaturedMedia = function(media) {
+  $scope.toggleFeaturedMedia = function (media) {
     if (media == 'image') {
       $scope.featuredMedia = true;
     }
@@ -1135,7 +1115,7 @@ app.controller('campaignReviewCtrl', function($location, $scope, $rootScope, $ro
       $scope.featuredMedia = false;
     }
   }
-  $scope.toggleCampaignTab = function(tab) {
+  $scope.toggleCampaignTab = function (tab) {
     if (tab == 'campaign') {
       $scope.campaignTab = true;
     }
@@ -1201,52 +1181,78 @@ app.controller('campaignReviewCtrl', function($location, $scope, $rootScope, $ro
     }
   }
 
-    // setting hash for the link
-    $scope.makeLink = function (id) {
-      var linkpath = $location.path();
-      $location.path(linkpath).hash(id).replace();
-      $scope.hashcheck = $location.hash();
+  // setting hash for the link
+  $scope.makeLink = function (id) {
+    var linkpath = $location.path();
+    $location.path(linkpath).hash(id).replace();
+    $scope.hashcheck = $location.hash();
+  }
+  $scope.showManager = function () {
+    $window.open('profile/' + $scope.campaign.managers[0].person_id);
+  }
+
+  $scope.getTotalStream = function () {
+    var tmp = parseInt($scope.stream_pagination.entriesperpage) * parseInt($scope.stream_filter.page_limit);
+    if (tmp > $scope.stream_pagination.totalentries) {
+      return $scope.stream_pagination.totalentries;
+    } else {
+      return tmp;
     }
-    $scope.showManager = function () {
-      $window.open('profile/' + $scope.campaign.managers[0].person_id);
+  }
+
+  $scope.toDate = function (str) {
+    if (str && str.length) {
+      var d = str.substring(0, 10);
+      var lst = str.substring(0, 10).split('-');
+      var time = str.substring(11, 16);
+      var f = new Date(lst[0], lst[1] - 1, lst[2]);
+      return d + "  " + time;
     }
-  
-    $scope.getTotalStream = function () {
-      var tmp = parseInt($scope.stream_pagination.entriesperpage) * parseInt($scope.stream_filter.page_limit);
-      if (tmp > $scope.stream_pagination.totalentries) {
-        return $scope.stream_pagination.totalentries;
-      } else {
-        return tmp;
+  }
+
+  $scope.showStreamDeail = function (stream, index) {
+    $scope.stream = stream;
+    //$('#streamfull').empty();
+    $scope.stream.sindex = index;
+    $location.search('stream', stream.id).replace();
+  }
+  check_path();
+
+  function check_path() {
+    var params = $location.search();
+    if (params.stream) {
+      $('#campaign-tabs .ui.menu .item').tab('change tab', 'streams');
+      $scope.show_section.streamDetail = true;
+      Restangular.one('campaign', $scope.campaign_id).one('stream', params.stream).customGET().then(function (success) {
+        $scope.stream = success;
+      });
+    }
+  }
+
+  // Animated scroll to rewards section
+  $scope.scrollToRewards = function () {
+    $timeout(function () {
+
+      $('html, body').animate({
+        scrollTop: $('#campaign-seg #rewards-list').offset().top - 15
+      }, 500);
+    }, 800);
+  }
+
+  // Scroll to rewards section and set dropdown item to active
+  $scope.scrollToMobileRewardsTab = function () {
+    var rewardsString = $translate.instant('campaign_page_rewardstitle');
+    $timeout(function () {
+      if ($location.hash() !== rewardsString) {
+        $location.search('').replace();
+        $scope.makeLink(rewardsString);
+        $scope.checklink();
       }
-    }
-  
-    $scope.toDate = function (str) {
-      if (str && str.length) {
-        var d = str.substring(0, 10);
-        var lst = str.substring(0, 10).split('-');
-        var time = str.substring(11, 16);
-        var f = new Date(lst[0], lst[1] - 1, lst[2]);
-        return d + "  " + time;
-      }
-    }
-  
-    $scope.showStreamDeail = function (stream, index) {
-      $scope.stream = stream;
-      //$('#streamfull').empty();
-      $scope.stream.sindex = index;
-      $location.search('stream', stream.id).replace();
-    }
-    check_path();
-  
-    function check_path() {
-      var params = $location.search();
-      if (params.stream) {
-        $('#campaign-tabs .ui.menu .item').tab('change tab', 'streams');
-        $scope.show_section.streamDetail = true;
-        Restangular.one('campaign', $scope.campaign_id).one('stream', params.stream).customGET().then(function (success) {
-          $scope.stream = success;
-        });
-      }
-    }
+
+      $('html, body').animate({
+        scrollTop: $('#rewards-seg #rewards-list').offset().top - 15
+      }, 500);
+    }, 800);
+  }
 
 });

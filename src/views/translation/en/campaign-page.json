@@ -75,5 +75,6 @@
   "campaign_social_media_button_text_label_twitter":"Twitter",
   "campaign_social_media_button_text_label_email":"Email",
   "campaign_or_share_text":"Or share via",
-  "ein_label":"EIN: "
+  "ein_label":"EIN: ",
+  "campaign_comment_disqus_shortname_missing_msg":"Disqus commenting system shortname not provided"
 }

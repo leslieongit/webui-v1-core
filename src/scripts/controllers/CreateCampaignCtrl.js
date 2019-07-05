@@ -1,11 +1,11 @@
-app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $rootScope, $scope, $interval, $timeout, $translatePartialLoader, $translate, $http, APICampaign, APIPortal, APILocale, API_URL, RESOURCE_REGIONS, UserService, CreateCampaignService, Restangular, Geolocator, $upload, CurrencyService, FileUploadService, ngQuickDateDefaults, PortalSettingsService, CampaignSettingsService, RestFullResponse) {
+app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $rootScope, $scope, $interval, $timeout, $translatePartialLoader, $translate, $http, APICampaign, APIPortal, APILocale, API_URL, RESOURCE_REGIONS, UserService, CreateCampaignService, Restangular, Geolocator, $upload, CurrencyService, FileUploadService, ngQuickDateDefaults, PortalSettingsService, CampaignSettingsService, RestFullResponse) {
   $scope.urlHost = $location.protocol() + "://" + $location.host() + "/";
-  $scope.clearMessage = function () {
+  $scope.clearMessage = function() {
     $rootScope.floatingMessage = [];
   };
   var msg;
   $scope.urlHost = $location.protocol() + "://" + $location.host() + "/";
-  $scope.clearMessage = function () {
+  $scope.clearMessage = function() {
     $rootScope.floatingMessage = [];
   };
   var msg;
@@ -22,6 +22,10 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
       }
     }
   }
+
+  $scope.thresholdvalue = {
+    value: 0
+  };
 
   var reqDeleteFileArr = [];
   $scope.currentUploadFile = {
@@ -45,7 +49,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   $scope.top_header_link_default_protocal = $scope.top_header_protocals[0];
 
   // Strip http and https from link
-  $scope.remove_link_protocals = function ($event) {
+  $scope.remove_link_protocals = function($event) {
     $event.target.value = $event.target.value.replace("https://", "").replace("http://", "");
   };
 
@@ -90,7 +94,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   $scope.isCampaignRevised = false;
   $scope.in_revision = false;
 
-  Restangular.one('campaign', $routeParams.campaign_id).customGET().then(function (success) {
+  Restangular.one('campaign', $routeParams.campaign_id).customGET().then(function(success) {
     $scope.owner = success.managers[0];
   });
 
@@ -107,7 +111,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   }
 
   // load portal settings
-  PortalSettingsService.getSettingsObj().then(function (success) {
+  PortalSettingsService.getSettingsObj().then(function(success) {
     $scope.public_settings = success.public_setting;
     $scope.native_lookup = $scope.public_settings.site_theme_shipping_native_lookup;
     $scope.reward_html_editor = success.public_setting.site_theme_campaign_reward_html_editor;
@@ -186,12 +190,12 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
       $scope.public_settings.site_campaign_allow_thumbnail_video = true;
     }
   });
-  $(document).ready(function () {
-    setTimeout(function () {
-      $scope.textlabel = $('#lbaelid').text();
-      $scope.label = $scope.textlabel.charAt(0);
-      $('#lbaelid').text($scope.label);
-    }, 500);
+  $(document).ready(function() {
+    // setTimeout(function() {
+    //   $scope.textlabel = $('#lbaelid').text();
+    //   $scope.label = $scope.textlabel.charAt(0);
+    //   $('#lbaelid').text($scope.label);
+    // }, 500);
   });
   // if campaign id exists in route, request data and prefill form
   if ($routeParams.campaign_id) {
@@ -202,7 +206,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     $scope.rewards_data = [];
     if (rewards.length > 0) {
       var count = 0;
-      angular.forEach(rewards, function (val) {
+      angular.forEach(rewards, function(val) {
         var tempAttributes = {};
         if (val.attributes) {
           tempAttributes = val.attributes;
@@ -225,7 +229,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         if (val.shipping) {
           if (val.shipping.length > 0) {
             val.shipping = checkNative(val.shipping);
-            angular.forEach(val.shipping, function (value) {
+            angular.forEach(val.shipping, function(value) {
               if (value.shipping_option_type_id == 3) {
                 var data = {
                   id: value.country_id,
@@ -234,7 +238,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
                 getFAQ
                 if (cID.length > 0) {
                   var insert = true;
-                  angular.forEach(cID, function (v) {
+                  angular.forEach(cID, function(v) {
                     if (v.id == data.id) {
                       insert = false;
                     }
@@ -247,7 +251,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
                 }
               }
             });
-            angular.forEach(val.shipping, function (value) {
+            angular.forEach(val.shipping, function(value) {
               var shippingOption = {
                 cost: '',
                 name: '',
@@ -274,7 +278,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
                   shipping_option_id: value.shipping_option_id,
                   id: value.id
                 };
-                angular.forEach(cID, function (subVal) {
+                angular.forEach(cID, function(subVal) {
                   if (value.country_id == subVal.id) {
                     shipOption = {
                       cost: value.cost,
@@ -306,7 +310,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
                 $scope.rewards_data[count].shipping.push(shippingOption);
               }
             });
-            angular.forEach(cID, function (Val) {
+            angular.forEach(cID, function(Val) {
               shippingOption = {
                 cost: '',
                 name: '',
@@ -333,7 +337,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
   function checkNative(addressData) {
     var newAddress = [];
-    angular.forEach(addressData, function (address) {
+    angular.forEach(addressData, function(address) {
       if ($scope.native_lookup) {
         if (address.country_native_name) {
           address.country = address.country_native_name;
@@ -348,16 +352,16 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     return newAddress;
   }
 
-  Restangular.one('portal/setting').customGET().then(function (success) {
-    angular.forEach(success, function (value) {
+  Restangular.one('portal/setting').customGET().then(function(success) {
+    angular.forEach(success, function(value) {
       if (value.name == 'site_campaign_raise_modes' && value.setting_type_id == 3) {
         $scope.mode_allowed = value.value;
         // generate mode dropdown options based on the allowed modes
-        Restangular.one('campaign/raise-mode').customGET().then(function (modes) {
+        Restangular.one('campaign/raise-mode').customGET().then(function(modes) {
           $scope.fundingMode = modes;
-          angular.forEach($scope.fundingMode, function (mode) {
+          angular.forEach($scope.fundingMode, function(mode) {
 
-            $translate(mode.description).then(function (value) {
+            $translate(mode.description).then(function(value) {
               mode.description = value;
             });
 
@@ -366,7 +370,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
               mode.allowed = true;
             }
           });
-          $timeout(function () {
+          $timeout(function() {
             $('.ui.dropdown').dropdown();
           }, 200);
         });
@@ -385,7 +389,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
       if (value.name == 'site_payment_gateway') {
         $scope.payment_gateway = value.value;
         if ($scope.payment_gateway == 2) {
-          Restangular.one('account/widgetmakr/widget').customGET().then(function (success) {
+          Restangular.one('account/widgetmakr/widget').customGET().then(function(success) {
             if (success.length > 0) {
               $scope.widget_accountID = success[0].widgetmakr_account_id;
 
@@ -400,7 +404,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         }
       }
     });
-    Restangular.one('campaign', campaign_id).one('ever_published').customGET().then(function (success) {
+    Restangular.one('campaign', campaign_id).one('ever_published').customGET().then(function(success) {
 
       $scope.fundingExist = $scope.direct_transaction && $scope.user.person_type_id != 1 || !$scope.contributionEnabled || $scope.isStepFundingDelayed && !success.ever_published;
       $scope.master_show_reward = false;
@@ -462,14 +466,14 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
   function getFAQ() {
     // prefill faqs
-    Restangular.one('campaign', campaign_id).one('faq').getList().then(function (success) {
+    Restangular.one('campaign', campaign_id).one('faq').getList().then(function(success) {
       if (!success.length) {
         $scope.campaign.faq = [];
         $scope.addFAQ($scope.campaign.faq);
       } else {
         $scope.campaign.faq = success;
       }
-      angular.forEach($scope.campaign.faq, function (value, key, obj) {
+      angular.forEach($scope.campaign.faq, function(value, key, obj) {
         if (!value.faq_pairs) {
           value.faq_pairs = [];
           $scope.addFAQPair(value.faq_pairs);
@@ -480,13 +484,13 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
   function getRevisionFAQ() {
     // prefill faqs
-    Restangular.one('campaign', campaign_id).one('faq-revision').getList().then(function (success) {
+    Restangular.one('campaign', campaign_id).one('faq-revision').getList().then(function(success) {
       if (!success.length) {
         $scope.no_faq_revisions = true;
         getFAQ();
       } else {
         $scope.campaign.faq = success;
-        angular.forEach($scope.campaign.faq, function (value, key, obj) {
+        angular.forEach($scope.campaign.faq, function(value, key, obj) {
           if (!value.faq_pairs) {
             value.faq_pairs = [];
             $scope.addFAQPair(value.faq_pairs);
@@ -497,7 +501,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   }
 
   function loadCampaignData(inSaveData) {
-    CreateCampaignService.load($routeParams.campaign_id).then(function (success) {
+    CreateCampaignService.load($routeParams.campaign_id).then(function(success) {
       // Emit event for hiding loader.
       $scope.$emit("loading_finished");
 
@@ -517,7 +521,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
       //Replace text with actual campaign fee
       $translate('get_started_fundingdetails1', {
         campaign_fee: $scope.percentage + "%"
-      }).then(function (value) {
+      }).then(function(value) {
         $scope.get_started_fundingdetails1 = value;
       });
 
@@ -538,7 +542,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
       CampaignSettingsService.processSettings(success.settings);
       $scope.campaign.settings = CampaignSettingsService.getSettings();
       if ($scope.enableCampaignRevisions && $scope.campaign.entry_status_id == 2) {
-        Restangular.one("campaign", campaign_id).customGET("setting-revision/bio_enable").then(function (success) {
+        Restangular.one("campaign", campaign_id).customGET("setting-revision/bio_enable").then(function(success) {
           if (success.value) {
             $scope.settingRevisions = true;
             $scope.campaign.settings.bio_enable = success.value;
@@ -565,7 +569,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
       // Get user attributes
       if ($scope.public_settings.site_campaign_enable_organization_name) {
-        Restangular.one('portal/person/attribute?filters={"person_id":"' + $scope.campaign.managers[0].id + '"}').customGET().then(function (success) {
+        Restangular.one('portal/person/attribute?filters={"person_id":"' + $scope.campaign.managers[0].id + '"}').customGET().then(function(success) {
           $scope.organization_name.value = success[0].attributes['organization_name'];
           $scope.organization_name.ein = success[0].attributes['ein'];
         });
@@ -620,7 +624,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         //check pledges for the shipping data
         reformatReward($scope.campaign.pledges);
       }
-      $translate(['Time_Based_Campaign', 'Continuous_Campaign']).then(function (value) {
+      $translate(['Time_Based_Campaign', 'Continuous_Campaign']).then(function(value) {
         if ($scope.campaign.starts && $scope.campaign.ends == null) {
           $('#default-run-mode').text(value.Continuous_Campaign);
           $scope.run_mode = false;
@@ -666,8 +670,10 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
           }
         }
       });
-      if (!$scope.campaign.maximum_allowed_funds_raised) { } else {
-        $scope.thresholdvalue = $scope.campaign.maximum_allowed_funds_raised;
+      if (!$scope.campaign.maximum_allowed_funds_raised) {
+
+      } else {
+        $scope.thresholdvalue.value = $scope.campaign.maximum_allowed_funds_raised;
         $('#maxthreshold').checkbox('check');
       }
       if (success.uri_paths.length) {
@@ -677,7 +683,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
       if ($scope.campaign.funding_goal == 0) {
         $scope.campaign.funding_goal = "";
       }
-      Restangular.one('campaign', campaign_id).one('stripe-account').customGET().then(function (stripe) {
+      Restangular.one('campaign', campaign_id).one('stripe-account').customGET().then(function(stripe) {
         if (stripe.length)
           $scope.campaign.stripe_account_id = stripe[0].id;
       });
@@ -689,7 +695,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
       } else {
         //pre-load video link
         $scope.links = [];
-        angular.forEach($scope.campaign.links, function (value) {
+        angular.forEach($scope.campaign.links, function(value) {
 
           if (value.region_id == 1 && value.resource_content_type_id == 1 && value.resource_type == "link") {
             $scope.campaign.video = value;
@@ -716,10 +722,10 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
       $scope.category_ids = [];
       // prefill categories
       if ($scope.campaign.categories) {
-        Restangular.one("portal/category").customGET().then(function (success) {
+        Restangular.one("portal/category").customGET().then(function(success) {
           if (success && success.length) {
             var categoryTemp = [];
-            success.forEach(function (value, index) {
+            success.forEach(function(value, index) {
               if (value.parent_category_id == null) {
                 categoryTemp.push(value);
               }
@@ -735,7 +741,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
       // prefill campaign location
       if ($scope.campaign.cities) {
-        angular.forEach($scope.campaign.cities, function (value, index) {
+        angular.forEach($scope.campaign.cities, function(value, index) {
           checkCitiesNative(value);
         });
         $scope.cities = $scope.campaign.cities;
@@ -747,17 +753,17 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         getFAQ();
       }
 
-      $timeout(function () {
-        $translate(['get_started_funding_startdate_placeholder', 'get_started_funding_enddate_note']).then(function (value) {
+      $timeout(function() {
+        $translate(['get_started_funding_startdate_placeholder', 'get_started_funding_enddate_note']).then(function(value) {
           $scope.get_started_funding_startdate_placeholder = value.get_started_funding_startdate_placeholder;
           $scope.get_started_funding_enddate_note = value.get_started_funding_enddate_note;
         });
       }, 100);
 
       Restangular.one('campaign', campaign_id).one('pledge-level').customGET().then(
-        function (success) {
+        function(success) {
           $scope.campaign.rewards = [];
-          angular.forEach(success, function (value) {
+          angular.forEach(success, function(value) {
             if (value.estimated_delivery_time) {
               //convert date
               value.estimated_delivery_time_convert = convertDate(value.estimated_delivery_time);
@@ -781,7 +787,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         $http({
           method: 'GET',
           url: suggestionEndpointUrl
-        }).then(function (success) {
+        }).then(function(success) {
           var resData = success.data;
           if (resData.hasOwnProperty("suggestions")) {
             $scope.blurbSuggestions = resData.suggestions.blurb;
@@ -790,7 +796,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
           } else {
             console.error("Content suggestion not available");
           }
-        }, function (error) {
+        }, function(error) {
           console.error(error);
         });
       }
@@ -840,7 +846,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   function adminUpdateRevision() {
     if ($routeParams.revision_id) {
       $scope.isCampaignRevised = true;
-      Restangular.one('campaign', $scope.campaign.entry_id).one('revision', $routeParams.revision_id).customGET().then(function (success) {
+      Restangular.one('campaign', $scope.campaign.entry_id).one('revision', $routeParams.revision_id).customGET().then(function(success) {
         $scope.revision = success[0];
       });
     }
@@ -850,12 +856,12 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   function createOrUpdateRevision() {
 
     if ($scope.enableCampaignRevisions && $scope.campaign.entry_status_id == 2) {
-      Restangular.one('campaign', $scope.campaign.entry_id).one('revision').customGET().then(function (success) {
+      Restangular.one('campaign', $scope.campaign.entry_id).one('revision').customGET().then(function(success) {
         try {
           $scope.revision = success[0];
           $location.search('revision_id', success[0].entry_revision_id);
         } catch (error) {
-          Restangular.one('campaign/' + $scope.campaign.entry_id + '/revision').customPOST($scope.campaign).then(function (new_success) {
+          Restangular.one('campaign/' + $scope.campaign.entry_id + '/revision').customPOST($scope.campaign).then(function(new_success) {
             $scope.revision = new_success[0];
             $scope.revision.blurb = $scope.campaign.blurb;
             $scope.revision.name = $scope.campaign.name;
@@ -879,7 +885,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
       var categoryIdsArray = [],
         subCategoryIdsArray = [];
       var campaignCategoriesCopy = angular.copy(campaignCategories);
-      angular.forEach(campaignCategoriesCopy, function (value) {
+      angular.forEach(campaignCategoriesCopy, function(value) {
         if (value.parent_category_id != null) {
           subCategoryIdsArray.push(value.category_id);
         } else {
@@ -888,23 +894,23 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
       });
       $scope.category_ids = angular.copy(categoryIdsArray);
       $scope.sub_category_ids = angular.copy(subCategoryIdsArray);
-      $timeout(function () {
+      $timeout(function() {
         $("#category-field select").val($scope.category_ids).trigger("change")
       }, 0);
     }
   }
 
-  $scope.setBlurbFromSuggestion = function (blurbSuggestion) {
-    $timeout(function () {
+  $scope.setBlurbFromSuggestion = function(blurbSuggestion) {
+    $timeout(function() {
       $("textarea[name='blurb']").val(blurbSuggestion.content);
     });
   }
 
-  $scope.setDescriptionFromSuggestion = function (descriptionSuggestion) {
+  $scope.setDescriptionFromSuggestion = function(descriptionSuggestion) {
     $scope.froalaOptionsCampaigns.froalaEditor('html.set', descriptionSuggestion.content);
   }
 
-  $scope.setFAQFromSuggestion = function (faqSuggestion) {
+  $scope.setFAQFromSuggestion = function(faqSuggestion) {
     // $scope.campaign.faq = [];
     if ($scope.campaign.faq && $scope.campaign.faq.length) {
       $scope.campaign.faq[0].name = faqSuggestion.name;
@@ -977,7 +983,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     value: "campaign_reward_subcountryspecific_shipping"
   }];
 
-  $scope.setRunMode = function (mode) {
+  $scope.setRunMode = function(mode) {
     $scope.runModeSelected = mode.id;
     if (mode.id == 2) {
       $scope.run_mode = false;
@@ -989,7 +995,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
   function getCampaignImages() {
     if ($scope.enableCampaignRevisions && $routeParams.revision_id) {
-      Restangular.one('campaign', campaign_id).one('resource-revision/file/').customGET().then(function (success) {
+      Restangular.one('campaign', campaign_id).one('resource-revision/file/').customGET().then(function(success) {
         hasImage = false;
         if (success.length) {
           $scope.campaignImages = [];
@@ -1001,7 +1007,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
           }
         }
         if (!hasImage) {
-          Restangular.one('campaign', campaign_id).one('resource/file/').customGET().then(function (success) {
+          Restangular.one('campaign', campaign_id).one('resource/file/').customGET().then(function(success) {
             $scope.campaignImages = [];
             if (success.length) {
               $scope.nonRevisionCampaignImage = true;
@@ -1011,15 +1017,15 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
                 }
               }
             }
-          }, function (fail) {
+          }, function(fail) {
             $scope.campaignImages = [];
           });
         }
-      }, function (fail) {
+      }, function(fail) {
         $scope.campaignImages = [];
       });
     } else {
-      Restangular.one('campaign', campaign_id).one('resource/file/').customGET().then(function (success) {
+      Restangular.one('campaign', campaign_id).one('resource/file/').customGET().then(function(success) {
         $scope.campaignImages = [];
         if (success.length) {
           for (var i = 0; i < success.length; i++) {
@@ -1028,14 +1034,14 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
             }
           }
         }
-      }, function (fail) {
+      }, function(fail) {
         $scope.campaignImages = [];
       });
     }
   }
 
 
-  $scope.uploadCampaignThumnail = function (files) {
+  $scope.uploadCampaignThumnail = function(files) {
     // if(files.type)
     if (files.length) {
       if ($scope.allowedImage(files[0].type)) {
@@ -1052,13 +1058,13 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         var $picNode = $('.campaignBasics');
         if ($scope.campaignImages != undefined && $scope.campaignImages.length == 0 || $scope.nonRevisionCampaignImage) {
           $scope.nonRevisionCampaignImage = false;
-          FileUploadService.upload(endpoint, files, params, $picNode).then(function (success) {
+          FileUploadService.upload(endpoint, files, params, $picNode).then(function(success) {
             if (success.length != 0) {
               getCampaignImages();
             }
           });
         } else if ($scope.campaignImages != undefined && $scope.campaignImages.length > 0) {
-          FileUploadService.modify(endpoint, files, params, $scope.campaignImages[0].id, $picNode).then(function (success) {
+          FileUploadService.modify(endpoint, files, params, $scope.campaignImages[0].id, $picNode).then(function(success) {
             if (success.length != 0) {
               getCampaignImages();
             }
@@ -1071,7 +1077,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     }
   }
 
-  $scope.allowedImage = function (file_type) {
+  $scope.allowedImage = function(file_type) {
     var allowed_type = ['image/vnd.microsoft.icon', 'image/x-icon', 'image/png', 'image/pjpeg', 'image/jpeg', 'image/gif'];
     if (allowed_type.indexOf(file_type) > -1) {
       return true;
@@ -1080,14 +1086,14 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     }
   }
 
-  $scope.deleteCampaignThumnail = function (files) {
+  $scope.deleteCampaignThumnail = function(files) {
     if (files && files.length) {
       var file = files.pop();
       var endpoint = 'resource/file';
       if ($scope.enableCampaignRevisions && $scope.campaign.entry_status_id == 2) {
         endpoint = 'resource-revision/file';
       }
-      Restangular.one('campaign', campaign_id).one(endpoint).customDELETE(file.id).then(function (success) {
+      Restangular.one('campaign', campaign_id).one(endpoint).customDELETE(file.id).then(function(success) {
         getCampaignImages();
       });
       $('.imagePlace .dimmer').dimmer('hide');
@@ -1097,9 +1103,9 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   };
 
   // Get campaign top banner image
-  var getCampaignHeaderImages = function () {
+  var getCampaignHeaderImages = function() {
     if ($scope.enableCampaignRevisions && $routeParams.revision_id) {
-      Restangular.one('campaign', campaign_id).one('resource-revision/file/').customGET().then(function (success) {
+      Restangular.one('campaign', campaign_id).one('resource-revision/file/').customGET().then(function(success) {
         var hasHeader = false;
         if (success.length) {
           $scope.campaignHeaderImages = [];
@@ -1111,7 +1117,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
           }
         }
         if (!hasHeader) {
-          Restangular.one('campaign', campaign_id).one('resource/file/').customGET().then(function (success) {
+          Restangular.one('campaign', campaign_id).one('resource/file/').customGET().then(function(success) {
             $scope.campaignHeaderImages = [];
             if (success.length) {
               $scope.nonRevisionCampaignHeaderImage = true;
@@ -1125,7 +1131,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         }
       });
     } else {
-      Restangular.one('campaign', campaign_id).one('resource/file/').customGET().then(function (success) {
+      Restangular.one('campaign', campaign_id).one('resource/file/').customGET().then(function(success) {
         $scope.campaignHeaderImages = [];
         if (success.length) {
           for (var i = 0; i < success.length; i++) {
@@ -1139,7 +1145,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   }
 
   // Upload campaign top banner image
-  $scope.uploadCampaignHeaderImage = function (files) {
+  $scope.uploadCampaignHeaderImage = function(files) {
     if (files.length) {
       if ($scope.allowedImage(files[0].type)) {
         var endpoint = 'campaign/' + campaign_id + '/resource/file/';
@@ -1155,13 +1161,13 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         var $picNode = $('.campaignHeaderImage');
         if ($scope.campaignHeaderImages.length == 0 || $scope.nonRevisionCampaignHeaderImage) {
           $scope.nonRevisionCampaignHeaderImage = false;
-          FileUploadService.upload(endpoint, files, params, $picNode).then(function (success) {
+          FileUploadService.upload(endpoint, files, params, $picNode).then(function(success) {
             if (success.length != 0) {
               getCampaignHeaderImages();
             }
           });
         } else if ($scope.campaignHeaderImages.length > 0) {
-          FileUploadService.modify(endpoint, files, params, $scope.campaignHeaderImages[0].id, $picNode).then(function (success) {
+          FileUploadService.modify(endpoint, files, params, $scope.campaignHeaderImages[0].id, $picNode).then(function(success) {
             if (success.length != 0) {
               getCampaignHeaderImages();
             }
@@ -1173,14 +1179,14 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
       }
     }
   }
-  $scope.deleteCampaignHeaderImage = function (files) {
+  $scope.deleteCampaignHeaderImage = function(files) {
     if (files && files.length) {
       var file = files.pop();
       var endpoint = 'resource/file';
       if ($scope.enableCampaignRevisions && $scope.campaign.entry_status_id == 2) {
         endpoint = 'resource-revision/file';
       }
-      Restangular.one('campaign', campaign_id).one(endpoint).customDELETE(file.id).then(function (success) {
+      Restangular.one('campaign', campaign_id).one(endpoint).customDELETE(file.id).then(function(success) {
         getCampaignHeaderImages();
       });
       $('.imagePlace .dimmer').dimmer('hide');
@@ -1209,7 +1215,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         resource: $scope.campaignThumbnailVideo.uri,
         region_id: $scope.RESOURCE_REGIONS.campaign.thumbnail_video,
       }
-      Restangular.one('campaign', campaign_id).one('resource/link', existing_id).customPUT(data).then(function (success) {
+      Restangular.one('campaign', campaign_id).one('resource/link', existing_id).customPUT(data).then(function(success) {
         $scope.campaignThumbnailVideo = success;
       });
     } else if ($scope.campaignThumbnailVideo.uri !== undefined &&
@@ -1222,33 +1228,33 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         resource: $scope.campaignThumbnailVideo.uri,
         region_id: $scope.RESOURCE_REGIONS.campaign.thumbnail_video,
       }
-      Restangular.one('campaign', campaign_id).one('resource/link/').customPOST(data).then(function (success) {
+      Restangular.one('campaign', campaign_id).one('resource/link/').customPOST(data).then(function(success) {
         $scope.campaignThumbnailVideo = success;
       });
     } else if ($scope.campaignThumbnailVideo.uri == "") {
       // Delete if entered value is empty.
-      Restangular.one('campaign', campaign_id).one('resource/link/').customDELETE(existing_id).then(function (success) {
+      Restangular.one('campaign', campaign_id).one('resource/link/').customDELETE(existing_id).then(function(success) {
         $scope.campaignThumbnailVideo = {};
       });
     }
   }
 
-  $scope.setRaiseMode = function (data) {
+  $scope.setRaiseMode = function(data) {
     $scope.campaign.raise_mode_id = data.raise_mode_id;
   }
 
   // click event for State select
-  $scope.stateSelected = function (data) {
+  $scope.stateSelected = function(data) {
     $scope.campaign.settings.state_current = $scope.public_settings.site_campaign_state_settings[data];
   }
 
-  $scope.durationTypeSelected = function (typeID) {
+  $scope.durationTypeSelected = function(typeID) {
     $scope.campaign.duration_type_id = typeID;
   };
   /*delay get campaign_image*/
-  $scope.delayGetImage = function (campaignID) {
-    $timeout(function () {
-      Restangular.one('campaign', campaignID).one('resource/file').customGET().then(function (images) {
+  $scope.delayGetImage = function(campaignID) {
+    $timeout(function() {
+      Restangular.one('campaign', campaignID).one('resource/file').customGET().then(function(images) {
         $scope.campaign.files = images;
       });
     }, 800);
@@ -1257,14 +1263,14 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   // Checks if a category list already exists, otherwise, send a request to the server for all categories and cache it
   if (angular.isUndefined($scope.categories)) {
     APIPortal.categories({},
-      function (success) {
+      function(success) {
         $scope.categories = $scope.$parent.categories = success;
       }
     );
   }
 
-  $scope.getCountries = function () {
-    Geolocator.getCountries().then(function (countries) {
+  $scope.getCountries = function() {
+    Geolocator.getCountries().then(function(countries) {
       if ($scope.native_lookup) {
         for (var i in countries) {
           if (countries[i].native_name != null) {
@@ -1293,7 +1299,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   // Function for checking duplicated country and update the country list with these tags
   // This function gets called when the controller is asking for countries data
   // Or when the data in select2, which is to select country, changes
-  $scope.updateDuplicatedCountryList = function (countries) {
+  $scope.updateDuplicatedCountryList = function(countries) {
     countriesWithShippingStatus = [];
     if (!countries && $scope.countries) {
       countries = $scope.countries;
@@ -1344,17 +1350,17 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
   function getCurrency() {
 
-    CurrencyService.getCurrency(function (success) {
+    CurrencyService.getCurrency(function(success) {
       if (success) {
         if ($scope.native_lookup) {
-          success.forEach(function (value) {
+          success.forEach(function(value) {
             value.name = value.native_name ? value.native_name : value.name;
           });
         }
         $scope.currency_options = success;
 
 
-        angular.forEach($scope.currency_options, function (value) {
+        angular.forEach($scope.currency_options, function(value) {
           if ($scope.public_settings.site_campaign_defaults.toggle) {
             $scope.campaign.currency_id = $scope.public_settings.site_campaign_currency_id;
           }
@@ -1370,12 +1376,12 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   }
 
   //Set the currency exchange
-  $scope.$watch('campaign.currency_id', function (value, oldValue) {
+  $scope.$watch('campaign.currency_id', function(value, oldValue) {
     if (value) {
       $('#campaign-currency-field .select-error').remove();
       $('#campaign-currency-field').removeClass('error');
     }
-    angular.forEach($scope.currency_options, function (value) {
+    angular.forEach($scope.currency_options, function(value) {
       if (value.currency_id == $scope.campaign.currency_id) {
         $scope.ccode = value.code_iso4217_alpha;
         return;
@@ -1384,25 +1390,25 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   });
 
 
-  $scope.removeLink = function (link, index) {
+  $scope.removeLink = function(link, index) {
     $scope.links.splice(index, 1);
     if (link.id) {
-      Restangular.one('campaign', campaign_id).one('resource/link', link.id).customDELETE().then(function (success) {
+      Restangular.one('campaign', campaign_id).one('resource/link', link.id).customDELETE().then(function(success) {
         refreshLinks();
       });
     }
   }
 
-  $scope.removeFaqPair = function (faq, pair) {
+  $scope.removeFaqPair = function(faq, pair) {
     faq.faq_pairs.splice(faq.faq_pairs.indexOf(pair), 1);
     if (pair.faq_pair_id) {
-      Restangular.one('campaign', campaign_id).one('faq', faq.id).one('faq-pair', pair.faq_pair_id).customDELETE().then(function (success) {
+      Restangular.one('campaign', campaign_id).one('faq', faq.id).one('faq-pair', pair.faq_pair_id).customDELETE().then(function(success) {
         getFAQ();
       });
     }
     if (pair.faq_pair_revision_id) {
       if ($scope.enableCampaignRevisions && $scope.campaign.entry_status_id == 2) {
-        Restangular.one('campaign', campaign_id).one('faq-revision', faq.id).one('faq-pair-revision', pair.faq_pair_revision_id).customDELETE().then(function (success) {
+        Restangular.one('campaign', campaign_id).one('faq-revision', faq.id).one('faq-pair-revision', pair.faq_pair_revision_id).customDELETE().then(function(success) {
           getRevisionFAQ();
         });
       }
@@ -1410,11 +1416,11 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
   }
 
-  $('#pathID').blur(function () {
+  $('#pathID').blur(function() {
 
-    Restangular.one('portal/uri-path', $scope.campaign.uri_path).customGET().then(function (success) {
+    Restangular.one('portal/uri-path', $scope.campaign.uri_path).customGET().then(function(success) {
       if (success.result == 1) {
-        $translate(['duplicate_path_error']).then(function (value) {
+        $translate(['duplicate_path_error']).then(function(value) {
           $scope.duplicatePath_message = value.duplicate_path_error;
         });
         //  $scope.duplicatePath_message='Specified path contains invalid characters (only letters/numbers and hyphen allowed)  or path is currently in use, please choose another path';
@@ -1429,13 +1435,13 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   });
 
   // Semantic UI form validation rule for checking if the integer is more than 0 then validate
-  $timeout(function () {
-    $.fn.form.settings.rules.lessThanInteger = function (integer) {
+  $timeout(function() {
+    $.fn.form.settings.rules.lessThanInteger = function(integer) {
       return (integer > 0) ? true : false;
     }
   });
 
-  $scope.basicsValidation = function () {
+  $scope.basicsValidation = function() {
 
     var translation = $translate.instant(['get_started_titlemessage', 'get_started_blurbnote', 'get_started_fundingmoney_input', 'get_started_funding_numberdays_note', 'get_started_funding_mode_note']);
 
@@ -1450,13 +1456,14 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
       goal: {
         identifier: 'goal',
         rules: [{
-          type: 'empty',
-          prompt: translation.get_started_fundingmoney_input
-        },
-        {
-          type: 'lessThanInteger[goal]',
-          prompt: translation.get_started_fundingmoney_input
-        }]
+            type: 'empty',
+            prompt: translation.get_started_fundingmoney_input
+          },
+          {
+            type: 'lessThanInteger[goal]',
+            prompt: translation.get_started_fundingmoney_input
+          }
+        ]
       },
       runtime_days: {
         identifier: 'runtime_days',
@@ -1490,16 +1497,16 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
     $('.campaign-basics-form.ui.form').form(basicsFormObj, {
       inline: true,
-      onSuccess: function () {
+      onSuccess: function() {
         $scope.valcheck = $scope.valcheck && true;
       },
-      onFailure: function () {
+      onFailure: function() {
         $scope.valcheck = $scope.valcheck && false;
       }
     }).form('validate form');
   }
 
-  $scope.campaignFeeValidation = function () {
+  $scope.campaignFeeValidation = function() {
     var translation = $translate.instant(['get_started_campaign_percentage_empty']);
     $('.campaign-basics-form.ui.form').form({
       percentage_fee: {
@@ -1510,18 +1517,18 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         }]
       }
     }, {
-        inline: true,
-        onSuccess: function () {
-          $scope.valcheck = $scope.valcheck && true;
-        },
-        onFailure: function () {
-          $scope.valcheck = $scope.valcheck && false;
-        }
-      }).form('validate form');
+      inline: true,
+      onSuccess: function() {
+        $scope.valcheck = $scope.valcheck && true;
+      },
+      onFailure: function() {
+        $scope.valcheck = $scope.valcheck && false;
+      }
+    }).form('validate form');
   }
 
-  $scope.campaignMinContributionValidation = function () {
-    $.fn.form.settings.rules.min_number = function (value) {
+  $scope.campaignMinContributionValidation = function() {
+    $.fn.form.settings.rules.min_number = function(value) {
       if (!isNaN($scope.campaign.settings.min_contribution)) {
         return true;
       } else {
@@ -1538,17 +1545,17 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         }]
       }
     }, {
-        inline: true,
-        onSuccess: function () {
-          $scope.valcheck = $scope.valcheck && true;
-        },
-        onFailure: function () {
-          $scope.valcheck = $scope.valcheck && false;
-        }
-      }).form('validate form');
+      inline: true,
+      onSuccess: function() {
+        $scope.valcheck = $scope.valcheck && true;
+      },
+      onFailure: function() {
+        $scope.valcheck = $scope.valcheck && false;
+      }
+    }).form('validate form');
   }
 
-  $scope.campaignMaxContributionValidation = function () {
+  $scope.campaignMaxContributionValidation = function() {
     // $.fn.form.settings.rules.max_number = function (value) {
     //   if (!isNaN($scope.campaign.settings.max_contribution)) {
     //     $scope.valcheck = $scope.valcheck && true;
@@ -1566,17 +1573,17 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         }]
       }
     }, {
-        inline: true,
-        onSuccess: function () {
-          $scope.valcheck = $scope.valcheck && true;
-        },
-        onFailure: function () {
-          $scope.valcheck = $scope.valcheck && false;
-        }
-      }).form('validate form');
+      inline: true,
+      onSuccess: function() {
+        $scope.valcheck = $scope.valcheck && true;
+      },
+      onFailure: function() {
+        $scope.valcheck = $scope.valcheck && false;
+      }
+    }).form('validate form');
   }
 
-  $scope.campaignVideoValidation = function () {
+  $scope.campaignVideoValidation = function() {
     var translation = $translate.instant(['get_started_campaign_video_empty']);
     $('.campaign-basics-form.ui.form').form({
       campaign_video: {
@@ -1587,17 +1594,17 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         }]
       }
     }, {
-        inline: true,
-        onSuccess: function () {
-          $scope.valcheck = $scope.valcheck && true;
-        },
-        onFailure: function () {
-          $scope.valcheck = $scope.valcheck && false;
-        }
-      }).form('validate form');
+      inline: true,
+      onSuccess: function() {
+        $scope.valcheck = $scope.valcheck && true;
+      },
+      onFailure: function() {
+        $scope.valcheck = $scope.valcheck && false;
+      }
+    }).form('validate form');
   }
 
-  $scope.campaignContractNumberValidation = function () {
+  $scope.campaignContractNumberValidation = function() {
     var translation = $translate.instant(['get_started_campaign_contract_number_empty']);
     $('.campaign-basics-form.ui.form').form({
       contract_number: {
@@ -1608,14 +1615,14 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         }]
       }
     }, {
-        inline: true,
-        onSuccess: function () {
-          $scope.valcheck = $scope.valcheck && true;
-        },
-        onFailure: function () {
-          $scope.valcheck = $scope.valcheck && false;
-        }
-      }).form('validate form');
+      inline: true,
+      onSuccess: function() {
+        $scope.valcheck = $scope.valcheck && true;
+      },
+      onFailure: function() {
+        $scope.valcheck = $scope.valcheck && false;
+      }
+    }).form('validate form');
   }
 
   // Separate validations for non semantic ui validations
@@ -1629,10 +1636,10 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
       $scope.valcheck = $scope.valcheck && false;
     }
 
-    if (!$scope.currency_options){;
+    if (!$scope.currency_options) {;
       $('.select-error').remove();
       $('#campaign-currency-field').addClass('error');
-      $scope.valcheck = $scope.valcheck && false; 
+      $scope.valcheck = $scope.valcheck && false;
     }
     if (!$('#featured-img-field .ui.image').hasClass('image-uploaded') && (typeof $scope.hideCampaignImageField == 'undefined' || !$scope.hideCampaignImageField)) {
       $('#featured-img-field .select-error').remove();
@@ -1676,7 +1683,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   }
 
   // Validate Campaign manager field
-  $scope.campaignManagerValidation = function () {
+  $scope.campaignManagerValidation = function() {
     var translation = $translate.instant(['get_started_campaign_manager_error'])
     $('.campaign-details-form.ui.form').form({
       recipient: {
@@ -1687,16 +1694,16 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         }]
       },
     }, {
-        inline: true,
-        onSuccess: function () {
-          $scope.passCampaignManagerCheck = true;
-          $scope.valcheck = true;
-        },
-        onFailure: function () {
-          $scope.passCampaignManagerCheck = false;
-          $scope.valcheck = false;
-        }
-      }).form('validate form')
+      inline: true,
+      onSuccess: function() {
+        $scope.passCampaignManagerCheck = true;
+        $scope.valcheck = true;
+      },
+      onFailure: function() {
+        $scope.passCampaignManagerCheck = false;
+        $scope.valcheck = false;
+      }
+    }).form('validate form')
   }
 
   function inlineDetailsValidation() {
@@ -1724,11 +1731,11 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     }
   }
   //Regex Reward Froala Validation
-  $.fn.form.settings.rules.regexFroalaValidation = function (value, validate) {
+  $.fn.form.settings.rules.regexFroalaValidation = function(value, validate) {
     return (validate <= 0) ? false : true;
   }
 
-  $scope.rewardsValidation = function () {
+  $scope.rewardsValidation = function() {
     var translation = $translate.instant(['campaign_reward_reward_contribution_description_error', 'campaign_reward_reward_contribution_name_error', 'campaign_reward_reward_contribution_message_error', 'campaign_reward_reward_contribution_message_error2']);
 
     $scope.rewards_validation = {
@@ -1751,7 +1758,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
       }
     }
 
-    angular.forEach($scope.rewards_data, function (value, key) {
+    angular.forEach($scope.rewards_data, function(value, key) {
       var descriptionLength;
       if (typeof value.description === 'undefined' || value.description == null) {
         descriptionLength = 0;
@@ -1770,10 +1777,10 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     });
     $('.campaign-rewards-form.ui.form').form($scope.rewards_validation, {
       inline: true,
-      onSuccess: function () {
+      onSuccess: function() {
         $scope.valcheck = $scope.valcheck && true;
       },
-      onFailure: function () {
+      onFailure: function() {
         $scope.valcheck = $scope.valcheck && false;
       }
     }).form('validate form');
@@ -1809,10 +1816,10 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
       .form(formObj, {
         inline: true,
         on: 'blur',
-        onSuccess: function () {
+        onSuccess: function() {
           $scope.valcheck = $scope.valcheck && true;
         },
-        onFailure: function () {
+        onFailure: function() {
           $scope.valcheck = $scope.valcheck && false;
         }
       }).form("validate form");
@@ -1820,7 +1827,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
 
   // sending PUT request to update campaign info
-  $scope.saveData = function ($event) {
+  $scope.saveData = function($event) {
     $scope.valcheck = true;
     // Check current path then initialize inline validations
     if ($scope.currentPath == 'getstarted') {
@@ -1832,7 +1839,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
       $scope.basicsValidation();
       inlineBasicsValidations();
-      
+
       // if campaign fee is required
       if ($scope.public_settings.site_campaign_percentage_required) {
         $scope.campaignFeeValidation();
@@ -1889,7 +1896,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     if ($scope.valcheck) {
       if ($scope.enableCampaignRevisions && $scope.campaign.entry_status_id == 2) {
         if ($scope.revision) {
-          Restangular.one('campaign', $scope.campaign.entry_id).one('revision', $scope.revision.entry_revision_id).customPUT($scope.revision).then(function (success) { });
+          Restangular.one('campaign', $scope.campaign.entry_id).one('revision', $scope.revision.entry_revision_id).customPUT($scope.revision).then(function(success) {});
         }
       }
       if ($scope.enableCampaignRevisions && $scope.campaign.entry_status_id == 2 && $scope.user.person_type_id == 1) {
@@ -1904,7 +1911,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
       $scope.campaign.rewards = [];
       var count = 0;
-      angular.forEach($scope.rewards_data, function (val) {
+      angular.forEach($scope.rewards_data, function(val) {
         //Show estimated delivery time
         var rewardsModel = {
           amount: val.amount,
@@ -1922,7 +1929,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         $scope.campaign.rewards.push(rewardsModel);
         if (val.shipping.length > 0) {
           // loop through shipping
-          angular.forEach(val.shipping, function (value) {
+          angular.forEach(val.shipping, function(value) {
             var shippingOption = {
               cost: '',
               name: '',
@@ -1935,7 +1942,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
             };
             //Shipping type
             if (value.sub_countries.length > 0) {
-              angular.forEach(value.sub_countries, function (sub) {
+              angular.forEach(value.sub_countries, function(sub) {
                 shippingOption = {
                   cost: sub.cost,
                   name: sub.name,
@@ -2017,22 +2024,21 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
           }
         }
         if ($('#maxthreshold').checkbox('is checked')) {
-          if ($scope.thresholdvalue > $scope.campaign.funding_goal) {
-            $scope.campaign.maximum_allowed_funds_raised = $scope.thresholdvalue;
+          if ($scope.thresholdvalue.value > $scope.campaign.funding_goal) {
+            $scope.campaign.maximum_allowed_funds_raised = $scope.thresholdvalue.value;
           } else {
             $scope.campaign.maximum_allowed_funds_raised = $scope.campaign.funding_goal;
-            $scope.thresholdvalue = $scope.campaign.funding_goal;
+            $scope.thresholdvalue.value = $scope.campaign.funding_goal;
           }
-
         } else {
-          $scope.thresholdvalue = 0;
+          $scope.thresholdvalue.value = 0;
           $scope.campaign.maximum_allowed_funds_raised = 0;
         }
 
         if ($scope.runModeSelected == 1) {
           if (!($scope.campaign.starts_date_time && $scope.campaign.ends_date_time && $scope.campaign.runtime_days > 0 || !$scope.campaign.starts_date_time && !$scope.campaign.runtime_days && !$scope.campaign.ends_date_time)) {
             $scope.saveError = true;
-            $timeout(function () {
+            $timeout(function() {
               $scope.saveError = false;
             }, 1500);
             return;
@@ -2044,8 +2050,8 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         }
 
       } else {
-        if (!$scope.campaign.maximum_allowed_funds_raised) { } else {
-          $scope.thresholdvalue = $scope.campaign.maximum_allowed_funds_raised;
+        if (!$scope.campaign.maximum_allowed_funds_raised) {} else {
+          $scope.thresholdvalue.value = $scope.campaign.maximum_allowed_funds_raised;
           $('#maxthreshold').checkbox('check');
           $scope.showt.value = true;
         }
@@ -2073,16 +2079,16 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
                 month = "0" + month;
               }
               var day = $scope.campaign.ends_date_time.getDate();
-              if (day > 9) { } else {
+              if (day > 9) {} else {
 
                 day = "0" + day;
               }
               var hours = $scope.campaign.ends_date_time.getHours();
-              if (hours > 9) { } else {
+              if (hours > 9) {} else {
                 hours = "0" + hours;
               }
               var mins = $scope.campaign.ends_date_time.getMinutes();
-              if (mins > 9) { } else {
+              if (mins > 9) {} else {
                 mins = "0" + mins;
               }
               var datestring = $scope.campaign.ends_date_time.getFullYear() + "-" + month + "-" + day + " " + hours + ":" + mins + ":00";
@@ -2106,16 +2112,16 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
               month = "0" + month;
             }
             var day = $scope.campaign.starts_date_time.getDate();
-            if (day > 9) { } else {
+            if (day > 9) {} else {
 
               day = "0" + day;
             }
             var hours = $scope.campaign.starts_date_time.getHours();
-            if (hours > 9) { } else {
+            if (hours > 9) {} else {
               hours = "0" + hours;
             }
             var mins = $scope.campaign.starts_date_time.getMinutes();
-            if (mins > 9) { } else {
+            if (mins > 9) {} else {
               mins = "0" + mins;
             }
             var datestring = $scope.campaign.starts_date_time.getFullYear() + "-" + month + "-" + day + " " + hours + ":" + mins + ":00";
@@ -2149,7 +2155,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
             saveFAQs();
           }
           if (reqDeleteFileArr.length) {
-            reqDeleteFileArr.forEach(function (value) {
+            reqDeleteFileArr.forEach(function(value) {
               Restangular.one("campaign", $scope.campaign.id).one("resource/file", value).customDELETE();
             });
             reqDeleteFileArr = [];
@@ -2178,7 +2184,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
             $scope.campaign.video.resource_id = $scope.campaign.video.id;
             $scope.campaign.video.resource = $scope.campaign.video.uri;
             $scope.campaign.video.resource_content_type = "video";
-            Restangular.one('campaign', campaign_id).one('resource/link', $scope.campaign.video.id).customPUT($scope.campaign.video).then(function (success) {
+            Restangular.one('campaign', campaign_id).one('resource/link', $scope.campaign.video.id).customPUT($scope.campaign.video).then(function(success) {
               $scope.campaign.video = success;
             });
           } else if ($scope.campaign.video.uri != "" &&
@@ -2190,13 +2196,13 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
               resource: $scope.campaign.video.uri,
               region_id: 1,
             }
-            Restangular.one('campaign', campaign_id).one('resource/link/').customPOST(data).then(function (success) {
+            Restangular.one('campaign', campaign_id).one('resource/link/').customPOST(data).then(function(success) {
               $scope.campaign.video = success;
             });
           }
           // Delete the video if URI is empty
           else if ($scope.campaign.video.uri == "") {
-            Restangular.one('campaign', campaign_id).one('resource/link/').customDELETE($scope.campaign.video.id).then(function (success) {
+            Restangular.one('campaign', campaign_id).one('resource/link/').customDELETE($scope.campaign.video.id).then(function(success) {
               $scope.campaign.video = {};
             });
           }
@@ -2227,7 +2233,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         'loading_message': 'in_progress'
       }
       $rootScope.floatingMessage = msg;
-      var campaignSaveReq = Restangular.one('campaign', campaign_id).customPUT($scope.campaign).then(function (success) {
+      var campaignSaveReq = Restangular.one('campaign', campaign_id).customPUT($scope.campaign).then(function(success) {
         CreateCampaignService.cacheIn(success);
         loadCampaignData(true);
         if ($scope.rewards_save_error) {
@@ -2260,7 +2266,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
             window.location.reload();
           }
         }
-      }, function (failure) {
+      }, function(failure) {
         msg = {
           'header': failure.data.message
         }
@@ -2291,13 +2297,13 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     $scope.rewards_save_error = false;
     // Delete the property we added to the countries objects so they don't get saved when saving
     if (countriesWithShippingStatus) {
-      angular.forEach(countriesWithShippingStatus, function (value, index) {
+      angular.forEach(countriesWithShippingStatus, function(value, index) {
         if (value.hasOwnProperty("shipping_status")) {
           delete value["shipping_status"];
         }
       });
     }
-    $scope.campaign.rewards.forEach(function (reward) {
+    $scope.campaign.rewards.forEach(function(reward) {
       if ($("#description" + ($scope.campaign.rewards.indexOf(reward) + 1)).froalaEditor('codeView.isActive') && $("#description" + ($scope.campaign.rewards.indexOf(reward) + 1)).froalaEditor('codeView.get') != "") {
         reward.description = $("#description" + ($scope.campaign.rewards.indexOf(reward) + 1)).froalaEditor('codeView.get');
       }
@@ -2324,22 +2330,22 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         }
 
         // process shipping options
-        request1.then(function (success) {
+        request1.then(function(success) {
           reward.id = success.id;
           saveShippingOption(reward, success.id);
           // $scope.savingData = false;
           $scope.saveSuccessful = true;
           if ($scope.rlength == $scope.campaign.rewards.length) {
-            $timeout(function () {
+            $timeout(function() {
               loadCampaignData(true);
             }, 500);
           }
           $scope.updateDuplicatedCountryList();
           // change to false after a few seconds
-          $timeout(function () {
+          $timeout(function() {
             $scope.saveSuccessful = false;
           }, 1500);
-        }, function (fail) {
+        }, function(fail) {
           $scope.rewards_save_error = fail.data.message;
           reward.errorMessage = fail.data.message;
           $scope.updateDuplicatedCountryList();
@@ -2352,14 +2358,14 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   function saveShippingOption(reward, rewardID) {
     var shipping = $scope.campaign.rewards[$scope.campaign.rewards.indexOf(reward)].shipping;
 
-    angular.forEach(shipping, function (obj) {
+    angular.forEach(shipping, function(obj) {
       if (obj.shipping_option_type_id == 1) {
         delete obj.country_id;
       }
       //for each shipping options use post/put/delete based on different situations
       //if the shipping id is empty but there is type id, use post to create new type
       if (!(parseInt(obj.shipping_option_id)) && parseInt(obj.shipping_option_type_id)) {
-        Restangular.one('campaign', campaign_id).one('pledge-level', rewardID).one('shipping-option').customPOST(obj).then(function (success) {
+        Restangular.one('campaign', campaign_id).one('pledge-level', rewardID).one('shipping-option').customPOST(obj).then(function(success) {
           // assign the id in response back to the object
           obj.shipping_option_id = success.id;
         });
@@ -2383,15 +2389,15 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         ($scope.links);return;*/
     // Grab the old data to compare
     // Request will only be called when new data is different from old data
-    Restangular.one('campaign', campaign_id).customGET().then(function (success) {
+    Restangular.one('campaign', campaign_id).customGET().then(function(success) {
       // Empty array to store the old data of generic links
       initialLinks = [];
-      angular.forEach(success.links, function (value) {
+      angular.forEach(success.links, function(value) {
         if (value.resource_content_type == "generic") {
           initialLinks.push(value);
         }
       });
-      angular.forEach($scope.links, function (link, index) {
+      angular.forEach($scope.links, function(link, index) {
 
         if (Array.isArray(selectedProtocols)) {
           if (selectedProtocols[index] != "Relative Path") {
@@ -2420,7 +2426,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
             // We only modify if data is different
             if (data_link.uri_text != initialLinks[index].uri_text || data_link.uri != initialLinks[index].uri) {
               data_link.resource_type = "link";
-              Restangular.one('campaign', campaign_id).one('resource/link', data_link.id).customPUT(data_link).then(function (success) {
+              Restangular.one('campaign', campaign_id).one('resource/link', data_link.id).customPUT(data_link).then(function(success) {
                 refreshLinks();
               });
             }
@@ -2429,7 +2435,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
           else {
             // POST request
             data_link.resource_type = "link";
-            Restangular.one('campaign', campaign_id).one('resource/link').customPOST(data_link).then(function (success) {
+            Restangular.one('campaign', campaign_id).one('resource/link').customPOST(data_link).then(function(success) {
               $scope.links[index] = success.plain();
               refreshLinks();
             });
@@ -2440,11 +2446,11 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   }
 
   function refreshLinks() {
-    Restangular.one('campaign', campaign_id).customGET().then(function (success) {
+    Restangular.one('campaign', campaign_id).customGET().then(function(success) {
       // This newIndex is the position in array where new data should be inserted
       // Not using the index because GET campaign has other types of links that are not generic
       var newIndex = 0;
-      angular.forEach(success.links, function (value, index) {
+      angular.forEach(success.links, function(value, index) {
         if (value.resource_content_type == "generic") {
           // Remove Protocol
           if (value.uri.substring(0, 7) == "http://") {
@@ -2466,7 +2472,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
   function adminSaveImages() {
     if ($scope.campaignImages[0] && $scope.campaignImages[0].entry_file_revision_id) {
-      Restangular.one('campaign', campaign_id).one('resource/file/').customGET().then(function (success) {
+      Restangular.one('campaign', campaign_id).one('resource/file/').customGET().then(function(success) {
         var tempCampaignImages = [];
         if (success.length) {
           for (var i = 0; i < success.length; i++) {
@@ -2475,8 +2481,8 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
             }
           }
           var imageObj = { file_sync_resource_id: tempCampaignImages[0].id, file_sync: true };
-          Restangular.one('campaign', campaign_id).one('resource-revision/file', $scope.campaignImages[0].id).customPUT(imageObj).then(function (success) {
-            Restangular.one('campaign', campaign_id).one('resource-revision/file').customDELETE($scope.campaignImages[0].id).then(function (success) {
+          Restangular.one('campaign', campaign_id).one('resource-revision/file', $scope.campaignImages[0].id).customPUT(imageObj).then(function(success) {
+            Restangular.one('campaign', campaign_id).one('resource-revision/file').customDELETE($scope.campaignImages[0].id).then(function(success) {
               getCampaignImages();
             });
           });
@@ -2485,7 +2491,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     }
 
     if ($scope.campaignHeaderImages[0] && $scope.campaignHeaderImages[0].entry_file_revision_id) {
-      Restangular.one('campaign', campaign_id).one('resource/file/').customGET().then(function (success) {
+      Restangular.one('campaign', campaign_id).one('resource/file/').customGET().then(function(success) {
         var tempCampaignHeaderImages = [];
         if (success.length) {
           for (var i = 0; i < success.length; i++) {
@@ -2494,8 +2500,8 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
             }
           }
           var imageObj = { file_sync_resource_id: tempCampaignHeaderImages[0].id, file_sync: true };
-          Restangular.one('campaign', campaign_id).one('resource-revision/file', $scope.campaignHeaderImages[0].id).customPUT(imageObj).then(function (success) {
-            Restangular.one('campaign', campaign_id).one('resource-revision/file').customDELETE($scope.campaignHeaderImages[0].id).then(function (success) {
+          Restangular.one('campaign', campaign_id).one('resource-revision/file', $scope.campaignHeaderImages[0].id).customPUT(imageObj).then(function(success) {
+            Restangular.one('campaign', campaign_id).one('resource-revision/file').customDELETE($scope.campaignHeaderImages[0].id).then(function(success) {
               getCampaignHeaderImages();
             });
           });
@@ -2506,9 +2512,9 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
   function adminSaveRevisionFAQs() {
     if ($scope.campaign.faq[0].faq_revision_id) {
-      Restangular.one('campaign', campaign_id).one('faq').getList().then(function (success) {
+      Restangular.one('campaign', campaign_id).one('faq').getList().then(function(success) {
         if (success.length) {
-          success.forEach(function (faq) {
+          success.forEach(function(faq) {
             if (faq.faq_id) {
               Restangular.one('campaign', $scope.campaign.entry_id).one('faq').customDELETE(faq.faq_id);
             }
@@ -2517,7 +2523,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
             }
           });
         }
-        $scope.campaign.faq.forEach(function (faq) {
+        $scope.campaign.faq.forEach(function(faq) {
           if (faq.faq_id) {
             Restangular.one('campaign', $scope.campaign.entry_id).one('faq').customDELETE(faq.faq_id);
             faq.faq_id = null;
@@ -2527,12 +2533,12 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
             faq.faq_revision_id = null;
           }
 
-          angular.forEach(faq.faq_pairs, function (value, key) {
+          angular.forEach(faq.faq_pairs, function(value, key) {
             if (value.id) {
               value.id = null;
             }
           });
-          Restangular.one('campaign', campaign_id).one('faq').customPOST(faq).then(function (success) {
+          Restangular.one('campaign', campaign_id).one('faq').customPOST(faq).then(function(success) {
             // save the faq id for future use
             var faqID = success[0].id;
             // if faq created successfully, assign the id from response back to object
@@ -2549,12 +2555,12 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   }
 
   function saveFAQs() {
-    $scope.campaign.faq.forEach(function (faq) {
+    $scope.campaign.faq.forEach(function(faq) {
       // if id not found, POST to create new
       if (!faq.faq_id) {
         // make sure the faq has name and description
         if (faq.name && faq.description) {
-          Restangular.one('campaign', campaign_id).one('faq').customPOST(faq).then(function (success) {
+          Restangular.one('campaign', campaign_id).one('faq').customPOST(faq).then(function(success) {
             // save the faq id for future use
             var faqID = success[0].id;
             // if faq created successfully, assign the id from response back to object
@@ -2580,7 +2586,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
   function updateFAQPairs(faq) {
     var rep = [];
-    angular.forEach(faq.faq_pairs, function (value, key) {
+    angular.forEach(faq.faq_pairs, function(value, key) {
       // make sure not sending empty request
       if (value.question && value.answer) {
         // if it has id, use PUT request to update
@@ -2598,14 +2604,14 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         }
       }
     });
-    $q.all(rep).then(function (success) {
+    $q.all(rep).then(function(success) {
       //Causing rollback behavior on frontend
       /*getFAQ();*/
     });
   }
 
   function saveRevisionFAQs() {
-    $scope.campaign.faq.forEach(function (faq) {
+    $scope.campaign.faq.forEach(function(faq) {
       // if id not found, POST to create new
       if ($scope.no_faq_revisions) {
         // make sure the faq has name and description
@@ -2613,7 +2619,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
           var faqObj = {};
           faqObj.description = faq.description;
           faqObj.name = faq.name;
-          Restangular.one('campaign', campaign_id).one('faq-revision').customPOST(faqObj).then(function (success) {
+          Restangular.one('campaign', campaign_id).one('faq-revision').customPOST(faqObj).then(function(success) {
             // save the faq id for future use
             var faqID = success[0].id;
             // if faq created successfully, assign the id from response back to object
@@ -2635,7 +2641,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
   function updateRevisionFAQPairs(faq) {
     var rep = [];
-    angular.forEach(faq.faq_pairs, function (value, key) {
+    angular.forEach(faq.faq_pairs, function(value, key) {
       // make sure not sending empty request
       if (value.question && value.answer) {
         // if it has id, use PUT request to update
@@ -2654,24 +2660,24 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         }
       }
     });
-    $q.all(rep).then(function (success) {
+    $q.all(rep).then(function(success) {
       //   //Causing rollback behavior on frontend
       //   /*getFAQ();*/
     });
   }
 
-  $scope.uploadCampaignFile = function (files) {
+  $scope.uploadCampaignFile = function(files) {
     if (files.length) {
       $scope.isUploading = true;
       var url = "campaign/" + $scope.campaign.id + "/resource/file";
-      FileUploadService.uploadFile(url, files).then(function (success) {
+      FileUploadService.uploadFile(url, files).then(function(success) {
         $scope.currentUploadFile.resourceId = success.data.id;
         $scope.currentUploadFile.title = $scope.currentUploadFile.title ? $scope.currentUploadFile.title : success.data.name;
         $scope.currentUploadFile.fileName = success.data.name;
         $scope.currentUploadFile.path = success.data.path_external;
         setFileIconType(success.data.mime_type);
         $scope.isUploading = false;
-      }, function (error) {
+      }, function(error) {
         $scope.isUploading = false;
       });
     }
@@ -2681,7 +2687,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     reqDeleteFileArr.push(resourceId);
   }
 
-  $scope.addCampaignFile = function () {
+  $scope.addCampaignFile = function() {
     if ($scope.currentUploadFile.fileName) {
       if (!$scope.campaign.settings.hasOwnProperty("campaign_files")) {
         $scope.campaign.settings.campaign_files = [];
@@ -2691,7 +2697,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     }
   }
 
-  $scope.cancelCampaignFile = function () {
+  $scope.cancelCampaignFile = function() {
     Restangular.one("campaign", $scope.campaign.id).one("resource/file", $scope.currentUploadFile.resourceId).customDELETE();
     resetFileUpload();
   }
@@ -2729,7 +2735,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     }
   }
 
-  $scope.removeFileFromSetting = function (fileObjIndex) {
+  $scope.removeFileFromSetting = function(fileObjIndex) {
     if ($scope.enableCampaignRevisions && $scope.campaign.entry_status_id == 2) {
       return false;
     } else {
@@ -2738,7 +2744,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     }
   }
 
-  $scope.saveVideoLink = function () {
+  $scope.saveVideoLink = function() {
     var link = window.prompt('Please enter a URL to insert', 'https://');
     Restangular.one('campaign', campaign_id).one('resource/link').customPOST({
       resource: link,
@@ -2748,15 +2754,15 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   }
 
   // Search cities and check if the result needs to be displayed in native language
-  $scope.searchCities = function (term) {
+  $scope.searchCities = function(term) {
     var cityID = null; // variable to hold city ID
     var countryID = null;
     var native_lookup = $scope.native_lookup == true ? 1 : 0;
     if (term) {
       // Check setting here to choose which one to use, check the layout
       // This one is to search cities directly
-      Geolocator.searchCities(term, native_lookup).then(function (cities) {
-        angular.forEach(cities, function (value) {
+      Geolocator.searchCities(term, native_lookup).then(function(cities) {
+        angular.forEach(cities, function(value) {
           checkCitiesNative(value);
         });
         $scope.cities = cities;
@@ -2764,10 +2770,10 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     }
   }
 
-  $scope.$watch('multipleCity.selected', function (value) {
+  $scope.$watch('multipleCity.selected', function(value) {
     if (value) {
       $scope.campaign.city_id = [];
-      angular.forEach(value, function (city) {
+      angular.forEach(value, function(city) {
         var cityID = Geolocator.lookupCityID(city.name);
         if (cityID) {
           $scope.campaign.city_id.push(cityID);
@@ -2782,7 +2788,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   // If it changes from null to a value, which is when user first created a campaign and set start date
   // we put a default value in runtime_days such as 1
   var tempStartsDateTime;
-  $scope.$watch("campaign.starts_date_time", function (newValue, oldValue) {
+  $scope.$watch("campaign.starts_date_time", function(newValue, oldValue) {
     if ((oldValue == null || oldValue == undefined) && newValue != null && newValue != undefined) {
       if ($scope.campaign.runtime_days == null || $scope.campaign.runtime_days == undefined) {
         $scope.campaign.runtime_days = 1;
@@ -2791,7 +2797,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   });
 
   // Custom filter for ngQuickDate so it disables all dates before today
-  $scope.noPastDates = function (d) {
+  $scope.noPastDates = function(d) {
     if (!d) {
       return true;
     }
@@ -2860,7 +2866,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   };
 
   // Takes an array and adds a reward to it, otherwise just creates a reward
-  $scope.addReward = function (arr) {
+  $scope.addReward = function(arr) {
     if (!$scope.reward_html_editor) {
       var rewardsModel = {
         amount: 0,
@@ -2888,11 +2894,11 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   }
 
   // Takes an array and adds a shipping option to it, otherwise just creates a shipping option
-  $scope.addShippingOption = function (arr) {
+  $scope.addShippingOption = function(arr) {
 
     // when adding, check the existing objects
     var worldwideInList = false;
-    angular.forEach(arr, function (value, key) {
+    angular.forEach(arr, function(value, key) {
       if (value.shipping_option_type_id == 1) {
         worldwideInList = true;
       }
@@ -2914,7 +2920,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
 
   // AWARD VARIATION - START
-  $scope.addVariationOption = function (reward) {
+  $scope.addVariationOption = function(reward) {
     if (reward.attributes) {
       if (!reward.attributes['variation']) {
         reward.attributes['variation'] = [];
@@ -2934,11 +2940,11 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     }
   }
 
-  $scope.removeVariationOption = function (reward, index) {
+  $scope.removeVariationOption = function(reward, index) {
     reward.attributes['variation'].splice(index, 1);
   }
 
-  $scope.addChoice = function (variation) {
+  $scope.addChoice = function(variation) {
     var choiceOption = {
       value: '',
     };
@@ -2947,20 +2953,20 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     }
   }
 
-  $scope.removeChoice = function (choice, index) {
-    choice.splice(index, 1);
-  }
-  // AWARD VARIATION - END
+  $scope.removeChoice = function(choice, index) {
+      choice.splice(index, 1);
+    }
+    // AWARD VARIATION - END
 
-  $scope.addsubCountry = function (arr, index) {
-    angular.forEach($scope.subCountries, function (val) {
-      if (val.cost) {
-        $scope.campaign.rewards[index].shipping.push(val);
-      }
-    });
-  }
-  // Takes an array and adds a link to it, otherwise just creates a link
-  $scope.addLink = function (arr) {
+  $scope.addsubCountry = function(arr, index) {
+      angular.forEach($scope.subCountries, function(val) {
+        if (val.cost) {
+          $scope.campaign.rewards[index].shipping.push(val);
+        }
+      });
+    }
+    // Takes an array and adds a link to it, otherwise just creates a link
+  $scope.addLink = function(arr) {
     var link = {
       uri: '',
       resource: '',
@@ -2973,7 +2979,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   }
 
   // Takes an array and adds an FAQ to it, otherwise just creates an FAQ
-  $scope.addFAQ = function (arr) {
+  $scope.addFAQ = function(arr) {
     if ($scope.public_settings.site_campaign_faq.toggle) {
       var FAQ = {
         name: $scope.public_settings.site_campaign_faq.name,
@@ -2992,7 +2998,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   }
 
   // Takes an array and adds an FAQ pair to it, otherwise just creates an FAQ pair
-  $scope.addFAQPair = function (FAQ) {
+  $scope.addFAQPair = function(FAQ) {
     var pair = {
       question: '',
       answer: '',
@@ -3005,7 +3011,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   // faq sort filter
   // For now, it's only for single FAQ, not designed for multiple ones
   $scope.faqSortOptions = {
-    stop: function (e, ui) {
+    stop: function(e, ui) {
       var pairs = ui.item.scope().faq.faq_pairs;
       for (var i = 0; i < pairs.length; i++) {
         pairs[i].display_priority = i + 1;
@@ -3016,7 +3022,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
   // For now, it's only for single FAQ, not designed for multiple ones
   $scope.rewardVariationSortOptions = {
-    stop: function (e, ui) {
+    stop: function(e, ui) {
       var pairs = ui.item.scope().faq.faq_pairs;
       for (var i = 0; i < pairs.length; i++) {
         pairs[i].display_priority = i + 1;
@@ -3026,7 +3032,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   };
 
   // select shipping option click function
-  $scope.selectShippingOption = function (rewardIndex, sIndex, optionID) {
+  $scope.selectShippingOption = function(rewardIndex, sIndex, optionID) {
 
     // assign option ID
     // use index of to get the reward index then assign it t;o the scope object
@@ -3036,9 +3042,9 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   };
 
   // shipping option -> country specific shipping selected country
-  $scope.selectedCountry = function (reward, sIndex, countryID) {
+  $scope.selectedCountry = function(reward, sIndex, countryID) {
     var shipping = $scope.campaign.rewards[$scope.campaign.rewards.indexOf(reward)].shipping;
-    angular.forEach(shipping, function (value, key) {
+    angular.forEach(shipping, function(value, key) {
       if (key != sIndex && countryID == value.country_id) {
         countryID = null;
         country_exist = true;
@@ -3049,13 +3055,13 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
 
   //show delete-faq modal
-  $scope.deleteFaq = function (faq) {
+  $scope.deleteFaq = function(faq) {
     $scope.faq = faq;
     $('.delete-faq-modal').modal('show');
   }
 
   //confirm delete faq
-  $scope.confirmDeleteFaq = function ($event) {
+  $scope.confirmDeleteFaq = function($event) {
     $scope.faq.entry_id = $scope.campaign.entry_id;
     if ($scope.faq.faq_id) {
       Restangular.one('campaign', $scope.campaign.entry_id).one('faq', $scope.faq.faq_id).customDELETE($scope.faq);
@@ -3072,21 +3078,21 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   }
 
   //show delete-reward modal
-  $scope.deleteReward = function (reward, index) {
+  $scope.deleteReward = function(reward, index) {
     $scope.reward = reward;
     $scope.reward.$index = index;
     $('.delete-reward-modal').modal('show');
   };
 
-  $scope.removeShippingOption = function (item, array) {
-    angular.forEach(array.shipping, function (value, key) {
+  $scope.removeShippingOption = function(item, array) {
+    angular.forEach(array.shipping, function(value, key) {
       if (item.$$hashKey == value.$$hashKey) {
         array.shipping.splice(key, 1);
       }
     });
 
     if (item.sub_countries.length > 0) {
-      angular.forEach(item.sub_countries, function (value) {
+      angular.forEach(item.sub_countries, function(value) {
         if (value.shipping_option_id) {
           Restangular.one('campaign', campaign_id).one('pledge-level', array.pledge_level_id).one('shipping-option', value.shipping_option_id).customDELETE();
         }
@@ -3100,7 +3106,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   };
 
   //confirm delete reward
-  $scope.confirmDeleteReward = function () {
+  $scope.confirmDeleteReward = function() {
     var rewardsModel = {
       amount: 0,
       name: '',
@@ -3119,11 +3125,11 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     }
   };
 
-  $scope.checkShippingOption = function (data) {
+  $scope.checkShippingOption = function(data) {
     var index = -1; // to hold index of world wide shipping option
 
     // loop through shipping options list once to see if there is a world wide shipping option
-    angular.forEach(data, function (value, key) {
+    angular.forEach(data, function(value, key) {
       if (value.shipping_option_type_id == 1) // if there is, mark down its index
       {
         index = key;
@@ -3133,13 +3139,13 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
     if (index == -1) // if no world wide option in the list
     {
-      angular.forEach(data, function (value, key) { // loop through the list and change the flag
+      angular.forEach(data, function(value, key) { // loop through the list and change the flag
 
         value['worldwideOption'] = false;
       });
     } else // if there is world wide shipping already in the list
     {
-      angular.forEach(data, function (value, key) { // loop through the list and change the flag
+      angular.forEach(data, function(value, key) { // loop through the list and change the flag
 
         value['worldwideOption'] = true;
       });
@@ -3147,19 +3153,19 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   };
 
   function getNotes() {
-    Restangular.one('campaign', $scope.campaign.entry_id).one('note').customGET().then(function (success) {
+    Restangular.one('campaign', $scope.campaign.entry_id).one('note').customGET().then(function(success) {
       if (success) {
         $scope.notes = success[0].value;
       }
     });
   }
 
-  $scope.showSubCountry = function (id, rindex, shipId, shipIndex) {
+  $scope.showSubCountry = function(id, rindex, shipId, shipIndex) {
     var data = {
       country_id: id
     };
     if (shipId == 3) {
-      Geolocator.getSubcountriesByCountry(id).then(function (subcountries) {
+      Geolocator.getSubcountriesByCountry(id).then(function(subcountries) {
         // Check which language to show
         if ($scope.native_lookup) {
           for (var i in subcountries) {
@@ -3170,7 +3176,7 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         }
         if (subcountries) {
           $scope.subCountries = [];
-          angular.forEach(subcountries, function (val) {
+          angular.forEach(subcountries, function(val) {
             var sub = {
               cost: 0,
               name: '',
@@ -3191,14 +3197,14 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     }
   }
 
-  $scope.validLink = function (link) {
+  $scope.validLink = function(link) {
     $scope.invalidThumbnailVideo = false;
     $('#campaign-thumbnail-video .select-error').remove();
     $('#campaign-thumbnail-video').removeClass('error');
     if (link) {
       link = link.replace(/https?:\/\//gi, $location.protocol() + '://');
       var encoded_link = btoa(link);
-      Restangular.one('campaign/video-check').customGET(encoded_link).then(function (success) {
+      Restangular.one('campaign/video-check').customGET(encoded_link).then(function(success) {
         var result = success.result;
         if (result == 0) {
           $scope.invalidThumbnailVideo = true;
@@ -3209,25 +3215,25 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     }
   }
 
-  $scope.videoCheck = function (link) {
-    $scope.invalidVideo = false;
-    $('#campaign-video .select-error').remove();
-    $('#campaign-video').removeClass('error');
-    if (link) {
-      $scope.campaign.video.uri = link.replace(/https?:\/\//gi, $location.protocol() + '://');
-      var encoded_link = btoa(link);
-      Restangular.one('campaign/video-check').customGET(encoded_link).then(function (success) {
-        var result = success.result;
-        if (result == 0) {
-          $scope.invalidVideo = true;
-        }
-      });
-    } else {
+  $scope.videoCheck = function(link) {
       $scope.invalidVideo = false;
+      $('#campaign-video .select-error').remove();
+      $('#campaign-video').removeClass('error');
+      if (link) {
+        $scope.campaign.video.uri = link.replace(/https?:\/\//gi, $location.protocol() + '://');
+        var encoded_link = btoa(link);
+        Restangular.one('campaign/video-check').customGET(encoded_link).then(function(success) {
+          var result = success.result;
+          if (result == 0) {
+            $scope.invalidVideo = true;
+          }
+        });
+      } else {
+        $scope.invalidVideo = false;
+      }
     }
-  }
-  // Reformat the date string retrieved when grabbing campaign data
-  // It's necessary as Firefox doesn't work well with Date.parse when it's '-'' instead of '/'
+    // Reformat the date string retrieved when grabbing campaign data
+    // It's necessary as Firefox doesn't work well with Date.parse when it's '-'' instead of '/'
   function reformatDate(dateString) {
     if (dateString != null) {
       // Using regex to look for all chars that are '-' and replace them with '/'
@@ -3246,17 +3252,17 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     }
   }
 
-  $scope.check = function () {
+  $scope.check = function() {
     $scope.checkstatus = true;
   }
 
   // Translate placeholder text for calender
-  $translate(['get_started_funding_startdate_placeholder', 'get_started_funding_enddate_placeholder']).then(function (value) {
+  $translate(['get_started_funding_startdate_placeholder', 'get_started_funding_enddate_placeholder']).then(function(value) {
     $scope.get_started_funding_startdate_placeholder = value.get_started_funding_startdate_placeholder;
     $scope.get_started_funding_enddate_placeholder = value.get_started_funding_enddate_placeholder;
   });
 
-  $scope.$watchGroup(['campaign.duration_type_id', 'campaign.runtime_days', 'campaign.starts_date_time'], function (values, oldValues) {
+  $scope.$watchGroup(['campaign.duration_type_id', 'campaign.runtime_days', 'campaign.starts_date_time'], function(values, oldValues) {
     // only watch after finish loading
     if (typeof oldValues[1] == "undefined") {
       return;
@@ -3303,14 +3309,14 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     }
   });
 
-  $scope.$watch('campaign.starts_date_time', function (newValue, oldValue) {
+  $scope.$watch('campaign.starts_date_time', function(newValue, oldValue) {
     if (newValue) {
       $('#start-date-field .select-error').remove();
       $('#start-date-field').removeClass('error');
     }
   });
 
-  $scope.$watch('campaign.ends_date_time', function (values) {
+  $scope.$watch('campaign.ends_date_time', function(values) {
     if (values) {
       $('#end-date-field .select-error').remove();
       $('#end-date-field').removeClass('error');
@@ -3331,11 +3337,11 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     }
   });
 
-  $scope.$watch('category_ids', function (newValue, oldValue) {
+  $scope.$watch('category_ids', function(newValue, oldValue) {
     if (!$scope.allCategories.length) {
-      Restangular.one("portal/category").customGET().then(function (success) {
+      Restangular.one("portal/category").customGET().then(function(success) {
         $scope.allCategories = angular.copy(success);
-      }, function (error) {
+      }, function(error) {
         console.error("Category Retrieve Error", error);
       });
     }
@@ -3357,14 +3363,14 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
         }
         $scope.subcategories = angular.copy(subcategory_temp);
         // Manually prefill the data
-        $timeout(function () {
+        $timeout(function() {
           $("#sub-category-field select").val($scope.sub_category_ids).trigger("change")
         }, 0);
       }
     }
   });
 
-  $scope.$watch('sub_category_ids', function (newValue, oldValue) {
+  $scope.$watch('sub_category_ids', function(newValue, oldValue) {
     if (newValue != oldValue) {
       if ($('#sub-category-field .select2-choices li').hasClass('select2-search-choice')) {
         $('#sub-category-field .select-error').remove();
@@ -3373,28 +3379,28 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     }
   });
 
-  $scope.$watch('campaignImages', function (newValue, oldValue) {
+  $scope.$watch('campaignImages', function(newValue, oldValue) {
     if (newValue) {
       $('#featured-img-field .select-error').remove();
       $('#featured-img-field').removeClass('error');
     }
   });
 
-  $scope.$watch('campaign.description', function (newValue, oldValue) {
+  $scope.$watch('campaign.description', function(newValue, oldValue) {
     if (newValue) {
       $('#campaign-details-field .select-error').remove();
       $('#campaign-details-field').removeClass('error');
     }
   });
 
-  $scope.$watch('campaign.faq[0].description', function (newValue, oldValue) {
+  $scope.$watch('campaign.faq[0].description', function(newValue, oldValue) {
     if (newValue) {
       $('#faq-description').removeClass('error');
     }
   });
 
   // Get new list of users.
-  $scope.updateUserList = function (name) {
+  $scope.updateUserList = function(name) {
     // Reset to first page.
     $("input[name='recipient']").removeAttr('value');
     $scope.user_list_page = 1;
@@ -3402,20 +3408,20 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
   }
 
   // Get list of usernames for composing messages
-  $scope.getPeopleNames = function (name, append) {
+  $scope.getPeopleNames = function(name, append) {
     $scope.append = false;
     if (append !== undefined) {
       $scope.append = append;
     }
     var filters = {
-      "filters": {
-        "name": name,
-      },
-      "page": $scope.user_list_page,
-      "page_entries": $scope.user_list_page_entries,
-    }
-    /*Restangular.one("portal/person-public").get(filters).then(function(success, limit){*/
-    RestFullResponse.all('portal/person-public').getList(filters).then(function (success) {
+        "filters": {
+          "name": name,
+        },
+        "page": $scope.user_list_page,
+        "page_entries": $scope.user_list_page_entries,
+      }
+      /*Restangular.one("portal/person-public").get(filters).then(function(success, limit){*/
+    RestFullResponse.all('portal/person-public').getList(filters).then(function(success) {
       $scope.pagination_info = success.headers();
 
       if (!$scope.append) {
@@ -3434,18 +3440,18 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
 
       // Need timeout or semantic function will not run correctly.
       // Show drop down if more results are found since semantic hides dropdown before api result is returned.
-      $timeout(function () {
+      $timeout(function() {
         if ($scope.list_users.length > 0) {
           $(".recipient.dropdown").dropdown("show");
         }
       }, 0);
 
-    }, function (failed) {
+    }, function(failed) {
       $scope.list_users = false;
     });
   }
 
-  $scope.setRecipient = function (event) {
+  $scope.setRecipient = function(event) {
     var first_name = event.target.attributes["first-name"].value;
     var last_name = event.target.attributes["last-name"].value;
     var id = event.target.attributes["data-value"].value;
@@ -3454,16 +3460,16 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     $scope.campaign.settings.campaign_manager_name = first_name + " " + last_name;
   }
 
-  $scope.$watch(function () {
+  $scope.$watch(function() {
     return $scope.campaign.private
-  }, function (newValue, oldValue) {
+  }, function(newValue, oldValue) {
     if (newValue != oldValue) {
       if (newValue) {
         if ($scope.campaign.settings && !$scope.campaign.settings.original_uri_path) {
           $scope.campaign.settings.original_uri_path = $scope.campaign.uri_path;
         }
         if (!/campaign\/private/.test($scope.campaign.uri_path)) {
-          Restangular.one("portal/token").customGET().then(function (success) {
+          Restangular.one("portal/token").customGET().then(function(success) {
             $scope.campaign.uri_path = "campaign/private/" + success.token;
           });
         }
@@ -3475,10 +3481,18 @@ app.controller('CreateCampaignCtrl', function ($q, $location, $routeParams, $roo
     }
   });
 
-  $scope.$watch('campaignFundingGoal.value', function (newValue, oldValue) {
+  $scope.$watch('campaignFundingGoal.value', function(newValue, oldValue) {
     if (newValue != oldValue && newValue) {
       if ($scope.campaign && typeof newValue === "string") {
         $scope.campaign.funding_goal = $rootScope.formatFundingGoal(newValue);
+      }
+    }
+  });
+
+  $scope.$watch('thresholdvalue.value', function(newValue, oldValue) {
+    if (newValue != oldValue && newValue) {
+      if ($scope.campaign && typeof newValue === "string") {
+        $scope.campaign.threshold = $rootScope.formatFundingGoal(newValue);
       }
     }
   });

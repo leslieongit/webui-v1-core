@@ -54,10 +54,8 @@
             </div>
             <div class="twelve wide center aligned column websiteFavicon">
               <div class="site-logo-thumbnail ui imagePlace">
-                <img ng-if="!site_favicon.value.path_external" src="images/placeholder-images/placeholder_favicon_visible.png"
-                  width="32" height="32">
-                <img ng-if="site_favicon.value.path_external" ng-src="{{server + '/image/site_favicon_32x32/' + site_favicon.value.path_external}}"
-                  imageonload>
+                <img ng-if="!site_favicon.value.path_external" src="images/placeholder-images/placeholder_favicon_visible.png" width="32" height="32">
+                <img ng-if="site_favicon.value.path_external" ng-src="{{server + '/image/site_favicon_32x32/' + site_favicon.value.path_external}}" imageonload>
                 <div class="ui dimmer">
                   <div class="content">
                     <div class="center">
@@ -85,8 +83,7 @@
             <div class="twelve wide center aligned column websiteLogo">
               <div class="site-logo-thumbnail ui imagePlace">
                 <img ng-if="!site_logo.value.path_external" src="images/placeholder-images/placeholder_logo.png">
-                <img ng-if="site_logo.value.path_external" ng-src="{{server + '/image/site_logo/' + site_logo.value.path_external}}"
-                  imageonload>
+                <img ng-if="site_logo.value.path_external" ng-src="{{server + '/image/site_logo/' + site_logo.value.path_external}}" imageonload>
                 <div class="ui dimmer">
                   <div class="content">
                     <div class="center">
@@ -123,10 +120,8 @@
             </div>
             <div class="twelve wide center aligned column loadScreenIcon">
               <div class="load-screen-icon ui imagePlace">
-                <img ng-if="!site_load_icon.value.path_external" src="images/placeholder-images/placeholder_load_icon_visible.png"
-                  width="100" height="100">
-                <img ng-if="site_load_icon.value.path_external" ng-src="{{server + '/image/w-100-h-100/' + site_load_icon.value.path_external}}"
-                  imageonload>
+                <img ng-if="!site_load_icon.value.path_external" src="images/placeholder-images/placeholder_load_icon_visible.png" width="100" height="100">
+                <img ng-if="site_load_icon.value.path_external" ng-src="{{server + '/image/w-100-h-100/' + site_load_icon.value.path_external}}" imageonload>
                 <div class="ui dimmer">
                   <div class="content">
                     <div class="center">
@@ -155,14 +150,11 @@
             <div class="twelve wide column center aligned select-semantic-icon">
               <div class="ui selection dropdown load-icon-selector row">
                 <input type="hidden" name="load-icon-select">
-                <div class="default text" translate="{{public_settings.site_load_class}}">
-                  {{'tab_portalsetting_select_icon'
-                  | translate}} </div>
+                <div class="default text">
+                  {{'tab_portalsetting_select_icon' | translate}} </div>
                 <i class="dropdown icon"></i>
                 <div class="menu">
-                  <div class="item" ng-repeat="load_icon in load_icons" ng-click="selectLoadClass(load_icon)"
-                    ng-attr-selected="{{public_settings.site_load_class == load_icon.name || undefined }}">{{load_icon.name
-                    | translate}}</div>
+                  <div class="item" ng-repeat="load_icon in load_icons" ng-click="selectLoadClass(load_icon)" ng-attr-selected="{{public_settings.site_load_class == load_icon.name || undefined }}">{{load_icon.name | translate}}</div>
                 </div>
               </div>
               <div ng-if="site_load_class" class="ui selection row">
@@ -195,19 +187,15 @@
                   <h4 class="ui header" translate> tab_portalsetting_home_banner_media </h4>
                   <div class="media-content" semantic-ui-tabs>
                     <div class="media-tab-menu ui top attached tabular menu">
-                      <a ng-class="{'active': public_settings.site_theme_banner_is_image==true}" class="item" data-tab="home-media-image"
-                        ng-click="setBannerIsImage(true)" translate>tab_portalsetting_top_banner_img_tab_label</a>
-                      <a ng-class="{'active': public_settings.site_theme_banner_is_image==false}" class="item" data-tab="home-media-video"
-                        ng-click="setBannerIsImage(false)" translate>tab_portalsetting_top_banner_video_tab_label</a>
+                      <a ng-class="{'active': public_settings.site_theme_banner_is_image==true}" class="item" data-tab="home-media-image" ng-click="setBannerIsImage(true)" translate>tab_portalsetting_top_banner_img_tab_label</a>
+                      <a ng-class="{'active': public_settings.site_theme_banner_is_image==false}" class="item" data-tab="home-media-video" ng-click="setBannerIsImage(false)" translate>tab_portalsetting_top_banner_video_tab_label</a>
                     </div>
 
-                    <div ng-class="{'hidden-tab': public_settings.site_theme_banner_is_image}" class="media-tab-content ui bottom attached tab"
-                      data-tab="home-media-image">
+                    <div ng-class="{'hidden-tab': public_settings.site_theme_banner_is_image}" class="media-tab-content ui bottom attached tab" data-tab="home-media-image">
                       <div id="home-media-image" class="media-image">
                         <div class="bg-thumbnail main-background-thumbnail ui imagePlace">
                           <img ng-if="!main_background.value.path_external" src="images/placeholder-images/placeholder_bg_preview.png">
-                          <img ng-if="main_background.value.path_external" ng-src="{{server + '/image/portal_setting_preview_background/' + main_background.value.path_external}}"
-                            imageonload>
+                          <img ng-if="main_background.value.path_external" ng-src="{{server + '/image/portal_setting_preview_background/' + main_background.value.path_external}}" imageonload>
                           <div class="ui dimmer">
                             <div class="content">
                               <div class="center">
@@ -218,45 +206,37 @@
                               </div>
                             </div>
                           </div>
-                          <button class="delete-button ui red tiny icon button" ng-show="main_background.value.path_external"
-                            ng-click="progress[0]=-1;deleteMainBackground()">
+                          <button class="delete-button ui red tiny icon button" ng-show="main_background.value.path_external" ng-click="progress[0]=-1;deleteMainBackground()">
                             <i class="delete icon"></i>
                           </button>
                         </div>
                         <p class="img-upload-notes" translate>tab_portalsetting_home_banner_image_upload_notes</p>
                         <div class="action-btns">
-                          <thrinacia-file-upload upload-id="uploadMainBackgroundButton" upload-file="uploadMainBackground"
-                            upload-translate="tab_portalsetting_Upload_Image"></thrinacia-file-upload>
+                          <thrinacia-file-upload upload-id="uploadMainBackgroundButton" upload-file="uploadMainBackground" upload-translate="tab_portalsetting_Upload_Image"></thrinacia-file-upload>
                         </div>
                       </div>
                     </div>
 
-                    <div ng-class="{'hidden-tab': !public_settings.site_theme_banner_is_image}" class="media-tab-content ui bottom attached tab"
-                      data-tab="home-media-video">
+                    <div ng-class="{'hidden-tab': !public_settings.site_theme_banner_is_image}" class="media-tab-content ui bottom attached tab" data-tab="home-media-video">
                       <div id="home-media-video" class="media-video">
                         <div class="video-url-section">
                           <div class="video-wrapper">
                             <div class="yv-video" ng-show="site_theme_banner_video_link_type=='youtube' || site_theme_banner_video_link_type=='vimeo'">
-                              <youtube-video ng-if="site_theme_banner_video_link_type=='youtube'" video-id="{{site_theme_banner_video_link_preview}}"
-                                id="ytplayer" autoplay="false" mute="true" modest-branding="true"></youtube-video>
-                              <iframe id="vimeoplayer" ng-if="site_theme_banner_video_link_type=='vimeo'" ng-src="{{site_theme_banner_video_link_preview}}"
-                                frameborder="0"></iframe>
+                              <youtube-video ng-if="site_theme_banner_video_link_type=='youtube'" video-id="{{site_theme_banner_video_link_preview}}" id="ytplayer" autoplay="false" mute="true" modest-branding="true"></youtube-video>
+                              <iframe id="vimeoplayer" ng-if="site_theme_banner_video_link_type=='vimeo'" ng-src="{{site_theme_banner_video_link_preview}}" frameborder="0"></iframe>
                             </div>
                             <div class="custom-video" ng-if="site_theme_banner_video_link_type=='custom'">
-                              <video ng-attr-muted="{{public_settings.site_theme_banner_video_mute ? '' : undefined}}"
-                                id="custom-video-player" controls>
+                              <video ng-attr-muted="{{public_settings.site_theme_banner_video_mute ? '' : undefined}}" id="custom-video-player" controls>
                                 <source ng-src="{{site_theme_banner_video_link_preview}}" type="video/mp4">
                                 </source>
                               </video>
                             </div>
-                            <button class="delete-button ui red tiny icon button" ng-if="site_theme_banner_video_link_type && site_theme_banner_video_link_type!='none'"
-                              ng-click="deletePreviewVideo()">
+                            <button class="delete-button ui red tiny icon button" ng-if="site_theme_banner_video_link_type && site_theme_banner_video_link_type!='none'" ng-click="deletePreviewVideo()">
                               <i class="remove icon"></i>
                             </button>
                           </div>
                           <div class="ui action input fluid">
-                            <input type="text" ng-model="public_settings.site_theme_banner_video_link"
-                              ng-attr-placeholder="{{'tab_portalsetting_top_banner_video_input_placeholder' | translate}}">
+                            <input type="text" ng-model="public_settings.site_theme_banner_video_link" ng-attr-placeholder="{{'tab_portalsetting_top_banner_video_input_placeholder' | translate}}">
                             <button class="ui button" ng-click="loadPreviewVideo()">
                               <span translate>tab_portalsetting_set_video</span>
                             </button>
@@ -264,8 +244,7 @@
                           <p class="note-text" translate>tab_portalsetting_top_banner_video_note</p>
                           <div class="action-toggle">
                             <div ng-class="{'checked': public_settings.site_theme_banner_video_mute}" class="mute-toggle ui toggle checkbox">
-                              <input ng-checked="public_settings.site_theme_banner_video_mute" id="banner_video_mute"
-                                type="checkbox">
+                              <input ng-checked="public_settings.site_theme_banner_video_mute" id="banner_video_mute" type="checkbox">
                               <label ng-click="checkChecked($event)" ng-bind="videoMuteToggle"></label>
                             </div>
                           </div>
@@ -275,8 +254,7 @@
                           <p class="note-text" translate>tab_portalsetting_top_banner_video_img_thumb_note</p>
                           <div class="bg-thumbnail main-background-thumbnail ui imagePlace">
                             <img ng-if="!main_background.value.path_external" src="images/placeholder-images/placeholder_bg_preview.png">
-                            <img ng-if="main_background.value.path_external" ng-src="{{server + '/image/portal_setting_preview_background/' + main_background.value.path_external}}"
-                              imageonload>
+                            <img ng-if="main_background.value.path_external" ng-src="{{server + '/image/portal_setting_preview_background/' + main_background.value.path_external}}" imageonload>
                             <div class="ui dimmer">
                               <div class="content">
                                 <div class="center">
@@ -288,15 +266,13 @@
                               </div>
                             </div>
 
-                            <button class="delete-button ui tiny red icon button" ng-show="main_background.value.path_external"
-                              ng-click="progress[0]=-1;deleteMainBackground()">
+                            <button class="delete-button ui tiny red icon button" ng-show="main_background.value.path_external" ng-click="progress[0]=-1;deleteMainBackground()">
                               <i class="delete icon"></i>
                             </button>
                           </div>
                           <p class="img-upload-notes" translate>tab_portalsetting_home_banner_mob_tab_image_upload_notes</p>
                           <div class="action-btns">
-                            <thrinacia-file-upload upload-id="uploadMainBackgroundButton" upload-file="uploadMainBackground"
-                              upload-translate="tab_portalsetting_Upload_Image"></thrinacia-file-upload>
+                            <thrinacia-file-upload upload-id="uploadMainBackgroundButton" upload-file="uploadMainBackground" upload-translate="tab_portalsetting_Upload_Image"></thrinacia-file-upload>
                           </div>
                         </div>
                       </div>
@@ -311,13 +287,11 @@
                     <div class="media-tab-menu ui top attached tabular menu">
                       <div class="active item" data-tab="explore-media-image" translate>tab_portalsetting_top_banner_img_tab_label</div>
                     </div>
-                    <div ng-class="{'hidden-tab': true}" class="media-tab-content ui bottom attached active tab"
-                      data-tab="explore-media-image">
+                    <div ng-class="{'hidden-tab': true}" class="media-tab-content ui bottom attached active tab" data-tab="explore-media-image">
                       <div id="explore-media-image" class="media-image">
                         <div class="bg-thumbnail explore-background-thumbnail ui imagePlace">
                           <img ng-if="!explore_background.value.path_external" src="images/placeholder-images/placeholder_bg_preview.png">
-                          <img ng-if="explore_background.value.path_external" ng-src="{{server + '/image/portal_setting_preview_background/' + explore_background.value.path_external}}"
-                            imageonload>
+                          <img ng-if="explore_background.value.path_external" ng-src="{{server + '/image/portal_setting_preview_background/' + explore_background.value.path_external}}" imageonload>
                           <div class="ui dimmer">
                             <div class="content">
                               <div class="center">
@@ -328,15 +302,13 @@
                               </div>
                             </div>
                           </div>
-                          <button class="delete-button ui tiny red icon button" ng-show="explore_background.value.path_external"
-                            ng-click="progress[0]=-1;deleteExploreBackground()">
+                          <button class="delete-button ui tiny red icon button" ng-show="explore_background.value.path_external" ng-click="progress[0]=-1;deleteExploreBackground()">
                             <i class="delete icon"></i>
                           </button>
                         </div>
                         <p class="img-upload-notes" translate>tab_portalsetting_home_banner_image_upload_notes</p>
                         <div class="action-btns">
-                          <thrinacia-file-upload upload-id="uploadExploreBackgroundButton" upload-file="uploadExploreBackground"
-                            upload-translate="tab_portalsetting_Upload_Image"></thrinacia-file-upload>
+                          <thrinacia-file-upload upload-id="uploadExploreBackgroundButton" upload-file="uploadExploreBackground" upload-translate="tab_portalsetting_Upload_Image"></thrinacia-file-upload>
                         </div>
                       </div>
                     </div>
@@ -362,8 +334,7 @@
                     <div class="default text" translate> tab_portalsetting_Select_Section </div>
                     <i class="dropdown icon"></i>
                     <div class="menu">
-                      <div class="item" ng-repeat="section in color_sections" ng-click="selectColorSection(section)">{{section.var_name
-                        | translate}}</div>
+                      <div class="item" ng-repeat="section in color_sections" ng-click="selectColorSection(section)">{{section.var_name | translate}}</div>
                     </div>
                   </div>
                 </div>
@@ -478,11 +449,9 @@
                     </div>
                   </div>
                   <div class="action-button ui green button add-link" ng-click="showExternalLinkFields()">
-                    {{'tab_portalsetting_Add_Link'
-                    | translate}} </div>
+                    {{'tab_portalsetting_Add_Link' | translate}} </div>
                   <div class="action-button ui red button delete-link" ng-click="deleteMultiLink()">
-                    {{'tab_portalsetting_RemoveFrom_Menu'
-                    | translate}} </div>
+                    {{'tab_portalsetting_RemoveFrom_Menu' | translate}} </div>
                 </div>
                 <div class="ui three column stackable grid new-link-fields" ng-if="isAddExternalLink">
                   <div class="seven wide column">
@@ -575,31 +544,26 @@
                 <div class="content ui form segment custom-main-banner">
                   <div>
                     <div class="ui buttons center aligned">
-                      <div class="ui button" ng-class="{positive: public_settings.site_home_page_text.main_banner.display=='text'}"
-                        ng-click="public_settings.site_home_page_text.main_banner.display='text'" translate>
+                      <div class="ui button" ng-class="{positive: public_settings.site_home_page_text.main_banner.display=='text'}" ng-click="public_settings.site_home_page_text.main_banner.display='text'" translate>
                         tab_portalsetting_Text_Content
                       </div>
                       <div class="or"></div>
-                      <div class="ui button" ng-class="{positive: public_settings.site_home_page_text.main_banner.display=='html'}"
-                        ng-click="public_settings.site_home_page_text.main_banner.display='html'" translate>
+                      <div class="ui button" ng-class="{positive: public_settings.site_home_page_text.main_banner.display=='html'}" ng-click="public_settings.site_home_page_text.main_banner.display='html'" translate>
                         tab_portalsetting_Html_block
                       </div>
                     </div>
                     <div class="main-banner-text" ng-show="public_settings.site_home_page_text.main_banner.display=='text'">
                       <div class="field">
                         <label translate> tab_portalsetting_Top_header </label>
-                        <input type="text" ng-attr-placeholder="{{'tab_portalsetting_Top_header' | translate}}"
-                          ng-model="public_settings.site_home_page_text.main_banner.header_one">
+                        <input type="text" ng-attr-placeholder="{{'tab_portalsetting_Top_header' | translate}}" ng-model="public_settings.site_home_page_text.main_banner.header_one">
                       </div>
                       <div class="field">
                         <label translate> tab_portalsetting_Middle_header </label>
-                        <input type="text" ng-attr-placeholder="{{'tab_portalsetting_Middle_header' | translate}}"
-                          ng-model="public_settings.site_home_page_text.main_banner.header_two">
+                        <input type="text" ng-attr-placeholder="{{'tab_portalsetting_Middle_header' | translate}}" ng-model="public_settings.site_home_page_text.main_banner.header_two">
                       </div>
                       <div class="field">
                         <label translate> tab_portalsetting_paragraph </label>
-                        <textarea type="text" ng-attr-placeholder="{{'tab_portalsetting_paragraph' | translate}}"
-                          ng-model="public_settings.site_home_page_text.main_banner.paragraph"></textarea>
+                        <textarea type="text" ng-attr-placeholder="{{'tab_portalsetting_paragraph' | translate}}" ng-model="public_settings.site_home_page_text.main_banner.paragraph"></textarea>
                       </div>
                       <div class="ui two column grid">
                         <div class="ui eight wide column">
@@ -615,16 +579,13 @@
                               <input type="hidden" name="font-family">
                               <div class="default text" ng-if="public_settings.site_home_page_text.main_banner.font_family">{{public_settings.site_home_page_text.main_banner.font_family}}
                               </div>
-                              <div class="default text" ng-if="!public_settings.site_home_page_text.main_banner.font_family"
-                                translate> tab_portalsetting_Font_Family
+                              <div class="default text" ng-if="!public_settings.site_home_page_text.main_banner.font_family" translate> tab_portalsetting_Font_Family
                               </div>
                               <i class="dropdown icon"></i>
                               <div class="menu">
-                                <div class="item" ng-click="public_settings.site_home_page_text.main_banner.font_family=''"
-                                  translate> tab_portalsetting_Default_Font
+                                <div class="item" ng-click="public_settings.site_home_page_text.main_banner.font_family=''" translate> tab_portalsetting_Default_Font
                                 </div>
-                                <div class="item" ng-repeat="(name,value) in font_list" ng-click="public_settings.site_home_page_text.main_banner.font_family=value"
-                                  style="font-family:{{value}}">{{value}}
+                                <div class="item" ng-repeat="(name,value) in font_list" ng-click="public_settings.site_home_page_text.main_banner.font_family=value" style="font-family:{{value}}">{{value}}
                                 </div>
                               </div>
                             </div>
@@ -653,19 +614,17 @@
                           <div class="ui dropdown selection">
                             <input type="hidden">
                             <i class="dropdown icon"></i>
-                            <div class="text">{{public_settings.site_home_page_text.main_banner.block_alignment.text |
-                              translate}}</div>
+                            <div class="text">{{public_settings.site_home_page_text.main_banner.block_alignment.text | translate}}
+                            </div>
                             <div class="menu">
-                              <div class="item" ng-repeat="conf in blockAlignConfigs" ng-click="setBlockAlign(conf)">{{conf.text
-                                | translate}}</div>
+                              <div class="item" ng-repeat="conf in blockAlignConfigs" ng-click="setBlockAlign(conf)">{{conf.text | translate}}</div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div class="main-banner-html" ng-show="public_settings.site_home_page_text.main_banner.display=='html'">
-                      <textarea froala="froalaOptionsMain" data-server="{{server}}" data-loc="{{server_loc}}" class="text-editor"
-                        ng-model="public_settings.site_home_page_text.main_banner.html" name="main_banner"></textarea>
+                      <textarea froala="froalaOptionsMain" data-server="{{server}}" data-loc="{{server_loc}}" class="text-editor" ng-model="public_settings.site_home_page_text.main_banner.html" name="main_banner"></textarea>
                     </div>
                   </div>
                 </div>
@@ -690,16 +649,13 @@
                         <div class="ui selection dropdown fluid">
                           <input type="hidden" name="font-family">
                           <div class="default text" ng-if="public_settings.site_home_page_text.middle_font_family">{{public_settings.site_home_page_text.middle_font_family}}</div>
-                          <div class="default text" ng-if="!public_settings.site_home_page_text.middle_font_family"
-                            translate> tab_portalsetting_Middle_Banner_Select_fontFamily
+                          <div class="default text" ng-if="!public_settings.site_home_page_text.middle_font_family" translate> tab_portalsetting_Middle_Banner_Select_fontFamily
                           </div>
                           <i class="dropdown icon"></i>
                           <div class="menu">
-                            <div class="item" ng-click="public_settings.site_home_page_text.middle_font_family=''"
-                              translate> tab_portalsetting_Middle_Banner_Default_fontFamily
+                            <div class="item" ng-click="public_settings.site_home_page_text.middle_font_family=''" translate> tab_portalsetting_Middle_Banner_Default_fontFamily
                             </div>
-                            <div class="item" ng-repeat="(name,value) in font_list" ng-click="public_settings.site_home_page_text.middle_font_family=value"
-                              style="font-family:{{value}}">{{value}}</div>
+                            <div class="item" ng-repeat="(name,value) in font_list" ng-click="public_settings.site_home_page_text.middle_font_family=value" style="font-family:{{value}}">{{value}}</div>
                           </div>
                         </div>
                       </div>
@@ -712,12 +668,10 @@
                 <div class="content ui form segment custom-bottom-banner">
                   <div>
                     <div class="ui buttons center aligned">
-                      <div class="ui button" ng-class="{positive: public_settings.site_home_page_text.bottom_banner.display=='text'}"
-                        ng-click="public_settings.site_home_page_text.bottom_banner.display='text'" translate>
+                      <div class="ui button" ng-class="{positive: public_settings.site_home_page_text.bottom_banner.display=='text'}" ng-click="public_settings.site_home_page_text.bottom_banner.display='text'" translate>
                         tab_portalsetting_Bottom_Banner_Text </div>
                       <div class="or"></div>
-                      <div class="ui button" ng-class="{positive: public_settings.site_home_page_text.bottom_banner.display=='html'}"
-                        ng-click="public_settings.site_home_page_text.bottom_banner.display='html'" translate>
+                      <div class="ui button" ng-class="{positive: public_settings.site_home_page_text.bottom_banner.display=='html'}" ng-click="public_settings.site_home_page_text.bottom_banner.display='html'" translate>
                         tab_portalsetting_Bottom_Banner_Html</div>
                     </div>
                     <div class="bottom-banner-text" ng-show="public_settings.site_home_page_text.bottom_banner.display=='text'">
@@ -738,16 +692,13 @@
                             <div class="ui selection dropdown fluid">
                               <input type="hidden" name="font-family">
                               <div class="default text" ng-if="public_settings.site_home_page_text.bottom_banner.top_header_font_family">{{public_settings.site_home_page_text.bottom_banner.top_header_font_family}}</div>
-                              <div class="default text" ng-if="!public_settings.site_home_page_text.bottom_banner.top_header_font_family"
-                                translate>tab_portalsetting_Bottom_Banner_Select_fontFamily
+                              <div class="default text" ng-if="!public_settings.site_home_page_text.bottom_banner.top_header_font_family" translate>tab_portalsetting_Bottom_Banner_Select_fontFamily
                               </div>
                               <i class="dropdown icon"></i>
                               <div class="menu">
-                                <div class="item" ng-click="public_settings.site_home_page_text.bottom_banner.top_header_font_family=''"
-                                  translate> tab_portalsetting_Bottom_Banner_Default_fontFamily
+                                <div class="item" ng-click="public_settings.site_home_page_text.bottom_banner.top_header_font_family=''" translate> tab_portalsetting_Bottom_Banner_Default_fontFamily
                                 </div>
-                                <div class="item" ng-repeat="(name,value) in font_list" ng-click="public_settings.site_home_page_text.bottom_banner.top_header_font_family=value"
-                                  style="font-family:{{value}}">{{value}}</div>
+                                <div class="item" ng-repeat="(name,value) in font_list" ng-click="public_settings.site_home_page_text.bottom_banner.top_header_font_family=value" style="font-family:{{value}}">{{value}}</div>
                               </div>
                             </div>
                           </div>
@@ -756,8 +707,7 @@
                       <div class="bottom-banner-divider ui section divider"></div>
                       <div class="field">
                         <label translate> tab_portalsetting_Bottom_Banner_paragraph </label>
-                        <textarea type="text" ng-attr-placeholder=" {{'tab_portalsetting_Bottom_Banner_paragraph' | translate}} "
-                          ng-model="public_settings.site_home_page_text.bottom_banner.paragraph"></textarea>
+                        <textarea type="text" ng-attr-placeholder=" {{'tab_portalsetting_Bottom_Banner_paragraph' | translate}} " ng-model="public_settings.site_home_page_text.bottom_banner.paragraph"></textarea>
                       </div>
                       <div class="ui two column grid">
                         <div class="ui eight wide column">
@@ -772,16 +722,13 @@
                             <div class="ui selection dropdown fluid">
                               <input type="hidden" name="font-family">
                               <div class="default text" ng-if="public_settings.site_home_page_text.bottom_banner.paragraph_font_family">{{public_settings.site_home_page_text.bottom_banner.paragraph_font_family}}</div>
-                              <div class="default text" ng-if="!public_settings.site_home_page_text.bottom_banner.paragraph_font_family"
-                                translate> tab_portalsetting_Bottom_Banner_Select_fontfamily
+                              <div class="default text" ng-if="!public_settings.site_home_page_text.bottom_banner.paragraph_font_family" translate> tab_portalsetting_Bottom_Banner_Select_fontfamily
                               </div>
                               <i class="dropdown icon"></i>
                               <div class="menu">
-                                <div class="item" ng-click="public_settings.site_home_page_text.bottom_banner.paragraph_font_family=''"
-                                  translate> tab_portalsetting_Bottom_Banner_Default_fontfamily
+                                <div class="item" ng-click="public_settings.site_home_page_text.bottom_banner.paragraph_font_family=''" translate> tab_portalsetting_Bottom_Banner_Default_fontfamily
                                 </div>
-                                <div class="item" ng-repeat="(name,value) in font_list" ng-click="public_settings.site_home_page_text.bottom_banner.paragraph_font_family=value"
-                                  style="font-family:{{value}}">{{value}}</div>
+                                <div class="item" ng-repeat="(name,value) in font_list" ng-click="public_settings.site_home_page_text.bottom_banner.paragraph_font_family=value" style="font-family:{{value}}">{{value}}</div>
                               </div>
                             </div>
                           </div>
@@ -794,18 +741,15 @@
                       <h4 class="column-header ui header" translate> tab_portalsetting_Bottom_Header_leftcolumn </h4>
                       <div class="display">
                         <label translate> tab_portalsetting_Bottom_Header_Display </label>
-                        <input type="checkbox" ng-model="public_settings.site_home_page_text.bottom_banner.left_column.display"
-                          ng-true-value="1" ng-false-value="0">
+                        <input type="checkbox" ng-model="public_settings.site_home_page_text.bottom_banner.left_column.display" ng-true-value="1" ng-false-value="0">
                       </div>
                       <div class="field">
                         <label translate> tab_portalsetting_Bottom_Header_Icon_class </label>
-                        <input type="text" ng-attr-placeholder="{{'tab_portalsetting_Bottom_Header_Icon_class' | translate}}"
-                          ng-model="public_settings.site_home_page_text.bottom_banner.left_column.icon_class">
+                        <input type="text" ng-attr-placeholder="{{'tab_portalsetting_Bottom_Header_Icon_class' | translate}}" ng-model="public_settings.site_home_page_text.bottom_banner.left_column.icon_class">
                       </div>
                       <div class="field">
                         <label translate> tab_portalsetting_Bottom_Header_header </label>
-                        <input type="text" ng-attr-placeholder=" {{'tab_portalsetting_Bottom_Header_header' | translate}}"
-                          ng-model="public_settings.site_home_page_text.bottom_banner.left_column.header">
+                        <input type="text" ng-attr-placeholder=" {{'tab_portalsetting_Bottom_Header_header' | translate}}" ng-model="public_settings.site_home_page_text.bottom_banner.left_column.header">
                       </div>
                       <div class="field">
                         <label translate> tab_portalsetting_Bottom_Header_paragraph </label>
@@ -814,44 +758,36 @@
                       <h4 class="column-header ui header" translate> tab_portalsetting_Bottom_Header_Middlecolumn </h4>
                       <div class="display">
                         <label translate> tab_portalsetting_Bottom_Header_Display</label>
-                        <input type="checkbox" ng-model="public_settings.site_home_page_text.bottom_banner.middle_column.display"
-                          ng-true-value="1" ng-false-value="0">
+                        <input type="checkbox" ng-model="public_settings.site_home_page_text.bottom_banner.middle_column.display" ng-true-value="1" ng-false-value="0">
                       </div>
                       <div class="field">
                         <label translate>tab_portalsetting_Bottom_Header_Icon_class</label>
-                        <input type="text" ng-attr-placeholder="{{'tab_portalsetting_Bottom_Header_Icon_class' | translate}}"
-                          ng-model="public_settings.site_home_page_text.bottom_banner.middle_column.icon_class">
+                        <input type="text" ng-attr-placeholder="{{'tab_portalsetting_Bottom_Header_Icon_class' | translate}}" ng-model="public_settings.site_home_page_text.bottom_banner.middle_column.icon_class">
                       </div>
                       <div class="field">
                         <label translate>tab_portalsetting_Bottom_Header_header </label>
-                        <input type="text" ng-attr-placeholder="{{'tab_portalsetting_Bottom_Header_header' | translate}}"
-                          ng-model="public_settings.site_home_page_text.bottom_banner.middle_column.header">
+                        <input type="text" ng-attr-placeholder="{{'tab_portalsetting_Bottom_Header_header' | translate}}" ng-model="public_settings.site_home_page_text.bottom_banner.middle_column.header">
                       </div>
                       <div class="field">
                         <label translate> tab_portalsetting_Bottom_Header_paragraph </label>
-                        <textarea type="text" ng-attr-placeholder="{{'tab_portalsetting_Bottom_Header_paragraph' | translate}}"
-                          ng-model="public_settings.site_home_page_text.bottom_banner.middle_column.paragraph"></textarea>
+                        <textarea type="text" ng-attr-placeholder="{{'tab_portalsetting_Bottom_Header_paragraph' | translate}}" ng-model="public_settings.site_home_page_text.bottom_banner.middle_column.paragraph"></textarea>
                       </div>
                       <h4 class="column-header ui header" translate> tab_portalsetting_Right_column </h4>
                       <div class="display">
                         <label translate>tab_portalsetting_Bottom_Header_Display</label>
-                        <input type="checkbox" ng-model="public_settings.site_home_page_text.bottom_banner.right_column.display"
-                          ng-true-value="1" ng-false-value="0">
+                        <input type="checkbox" ng-model="public_settings.site_home_page_text.bottom_banner.right_column.display" ng-true-value="1" ng-false-value="0">
                       </div>
                       <div class="field">
                         <label translate>tab_portalsetting_Bottom_Header_Icon_class </label>
-                        <input type="text" ng-attr-placeholder="{{'tab_portalsetting_Bottom_Header_Icon_class' | translate}}"
-                          ng-model="public_settings.site_home_page_text.bottom_banner.right_column.icon_class">
+                        <input type="text" ng-attr-placeholder="{{'tab_portalsetting_Bottom_Header_Icon_class' | translate}}" ng-model="public_settings.site_home_page_text.bottom_banner.right_column.icon_class">
                       </div>
                       <div class="field">
                         <label translate> tab_portalsetting_Bottom_Header_header </label>
-                        <input type="text" ng-attr-placeholder="{{'tab_portalsetting_Bottom_Header_header' | translate}}"
-                          ng-model="public_settings.site_home_page_text.bottom_banner.right_column.header">
+                        <input type="text" ng-attr-placeholder="{{'tab_portalsetting_Bottom_Header_header' | translate}}" ng-model="public_settings.site_home_page_text.bottom_banner.right_column.header">
                       </div>
                       <div class="field">
                         <label translate> tab_portalsetting_Bottom_Header_paragraph </label>
-                        <textarea type="text" ng-attr-placeholder="{{'tab_portalsetting_Bottom_Header_paragraph' | translate}}"
-                          ng-model="public_settings.site_home_page_text.bottom_banner.right_column.paragraph"></textarea>
+                        <textarea type="text" ng-attr-placeholder="{{'tab_portalsetting_Bottom_Header_paragraph' | translate}}" ng-model="public_settings.site_home_page_text.bottom_banner.right_column.paragraph"></textarea>
                       </div>
                       <div class="bottom-banner-divider ui section divider"></div>
                       <h4 class="ui header" translate> Column Header </h4>
@@ -868,16 +804,13 @@
                             <div class="ui selection dropdown fluid">
                               <input type="hidden" name="font-family">
                               <div class="default text" ng-if="public_settings.site_home_page_text.bottom_banner.column_header_font_family">{{public_settings.site_home_page_text.bottom_banner.column_header_font_family}}</div>
-                              <div class="default text" ng-if="!public_settings.site_home_page_text.bottom_banner.column_header_font_family"
-                                translate>tab_portalsetting_Bottom_Banner_Select_fontFamily
+                              <div class="default text" ng-if="!public_settings.site_home_page_text.bottom_banner.column_header_font_family" translate>tab_portalsetting_Bottom_Banner_Select_fontFamily
                               </div>
                               <i class="dropdown icon"></i>
                               <div class="menu">
-                                <div class="item" ng-click="public_settings.site_home_page_text.bottom_banner.column_header_font_family = '' "
-                                  translate>
+                                <div class="item" ng-click="public_settings.site_home_page_text.bottom_banner.column_header_font_family = '' " translate>
                                   tab_portalsetting_Bottom_Banner_Default_fontFamily </div>
-                                <div class="item" ng-repeat="(name,value) in font_list" ng-click="public_settings.site_home_page_text.bottom_banner.column_header_font_family = value"
-                                  style="font-family:{{value}}">{{value}}</div>
+                                <div class="item" ng-repeat="(name,value) in font_list" ng-click="public_settings.site_home_page_text.bottom_banner.column_header_font_family = value" style="font-family:{{value}}">{{value}}</div>
                               </div>
                             </div>
                           </div>
@@ -886,8 +819,7 @@
                       <div class="bottom-banner-divider ui section divider"></div>
                       <div class="field">
                         <label translate> tab_portalsetting_Bottom_Header</label>
-                        <input type="text" ng-attr-placeholder="{{'tab_portalsetting_Bottom_Header' | translate}}"
-                          ng-model="public_settings.site_home_page_text.bottom_banner.header_bottom">
+                        <input type="text" ng-attr-placeholder="{{'tab_portalsetting_Bottom_Header' | translate}}" ng-model="public_settings.site_home_page_text.bottom_banner.header_bottom">
                       </div>
                       <div class="ui two column grid">
                         <div class="eight wide column">
@@ -902,16 +834,13 @@
                             <div class="ui selection dropdown fluid">
                               <input type="hidden" name="font-family">
                               <div class="default text" ng-if="public_settings.site_home_page_text.bottom_banner.bottom_header_font_family">{{public_settings.site_home_page_text.bottom_banner.bottom_header_font_family}}</div>
-                              <div class="default text" ng-if="!public_settings.site_home_page_text.bottom_banner.bottom_header_font_family"
-                                translate>tab_portalsetting_Bottom_Banner_Select_fontFamily
+                              <div class="default text" ng-if="!public_settings.site_home_page_text.bottom_banner.bottom_header_font_family" translate>tab_portalsetting_Bottom_Banner_Select_fontFamily
                               </div>
                               <i class="dropdown icon"></i>
                               <div class="menu">
-                                <div class="item" ng-click="public_settings.site_home_page_text.bottom_banner.bottom_header_font_family=''"
-                                  translate> tab_portalsetting_Bottom_Banner_Default_fontFamily
+                                <div class="item" ng-click="public_settings.site_home_page_text.bottom_banner.bottom_header_font_family=''" translate> tab_portalsetting_Bottom_Banner_Default_fontFamily
                                 </div>
-                                <div class="item" ng-repeat="(name,value) in font_list" ng-click="public_settings.site_home_page_text.bottom_banner.bottom_header_font_family=value"
-                                  style="font-family:{{value}}">{{value}}</div>
+                                <div class="item" ng-repeat="(name,value) in font_list" ng-click="public_settings.site_home_page_text.bottom_banner.bottom_header_font_family=value" style="font-family:{{value}}">{{value}}</div>
                               </div>
                             </div>
                           </div>
@@ -921,8 +850,7 @@
 
 
                     <div class="bottom-banner-html" ng-show="public_settings.site_home_page_text.bottom_banner.display=='html'">
-                      <textarea froala="froalaOptionsBot" data-server="{{server}}" data-loc="{{server_loc}}" class="text-editor"
-                        ng-model="public_settings.site_home_page_text.bottom_banner.html" name="bottom_banner"></textarea>
+                      <textarea froala="froalaOptionsBot" data-server="{{server}}" data-loc="{{server_loc}}" class="text-editor" ng-model="public_settings.site_home_page_text.bottom_banner.html" name="bottom_banner"></textarea>
                     </div>
                   </div>
                   <div class="bottom-banner-divider ui section divider"></div>
@@ -950,8 +878,7 @@
                   <div class="column">
                     <div class="field">
                       <label>{{'tab_portalsetting_featured_project'| translate}} </label>
-                      <input type="text" ng-attr-placeholder="{{'tab_portalsetting_featured_project'| translate}}"
-                        ng-model="public_settings.site_home_page_text.titles.top_title">
+                      <input type="text" ng-attr-placeholder="{{'tab_portalsetting_featured_project'| translate}}" ng-model="public_settings.site_home_page_text.titles.top_title">
                       <div class="ui checkbox" ng-model="featuredproject" style="margin-top:15px;">
                         <input type="checkbox" id="featured">
                         <label> {{'tab_portalsetting_show_section'| translate}}</label>
@@ -961,8 +888,7 @@
                   <div class="column">
                     <div class="field">
                       <label>{{'tab_portalsetting_recent_project'| translate}} </label>
-                      <input type="text" ng-attr-placeholder="{{'tab_portalsetting_recent_project'| translate}}"
-                        ng-model="public_settings.site_home_page_text.titles.bottom_title">
+                      <input type="text" ng-attr-placeholder="{{'tab_portalsetting_recent_project'| translate}}" ng-model="public_settings.site_home_page_text.titles.bottom_title">
                       <div class="ui checkbox" ng-model="newproject" style="margin-top:15px;">
                         <input type="checkbox" id="new">
                         <label>{{'tab_portalsetting_show_section'| translate}}</label>
@@ -992,8 +918,7 @@
                       <div class="column">
                         <img src="{{server}}/image/site_logo_320x80/{{link.image_link}}" ng-if="link.image_link">
                         <img src="images/placeholder-images/placeholder_load_icon_visible.png" ng-if="!link.image_link">
-                        <thrinacia-file-upload upload-id="uploadPartnerLogoButton" upload-index="{{$index}}"
-                          upload-file="uploadPartnerLogo" upload-translate="tab_portalsetting_logo_banner_upload"></thrinacia-file-upload>
+                        <thrinacia-file-upload upload-id="uploadPartnerLogoButton" upload-index="{{$index}}" upload-file="uploadPartnerLogo" upload-translate="tab_portalsetting_logo_banner_upload"></thrinacia-file-upload>
                       </div>
                       <div class="column">
                         <div class="ui red icon button" ng-click="removePartnerLogo(link, $index)">
@@ -1002,8 +927,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="add-more-btn ui green right labeled icon button" ng-click="addPartnerLogo(public_settings.logo_links)"
-                    ng-if="public_settings.logo_links.length < 6" id="widget-addbtn">
+                  <div class="add-more-btn ui green right labeled icon button" ng-click="addPartnerLogo(public_settings.logo_links)" ng-if="public_settings.logo_links.length < 6" id="widget-addbtn">
                     <span translate>tab_portalsetting_logo_banner_button</span>
                     <i class="add icon"></i>
                   </div>
@@ -1022,23 +946,19 @@
             <div class="twelve wide column text-setting-column">
               <div class="custom-explore-banner">
                 <div class="ui buttons center aligned">
-                  <div class="ui button" ng-class="{'positive': public_settings.site_explore_page_text.display=='text' || public_settings.site_explore_page_text.display==' ' }"
-                    ng-click="public_settings.site_explore_page_text.display='text'" translate>
+                  <div class="ui button" ng-class="{'positive': public_settings.site_explore_page_text.display=='text' || public_settings.site_explore_page_text.display==' ' }" ng-click="public_settings.site_explore_page_text.display='text'" translate>
                     tab_portalsetting_Explore_textContent
                   </div>
                   <div class="or"></div>
-                  <div class="ui button" ng-class="{positive: public_settings.site_explore_page_text.display=='html'}"
-                    ng-click="public_settings.site_explore_page_text.display='html'" translate>
+                  <div class="ui button" ng-class="{positive: public_settings.site_explore_page_text.display=='html'}" ng-click="public_settings.site_explore_page_text.display='html'" translate>
                     tab_portalsetting_Explore_htmlblock </div>
                 </div>
                 <div class="ui fluid form field defaultForm" ng-show="public_settings.site_explore_page_text.display=='text' ">
                   <label translate> tab_portalsetting_Explore_mainHeader </label>
-                  <input type="text" ng-model="public_settings.site_explore_page_text.banner_header"
-                    ng-attr-placeholder=" {{'tab_portalsetting_Explore_mainHeader' | translate}} ">
+                  <input type="text" ng-model="public_settings.site_explore_page_text.banner_header" ng-attr-placeholder=" {{'tab_portalsetting_Explore_mainHeader' | translate}} ">
                 </div>
                 <div class="defaultForm" ng-show="public_settings.site_explore_page_text.display=='html'">
-                  <textarea froala="froalaOptionsExplore" data-server="{{server}}" data-loc="{{server_loc}}" class="text-editor"
-                    ng-model="public_settings.site_explore_page_text.html" name="explore_banner"></textarea>
+                  <textarea froala="froalaOptionsExplore" data-server="{{server}}" data-loc="{{server_loc}}" class="text-editor" ng-model="public_settings.site_explore_page_text.html" name="explore_banner"></textarea>
                 </div>
                 <div class="row">
                   <label translate> Campaign Search </label>
@@ -1047,8 +967,8 @@
                     <div class="default text" translate> {{public_settings.site_search_explore}} </div>
                     <i class="dropdown icon"></i>
                     <div class="menu">
-                      <div class="item" ng-repeat="obj in searchFilters" ng-click="selectSearchFilter($index)">{{obj |
-                        translate}}</div>
+                      <div class="item" ng-repeat="obj in searchFilters" ng-click="selectSearchFilter($index)">{{obj | translate}}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1081,8 +1001,7 @@
               </p>
             </div>
             <div class="twelve wide column">
-              <textarea froala="froalaFooterCustomHtmlBlock" data-server="{{server}}" data-loc="{{server_loc}}" class="text-editor"
-                ng-model="public_settings.site_homepage_custom_html_block.html" name="homepage_custom"></textarea>
+              <textarea froala="froalaFooterCustomHtmlBlock" data-server="{{server}}" data-loc="{{server_loc}}" class="text-editor" ng-model="public_settings.site_homepage_custom_html_block.html" name="homepage_custom"></textarea>
             </div>
           </div>
 
@@ -1094,8 +1013,7 @@
               </p>
             </div>
             <div class="twelve wide column">
-              <textarea froala="froalaFooterCustomHtmlBlock" data-server="{{server}}" data-loc="{{server_loc}}" class="text-editor"
-                ng-model="public_settings.site_footer_custom_html_block.html" name="footer_custom"></textarea>
+              <textarea froala="froalaFooterCustomHtmlBlock" data-server="{{server}}" data-loc="{{server_loc}}" class="text-editor" ng-model="public_settings.site_footer_custom_html_block.html" name="footer_custom"></textarea>
             </div>
           </div>
 
@@ -1126,37 +1044,37 @@
                 <label ng-show="!public_settings.site_tipping.toggle" translate>tab_portalsetting_campaign_tipping_enable</label>
               </div>
               <div class="campaign-tipping-form ui fluid form field" ng-if="public_settings.site_tipping.toggle">
-                <div class="row">
+                <div class="field">
                   <div class="ui checkbox" ng-model="public_settings.site_tipping.toggle_no_tip">
-                    <input type="checkbox">
+                    <input type="checkbox" name="no_tip">
                     <label translate>tab_portalsetting_campaign_tipping_toggle_no_tips</label>
                   </div>
                 </div>
-                <div class="row">
+                <div class="field">
                   <div class="ui checkbox" ng-model="public_settings.site_tipping.toggle_process_tips_immediately">
-                    <input type="checkbox">
+                    <input type="checkbox" name="tip_force">
                     <label translate>tab_portalsetting_campaign_tipping_force</label>
                   </div>
                 </div>
-                <div class="row">
+                <div class="field">
                   <div class="ui checkbox" ng-model="public_settings.site_tipping.toggle_bottom_tip">
                     <input type="checkbox">
                     <label translate>tab_portalsetting_campaign_bottom_tip</label>
                   </div>
                 </div>
-                <div class="row">
+                <div class="inline field">
                   <div class="ui checkbox" ng-model="public_settings.site_tipping.toggle_dynamic">
-                    <input type="checkbox">
+                    <input type="checkbox" name="tip_manual">
                     <label translate>tab_portalsetting_campaign_tipping_toggle_manual</label>
                   </div>
                 </div>
-                <div class="row child-sub-toggle" ng-if="public_settings.site_tipping.toggle_dynamic">
+                <div class="field child-sub-toggle" ng-if="public_settings.site_tipping.toggle_dynamic">
                   <div class="ui checkbox" ng-model="public_settings.site_tipping.toggle_dynamic_min_max">
                     <input type="checkbox">
                     <label translate>tab_portalsetting_campaign_tipping_toggle_min_max</label>
                   </div>
                 </div>
-                <div class="row" ng-if="public_settings.site_tipping.toggle_dynamic && public_settings.site_tipping.toggle_dynamic_min_max">
+                <div class="field" ng-if="public_settings.site_tipping.toggle_dynamic && public_settings.site_tipping.toggle_dynamic_min_max">
                   <div class="min-max-manual-tipping ui fluid form">
                     <div class="min-max-manual-tipping-grid ui two column grid">
                       <div class="three wide column">
@@ -1177,9 +1095,9 @@
                   </div>
                 </div>
 
-                <div class="row">
+                <div class="inline field">
                   <div class="ui checkbox" ng-model="public_settings.site_tipping.toggle_tiers">
-                    <input type="checkbox">
+                    <input type="checkbox" name="toggle_tiers">
                     <label translate>tab_portalsetting_campaign_tipping_toggle_tiers</label>
                   </div>
                 </div>
@@ -1210,13 +1128,11 @@
                           <div class="fa fa-bars"></div>
                         </div>
                         <div class="six wide column">
-                          <input type="text" ng-attr-placeholder="{{'tab_portalsetting_campaign_tipping_tier_name' | translate}} "
-                            ng-model="tier.name">
+                          <input type="text" ng-attr-placeholder="{{'tab_portalsetting_campaign_tipping_tier_name' | translate}} " ng-model="tier.name">
                         </div>
 
                         <div class="three wide column">
-                          <input type="text" ng-attr-placeholder="{{'tab_portalsetting_campaign_tipping_tier_amount' | translate}} "
-                            ng-model="tier.value">
+                          <input type="text" ng-attr-placeholder="{{'tab_portalsetting_campaign_tipping_tier_amount' | translate}} " ng-model="tier.value">
                         </div>
 
                         <div class="four wide column">
@@ -1229,10 +1145,8 @@
                             <div class="default text" ng-if="!tier.type" translate>tab_portalsetting_campaign_tipping_fixed_amount</div>
                             <i class="dropdown icon"></i>
                             <div class="menu">
-                              <div class="item" data-value="Dollar" ng-click="updateTierType($index, 'Dollar')"
-                                translate>tab_portalsetting_campaign_tipping_fixed_amount</div>
-                              <div class="item" data-value="Percent" ng-click="updateTierType($index, 'Percent')"
-                                translate>tab_portalsetting_campaign_tipping_percentage</div>
+                              <div class="item" data-value="Dollar" ng-click="updateTierType($index, 'Dollar')" translate>tab_portalsetting_campaign_tipping_fixed_amount</div>
+                              <div class="item" data-value="Percent" ng-click="updateTierType($index, 'Percent')" translate>tab_portalsetting_campaign_tipping_percentage</div>
                             </div>
                           </div>
                         </div>
@@ -1253,18 +1167,15 @@
                 <div class="row default-tip-option-toggle" ng-if="(public_settings.site_tipping.toggle_dynamic && public_settings.site_tipping.toggle_tiers) || (public_settings.site_tipping.toggle_dynamic && public_settings.site_tipping.toggle_no_tip) || (public_settings.site_tipping.toggle_tiers && public_settings.site_tipping.toggle_no_tip)">
                   <p translate>tab_portalsetting_campaign_tipping_default_option</p>
                   <div class="ui buttons tipping-options-selection field">
-                    <div class="ui button" ng-class="{ 'green': public_settings.site_tipping.selectedTipDefault == 'tiers' }"
-                      ng-if="public_settings.site_tipping.toggle_tiers" ng-click="setTipDefault('tiers')" translate>
+                    <div class="ui button" ng-class="{ 'green': public_settings.site_tipping.selectedTipDefault == 'tiers' }" ng-if="public_settings.site_tipping.toggle_tiers" ng-click="setTipDefault('tiers')" translate>
                       tab_portalsetting_campaign_tipping_choose_tip
                     </div>
                     <div class="or" ng-if="public_settings.site_tipping.toggle_tiers && public_settings.site_tipping.toggle_dynamic"></div>
-                    <div class="ui button" ng-class="{ 'green': public_settings.site_tipping.selectedTipDefault == 'dynamic' }"
-                      ng-if="public_settings.site_tipping.toggle_dynamic" ng-click="setTipDefault('dynamic')" translate>
+                    <div class="ui button" ng-class="{ 'green': public_settings.site_tipping.selectedTipDefault == 'dynamic' }" ng-if="public_settings.site_tipping.toggle_dynamic" ng-click="setTipDefault('dynamic')" translate>
                       tab_portalsetting_campaign_tipping_enter_tip_amount
                     </div>
                     <div class="or" ng-if="public_settings.site_tipping.toggle_no_tip"></div>
-                    <div class="ui button" ng-class="{ 'green': public_settings.site_tipping.selectedTipDefault == 'no_tip' }"
-                      ng-if="public_settings.site_tipping.toggle_no_tip" ng-click="setTipDefault('no_tip')" translate>
+                    <div class="ui button" ng-class="{ 'green': public_settings.site_tipping.selectedTipDefault == 'no_tip' }" ng-if="public_settings.site_tipping.toggle_no_tip" ng-click="setTipDefault('no_tip')" translate>
                       tab_portalsetting_campaign_tipping_no_tip
                     </div>
                   </div>
@@ -1298,8 +1209,7 @@
                 <i class="dropdown icon"></i>
                 <input type="hidden" class="default_mode" name="default_mode">
                 <div class="menu">
-                  <div ng-repeat="sort in exploreDefaultSort" ng-click="setExploreDefaultSort(sort)" class="item"
-                    data-value="{{sort.value}}">{{sort.type}}</div>
+                  <div ng-repeat="sort in exploreDefaultSort" ng-click="setExploreDefaultSort(sort)" class="item" data-value="{{sort.value}}">{{sort.type}}</div>
                 </div>
               </div>
             </div>
@@ -1429,8 +1339,7 @@
                     <div class="default text" translate> tab_portalsetting_SocialMedia_links_select </div>
                     <i class="dropdown icon"></i>
                     <div class="menu">
-                      <div class="item" ng-repeat="obj in public_settings.site_social_media_links" ng-click="selectSocialMedia(obj)">{{obj.name
-                        | translate}}</div>
+                      <div class="item" ng-repeat="obj in public_settings.site_social_media_links" ng-click="selectSocialMedia(obj)">{{obj.name | translate}}</div>
                     </div>
                   </div>
 
@@ -1475,8 +1384,7 @@
 
             <div class="twelve wide column">
               <div class="ui fluid form field">
-                <input class="email-form" validate-email sui-popup name="email-from" type="text" ng-model="private_settings.site_email_address_from"
-                  ng-attr-placeholder="    {{'tab_portalsetting_Sendermail' | translate}} " data-content="    {{'tab_portalsetting_Sendermail_datacontent' | translate}}"
+                <input class="email-form" validate-email sui-popup name="email-from" type="text" ng-model="private_settings.site_email_address_from" ng-attr-placeholder="    {{'tab_portalsetting_Sendermail' | translate}} " data-content="    {{'tab_portalsetting_Sendermail_datacontent' | translate}}"
                   data-position="top left">
               </div>
             </div>
@@ -1493,9 +1401,8 @@
             <div class="twelve wide column">
 
               <div class="ui fluid form field">
-                <input name="admin-email" validate-email type="text" class="email-to" sui-popup name="email-to"
-                  ng-model="private_settings.site_email_address_admin" ng-attr-placeholder="  {{'tab_portalsetting_Mail_receiver' | translate}}"
-                  data-content="    {{'tab_portalsetting_Sendermail_datacontent' | translate}}" data-position="top left">
+                <input name="admin-email" validate-email type="text" class="email-to" sui-popup name="email-to" ng-model="private_settings.site_email_address_admin" ng-attr-placeholder="  {{'tab_portalsetting_Mail_receiver' | translate}}" data-content="    {{'tab_portalsetting_Sendermail_datacontent' | translate}}"
+                  data-position="top left">
               </div>
             </div>
 
@@ -1661,8 +1568,7 @@
               <div class="row child-sub-toggle" ng-show="public_settings.site_person_attributes_non_admin">
                 <div class="ui checkbox" ng-model="public_settings.site_person_attributes_non_admin_read_all_disallow">
                   <input type="checkbox">
-                  <label translate style="display: inline-block;" data-content="{{'tab_portalsetting_site_disable_read_to_others_note' | translate}}"
-                    class="site-attributes-non-admin-disallow">tab_portalsetting_site_disable_read_to_others</label>
+                  <label translate style="display: inline-block;" data-content="{{'tab_portalsetting_site_disable_read_to_others_note' | translate}}" class="site-attributes-non-admin-disallow">tab_portalsetting_site_disable_read_to_others</label>
                   <i class="help circle icon"></i>
                 </div>
               </div>
@@ -1695,8 +1601,8 @@
                 <div class="text">{{public_settings.site_auth_scheme.translation | translate}}</div>
                 <i class="dropdown icon"></i>
                 <div class="menu">
-                  <div class="item" ng-repeat="auth in auth_scheme" ng-click="setAuthScheme(auth)">{{auth.translation |
-                    translate}}</div>
+                  <div class="item" ng-repeat="auth in auth_scheme" ng-click="setAuthScheme(auth)">{{auth.translation | translate}}
+                  </div>
                 </div>
               </div>
             </div>
@@ -1712,14 +1618,12 @@
               <div class="ui two column grid stackable">
                 <div class="five wide column">
                   <div class="ui input fluid">
-                    <input type="text" ng-attr-placeholder="{{'tab_portalsetting_site_redirect_links_button_login' | translate}}"
-                      ng-model="loginRedirect.text">
+                    <input type="text" ng-attr-placeholder="{{'tab_portalsetting_site_redirect_links_button_login' | translate}}" ng-model="loginRedirect.text">
                   </div>
                 </div>
                 <div class="eleven wide column">
                   <div class="ui input fluid">
-                    <input type="text" ng-attr-placeholder="{{'tab_portalsetting_site_redirect_links_link_login' | translate}}"
-                      ng-model="loginRedirect.link">
+                    <input type="text" ng-attr-placeholder="{{'tab_portalsetting_site_redirect_links_link_login' | translate}}" ng-model="loginRedirect.link">
                   </div>
                 </div>
               </div>
@@ -1728,14 +1632,12 @@
               <div class="ui two column grid stackable">
                 <div class="five wide column">
                   <div class="ui input fluid">
-                    <input type="text" ng-attr-placeholder="{{'tab_portalsetting_site_redirect_links_button_register' | translate}}"
-                      ng-model="registerRedirect.text">
+                    <input type="text" ng-attr-placeholder="{{'tab_portalsetting_site_redirect_links_button_register' | translate}}" ng-model="registerRedirect.text">
                   </div>
                 </div>
                 <div class="eleven wide column">
                   <div class="ui input fluid">
-                    <input type="text" ng-attr-placeholder="{{'tab_portalsetting_site_redirect_links_link_register' | translate}}"
-                      ng-model="registerRedirect.link">
+                    <input type="text" ng-attr-placeholder="{{'tab_portalsetting_site_redirect_links_link_register' | translate}}" ng-model="registerRedirect.link">
                   </div>
                 </div>
               </div>
@@ -1920,10 +1822,10 @@
                   <label ng-show="!public_settings.site_campaign_ecommerce_analytics.toggle" translate>tab_portalsetting_campaign_ea_toggle_label_off</label>
                 </div>
                 <div class="ui fluid form field" ng-if="public_settings.site_campaign_ecommerce_analytics.toggle">
-                  <div class="ui input">
-                    <input name="tracking_code" type="text" ng-model="public_settings.site_campaign_ecommerce_analytics.code"
-                      ng-attr-placeholder=" {{'tab_portalsetting_campaign_ea_label' | translate}} ">
+                  <div class="ui input tracking-input">
+                    <input name="tracking_code" type="text" ng-model="public_settings.site_campaign_ecommerce_analytics.code" ng-attr-placeholder=" {{'tab_portalsetting_campaign_ea_label' | translate}} ">
                   </div>
+                  <br/>
                   <em translate>tab_portalsetting_campaign_ea_header</em>
                 </div>
               </div>
@@ -1991,8 +1893,7 @@
                 <i class="dropdown icon"></i>
                 <input type="hidden" class="default_mode" name="default_mode">
                 <div class="menu">
-                  <div ng-repeat="mode in decimal_option_modes" class="decimal-modes item" data-value="{{mode.type_id}}"
-                    ng-click="decimalNotationSelected(mode.type_id)">
+                  <div ng-repeat="mode in decimal_option_modes" class="decimal-modes item" data-value="{{mode.type_id}}" ng-click="decimalNotationSelected(mode.type_id)">
                     {{ mode.name | translate}}
                   </div>
                 </div>
@@ -2050,29 +1951,6 @@
           </div>
           <div class="ui two column stackable setting-bg grid">
             <div class="four wide column">
-              <h3 class="ui header main-font-color" translate="tab_portalsetting_campaign_contribution_restrict"></h3>
-              <p translate>tab_portalsetting_campaign_contribution_restrict_message</p>
-            </div>
-            <div class="twelve wide left aligned column">
-              <div class="toggle-sticky ui toggle checkbox site-campaign-contribution" ng-model="public_settings.site_campaign_contributions"
-                style="margin-bottom:14px">
-                <input type="checkbox" name="public">
-                <label>
-                  <span translate="tab_portalsetting_campaign_contribution_restrict_toggle"></span>
-                  <span translate ng-show="public_settings.site_campaign_contributions">tab_portalsetting_campaign_contribution_restrict_toggle_off</span>
-                  <span translate ng-show="!public_settings.site_campaign_contributions">tab_portalsetting_campaign_contribution_restrict_toggle_on</span>
-                </label>
-              </div>
-              <div class="row" ng-if="!public_settings.site_campaign_contributions">
-                <h4 translate="tab_portalsetting_campaign_contribution_instruction"></h4>
-                <textarea froala="froalaOptionsContributionInfo" data-server="{{server}}" data-loc="{{server_loc}}"
-                  class="contribution-instruction" ng-model="public_settings.site_campaign_contributions_instruction"></textarea>
-              </div>
-            </div>
-          </div>
-
-          <div class="ui two column stackable setting-bg grid">
-            <div class="four wide column">
               <h3 class="ui header main-font-color" translate> tab_portalsetting_No_Campaign_message </h3>
               <p translate>
                 tab_portalsetting_No_Campaign_message_note
@@ -2080,8 +1958,7 @@
             </div>
             <div class="twelve wide column">
               <div class="ui fluid form field">
-                <input type="text" name="no_campaign_message" ng-model="public_settings.site_theme_no_campaign_message"
-                  ng-attr-placeholder=" {{'tab_portalsetting_Message' | translate}}">
+                <input type="text" name="no_campaign_message" ng-model="public_settings.site_theme_no_campaign_message" ng-attr-placeholder=" {{'tab_portalsetting_Message' | translate}}">
               </div>
             </div>
           </div>
@@ -2134,8 +2011,7 @@
                     <i class="dropdown icon"></i>
                     <input type="hidden" class="default_mode" name="default_mode">
                     <div class="menu">
-                      <div ng-repeat="mode in raise_modes" class="item" ng-show="mode.allowed" data-value="{{mode.id}}"
-                        ng-click="setRaiseMode(mode)">
+                      <div ng-repeat="mode in raise_modes" class="item" ng-show="mode.allowed" data-value="{{mode.id}}" ng-click="setRaiseMode(mode)">
                         {{ mode.description | translate}}
                       </div>
                     </div>
@@ -2280,15 +2156,13 @@
                     <div class="defaultForm">
                       <div class="amount-input field" ng-if="rewardAttributesEnabled || public_settings.site_theme_campaign_show_reward_enable_variation">
                         <div class="ui input">
-                          <input type="text" name="custom_reward_text" ng-model="public_settings.site_campaign_custom_button.reward"
-                            placeholder=" {{'tab_portalsetting_campaign_button_text_reward' | translate}}" class="ng-pristine ng-valid ng-touched">
+                          <input type="text" name="custom_reward_text" ng-model="public_settings.site_campaign_custom_button.reward" placeholder=" {{'tab_portalsetting_campaign_button_text_reward' | translate}}" class="ng-pristine ng-valid ng-touched">
                         </div>
                         <em class="custom-formatting-notes" translate>tab_portalsetting_campaign_button_text_reward_label</em>
                       </div>
                       <div class="amount-input field">
                         <div class="ui input">
-                          <input type="text" name="custom_contribution_text" ng-model="public_settings.site_campaign_custom_button.contribution"
-                            placeholder=" {{'tab_portalsetting_campaign_button_text_contrib' | translate}}" class="ng-pristine ng-valid ng-touched">
+                          <input type="text" name="custom_contribution_text" ng-model="public_settings.site_campaign_custom_button.contribution" placeholder=" {{'tab_portalsetting_campaign_button_text_contrib' | translate}}" class="ng-pristine ng-valid ng-touched">
                         </div>
                         <em class="custom-formatting-notes" translate>tab_portalsetting_campaign_button_text_contrib_label</em>
                       </div>
@@ -2351,13 +2225,11 @@
               </div>
               <div class="six wide column">
                 <label translate>tab_portalsetting_fixed_duration_set_start</label>
-                <quick-datepicker ng-model="public_settings.site_campaign_fixed_campaign_duration_start"
-                  disable-clear-button="true" date-format='EEEE, yyyy/MM/d' placeholder="{{get_started_funding_startdate_placeholder}}"></quick-datepicker>
+                <quick-datepicker ng-model="public_settings.site_campaign_fixed_campaign_duration_start" disable-clear-button="true" date-format='EEEE, yyyy/MM/d' placeholder="{{get_started_funding_startdate_placeholder}}"></quick-datepicker>
               </div>
               <div class="six wide column">
                 <label translate>tab_portalsetting_fixed_duration_set_end</label>
-                <quick-datepicker ng-model="public_settings.site_campaign_fixed_campaign_duration_end"
-                  disable-clear-button="true" date-format='EEEE, yyyy/MM/d' placeholder="{{get_started_funding_startdate_placeholder}}"></quick-datepicker>
+                <quick-datepicker ng-model="public_settings.site_campaign_fixed_campaign_duration_end" disable-clear-button="true" date-format='EEEE, yyyy/MM/d' placeholder="{{get_started_funding_startdate_placeholder}}"></quick-datepicker>
               </div>
             </div>
           </div>
@@ -2700,12 +2572,9 @@
                 <div class="default text" translate="tab_portalsetting_campaign_social_sharing_users"></div>
                 <i class="dropdown icon"></i>
                 <div class="menu">
-                  <div class="item" data-value="users" translate="tab_portalsetting_campaign_social_sharing_users"
-                    ng-click="setSharingOptions(sharingOptions.sharing_users)"></div>
-                  <div class="item" data-value="creator" translate="tab_portalsetting_campaign_social_sharing_campaign_creator"
-                    ng-click="setSharingOptions(sharingOptions.sharing_backers)"></div>
-                  <div class="item" data-value="disabled" translate="tab_portalsetting_campaign_social_sharing_disabled"
-                    ng-click="setSharingOptions(sharingOptions.sharing_disabled)"></div>
+                  <div class="item" data-value="users" translate="tab_portalsetting_campaign_social_sharing_users" ng-click="setSharingOptions(sharingOptions.sharing_users)"></div>
+                  <div class="item" data-value="creator" translate="tab_portalsetting_campaign_social_sharing_campaign_creator" ng-click="setSharingOptions(sharingOptions.sharing_backers)"></div>
+                  <div class="item" data-value="disabled" translate="tab_portalsetting_campaign_social_sharing_disabled" ng-click="setSharingOptions(sharingOptions.sharing_disabled)"></div>
                 </div>
               </div>
             </div>
@@ -2752,8 +2621,7 @@
                     </label>
                   </div>
                   <div class="ui input fluid setting-content-suggestion-endpoint" ng-show="public_settings.campaign_content_suggestion_enabled">
-                    <input type="text" placeholder="{{'tab_portalsetting_campaign_content_suggestion_placeholder' | translate}}"
-                      ng-model="public_settings.campaign_content_suggestion" />
+                    <input type="text" placeholder="{{'tab_portalsetting_campaign_content_suggestion_placeholder' | translate}}" ng-model="public_settings.campaign_content_suggestion" />
                   </div>
                   <br>
                 </div>
@@ -2804,8 +2672,8 @@
                 </div>
                 <i class="dropdown icon"></i>
                 <div class="menu">
-                  <div class="item" ng-repeat="menu in menuOptionsFaq" ng-click="faqSelected($index)">{{menu |
-                    translate}}</div>
+                  <div class="item" ng-repeat="menu in menuOptionsFaq" ng-click="faqSelected($index)">{{menu | translate}}
+                  </div>
                 </div>
               </div>
             </div>
@@ -2821,8 +2689,8 @@
                 </div>
                 <i class="dropdown icon"></i>
                 <div class="menu">
-                  <div class="item" ng-repeat="menu in menuOptionsBacker" ng-click="backerSelected($index)">{{menu |
-                    translate}}</div>
+                  <div class="item" ng-repeat="menu in menuOptionsBacker" ng-click="backerSelected($index)">{{menu | translate}}
+                  </div>
                 </div>
               </div>
               <div class="row">
@@ -2856,8 +2724,8 @@
                   </div>
                   <i class="dropdown icon"></i>
                   <div class="menu">
-                    <div class="item" ng-repeat="menu in menuOptionsComment" ng-click="commentSelected($index)">{{menu|
-                      translate}}</div>
+                    <div class="item" ng-repeat="menu in menuOptionsComment" ng-click="commentSelected($index)">{{menu| translate}}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2892,8 +2760,8 @@
                 </div>
                 <i class="dropdown icon"></i>
                 <div class="menu">
-                  <div class="item" ng-repeat="menu in menuOptionsStream" ng-click="streamSelected($index)">{{menu|
-                    translate}}</div>
+                  <div class="item" ng-repeat="menu in menuOptionsStream" ng-click="streamSelected($index)">{{menu| translate}}
+                  </div>
                 </div>
               </div>
               <div class="ui checkbox" ng-model="public_settings.site_campaign_updates_display">
@@ -3005,14 +2873,12 @@
               <div ng-if="public_settings.site_campaign_faq.toggle">
                 <div class="row" style="margin-bottom:10px;">
                   <div class="ui fluid form field">
-                    <input type="text" ng-model="public_settings.site_campaign_faq.name" placeholder=" {{'tab_portalsetting_campaign_faq_name' | translate}}"
-                      class="ng-pristine ng-valid ng-touched">
+                    <input type="text" ng-model="public_settings.site_campaign_faq.name" placeholder=" {{'tab_portalsetting_campaign_faq_name' | translate}}" class="ng-pristine ng-valid ng-touched">
                   </div>
                 </div>
                 <div class="row">
                   <div class="ui fluid form field">
-                    <input type="text" ng-model="public_settings.site_campaign_faq.description" placeholder=" {{'tab_portalsetting_campaign_faq_description' | translate}}"
-                      class="ng-pristine ng-valid ng-touched">
+                    <input type="text" ng-model="public_settings.site_campaign_faq.description" placeholder=" {{'tab_portalsetting_campaign_faq_description' | translate}}" class="ng-pristine ng-valid ng-touched">
                   </div>
                 </div>
               </div>
@@ -3054,8 +2920,7 @@
                 <div class="sixteen wide column file-upload-area" ng-if="public_settings.site_campaign_state_hide">
                   <h3 translate>tab_portalsetting_campaign_state_field_header</h3>
                   <div id="file-upload" class="file-container">
-                    <textarea froala="froalaOptions" data-server="{{server}}" data-loc="{{server_loc}}" id="currentUploadeFileTitleEditor"
-                      class="page-content" ng-model="currentUploadFile.title"></textarea>
+                    <textarea froala="froalaOptions" data-server="{{server}}" data-loc="{{server_loc}}" id="currentUploadeFileTitleEditor" class="page-content" ng-model="currentUploadFile.title"></textarea>
                     <p></p>
                     <div class="ui input fluid">
                       <br>
@@ -3068,8 +2933,7 @@
                     <span translate="tab_portalsetting_campaign_state_file_upload" ng-show="!currentUploadFile.fileName"></span>
 
                     <div class="btn-actions">
-                      <button class="ui teal icon button" ng-class="{'loading': isUploading}" ng-file-select="uploadStateFile($files)"
-                        onclick="this.value = null;">
+                      <button class="ui teal icon button" ng-class="{'loading': isUploading}" ng-file-select="uploadStateFile($files)" onclick="this.value = null;">
                         <i class="upload icon"></i>
                         <span translate="tab_portalsetting_campaign_state_file_upload_button"></span>
                       </button>
@@ -3090,21 +2954,18 @@
                 <div class="sixteen wide column" ng-if="public_settings.site_campaign_state_hide">
                   <div class="file-list">
                     <div class="item" ng-repeat="campaignFile in public_settings.site_campaign_state_settings">
-                      <img class="ui image" ng-src="{{server + '/image/campaign_progress_status/' + campaignFile.path}}"
-                        alt="state_image"></img>
+                      <img class="ui image" ng-src="{{server + '/image/campaign_progress_status/' + campaignFile.path}}" alt="state_image"></img>
                       <div class="middle aligned content">
                         <!-- regular title without tool tip -->
                         <div ng-if="!(campaignFile.tooltip && campaignFile.tooltip != '')" class="header" ng-bind-html="campaignFile.title"></div>
                         <!-- THIS COMMENT IS FOR TOOLTIP -->
-                        <div ng-if="campaignFile.tooltip && campaignFile.tooltip != ''" class="header" sui-popup
-                          data-content="{{campaignFile.tooltip}}" data-position="bottom center" ng-bind-html="campaignFile.title"></div>
+                        <div ng-if="campaignFile.tooltip && campaignFile.tooltip != ''" class="header" sui-popup data-content="{{campaignFile.tooltip}}" data-position="bottom center" ng-bind-html="campaignFile.title"></div>
                         <!-- THIS COMMENT IS FOR TOOLTIP -->
                         <div class="description">
                           <p ng-bind="campaignFile.description"></p>
                         </div>
                         <div class="extra">
-                          <a ng-href="{{server + '/image/campaign_progress_status/' + campaignFile.path}}" target="_blank"
-                            translate="campaign_setup_file_view"></a>
+                          <a ng-href="{{server + '/image/campaign_progress_status/' + campaignFile.path}}" target="_blank" translate="campaign_setup_file_view"></a>
                           <a href="" translate="campaign_setup_file_delete" ng-click="removeFileFromSetting($index)"></a>
                         </div>
                       </div>
@@ -3138,7 +2999,7 @@
                 <div class="active content">
                   <div class="six wide column ng-scope">
                     <div class="f-currency-btn column defaultForm">
-                      <div class="field" id="campaign-currency-field">
+                      <div class="field" id="defaults-campaign-currency-field">
                         <label translate> tab_portalsetting_campaign_defaults_currency_label </label>
                         <select ng-model="public_settings.site_campaign_currency_id" ui-select2="currencypicker">
                           <option value="{{currency.currency_id}}" class="item" ng-repeat="currency in currency_options | orderBy:'name'">{{currency.name}}
@@ -3171,8 +3032,8 @@
                         <i class="dropdown icon"></i>
                         <input type="hidden" name="campaign-mode" value="{{campaign.run_mode_name}}" onkeydown="if (event.keyCode == 13) return false;">
                         <div class="menu">
-                          <div class="item" ng-repeat="mode in runMode" data-value="{{mode.id}}" ng-click="setRunMode(mode)">{{mode.name|
-                            translate}}</div>
+                          <div class="item" ng-repeat="mode in runMode" data-value="{{mode.id}}" ng-click="setRunMode(mode)">{{mode.name| translate}}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -3180,13 +3041,11 @@
                   <div ng-if="public_settings.site_campaign_defaults_runMode == 1" style="margin-bottom:10px;">
                     <div class="six wide column defaultForm">
                       <label translate>tab_portalsetting_campaign_defaults_start</label>
-                      <quick-datepicker ng-model="public_settings.site_campaign_fixed_campaign_duration_start"
-                        disable-clear-button="true" date-format='EEEE, yyyy/MM/d' placeholder="{{get_started_funding_startdate_placeholder}}"></quick-datepicker>
+                      <quick-datepicker ng-model="public_settings.site_campaign_fixed_campaign_duration_start" disable-clear-button="true" date-format='EEEE, yyyy/MM/d' placeholder="{{get_started_funding_startdate_placeholder}}"></quick-datepicker>
                     </div>
                     <div class="six wide column defaultForm">
                       <label translate>tab_portalsetting_campaign_defaults_end</label>
-                      <quick-datepicker ng-model="public_settings.site_campaign_fixed_campaign_duration_end"
-                        disable-clear-button="true" date-format='EEEE, yyyy/MM/d' placeholder="{{get_started_funding_startdate_placeholder}}"></quick-datepicker>
+                      <quick-datepicker ng-model="public_settings.site_campaign_fixed_campaign_duration_end" disable-clear-button="true" date-format='EEEE, yyyy/MM/d' placeholder="{{get_started_funding_startdate_placeholder}}"></quick-datepicker>
                     </div>
                   </div>
                   <div class="six wide column ng-scope defaultForm" ng-if="public_settings.site_theme_campaign_percentage_enabled">
@@ -3194,8 +3053,7 @@
                     <div class="ui right labeled input contribution-input fluid">
                       <div class="field">
                         <div class="ui input">
-                          <input name="percentage_fee" type="text" ng-model="public_settings.site_campaign_defaults.percentage_fee"
-                            numbers-only="" allow-decimal="true" class="ng-pristine ng-untouched ng-valid">
+                          <input name="percentage_fee" type="text" ng-model="public_settings.site_campaign_defaults.percentage_fee" numbers-only="" allow-decimal="true" class="ng-pristine ng-untouched ng-valid">
                           <div class="ui label" style="padding-top:1.2em">
                             %
                           </div>
@@ -3335,8 +3193,7 @@
               </div>
               <div class="ui fluid form field" ng-if="public_settings.site_campaign_goog_shortener.toggle">
                 <div class="ui input">
-                  <input name="tracking_code" type="text" ng-model="public_settings.site_campaign_goog_shortener.code"
-                    ng-attr-placeholder=" {{'tab_portalsetting_campaign_goog_placeholders' | translate}} ">
+                  <input name="tracking_code" type="text" ng-model="public_settings.site_campaign_goog_shortener.code" ng-attr-placeholder=" {{'tab_portalsetting_campaign_goog_placeholders' | translate}} ">
                 </div>
               </div>
             </div>
@@ -3628,6 +3485,23 @@
             </div>
           </div>
 
+          <div class="ui two column stackable setting-bg grid campaign-disclaimer-toggle">
+            <div class="four wide column">
+              <h3 class="ui header main-font-color" translate> tab_portalsetting_campaign_disclaimer_title </h3>
+              <p translate="tab_portalsetting_campaign_disclaimer_notes"></p>
+            </div>
+            <div class="twelve wide column">
+              <div class="ui toggle checkbox" ng-model="public_settings.site_campaign_campaign_toggle_disclaimer_text.toggle">
+                <input type="checkbox" name="public">
+                <label ng-show="public_settings.site_campaign_campaign_toggle_disclaimer_text.toggle" translate>tab_portalsetting_campaign_disable_disclaimer_toggle_label</label>
+                <label ng-show="!public_settings.site_campaign_campaign_toggle_disclaimer_text.toggle" translate>tab_portalsetting_campaign_enable_disclaimer_toggle_label</label>
+              </div>
+              <div class="ui fluid form field disclaimer-text-form" ng-if="public_settings.site_campaign_campaign_toggle_disclaimer_text.toggle">
+                <textarea ng-model="public_settings.site_campaign_campaign_toggle_disclaimer_text.text"></textarea>
+              </div>
+            </div>
+          </div>
+
           <div class="ui basic segment site-settings-btn">
             <div class="ui column">
               <div class="ui right floated green button save-site-settings" ng-click="saveCampaignSetting()" translate>
@@ -3649,7 +3523,7 @@
               <p translate="tab_portalsetting_payment_setting_enabled_note"></p>
             </div>
             <div class="right-col twelve wide column">
-              <div class="ui toggle checkbox" ng-model="public_settings.payment_setting_enabled">
+              <div class="ui toggle checkbox" ng-model="public_settings.payment_setting_enabled" ng-click="clickCC(public_settings.payment_setting_enabled,public_settings.site_campaign_contributions)">
                 <input type="checkbox">
                 <label>
                   <span translate="tab_portalsetting_payment_setting_enabled_toggle_note"></span>
@@ -3659,7 +3533,68 @@
               </div>
             </div>
           </div>
+          <div class="ui two column stackable setting-bg grid">
+            <div class="four wide column">
+              <h3 class="ui header main-font-color" translate="tab_portalsetting_campaign_contribution_restrict"></h3>
+              <p translate>tab_portalsetting_campaign_contribution_restrict_message</p>
+            </div>
+            <div class="twelve wide left aligned column">
+              <div class="toggle-sticky ui toggle checkbox site-campaign-contribution" ng-class="{'disabled': !public_settings.payment_setting_enabled }" ng-model="public_settings.site_campaign_contributions" style="margin-bottom:14px">
+                <input type="checkbox" name="public">
+                <label>
+                  <span translate="tab_portalsetting_campaign_contribution_restrict_toggle"></span>
+                  <span translate ng-show="public_settings.site_campaign_contributions">tab_portalsetting_campaign_contribution_restrict_toggle_off</span>
+                  <span translate ng-show="!public_settings.site_campaign_contributions">tab_portalsetting_campaign_contribution_restrict_toggle_on</span>
+                </label>
+              </div>
+              <div class="row" ng-if="!public_settings.site_campaign_contributions">
+                <h4 translate="tab_portalsetting_campaign_contribution_instruction"></h4>
+                <textarea froala="froalaOptionsContributionInfo" data-server="{{server}}" data-loc="{{server_loc}}" class="contribution-instruction" ng-model="public_settings.site_campaign_contributions_instruction"></textarea>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <div class="setting-content widget-setting-content" ng-if="!public_settings.payment_setting_enabled">
+          <div class="ui two column stackable setting-bg grid" style="margin-top: 0">
+            <div class="four wide column">
+              <h3 class="ui header main-font-color" translate> tab_portalsetting_Stripesetting_Account_Country </h3>
+              <p translate>
+                tab_portalsetting_Stripesetting_Account_Country_note
+              </p>
+            </div>
+            <div class="twelve wide column">
+              <div class="ui form">
+                <div class="field">
+                  <div class="ui selection dropdown" ng-model="stripe_setting.country_id" ng-keypress="stripeCountryEnter($event)">
+                    <input name="stripe_country" type="hidden">
+                    <div class="default text" translate> tab_portalsetting_Stripesetting_Select_Country
+                    </div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                      <div class="item" data-value="{{scountry.country_id}}" ng-repeat="scountry in stripeCountries" ng-click="setStripeCountry(scountry.country_id)">{{scountry.name}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="four wide column">
+              <h3 class="ui header main-font-color" translate="tab_portalsetting_Stripesetting_currency"></h3>
+              <p translate="tab_portalsetting_Stripesetting_currency_note"></p>
+            </div>
+            <div class="twelve wide column">
+              <div class="field" id="campaign-currency-field">
+                <select multiple ng-model="currency_setting.currency_ids" ui-select2="currencypicker">
+                  <option ng-repeat="currency in stripeSupportedCurrencies" class="item" value="{{currency.currency_id}}">{{currency.name}}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="setting-content widget-setting-content" ng-show="public_settings.payment_setting_enabled">
           <div class="ui two column stackable setting-bg grid" style="margin-top: 0">
             <div class="left-col four wide column">
@@ -3674,8 +3609,7 @@
                 <i class="dropdown icon"></i>
                 <input type="hidden" name="card-type">
                 <div class="menu">
-                  <div ng-repeat="type in paymenttype" ng-value="type.type_id" ng-click="paymentType(type)" class="item">{{type.name
-                    | translate}}</div>
+                  <div ng-repeat="type in paymenttype" ng-value="type.type_id" ng-click="paymentType(type)" class="item">{{type.name | translate}}</div>
                 </div>
               </div>
             </div>
@@ -3692,8 +3626,7 @@
               <form class="ui form" id="post-processing-interval">
                 <div class="field">
                   <div class="ui input">
-                    <input type="text" name="processing_days" ng-model="private_settings.site_campaign_processing_days"
-                      numbers-only value="0">
+                    <input type="text" name="processing_days" ng-model="private_settings.site_campaign_processing_days" numbers-only value="0">
                     <span class="field-label" translate>tab_portalsetting_post_processing_Day(s)</span>
                   </div>
                 </div>
@@ -3710,20 +3643,6 @@
                   <div class="content">
                     <div translate>tab_portalsetting_Stripesetting_message </div>
                   </div>
-                </div>
-              </div>
-              <div class="four wide column" ng-show="public_settings.payment_setting_enabled">
-                <h3 class="ui header main-font-color" translate>tab_portalsetting_Stripesetting_transactionfee</h3>
-                <p translate>
-                  tab_portalsetting_Stripesetting_transactionfee_note
-                </p>
-              </div>
-              <div class="twelve wide column" ng-show="public_settings.payment_setting_enabled">
-                <div class="ui fluid form field stripe-fee">
-                  <input type="text" name="campaign_fee" ng-model="stripe_fee.campaign_fee" numbers-only allow-decimal="true"
-                    ng-hide="public_settings.site_campaign_fee_direct_transaction">
-                  <span ng-show="public_settings.site_campaign_fee_direct_transaction">0%</span>
-                  <span ng-show="!public_settings.site_campaign_fee_direct_transaction" class="percentage-symbol">%</span>
                 </div>
               </div>
 
@@ -3747,18 +3666,6 @@
               </div>
               <div ng-show="livemode && public_settings.payment_setting_enabled" class="sixteen wide column">
                 <div class="ui two column stackable setting-bg grid">
-                  <div class="four wide column">
-                    <h3 class="ui header main-font-color" translate> tab_portalsetting_Stripesetting_ClientId </h3>
-                    <p translate>
-                      tab_portalsetting_Stripesetting_ClientId_note
-                    </p>
-                  </div>
-
-                  <div class="twelve wide column">
-                    <div class="ui fluid form field">
-                      <input type="text" name="client_id" ng-model="stripe_live_clientId" ng-attr-placeholder=" {{'tab_portalsetting_Stripesetting_ClientId_placeholder' | translate}} ">
-                    </div>
-                  </div>
 
                   <div class="four wide column">
                     <h3 class="ui header main-font-color" translate> tab_portalsetting_Stripesetting_SecretKey</h3>
@@ -3768,8 +3675,8 @@
                   </div>
 
                   <div class="twelve wide column">
-                    <div class="ui fluid form field">
-                      <input type="text" name="secret_key" ng-model="stripe_live_secretkey" ng-attr-placeholder="  {{'tab_portalsetting_Stripesetting_SecretKey_placeholder' | translate}} ">
+                    <div id="live_secret_key" class="ui fluid form field">
+                      <input type="text" name="live_secret_key" ng-model="stripe_live_secretkey" ng-attr-placeholder="  {{'tab_portalsetting_Stripesetting_SecretKey_placeholder' | translate}} ">
                     </div>
                   </div>
 
@@ -3781,103 +3688,185 @@
                   </div>
 
                   <div class="twelve wide column">
-                    <div class="ui fluid form field">
-                      <input type="text" name="secret_key" ng-model="stripe_live_publishkey" ng-attr-placeholder=" {{'tab_portalsetting_Stripesetting_Publishkey_placeholder' | translate}} ">
+                    <div id="live_publish_key" class="ui fluid form field">
+                      <input type="text" name="live_publish_key" ng-model="stripe_live_publishkey" ng-attr-placeholder=" {{'tab_portalsetting_Stripesetting_Publishkey_placeholder' | translate}} ">
                     </div>
                   </div>
-                </div>
-              </div>
 
-              <div ng-show="testmode" class="sixteen wide column" g-show="public_settings.payment_setting_enabled">
-                <div class="ui two column stackable setting-bg grid" ng-show="public_settings.payment_setting_enabled">
-                  <div class="four wide column">
+                  <div class="four wide column" ng-show="public_settings.payment_setting_enabled && showDirectTransaction">
+                    <h3 class="ui header main-font-color" translate="tab_portalsetting_direct_transaction"></h3>
+                    <p translate="tab_portalsetting_direct_transaction_message"></p>
+                  </div>
+                  <div class="twelve wide column" ng-show="public_settings.payment_setting_enabled && showDirectTransaction">
+                    <div class="ui toggle checkbox toggle-stripe" ng-click="checkBank()" ng-model="public_settings.site_campaign_fee_direct_transaction">
+                      <input type="checkbox">
+                      <label>
+                        <span translate="tab_portalsetting_direct_transaction_enabled_toggle_note"></span>
+                        <span translate ng-show="public_settings.site_campaign_fee_direct_transaction">tab_portalsetting_direct_transaction_enabled_off</span>
+                        <span translate ng-show="!public_settings.site_campaign_fee_direct_transaction">tab_portalsetting_direct_transaction_enabled_on</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="four wide column" ng-show="public_settings.payment_setting_enabled && !public_settings.site_campaign_fee_direct_transaction">
                     <h3 class="ui header main-font-color" translate> tab_portalsetting_Stripesetting_ClientId </h3>
                     <p translate>
                       tab_portalsetting_Stripesetting_ClientId_note
                     </p>
                   </div>
 
-                  <div class="twelve wide column">
-                    <div class="ui fluid form field">
-                      <input type="text" name="client_id" ng-model="stripe_test_clientId" ng-attr-placeholder=" {{'tab_portalsetting_Stripesetting_ClientId_placeholder' | translate}} ">
+                  <div class="twelve wide column" ng-show="public_settings.payment_setting_enabled && !public_settings.site_campaign_fee_direct_transaction">
+                    <div id="live_client_id" class="ui fluid form field">
+                      <input type="text" name="live_client_id" ng-model="stripe_live_clientId" ng-attr-placeholder=" {{'tab_portalsetting_Stripesetting_ClientId_placeholder' | translate}} ">
                     </div>
                   </div>
 
-                  <div class="four wide column">
-                    <h3 class="ui header main-font-color" translate> tab_portalsetting_Stripesetting_SecretKey</h3>
+                  <div class="four wide column" ng-show="public_settings.payment_setting_enabled && !public_settings.site_campaign_fee_direct_transaction">
+                    <h3 class="ui header main-font-color" translate> tab_portalsetting_Stripesetting_RedirectUrl </h3>
                     <p translate>
-                      tab_portalsetting_Stripesetting_SecretKey_note
+                      tab_portalsetting_Stripesetting_RedirectUrl_note
                     </p>
                   </div>
-
-                  <div class="twelve wide column">
-                    <div class="ui fluid form field">
-                      <input type="text" name="secret_key" ng-model="stripe_test_secretkey" ng-attr-placeholder="  {{'tab_portalsetting_Stripesetting_SecretKey_placeholder' | translate}} ">
-                    </div>
+                  <div class="twelve wide column" ng-show="public_settings.payment_setting_enabled && !public_settings.site_campaign_fee_direct_transaction">
+                    <input type="text" name="name" readonly ng-attr-value="{{home_url}}{{'tab_portalsetting_Stripesetting_stripeconnect' | translate}}">
                   </div>
 
-                  <div class="four wide column">
-                    <h3 class="ui header main-font-color" translate> tab_portalsetting_Stripesetting_Publishkey </h3>
+                  <div class="four wide column" ng-show="public_settings.payment_setting_enabled && !public_settings.site_campaign_fee_direct_transaction">
+                    <h3 class="ui header main-font-color" translate>tab_portalsetting_Stripesetting_transactionfee</h3>
                     <p translate>
-                      tab_portalsetting_Stripesetting_Publishkey_note
+                      tab_portalsetting_Stripesetting_transactionfee_note
                     </p>
                   </div>
-
-                  <div class="twelve wide column">
-                    <div class="ui fluid form field">
-                      <input type="text" name="secret_key" ng-model="stripe_test_publishkey" ng-attr-placeholder=" {{'tab_portalsetting_Stripesetting_Publishkey_placeholder' | translate}} ">
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="four wide column" ng-show="public_settings.payment_setting_enabled">
-                <h3 class="ui header main-font-color" translate> tab_portalsetting_Stripesetting_Account_Country </h3>
-                <p translate>
-                  tab_portalsetting_Stripesetting_Account_Country_note
-                </p>
-              </div>
-              <div class="twelve wide column" ng-show="public_settings.payment_setting_enabled">
-                <div class="field">
-                  <div class="ui selection dropdown" ng-model="stripe_setting.country_id" ng-keypress="stripeCountryEnter($event)">
-                    <input name="stripe_country" type="hidden">
-                    <div class="default text" translate> tab_portalsetting_Stripesetting_Select_Country
-                    </div>
-                    <i class="dropdown icon"></i>
-                    <div class="menu">
-                      <div class="item" data-value="{{scountry.country_id}}" ng-repeat="scountry in stripeCountries"
-                        ng-click="setStripeCountry(scountry.country_id)">{{scountry.name}}
+                  <div class="twelve wide column" ng-show="public_settings.payment_setting_enabled && !public_settings.site_campaign_fee_direct_transaction">
+                    <div class="ui fluid form stripe-fee">
+                      <div class="field inline">
+                        <input type="text" name="campaign_fee" ng-model="stripe_fee.campaign_fee" numbers-only allow-decimal="true" ng-hide="public_settings.site_campaign_fee_direct_transaction">
+                        <span ng-show="public_settings.site_campaign_fee_direct_transaction">0%</span>
+                        <span ng-show="!public_settings.site_campaign_fee_direct_transaction" class="percentage-symbol">%</span>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div class="four wide column" ng-show="public_settings.payment_setting_enabled">
+              <div ng-show="testmode" class="sixteen wide column" ng-show="public_settings.payment_setting_enabled">
+                <div class="ui two column stackable setting-bg grid" ng-show="public_settings.payment_setting_enabled">
+
+                  <div class="four wide column">
+                    <h3 class="ui header main-font-color" translate> tab_portalsetting_Stripesetting_SecretKey</h3>
+                    <p translate>
+                      tab_portalsetting_Stripesetting_SecretKey_note
+                    </p>
+                  </div>
+
+                  <div class="twelve wide column">
+                    <div id="test_secret_key" class="ui fluid form field">
+                      <input type="text" name="test_secret_key" ng-model="stripe_test_secretkey" ng-attr-placeholder="  {{'tab_portalsetting_Stripesetting_SecretKey_placeholder' | translate}} ">
+                    </div>
+                  </div>
+
+                  <div class="four wide column">
+                    <h3 class="ui header main-font-color" translate> tab_portalsetting_Stripesetting_Publishkey </h3>
+                    <p translate>
+                      tab_portalsetting_Stripesetting_Publishkey_note
+                    </p>
+                  </div>
+
+                  <div class="twelve wide column">
+                    <div class="ui fluid form field" id="test_publish_key">
+                      <input type="text" name="test_publish_key" ng-model="stripe_test_publishkey" ng-attr-placeholder=" {{'tab_portalsetting_Stripesetting_Publishkey_placeholder' | translate}} ">
+                    </div>
+                  </div>
+
+                  <div class="four wide column" ng-show="public_settings.payment_setting_enabled && showDirectTransaction">
+                    <h3 class="ui header main-font-color" translate="tab_portalsetting_direct_transaction"></h3>
+                    <p translate="tab_portalsetting_direct_transaction_message"></p>
+                  </div>
+                  <div class="twelve wide column" ng-show="public_settings.payment_setting_enabled && showDirectTransaction">
+                    <div class="ui toggle checkbox toggle-stripe" ng-click="checkBank()" ng-model="public_settings.site_campaign_fee_direct_transaction">
+                      <input type="checkbox">
+                      <label>
+                        <span translate="tab_portalsetting_direct_transaction_enabled_toggle_note"></span>
+                        <span translate ng-show="public_settings.site_campaign_fee_direct_transaction">tab_portalsetting_direct_transaction_enabled_off</span>
+                        <span translate ng-show="!public_settings.site_campaign_fee_direct_transaction">tab_portalsetting_direct_transaction_enabled_on</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="four wide column" ng-show="public_settings.payment_setting_enabled && !public_settings.site_campaign_fee_direct_transaction">
+                    <h3 class="ui header main-font-color" translate> tab_portalsetting_Stripesetting_ClientId </h3>
+                    <p translate>
+                      tab_portalsetting_Stripesetting_ClientId_note
+                    </p>
+                  </div>
+
+                  <div class="twelve wide column" ng-show="public_settings.payment_setting_enabled && !public_settings.site_campaign_fee_direct_transaction">
+                    <div id="test_client_id" class="ui fluid form field">
+                      <input type="text" name="test_client_id" ng-model="stripe_test_clientId" ng-attr-placeholder=" {{'tab_portalsetting_Stripesetting_ClientId_placeholder' | translate}} ">
+                    </div>
+                  </div>
+
+                  <div class="four wide column" ng-show="public_settings.payment_setting_enabled && !public_settings.site_campaign_fee_direct_transaction">
+                    <h3 class="ui header main-font-color" translate> tab_portalsetting_Stripesetting_RedirectUrl </h3>
+                    <p translate>
+                      tab_portalsetting_Stripesetting_RedirectUrl_note
+                    </p>
+                  </div>
+                  <div class="twelve wide column" ng-show="public_settings.payment_setting_enabled && !public_settings.site_campaign_fee_direct_transaction">
+                    <input type="text" name="name" readonly ng-attr-value="{{home_url}}{{'tab_portalsetting_Stripesetting_stripeconnect' | translate}}">
+                  </div>
+
+                  <div class="four wide column" ng-show="public_settings.payment_setting_enabled && !public_settings.site_campaign_fee_direct_transaction">
+                    <h3 class="ui header main-font-color" translate>tab_portalsetting_Stripesetting_transactionfee</h3>
+                    <p translate>
+                      tab_portalsetting_Stripesetting_transactionfee_note
+                    </p>
+                  </div>
+                  <div class="twelve wide column" ng-show="public_settings.payment_setting_enabled && !public_settings.site_campaign_fee_direct_transaction">
+                    <div class="ui fluid form stripe-fee">
+                      <div class="field inline">
+                        <input type="text" name="campaign_fee" ng-model="stripe_fee.campaign_fee" numbers-only allow-decimal="true" ng-hide="public_settings.site_campaign_fee_direct_transaction">
+                        <span ng-show="public_settings.site_campaign_fee_direct_transaction">0%</span>
+                        <span ng-show="!public_settings.site_campaign_fee_direct_transaction" class="percentage-symbol">%</span>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="four wide column" ng-if="public_settings.payment_setting_enabled">
+                <h3 class="ui header main-font-color" translate> tab_portalsetting_Stripesetting_Account_Country </h3>
+                <p translate>
+                  tab_portalsetting_Stripesetting_Account_Country_note
+                </p>
+              </div>
+              <div class="twelve wide column" ng-if="public_settings.payment_setting_enabled">
+                <div class="ui form">
+                  <div class="field">
+                    <div class="ui selection dropdown" ng-model="stripe_setting.country_id" ng-keypress="stripeCountryEnter($event)">
+                      <input name="stripe_country" type="hidden">
+                      <div class="default text" translate> tab_portalsetting_Stripesetting_Select_Country
+                      </div>
+                      <i class="dropdown icon"></i>
+                      <div class="menu">
+                        <div class="item" data-value="{{scountry.country_id}}" ng-repeat="scountry in stripeCountries" ng-click="setStripeCountry(scountry.country_id)">{{scountry.name}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+  
+              <div class="four wide column" ng-if="public_settings.payment_setting_enabled">
                 <h3 class="ui header main-font-color" translate="tab_portalsetting_Stripesetting_currency"></h3>
                 <p translate="tab_portalsetting_Stripesetting_currency_note"></p>
               </div>
-              <div class="twelve wide column" ng-show="public_settings.payment_setting_enabled">
+              <div class="twelve wide column" ng-if="public_settings.payment_setting_enabled">
                 <div class="field" id="campaign-currency-field">
                   <select multiple ng-model="currency_setting.currency_ids" ui-select2="currencypicker">
                     <option ng-repeat="currency in stripeSupportedCurrencies" class="item" value="{{currency.currency_id}}">{{currency.name}}
                     </option>
                   </select>
-                </div>
-              </div>
-
-              <div class="four wide column" ng-show="public_settings.payment_setting_enabled && showDirectTransaction">
-                <h3 class="ui header main-font-color" translate="tab_portalsetting_direct_transaction"></h3>
-                <p translate="tab_portalsetting_direct_transaction_message"></p>
-              </div>
-              <div class="twelve wide column" ng-show="public_settings.payment_setting_enabled && showDirectTransaction">
-                <div class="ui toggle checkbox toggle-stripe" ng-click="checkBank()" ng-model="public_settings.site_campaign_fee_direct_transaction">
-                  <input type="checkbox">
-                  <label>
-                    <span translate="tab_portalsetting_direct_transaction_enabled_toggle_note"></span>
-                    <span translate ng-show="public_settings.site_campaign_fee_direct_transaction">tab_portalsetting_direct_transaction_enabled_off</span>
-                    <span translate ng-show="!public_settings.site_campaign_fee_direct_transaction">tab_portalsetting_direct_transaction_enabled_on</span>
-                  </label>
                 </div>
               </div>
 
@@ -3899,9 +3888,7 @@
                   </div>
                 </div>
                 <div class="item row">
-                  <div class="field bank-form-country-selector" ng-show="public_settings.site_campaign_country_funding_step" style="margin-bottom: 10px;">
-                    <select multiple ng-model="public_settings.site_campaign_country_ids" ui-select2=""
-                      ng-attr-placeholder="{{'Select Countries' | translate}}" style="width: 100%">
+                  <div id="bankform-country-field" class="field bank-form-country-selector" ng-show="public_settings.site_campaign_country_funding_step" style="margin-bottom: 10px;"> <select multiple ng-model="public_settings.site_campaign_country_ids" ui-select2="" ng-attr-placeholder="{{'Select Countries' | translate}}" style="width: 100%">
                       <option value="{{country.country_id}}" class="item" ng-repeat="country in stripeCountries">{{country.name}}</option>
                     </select>
                   </div>
@@ -3910,7 +3897,7 @@
 
             </div>
 
-            <div class="ui two column stackable setting-bg grid" ng-show="public_settings.payment_setting_enabled">
+            <!-- <div class="ui two column stackable setting-bg grid" ng-show="public_settings.payment_setting_enabled">
               <div class="four wide column">
                 <h3 class="ui header main-font-color" translate> tab_portalsetting_Stripesetting_RedirectUrl </h3>
                 <p translate>
@@ -3920,7 +3907,7 @@
               <div class="twelve wide column">
                 <input type="text" name="name" readonly ng-attr-value="{{home_url}}{{'tab_portalsetting_Stripesetting_stripeconnect' | translate}}">
               </div>
-            </div>
+            </div> -->
             <div class="ui two column stackable setting-bg grid" ng-show="public_settings.payment_setting_enabled">
               <div class="sixteen wide column">
                 <div class="ui info message">
@@ -3935,8 +3922,7 @@
               </div>
               <div class="nine wide column">
                 <div class="ui  form field">
-                  <input type="text" name="company name" ng-model="public_settings.site_theme_portal_company_name"
-                    ng-attr-placeholder=" {{'tab_portalsetting_company_name_placeholder' | translate}} " id="formcompany">
+                  <input type="text" name="company name" ng-model="public_settings.site_theme_portal_company_name" ng-attr-placeholder=" {{'tab_portalsetting_company_name_placeholder' | translate}} " id="formcompany">
                 </div>
               </div>
               <div class="three wide column">
@@ -3948,8 +3934,7 @@
               </div>
               <div class="nine wide column">
                 <div class="ui  form field">
-                  <input type="text" maxLength="25" name="company phone" ng-model="public_settings.site_theme_portal_company_number"
-                    ng-attr-placeholder=" {{'tab_portalsetting_company_phone_placeholder' | translate}} " id="formcompany">
+                  <input type="text" maxLength="25" name="company phone" ng-model="public_settings.site_theme_portal_company_number" ng-attr-placeholder=" {{'tab_portalsetting_company_phone_placeholder' | translate}} " id="formcompany">
                 </div>
               </div>
               <div class="three wide column">
@@ -3985,13 +3970,11 @@
 
                     <div class="three wide column">
                       <label ng-show="$index==0">{{'tab_portalsetting_widgets_instance_id' | translate}}</label>
-                      <input id="widgetInput" type="text" class="center" ng-attr-placeholder="{{'tab_portalsetting_widgets_instance_id' | translate}}"
-                        ng-model="link.widget_instance_id" type="text">
+                      <input id="widgetInput" type="text" class="center" ng-attr-placeholder="{{'tab_portalsetting_widgets_instance_id' | translate}}" ng-model="link.widget_instance_id" type="text">
                     </div>
                     <div class="six wide column">
                       <label ng-show="$index==0">{{'tab_portalsetting_widgets_api' | translate}}</label>
-                      <input id="widgetInput" type="text" class="center" ng-attr-placeholder="Widget {{'tab_portalsetting_widgets_api' | translate}}"
-                        ng-model="link.api_key" type="text">
+                      <input id="widgetInput" type="text" class="center" ng-attr-placeholder="Widget {{'tab_portalsetting_widgets_api' | translate}}" ng-model="link.api_key" type="text">
                     </div>
                     <div class="one wide column" ng-show="$index!=0" style="margin-top: -.7rem;">
                       <label></label>
@@ -4027,23 +4010,19 @@
                   <div class="fields">
                     <div class="seven wide field">
                       <label translate>tab_portalsetting_crimson_App_Key</label>
-                      <input type="text" name="card[number]" ng-attr-placeholder="{{'tab_portalsetting_crimson_App_Key'|translate}}"
-                        ng-model="crimson.app_key">
+                      <input type="text" name="card[number]" ng-attr-placeholder="{{'tab_portalsetting_crimson_App_Key'|translate}}" ng-model="crimson.app_key">
                     </div>
                     <div class="three wide field">
                       <label translate>tab_portalsetting_crimson_App_ID</label>
-                      <input type="text" name="card[number]" ng-attr-placeholder="{{'tab_portalsetting_crimson_App_ID'|translate}}"
-                        ng-model="crimson.app_id">
+                      <input type="text" name="card[number]" ng-attr-placeholder="{{'tab_portalsetting_crimson_App_ID'|translate}}" ng-model="crimson.app_id">
                     </div>
                     <div class="three wide field">
                       <label translate>tab_portalsetting_crimson_User_Name</label>
-                      <input type="text" name="card[number]" ng-attr-placeholder="{{'tab_portalsetting_crimson_User_Name'|translate}}"
-                        ng-model="crimson.un">
+                      <input type="text" name="card[number]" ng-attr-placeholder="{{'tab_portalsetting_crimson_User_Name'|translate}}" ng-model="crimson.un">
                     </div>
                     <div class="three wide field">
                       <label translate>tab_portalsetting_crimson_Password</label>
-                      <input type="text" name="card[number]" ng-attr-placeholder="{{'tab_portalsetting_crimson_Password'| translate}}"
-                        ng-model="crimson.pw">
+                      <input type="text" name="card[number]" ng-attr-placeholder="{{'tab_portalsetting_crimson_Password'| translate}}" ng-model="crimson.pw">
                     </div>
                   </div>
                 </form>
@@ -4078,6 +4057,11 @@
       <div id="disqus-settings" class="portal-settings-wrap">
         <div class="setting-content disqus-setting-content">
           <div class="ui stackable setting-bg grid">
+            <div class="sixteen wide column">
+              <div class="comment-system-tab-notes">
+                <div class="ui info message">{{'tab_portalsetting_comment_system_toggle_note'|translate}}</div>
+              </div>
+            </div>
             <div class="four wide column">
               <h3 class="ui header main-font-color" translate>tab_portalsetting_Disqus_choose_comment</h3>
               <p translate>
@@ -4098,9 +4082,7 @@
                   <div class="content">
                     <div>{{'tab_portalsetting_Disqus_message'|translate}}
                       <a target="_blank" href="https://disqus.com/admin/create/">
-                        {{'tab_portalsetting_Disqus_message2' | translate}} </a> {{'tab_portalsetting_Disqus_message3'
-                      |
-                      translate}}
+                        {{'tab_portalsetting_Disqus_message2' | translate}} </a> {{'tab_portalsetting_Disqus_message3' | translate}}
                     </div>
                   </div>
                 </div>
@@ -4110,9 +4092,8 @@
               </div>
 
               <div class="four wide column">
-                <div class="ui fluid form field">
-                  <input type="text" name="disqus-shortname" ng-model="public_settings.site_disqus_code"
-                    ng-attr-placeholder=" {{'tab_portalsetting_Disqus_Shortname_placeholder' | translate}} ">
+                <div class="ui fluid form disqus-comments-form field">
+                  <input type="text" name="disqus-shortname" ng-model="public_settings.site_disqus_code" ng-attr-placeholder=" {{'tab_portalsetting_Disqus_Shortname_placeholder' | translate}} ">
                 </div>
               </div>
             </div>
@@ -4150,12 +4131,9 @@
                   <div class="default text" translate="tab_portalsetting_comment_anonymous_commenting_disabled"></div>
                   <i class="dropdown icon"></i>
                   <div class="menu">
-                    <div class="item" data-value="disabled" translate="tab_portalsetting_comment_anonymous_commenting_disabled"
-                      ng-click="setAnonymousSetting(anonymousValuesObject.anonymous_disabled)"></div>
-                    <div class="item" data-value="backers" translate="tab_portalsetting_comment_anonymous_commenting_backers_only"
-                      ng-click="setAnonymousSetting(anonymousValuesObject.anonymous_backers)"></div>
-                    <div class="item" data-value="users" translate="tab_portalsetting_comment_anonymous_commenting_everyone"
-                      ng-click="setAnonymousSetting(anonymousValuesObject.anonymous_users)"></div>
+                    <div class="item" data-value="disabled" translate="tab_portalsetting_comment_anonymous_commenting_disabled" ng-click="setAnonymousSetting(anonymousValuesObject.anonymous_disabled)"></div>
+                    <div class="item" data-value="backers" translate="tab_portalsetting_comment_anonymous_commenting_backers_only" ng-click="setAnonymousSetting(anonymousValuesObject.anonymous_backers)"></div>
+                    <div class="item" data-value="users" translate="tab_portalsetting_comment_anonymous_commenting_everyone" ng-click="setAnonymousSetting(anonymousValuesObject.anonymous_users)"></div>
                   </div>
                 </div>
               </div>
@@ -4165,8 +4143,7 @@
                 <!--<p class="note-text ng-scope" translate="">tab_portalsetting_Disqus_auto_refresh_description</p>-->
               </div>
               <div class="twelve wide column">
-                <div class="ui checkbox" id="custom-comment-anonymous-force" ng-model="public_settings.custom_comment_anonymous_commenting_force"
-                  ng-class="{'disabled': !public_settings.custom_comment_anonymous_commenting || public_settings.custom_comment_anonymous_commenting == anonymousValuesObject.anonymous_disabled}">
+                <div class="ui checkbox" id="custom-comment-anonymous-force" ng-model="public_settings.custom_comment_anonymous_commenting_force" ng-class="{'disabled': !public_settings.custom_comment_anonymous_commenting || public_settings.custom_comment_anonymous_commenting == anonymousValuesObject.anonymous_disabled}">
                   <input type="checkbox">
                 </div>
               </div>
@@ -4201,8 +4178,7 @@
                         <div class="item" ng-click="public_settings.custom_comment_font_family=''" translate>
                           tab_portalsetting_Bottom_Banner_Default_fontfamily
                         </div>
-                        <div class="item" ng-repeat="(name,value) in font_list" ng-click="public_settings.custom_comment_font_family=value"
-                          style="font-family:{{value}}">{{value}}</div>
+                        <div class="item" ng-repeat="(name,value) in font_list" ng-click="public_settings.custom_comment_font_family=value" style="font-family:{{value}}">{{value}}</div>
                       </div>
                     </div>
                   </div>
@@ -4210,8 +4186,7 @@
               </div>
             </div>
           </div>
-          <div class="ui green button right floated" ng-click="saveDisqusShortname(public_settings.site_disqus_code)"
-            translate> tab_portalsetting_Disqus_Savebutton
+          <div class="ui green button right floated" ng-click="saveDisqusShortname(public_settings.site_disqus_code)" translate> tab_portalsetting_Disqus_Savebutton
           </div>
 
         </div>
@@ -4322,9 +4297,8 @@
                   <i class="dropdown icon"></i>
                   <input type="hidden" name="custom-type">
                   <div class="menu">
-                    <div ng-repeat="type in customSection" ng-click="customType(type)" class="item">{{type.name|
-                      translate
-                      }}</div>
+                    <div ng-repeat="type in customSection" ng-click="customType(type)" class="item">{{type.name| translate }}
+                    </div>
                   </div>
                 </div>
                 <div class="row" ng-if="cur_type == 2">
@@ -4375,8 +4349,7 @@
                             </div>
                             <div class="field" ng-show="cur_type == 1 || cur_type == 2 && !public_settings.site_campaign_personal_section_enhanced">
                               <label translate>tab_portalsetting_Type</label>
-                              <input id="widgetInput" type="text" class="center" ng-attr-placeholder="{{'tab_portalsetting_Type_plc' | translate}}"
-                                disabled>
+                              <input id="widgetInput" type="text" class="center" ng-attr-placeholder="{{'tab_portalsetting_Type_plc' | translate}}" disabled>
                             </div>
                             <div class="field" ng-show="cur_type == 2 && public_settings.site_campaign_personal_section_enhanced">
                               <label translate>tab_portalsetting_Type</label>
@@ -4387,15 +4360,13 @@
                                 <i class="dropdown icon"></i>
                                 <div class="menu">
                                   <div class="item" ng-repeat="options in customTypeOption" ng-click="customFieldType($index, link)">
-                                    {{options
-                                    | translate}}</div>
+                                    {{options | translate}}</div>
                                 </div>
                               </div>
                             </div>
                             <div class="field dropdown-field-values" ng-show="cur_type == 2 && link.option === 'Dropdown' && public_settings.site_campaign_personal_section_enhanced">
                               <label>{{'tab_portalsetting_dropdown_array' | translate}}</label>
-                              <input id="widgetInput" type="text" class="center" ng-model="link.dropdown_array"
-                                ng-attr-placeholder="{{'tab_portalsetting_Type_plc' | translate}}">
+                              <input id="widgetInput" type="text" class="center" ng-model="link.dropdown_array" ng-attr-placeholder="{{'tab_portalsetting_Type_plc' | translate}}">
                             </div>
                             <div class="field">
                               <label translate>tab_portalsetting_placeholder</label>
@@ -4405,8 +4376,7 @@
                             </div>
                             <div class="field" ng-show="cur_type == 2 && link.option === 'Text' && public_settings.site_campaign_personal_section_enhanced">
                               <label translate>tab_portalsetting_Validator</label>
-                              <input id="widgetInput" type="text" ng-model="link.validate" class="center"
-                                ng-attr-placeholder="{{'tab_portalsetting_Validator_plc' | translate}}">
+                              <input id="widgetInput" type="text" ng-model="link.validate" class="center" ng-attr-placeholder="{{'tab_portalsetting_Validator_plc' | translate}}">
                             </div>
                             <div ng-show="cur_type == 2 && link.option === 'Dropdown' && public_settings.site_campaign_personal_section_enhanced"></div>
                             <div class="field" ng-show="cur_type == 2">
@@ -4464,8 +4434,7 @@
                     </li>
                   </ul>
                   <div class="btn-wrap" style="margin-top: 1rem;">
-                    <div class="add-more-btn ui green right labeled icon button" ng-click="addCustomField(custom_link)"
-                      id="widget-addbtn">
+                    <div class="add-more-btn ui green right labeled icon button" ng-click="addCustomField(custom_link)" id="widget-addbtn">
                       <span translate>tab_portalsetting_Add_Field</span>
                       <i class="add icon"></i>
                     </div>
@@ -4481,8 +4450,7 @@
     </div>
 
     <div class="ui tab" data-tab="email-notifications">
-      <div class="menu-tab-content" ng-include src="'views/templates/partials/admin-dashboard/tab-email-notifications.html'"
-        ng-controller="AdminEmailNotificationsCtrl"></div>
+      <div class="menu-tab-content" ng-include src="'views/templates/partials/admin-dashboard/tab-email-notifications.html'" ng-controller="AdminEmailNotificationsCtrl"></div>
     </div>
 
   </div>
@@ -4613,9 +4581,9 @@
   </div>
 </div>
 
-<div class="ui small modal dangous-action-alert">
+<div class="ui small modal dangerous-action-alert">
   <div class="header">
-    <h3 class="ui header" translate> tab_portalsetting_Disqus_Setting </h3>
+    <h3 class="ui header" translate> tab_portalsetting_Dangerous_Stripe_Setting </h3>
   </div>
   <div class="content">
     <p translate> tab_portalsetting_stripeerror_msg </p>

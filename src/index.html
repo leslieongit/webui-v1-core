@@ -21,8 +21,7 @@
   <link ng-controller="FavIconCtrl" rel="shortcut icon" ng-href="{{faviconURL}}" type="image/png">
 
   <!-- google fonts -->
-  <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700|Pacifico|Lato:400,700,400italic,700italic&subset=latin'
-    rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700|Pacifico|Lato:400,700,400italic,700italic&subset=latin' rel='stylesheet' type='text/css'>
 
   <!-- semantic UI 1.x css -->
   <link rel="stylesheet" href="app/bower_components/semantic-ui/dist/semantic.min.css">
@@ -65,15 +64,13 @@
   <link rel="stylesheet" type="text/css" href="plugins/froala/css/plugins/quick_insert.min.css">
   <link rel="stylesheet" type="text/css" href="plugins/froala/css/plugins/table.min.css">
   <link rel="stylesheet" type="text/css" href="plugins/froala/css/plugins/video.min.css">
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"
-  />
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
 
 
 </head>
 
-<body ng-controller="MainCtrl" class="container main-color" id="{{$root.page_route}}" ng-class="theme_classes" translate-cloak
-  ng-cloak>
+<body ng-controller="MainCtrl" class="container main-color" id="{{$root.page_route}}" ng-class="theme_classes" translate-cloak ng-cloak>
   <div id="loader" class="ui page dimmer">
     <div class="content">
       <div class="center">
@@ -93,8 +90,7 @@
         <img class="ui image" ng-src="{{logoUrl}}">
       </div>
     </a>
-    <a ng-class="{active: $location.path() == '/' + page.path}" class="item menu-item" ng-repeat="page in headerMenu" ng-href="{{page.path}}"
-      my-target="{{page.id}}" ng-bind="page.name" target="_self"></a>
+    <a ng-class="{active: $location.path() == '/' + page.path}" class="item menu-item" ng-repeat="page in headerMenu" ng-href="{{page.path}}" my-target="{{page.id}}" ng-bind="page.name" target="_self"></a>
     <div ng-show="User.isLoggedIn()">
 
       <h4 class="ui horizontal header divider inverted mobile-menu-header" translate>
@@ -102,14 +98,10 @@
       </h4>
       <div class="menu">
 
-        <a ng-show="User.portal_admin" class="item menu-item" ng-class="{active: $location.path() === '/admin/dashboard'}" href="/admin/dashboard"
-          translate> mobile_header_administration </a>
-        <a ng-show="User.campaign_manager" class="item menu-item" ng-class="{active: $location.path() === '/campaign-manager'}" href="/campaign-manager"
-          translate> mobile_header_mycampaigns </a>
-        <a ng-show="User.campaign_backer" class="item menu-item" ng-class="{active: $location.path() === '/pledge-history'}" href="/pledge-history"
-          translate> mobile_header_mycontributions </a>
-        <a class="item menu-item" class="item menu-item" ng-class="{active: $location.path() === 'message-center'}" href="/message-center"
-          translate> mobile_header_mymessages</a>
+        <a ng-show="User.portal_admin" class="item menu-item" ng-class="{active: $location.path() === '/admin/dashboard'}" href="/admin/dashboard" translate> mobile_header_administration </a>
+        <a ng-show="User.campaign_manager" class="item menu-item" ng-class="{active: $location.path() === '/campaign-manager'}" href="/campaign-manager" translate> mobile_header_mycampaigns </a>
+        <a ng-show="User.campaign_backer" class="item menu-item" ng-class="{active: $location.path() === '/pledge-history'}" href="/pledge-history" translate> mobile_header_mycontributions </a>
+        <a class="item menu-item" class="item menu-item" ng-class="{active: $location.path() === 'message-center'}" href="/message-center" translate> mobile_header_mymessages</a>
 
 
       </div>
@@ -131,7 +123,6 @@
   </div>
   <div class="pusher" style="overflow:initial" ng-show="partsDone">
     <script>
-      
     </script>
     <div id="nav-wrapper" ng-include src="'views/templates/partials/nav.html'" ng-hide="$root.nav_disabled"></div>
     <div id="main-bg" ng-view autoscroll="true" ng-class="{ 'sticky-menu-push' : stickyMenu }"></div>
@@ -330,7 +321,7 @@
   </script>
   <div id="fb-root"></div>
   <script>
-    (function (d, s, id) {
+    (function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) return;
       js = d.createElement(s);

@@ -1,14 +1,16 @@
-
 <div class="mainbody-wrap" ng-cloak>
   <div class="background-wrap">
     <div class="ui page grid">
       <div class="ui column" ng-if="!isContributionLayout1" id="default-contribution-layout">
+        <div class="campaign-disclaimer-text" ng-if="displayCampaignDisclaimer.toggle && displayCampaignDisclaimer.text">
+          <div class="ui warning message" ng-bind-html="displayCampaignDisclaimer.text"></div>
+        </div>
         <div class="pledge-campaign-top-header">
           <div class="ui two column stackable grid">
             <div class="four wide column campaign-img">
               <a ng-href="{{campaign_loc}}">
-                <img ng-if="campaign.files.length" ng-repeat="file in campaign.files | filter:{region_id: RESOURCE_REGIONS.campaign.thumbnail} | orderBy:'-file_id' | limitTo: 1"
-                  ng-src="{{server + '/image/campaign_thumbnail_xl/' + file.path_external}}" class="ui image" />
+                <img ng-if="campaign.files.length" ng-repeat="file in campaign.files | filter:{region_id: RESOURCE_REGIONS.campaign.thumbnail} | orderBy:'-file_id' | limitTo: 1" ng-src="{{server + '/image/campaign_thumbnail_xl/' + file.path_external}}" class="ui image"
+                />
                 <img ng-if="campaign.files.length == 0" src="images/placeholder-images/placeholder_campaign_thumb.png" class="ui image" />
               </a>
             </div>
@@ -17,7 +19,7 @@
               <h4 ng-if="!public_settings.site_campaign_enable_organization_name"> {{'pledge_campaign_by' | translate}} {{campaign.managers[0].first_name}} {{campaign.managers[0].last_name}}</h4>
               <h4 ng-if="public_settings.site_campaign_enable_organization_name"> {{'guest_contribution_by' | translate}} {{organization_name.value}}</h4>
               <p ng-if="public_settings.site_campaign_enable_organization_name">{{'ein_label' | translate}}{{organization_name.ein}}</p>
-              <p>{{campaign.blurb}}</p>
+              <p ng-bind-html="campaign.blurb"></p>
             </div>
           </div>
         </div>
@@ -49,24 +51,20 @@
               </div>
               <div class="eleven wide column right-col" ng-if="tippingOptions.toggle && !tippingOptions.toggle_bottom_tip">
                 <div class="ui buttons tipping-options-selection field" ng-class="{'error': tipTypeError}" ng-if="(tippingOptions.toggle_dynamic && tippingOptions.toggle_tiers) || (tippingOptions.toggle_dynamic && tippingOptions.toggle_no_tip) || (tippingOptions.toggle_tiers && tippingOptions.toggle_no_tip)">
-                  <div class="ui button" ng-class="{ 'green': selectedTipType == 'tiers' }" ng-if="tippingOptions.toggle_tiers" ng-click="tipTypeSelection('tiers')"
-                    translate>
+                  <div class="ui button" ng-class="{ 'green': selectedTipType == 'tiers' }" ng-if="tippingOptions.toggle_tiers" ng-click="tipTypeSelection('tiers')" translate>
                     pledge_campaign_choose_tip
                   </div>
                   <div class="or" ng-if="tippingOptions.toggle_tiers && tippingOptions.toggle_dynamic"></div>
-                  <div class="ui button" ng-class="{ 'green': selectedTipType == 'dynamic' }" ng-if="tippingOptions.toggle_dynamic" ng-click="tipTypeSelection('dynamic')"
-                    translate>
+                  <div class="ui button" ng-class="{ 'green': selectedTipType == 'dynamic' }" ng-if="tippingOptions.toggle_dynamic" ng-click="tipTypeSelection('dynamic')" translate>
                     pledge_campaign_enter_tip_amount
                   </div>
                   <div class="or" ng-if="tippingOptions.toggle_no_tip"></div>
-                  <div class="ui button" ng-class="{ 'green': selectedTipType == 'no_tip' }" ng-if="tippingOptions.toggle_no_tip" ng-click="tipTypeSelection('no_tip')"
-                    translate>
+                  <div class="ui button" ng-class="{ 'green': selectedTipType == 'no_tip' }" ng-if="tippingOptions.toggle_no_tip" ng-click="tipTypeSelection('no_tip')" translate>
                     pledge_campaign_no_tip
                   </div>
                 </div>
                 <div class="ui red pointing prompt label transition visible" ng-if="tipTypeError" translate>pledge_campaign_select_tip_option</div>
-                <div ng-if="(tippingOptions.toggle_dynamic && !tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'dynamic'"
-                  class="ui dynamic-tipping-form form tipping-option">
+                <div ng-if="(tippingOptions.toggle_dynamic && !tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'dynamic'" class="ui dynamic-tipping-form form tipping-option">
                   <div class="field">
                     <div class="ui left labeled input">
                       <div class="ui label" ng-bind-html=" ' ' | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
@@ -74,22 +72,19 @@
                     </div>
                   </div>
                 </div>
-                <div ng-if="(!tippingOptions.toggle_dynamic && tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'tiers'"
-                  class="tipping-option">
+                <div ng-if="(!tippingOptions.toggle_dynamic && tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'tiers'" class="tipping-option">
                   <div class="tip-field field" ng-if="tippingOptions.tiers[0]">
                     <div class="ui selection dropdown tip-tiers">
                       <input type="hidden" name="tip_tier">
                       <i class="dropdown icon"></i>
                       <div class="default text">
-                        <span ng-if="tippingOptions.toggle_tier_names">{{tippingOptions.tiers[0].name}} -</span>
-                        <span>{{ ' ' | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}{{tippingOptions.tiers[0].dollar_amount
-                          | number : 2}}</span>
+                        <span ng-if="tippingOptions.toggle_tier_names">{{tipTiersDefaultName}} -</span>
+                        <span>{{tipTiersDefaultAmount | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}</span>
                       </div>
                       <div class="menu">
-                        <div class="item" data-value="{{$index}}" ng-repeat="tier in tippingOptions.tiers track by $index" ng-click="tipTierSelection(tier.value, tier.type, tier.dollar_amount, tier.name)">
+                        <div class="item" data-value="{{$index}}" ng-repeat="tier in tippingOptions.tiers track by $index" ng-click="tipTierSelection(tier.value, tier.type, tier.dollar_amount, tier.name, $index)">
                           <span ng-if="tippingOptions.toggle_tier_names">{{tier.name}} -</span>
-                          <span>{{ ' ' | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}{{tier.dollar_amount
-                            | number : 2}}</span>
+                          <span>{{tier.dollar_amount | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}</span>
                         </div>
                       </div>
                     </div>
@@ -109,7 +104,7 @@
               <!-- REPLACEMENT -->
               <div class="eleven wide column right-col" ng-if="pledgeReplace">
                 <div ng-click="scrollToRewardParam()" ng-if="campaign.pledges && rewards.length" class="ui green label change-reward" translate>
-                pledge_campaign_choose_reward
+                  pledge_campaign_choose_reward
                 </div>
                 <div class="ui segment reward-wrap" ng-if="campaign.pledges && rewards.length">
                   <div ng-repeat="selectedReward in rewardsQueue">
@@ -134,9 +129,9 @@
                         </div>
                       </div>
                       <div class="reward-description fr-view" ng-hide="reward_html_editor" html-render html="selectedReward.description"></div>
-                      <div ng-show="reward_html_editor" ng-bind-html="selectedReward.description"></div>
-                      <div class="reward-etd" ng-if="selectedReward.estimated_delivery_time">{{'pledge_campaign_estimate_dlivery' | translate}} {{selectedReward.estimated_delivery_time | formatDate:"MMMM
-                        DD, YYYY" }}</div>
+                      <!-- <div ng-show="reward_html_editor" ng-bind-html="selectedReward.description"></div> -->
+                      <div ng-show="reward_html_editor" html-render html="selectedReward.description"></div>
+                      <div class="reward-etd" ng-if="selectedReward.estimated_delivery_time">{{'pledge_campaign_estimate_dlivery' | translate}} {{selectedReward.estimated_delivery_time | formatDate:"MMMM DD, YYYY" }}</div>
                     </div>
 
                     <div ng-if="!selectedReward">
@@ -171,43 +166,43 @@
                     <h4 class="title" ng-if="pledgeReplace && pledgeAmount" translate>pledge_campaign_yourcontribution</h4>
                     <form class="ui form contribution-form">
                       <div class="field">
-                        <div ng-if="!pledgeReplace" ng-show="allowDecimalNotation == 2 || allowDecimalNotation == 3" class="ui big left labeled right labeled input contribution-input fluid">
-                          <div class="ui label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"
-                            style="padding-top:1.3em;"></div>
-                          <input name="contribution_amount" ng-class="{'has-error': !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}"
-                            type="text" min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}"
-                            ng-model="campaignFundingGoal.value" number-with-decimals>
-                          <div ng-if="allowDecimalNotation == 2" class="ui label" style="padding-top:1.5em;">
+                        <div ng-if="!pledgeReplace" ng-show="allowDecimalNotation == 2 || allowDecimalNotation == 3" class="contribution-input with-decimal">
+                          <div class="ui label currency-symbol" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
+                          <div class="input-wrap">
+                            <input name="contribution_amount" ng-class="{'has-error': !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}" type="text" min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}"
+                              ng-model="campaignFundingGoal.value" number-with-decimals>
+                          </div>
+                          <div ng-if="allowDecimalNotation == 2" class="ui label decimal-value">
                             <span>.00</span>
                           </div>
                         </div>
-                        <div ng-if="pledgeReplace && pledgeAmount" ng-show="allowDecimalNotation == 2 || allowDecimalNotation == 3" class="ui big left labeled right labeled input contribution-input fluid">
-                          <div class="ui label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"
-                            style="padding-top:1.3em;"></div>
-                          <input name="contribution_amount" ng-class="{'has-error': !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}"
-                            type="text" min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}"
-                            ng-model="campaignFundingGoal.value" number-with-decimals>
-                          <div ng-if="allowDecimalNotation == 2" class="ui label" style="padding-top:1.5em;">
+                        <div ng-if="pledgeReplace && pledgeAmount" ng-show="allowDecimalNotation == 2 || allowDecimalNotation == 3" class="input contribution-input with-decimal">
+                          <div class="ui label currency-symbol" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
+                          <div class="input-wrap">
+                            <input name="contribution_amount" ng-class="{'has-error': !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}" type="text" min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}"
+                              ng-model="campaignFundingGoal.value" number-with-decimals>
+                          </div>
+                          <div ng-if="allowDecimalNotation == 2" class="ui label decimal-value">
                             <span>.00</span>
                           </div>
                         </div>
                       </div>
                       <div class="field" ng-if="!pledgeReplace">
-                        <div ng-show="allowDecimalNotation == 1" class="ui big left labeled labeled input contribution-input fluid">
-                          <div class="ui label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"
-                            style="padding-top:1.3em;"></div>
-                          <input name="contribution_amount_decimal" ng-class="{'has-error': pledgeAmount < selectedReward.amount || !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}"
-                            type="text" min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}"
-                            ng-model="campaignFundingGoal.value" number-with-decimals ng-attr-allow-decimal="true">
+                        <div ng-show="allowDecimalNotation == 1" class="contribution-input">
+                          <div class="ui label currency-symbol" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
+                          <div class="input-wrap">
+                            <input name="contribution_amount_decimal" ng-class="{'has-error': pledgeAmount < selectedReward.amount || !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}" type="text"
+                              min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}" ng-model="campaignFundingGoal.value" number-with-decimals ng-attr-allow-decimal="true">
+                          </div>
                         </div>
                       </div>
                       <div class="field" ng-if="pledgeReplace && pledgeAmount">
-                        <div ng-show="allowDecimalNotation == 1" class="ui big left labeled labeled input contribution-input fluid">
-                          <div class="ui label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"
-                            style="padding-top:1.3em;"></div>
-                          <input name="contribution_amount_decimal" ng-class="{'has-error': pledgeAmount < selectedReward.amount || !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}"
-                            type="text" min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}"
-                            ng-model="campaignFundingGoal.value" number-with-decimals ng-attr-allow-decimal="true">
+                        <div ng-show="allowDecimalNotation == 1" class="contribution-input">
+                          <div class="ui label currency-symbol" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
+                          <div class="input-wrap">
+                            <input name="contribution_amount_decimal" ng-class="{'has-error': pledgeAmount < selectedReward.amount || !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}" type="text"
+                              min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}" ng-model="campaignFundingGoal.value" number-with-decimals ng-attr-allow-decimal="true">
+                          </div>
                         </div>
                       </div>
                     </form>
@@ -246,9 +241,9 @@
                     </div>
                     <!-- <div class="reward-description" ng-hide="reward_html_editor">{{selectedReward.description}}</div> -->
                     <div class="reward-description fr-view" ng-hide="reward_html_editor" html-render html="selectedReward.description"></div>
-                    <div ng-show="reward_html_editor" ng-bind-html="selectedReward.description"></div>
-                    <div class="reward-etd" ng-if="selectedReward.estimated_delivery_time">{{'pledge_campaign_estimate_dlivery' | translate}} {{selectedReward.estimated_delivery_time | formatDate:"MMMM
-                      DD, YYYY" }}</div>
+                    <!-- <div ng-show="reward_html_editor" ng-bind-html="selectedReward.description"></div> -->
+                    <div ng-show="reward_html_editor" html-render html="selectedReward.description"></div>
+                    <div class="reward-etd" ng-if="selectedReward.estimated_delivery_time">{{'pledge_campaign_estimate_dlivery' | translate}} {{selectedReward.estimated_delivery_time | formatDate:"MMMM DD, YYYY" }}</div>
                   </div>
 
                   <div ng-if="!selectedReward">
@@ -262,33 +257,33 @@
                     <h4 class="title" translate>pledge_campaign_yourcontribution</h4>
                     <form class="ui form contribution-form">
                       <div class="field">
-                        <div ng-show="allowDecimalNotation == 2 || allowDecimalNotation == 3" class="ui big left labeled right labeled input contribution-input fluid">
-                          <div class="ui label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"
-                            style="padding-top:1.3em;"></div>
-                          <input name="contribution_amount" ng-class="{'has-error': pledgeAmount < selectedReward.amount || !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}"
-                            type="text" min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}"
-                            ng-model="campaignFundingGoal.value" number-with-decimals>
-                          <div ng-if="allowDecimalNotation == 2" class="ui label" style="padding-top:1.5em;">
+                        <div ng-show="allowDecimalNotation == 2 || allowDecimalNotation == 3" class="contribution-input-decimal fluid">
+                          <div class="ui label currency-symbol" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
+                          <div class="input-wrap">
+                            <input name="contribution_amount" ng-class="{'has-error': pledgeAmount < selectedReward.amount || !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}" type="text" min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}"
+                              ng-model="campaignFundingGoal.value" number-with-decimals>
+                          </div>
+                          <div ng-if="allowDecimalNotation == 2" class="ui label decimal-value">
                             <span>.00</span>
                           </div>
                         </div>
                       </div>
                       <div class="field" ng-if="!pledgeReplace">
-                        <div ng-show="allowDecimalNotation == 1" class="ui big left labeled labeled input contribution-input fluid">
-                          <div class="ui label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"
-                            style="padding-top:1.3em;"></div>
-                          <input name="contribution_amount_decimal" ng-class="{'has-error': pledgeAmount < selectedReward.amount || !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}"
-                            type="text" min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}"
-                            ng-model="campaignFundingGoal.value" number-with-decimals ng-attr-allow-decimal="true">
+                        <div ng-show="allowDecimalNotation == 1" class="contribution-input">
+                          <div class="ui label currency-symbol" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
+                          <div class="input-wrap">
+                            <input name="contribution_amount_decimal" ng-class="{'has-error': pledgeAmount < selectedReward.amount || !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}" type="text"
+                              min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}" ng-model="campaignFundingGoal.value" number-with-decimals ng-attr-allow-decimal="true">
+                          </div>
                         </div>
                       </div>
                       <div class="field" ng-if="pledgeReplace && pledgeAmount">
-                        <div ng-show="allowDecimalNotation == 1" class="ui big left labeled labeled input contribution-input fluid">
-                          <div class="ui label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"
-                            style="padding-top:1.3em;"></div>
-                          <input name="contribution_amount_decimal" ng-class="{'has-error': pledgeAmount < selectedReward.amount || !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}"
-                            type="text" min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}"
-                            ng-model="campaignFundingGoal.value" number-with-decimals ng-attr-allow-decimal="true">
+                        <div ng-show="allowDecimalNotation == 1" class="contribution-input">
+                          <div class="ui label currency-symbol" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
+                          <div class="input-wrap">
+                            <input name="contribution_amount_decimal" ng-class="{'has-error': pledgeAmount < selectedReward.amount || !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}" type="text"
+                              min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}" ng-model="campaignFundingGoal.value" number-with-decimals ng-attr-allow-decimal="true">
+                          </div>
                         </div>
                       </div>
                     </form>
@@ -370,8 +365,7 @@
                         <input type="checkbox" name="is_a_tax_payer">
                         <label translate>charity_helper_is_a_uk_taxpayer</label>
                       </div>
-                      <div class="ui checkbox charity-checkbox" ng-show="charity.is_a_gift && public_settings.site_campaign_charity_helper_alternate_form"
-                        ng-model="charity.is_a_tax_payer">
+                      <div class="ui checkbox charity-checkbox" ng-show="charity.is_a_gift && public_settings.site_campaign_charity_helper_alternate_form" ng-model="charity.is_a_tax_payer">
                         <input type="checkbox" name="is_a_tax_payer">
                         <label translate>charity_helper_is_a_uk_taxpayer_alternate</label>
                       </div>
@@ -473,47 +467,40 @@
               </div>
               <div class="eleven wide column right-col" ng-if="tippingOptions.toggle && tippingOptions.toggle_bottom_tip">
                 <div class="ui buttons tipping-options-selection field" ng-class="{'error': tipTypeError}" ng-if="(tippingOptions.toggle_dynamic && tippingOptions.toggle_tiers) || (tippingOptions.toggle_dynamic && tippingOptions.toggle_no_tip) || (tippingOptions.toggle_tiers && tippingOptions.toggle_no_tip)">
-                  <div class="ui button" ng-class="{ 'green': selectedTipType == 'tiers' }" ng-if="tippingOptions.toggle_tiers" ng-click="tipTypeSelection('tiers')"
-                    translate>
+                  <div class="ui button" ng-class="{ 'green': selectedTipType == 'tiers' }" ng-if="tippingOptions.toggle_tiers" ng-click="tipTypeSelection('tiers')" translate>
                     pledge_campaign_choose_tip
                   </div>
                   <div class="or" ng-if="tippingOptions.toggle_tiers && tippingOptions.toggle_dynamic"></div>
-                  <div class="ui button" ng-class="{ 'green': selectedTipType == 'dynamic' }" ng-if="tippingOptions.toggle_dynamic" ng-click="tipTypeSelection('dynamic')"
-                    translate>
+                  <div class="ui button" ng-class="{ 'green': selectedTipType == 'dynamic' }" ng-if="tippingOptions.toggle_dynamic" ng-click="tipTypeSelection('dynamic')" translate>
                     pledge_campaign_enter_tip_amount
                   </div>
                   <div class="or" ng-if="tippingOptions.toggle_no_tip"></div>
-                  <div class="ui button" ng-class="{ 'green': selectedTipType == 'no_tip' }" ng-if="tippingOptions.toggle_no_tip" ng-click="tipTypeSelection('no_tip')"
-                    translate>
+                  <div class="ui button" ng-class="{ 'green': selectedTipType == 'no_tip' }" ng-if="tippingOptions.toggle_no_tip" ng-click="tipTypeSelection('no_tip')" translate>
                     pledge_campaign_no_tip
                   </div>
                 </div>
                 <div class="ui red pointing prompt label transition visible" ng-if="tipTypeError" translate>pledge_campaign_select_tip_option</div>
-                <div ng-if="(tippingOptions.toggle_dynamic && !tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'dynamic'"
-                  class="ui dynamic-tipping-form form tipping-option">
+                <div ng-if="(tippingOptions.toggle_dynamic && !tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'dynamic'" class="ui dynamic-tipping-form form tipping-option">
                   <div class="field">
                     <div class="ui left labeled input">
-                      <div class="ui label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
+                      <div class="ui label" ng-bind-html=" ' ' | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
                       <input name="dynamic_tip" type="text" ng-model="tip.dollar_amount">
                     </div>
                   </div>
                 </div>
-                <div ng-if="(!tippingOptions.toggle_dynamic && tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'tiers'"
-                  class="tipping-option">
+                <div ng-if="(!tippingOptions.toggle_dynamic && tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'tiers'" class="tipping-option">
                   <div class="tip-field field" ng-if="tippingOptions.tiers[0]">
                     <div class="ui selection dropdown tip-tiers">
                       <input type="hidden" name="tip_tier">
                       <i class="dropdown icon"></i>
                       <div class="default text">
-                        <span ng-if="tippingOptions.toggle_tier_names">{{tippingOptions.tiers[0].name}} -</span>
-                        <span>{{ ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option}}{{tippingOptions.tiers[0].dollar_amount
-                          | number : 2}}</span>
+                        <span ng-if="tippingOptions.toggle_tier_names">{{tipTiersDefaultName}} -</span>
+                        <span>{{tipTiersDefaultAmount | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}</span>
                       </div>
                       <div class="menu">
-                        <div class="item" data-value="{{$index}}" ng-repeat="tier in tippingOptions.tiers track by $index" ng-click="tipTierSelection(tier.value, tier.type, tier.dollar_amount, tier.name)">
+                        <div class="item" data-value="{{$index}}" ng-repeat="tier in tippingOptions.tiers track by $index" ng-click="tipTierSelection(tier.value, tier.type, tier.dollar_amount, tier.name, $index)">
                           <span ng-if="tippingOptions.toggle_tier_names">{{tier.name}} -</span>
-                          <span>{{ ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option}}{{tier.dollar_amount
-                            | number : 2}}</span>
+                          <span>{{tier.dollar_amount | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}</span>
                         </div>
                       </div>
                     </div>
@@ -530,11 +517,11 @@
               <div class="eleven wide column right-col" ng-if="acceptExtraPledgeData">
                 <div class="ui buttons tipping-options-selection field">
                   <div class="ui button" ng-class="{ 'green': selectedAccountType == 'Individual' }" ng-click="accountTypeSelected('Individual')" translate>
-                      pledge_campaign_account_type_individual
+                    pledge_campaign_account_type_individual
                   </div>
                   <div class="or"></div>
                   <div class="ui button" ng-class="{ 'green': selectedAccountType == 'Organization' }" ng-click="accountTypeSelected('Organization')" translate>
-                      pledge_campaign_account_type_business
+                    pledge_campaign_account_type_business
                   </div>
                 </div>
               </div>
@@ -571,13 +558,12 @@
                 <div ng-hide="toggle.newCompany" class="newCompany">
                   <div class="ui form" id="new-user-company-form">
                     <div class="ui fluid form company-form">
-                      <div class="ui basic campaign-bg segment">                
+                      <div class="ui basic campaign-bg segment">
                         <div class="ui two column stackable grid">
                           <div class="eleven wide column">
                             <div class="ui fluid form user-new-company-form">
                               <div class="field">
-                                <input type="text" name="company_name" ng-attr-placeholder="{{'pledge_campaign_company_placeholder'| translate}}"
-                                  ng-model="businessSelected.name">
+                                <input type="text" name="company_name" ng-attr-placeholder="{{'pledge_campaign_company_placeholder'| translate}}" ng-model="businessSelected.name">
                               </div>
                               <div class="field">
                                 <input name="businessEmail" type="text" ng-model="businessSelected.email" placeholder="{{'pledge_campaign_business_email'|translate}}">
@@ -606,38 +592,32 @@
                   <div class="two fields">
                     <div class="field">
                       <label translate>pledge_campaign_First_Name</label>
-                      <input ng-class="{'has-error': !person.fname && (payment_gateway==2) }" type="text" placeholder="{{'pledge_campaign_First_Name'|translate }}"
-                        ng-model="person.fname">
+                      <input ng-class="{'has-error': !person.fname && (payment_gateway==2) }" type="text" placeholder="{{'pledge_campaign_First_Name'|translate }}" ng-model="person.fname">
                     </div>
                     <div class="field">
                       <label translate>pledge_campaign_Last_Name</label>
-                      <input ng-class="{'has-error': !person.lname && payment_gateway==2 }" type="text" placeholder="{{'pledge_campaign_Last_Name'| translate}}"
-                        ng-model="person.lname">
+                      <input ng-class="{'has-error': !person.lname && payment_gateway==2 }" type="text" placeholder="{{'pledge_campaign_Last_Name'| translate}}" ng-model="person.lname">
                     </div>
                   </div>
                   <div class="two fields">
                     <div class="field">
                       <label translate>pledge_campaign_Employer</label>
-                      <input ng-class="{'has-error': !person.employer && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_Employer' | translate}}"
-                        ng-model="person.employer">
+                      <input ng-class="{'has-error': !person.employer && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_Employer' | translate}}" ng-model="person.employer">
                     </div>
                     <div class="field">
                       <label translate>pledge_campaign_Occupation</label>
-                      <input ng-class="{'has-error': !person.occupation && payment_gateway==2 }" type="text" placeholder="{{'pledge_campaign_Occupation' | translate}}"
-                        ng-model="person.occupation">
+                      <input ng-class="{'has-error': !person.occupation && payment_gateway==2 }" type="text" placeholder="{{'pledge_campaign_Occupation' | translate}}" ng-model="person.occupation">
                     </div>
                   </div>
 
                   <div class="two fields">
                     <div class="field">
                       <label translate>pledge_campaign_Email</label>
-                      <input ng-class="{'has-error': !person.email && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_Email'| translate}}"
-                        ng-model="person.email">
+                      <input ng-class="{'has-error': !person.email && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_Email'| translate}}" ng-model="person.email">
                     </div>
                     <div class="field">
                       <label translate>pledge_campaign_Phone_Number</label>
-                      <input maxLength="25" numbers-Only ng-class="{'has-error': !person.number && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_Phone_Number'|translate}}"
-                        ng-model="person.number">
+                      <input maxLength="25" numbers-Only ng-class="{'has-error': !person.number && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_Phone_Number'|translate}}" ng-model="person.number">
                     </div>
                   </div>
                 </div>
@@ -656,8 +636,7 @@
                   <div class="two fields">
                     <div class="field">
                       <label translate>pledge_campaign_Address1</label>
-                      <input ng-class="{'has-error': !person.address1 && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_Address1' | translate}}"
-                        ng-model="person.address1">
+                      <input ng-class="{'has-error': !person.address1 && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_Address1' | translate}}" ng-model="person.address1">
                     </div>
                     <div class="field">
                       <label translate>pledge_campaign_Address2</label>
@@ -680,8 +659,7 @@
 
                     <div class="field">
                       <label translate>pledge_campaign_Zip</label>
-                      <input ng-class="{'has-error': !person.zip && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_Zip' | translate}}"
-                        ng-model="person.zip">
+                      <input ng-class="{'has-error': !person.zip && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_Zip' | translate}}" ng-model="person.zip">
                     </div>
                   </div>
 
@@ -714,8 +692,7 @@
                             </div>
                             <i class="dropdown icon"></i>
                             <div class="menu">
-                              <div ng-repeat="card in pledgerCards" ng-click="cardSelected(card,$index)" id="cardinfo" class="item c{{card.stripe_account_card_type}}"
-                                value="{{card.last4}}">
+                              <div ng-repeat="card in pledgerCards" ng-click="cardSelected(card,$index)" id="cardinfo" class="item c{{card.stripe_account_card_type}}" value="{{card.last4}}">
                                 <img src="images/cards/{{card.stripe_account_card_type}}.png" />**** **** ****
                                 <span ng-bind="card.last4"></span>
                               </div>
@@ -768,8 +745,7 @@
                     <div class="two fields">
                       <div class="field">
                         <label translate> pledge_campaign_creditcard_card_number </label>
-                        <input name="card_number" type="text" placeholder="{{'pledge_campaign_creditcard_card_number'| translate}}" ng-model="creditCard.number"
-                        ng-change="checkCardType()" class="creditCardNumber">
+                        <input name="card_number" type="text" placeholder="{{'pledge_campaign_creditcard_card_number'| translate}}" ng-model="creditCard.number" ng-change="checkCardType()" class="creditCardNumber">
                       </div>
                       <div class="field"></div>
                     </div>
@@ -781,14 +757,12 @@
                           <div class="exp-date-field field">
                             <label translate>pledge_campaign_payment_expiration_month</label>
                             <div class="input-wrap">
-                              <input name="card_exp_month" type="text" class="exp-date" placeholder="{{'pledge_campaign_creditcard_month_placeholder'|translate}}"
-                              ng-model="creditCard.exp_month" numbers-only maxlength="2">
+                              <input name="card_exp_month" type="text" class="exp-date" placeholder="{{'pledge_campaign_creditcard_month_placeholder'|translate}}" ng-model="creditCard.exp_month" numbers-only maxlength="2">
                             </div>
                           </div>
                           <div class="exp-date-field field">
                             <label translate>pledge_campaign_payment_expiration_year</label>
-                            <input name="card_exp_year" type="text" class="exp-date" placeholder="{{'pledge_campaign_creditcard_year_placeholder'|translate}}"
-                              ng-model="creditCard.exp_year" numbers-only maxlength="2">
+                            <input name="card_exp_year" type="text" class="exp-date" placeholder="{{'pledge_campaign_creditcard_year_placeholder'|translate}}" ng-model="creditCard.exp_year" numbers-only maxlength="2">
                           </div>
 
                         </div>
@@ -799,8 +773,7 @@
                           <i class="info circle icon" data-content="{{'pledge_campaign_creditcard_cvc_note'| translate }}"
                             sui-popup></i>
                         </label>
-                        <input name="card_cvc" placeholder="{{'pledge_campaign_creditcard_cvc_placeholder'|translate}}" type="text" class="cvv-code cardCVC"
-                          ng-model="creditCard.cvc" numbers-only>
+                        <input name="card_cvc" placeholder="{{'pledge_campaign_creditcard_cvc_placeholder'|translate}}" type="text" class="cvv-code cardCVC" ng-model="creditCard.cvc" numbers-only>
                       </div>
                     </div>
 
@@ -818,8 +791,7 @@
                   <div class="two fields">
                     <div class="field">
                       <label translate> pledge_campaign_cardholder_name </label>
-                      <input ng-class="{'has-error': !creditCard.name && payment_gateway==2 }" type="text" placeholder="{{'pledge_campaign_creditcard_name'|translate}}"
-                        ng-model="creditCard.name">
+                      <input ng-class="{'has-error': !creditCard.name && payment_gateway==2 }" type="text" placeholder="{{'pledge_campaign_creditcard_name'|translate}}" ng-model="creditCard.name">
                     </div>
                     <div class="field"></div>
                   </div>
@@ -828,8 +800,7 @@
                   <div class="two fields">
                     <div class="field">
                       <label translate> pledge_campaign_creditcard_card_number </label>
-                      <input class="creditCardNumber" ng-class="{'has-error': !creditCard.number && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_creditcard_card_number'| translate}}"
-                        ng-model="creditCard.number" maxlength="19">
+                      <input class="creditCardNumber" ng-class="{'has-error': !creditCard.number && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_creditcard_card_number'| translate}}" ng-model="creditCard.number" maxlength="19">
                     </div>
                     <!-- <div class="field">
                       <label>Card Type</label>
@@ -850,12 +821,10 @@
                       </label>
                       <div class="two fields">
                         <div class="exp-date-field field">
-                          <input ng-class="{'has-error': !creditCard.exp_month && payment_gateway==2}" type="text" class="exp-date" placeholder="{{'pledge_campaign_creditcard_month_placeholder'| translate }}"
-                            ng-model="creditCard.exp_month" numbers-only maxlength="2">
+                          <input ng-class="{'has-error': !creditCard.exp_month && payment_gateway==2}" type="text" class="exp-date" placeholder="{{'pledge_campaign_creditcard_month_placeholder'| translate }}" ng-model="creditCard.exp_month" numbers-only maxlength="2">
                         </div>
                         <div class="exp-date-field field">
-                          <input ng-class="{'has-error': !creditCard.exp_year && payment_gateway==2}" type="text" class="exp-date" placeholder="{{'pledge_campaign_creditcard_year_placeholder'| translate }}"
-                            ng-model="creditCard.exp_year" numbers-only maxlength="2">
+                          <input ng-class="{'has-error': !creditCard.exp_year && payment_gateway==2}" type="text" class="exp-date" placeholder="{{'pledge_campaign_creditcard_year_placeholder'| translate }}" ng-model="creditCard.exp_year" numbers-only maxlength="2">
                         </div>
 
                       </div>
@@ -865,8 +834,7 @@
                       <label id="cvc"> {{'pledge_campaign_creditcard_cvc'|translate}}
                         <i class="info circle icon" data-content="{{'pledge_campaign_creditcard_cvc_note'| translate }}"></i>
                       </label>
-                      <input ng-class="{'has-error': !creditCard.cvc && payment_gateway==2 }" placeholder="{{'pledge_campaign_creditcard_cvc_placeholder'| translate }}"
-                        type="text" class="cvv-code" ng-model="creditCard.cvc" numbers-only maxlength="5">
+                      <input ng-class="{'has-error': !creditCard.cvc && payment_gateway==2 }" placeholder="{{'pledge_campaign_creditcard_cvc_placeholder'| translate }}" type="text" class="cvv-code" ng-model="creditCard.cvc" numbers-only maxlength="5">
                     </div>
 
                   </div>
@@ -900,8 +868,7 @@
                             </div>
                             <i class="dropdown icon"></i>
                             <div class="menu">
-                              <div ng-repeat="card in pledgerCards" ng-click="cardSelected(card,$index)" id="cardinfo" class="item c{{card.stripe_account_card_type}}"
-                                value="{{card.last4}}">
+                              <div ng-repeat="card in pledgerCards" ng-click="cardSelected(card,$index)" id="cardinfo" class="item c{{card.stripe_account_card_type}}" value="{{card.last4}}">
                                 <img src="images/cards/{{card.stripe_account_card_type}}.png" />**** **** ****
                                 <span ng-bind="card.last4"></span>
                               </div>
@@ -995,8 +962,7 @@
                   <div class="two fields">
                     <div class="field">
                       <label translate> pledge_campaign_cardholder_name </label>
-                      <input ng-class="{'has-error': !creditCard.name && payment_gateway==2 }" type="text" placeholder="{{'pledge_campaign_creditcard_name'|translate}}"
-                        ng-model="creditCard.name">
+                      <input ng-class="{'has-error': !creditCard.name && payment_gateway==2 }" type="text" placeholder="{{'pledge_campaign_creditcard_name'|translate}}" ng-model="creditCard.name">
                     </div>
                     <div class="field"></div>
                   </div>
@@ -1005,8 +971,7 @@
                   <div class="two fields">
                     <div class="field">
                       <label translate> pledge_campaign_creditcard_card_number </label>
-                      <input class="creditCardNumber" ng-class="{'has-error': !creditCard.number && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_creditcard_card_number'| translate}}"
-                        ng-model="creditCard.number" maxlength="19">
+                      <input class="creditCardNumber" ng-class="{'has-error': !creditCard.number && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_creditcard_card_number'| translate}}" ng-model="creditCard.number" maxlength="19">
                     </div>
                   </div>
 
@@ -1017,12 +982,10 @@
                       </label>
                       <div class="two fields">
                         <div class="exp-date-field field">
-                          <input ng-class="{'has-error': !creditCard.exp_month && payment_gateway==2}" type="text" class="exp-date" placeholder="{{'pledge_campaign_creditcard_month_placeholder'| translate }}"
-                            ng-model="creditCard.exp_month" numbers-only maxlength="2">
+                          <input ng-class="{'has-error': !creditCard.exp_month && payment_gateway==2}" type="text" class="exp-date" placeholder="{{'pledge_campaign_creditcard_month_placeholder'| translate }}" ng-model="creditCard.exp_month" numbers-only maxlength="2">
                         </div>
                         <div class="exp-date-field field">
-                          <input ng-class="{'has-error': !creditCard.exp_year && payment_gateway==2}" type="text" class="exp-date" placeholder="{{'pledge_campaign_creditcard_year_placeholder'| translate }}"
-                            ng-model="creditCard.exp_year" numbers-only maxlength="2">
+                          <input ng-class="{'has-error': !creditCard.exp_year && payment_gateway==2}" type="text" class="exp-date" placeholder="{{'pledge_campaign_creditcard_year_placeholder'| translate }}" ng-model="creditCard.exp_year" numbers-only maxlength="2">
                         </div>
 
                       </div>
@@ -1032,8 +995,7 @@
                       <label id="cvc"> {{'pledge_campaign_creditcard_cvc'|translate}}
                         <i class="info circle icon" data-content="{{'pledge_campaign_creditcard_cvc_note'| translate }}"></i>
                       </label>
-                      <input ng-class="{'has-error': !creditCard.cvc && payment_gateway==2 }" placeholder="{{'pledge_campaign_creditcard_cvc_placeholder'| translate }}"
-                        type="text" class="cvv-code" ng-model="creditCard.cvc" numbers-only maxlength="5">
+                      <input ng-class="{'has-error': !creditCard.cvc && payment_gateway==2 }" placeholder="{{'pledge_campaign_creditcard_cvc_placeholder'| translate }}" type="text" class="cvv-code" ng-model="creditCard.cvc" numbers-only maxlength="5">
                     </div>
 
                   </div>
@@ -1042,15 +1004,18 @@
             </div>
           </div>
           <!-- END -->
-
-          <h2 ng-if="(shippingOption.length || requiresShipping) || acceptExtraPledgeData" class="ui inverted top attached header" translate> pledge_campaign_shipping_info</h2>
+          <h2 ng-if="(shippingOption.length || requiresShipping) && !acceptExtraPledgeData" class="ui inverted top attached header" translate> pledge_campaign_shipping_info</h2>
+          <h2 ng-if="(shippingOption.length || requiresShipping) && acceptExtraPledgeData" class="ui inverted top attached header" translate> pledge_campaign_shipping_info</h2>
+          <h2 ng-if="!(shippingOption.length || requiresShipping) && acceptExtraPledgeData" class="ui inverted top attached header" translate> pledge_campaign_address_info</h2>
           <div ng-if="(shippingOption.length || requiresShipping) || acceptExtraPledgeData" class="shipping-info campaign-bg ui middle attached basic segment">
             <div class="formbg ui two column stackable grid">
               <div class="ui corner red label" data-content="Required Field" sui-popup="">
                 <i class="white asterisk icon"></i>
               </div>
               <div class="five wide column left-col">
-                <h3 class="ui header" translate> pledge_campaign_shipping_address </h3>
+                <h3 ng-if="(shippingOption.length || requiresShipping) && !acceptExtraPledgeData" class="ui header" translate> pledge_campaign_shipping_address </h3>
+                <h3 ng-if="(shippingOption.length || requiresShipping) && acceptExtraPledgeData" class="ui header" translate> pledge_campaign_shipping_address </h3>
+                <h3 ng-if="!(shippingOption.length || requiresShipping) && acceptExtraPledgeData" class="ui header" translate> pledge_campaign_your_address </h3>
                 <p translate>pledge_campaign_shipping_address_message</p>
               </div>
               <div class="eleven wide column right-col">
@@ -1078,45 +1043,45 @@
                         </div>
                       </div>
                       <div class="ui selection fluid dropdown address-select" ng-if="acceptExtraPledgeData && selectedAccountType == 'Individual'">
-                          <input name="choose_address" type="hidden">
-                          <div class="default text">
-                            Choose a shipping address
-                          </div>
-                          <i class="dropdown icon"></i>
-                          <div class="menu">
-                            <div ng-repeat="address in profileAddress.personal" ng-click="setFlag('newAddress', true); addressSelected(address)" class="item">
-                              <!-- With Alt Shipping Address Form -->
-                              <span ng-if="!native_lookup && address.city_alt">{{address.street1}}, {{address.city_alt}} | {{address.mail_code}}</span>
-                              <span ng-if="native_lookup && address.city_alt">{{address.mail_code}} {{address.city_alt}} {{address.street1}}</span>
-  
-                              <!-- With Normal Shipping Address Form -->
-                              <span ng-show="!native_lookup && !address.city_alt">{{address.street1}}, {{address.city_full}} | {{address.mail_code}}</span>
-                              <span ng-show="native_lookup && !address.city_alt">
+                        <input name="choose_address" type="hidden">
+                        <div class="default text">
+                          Choose a shipping address
+                        </div>
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                          <div ng-repeat="address in profileAddress.personal" ng-click="setFlag('newAddress', true); addressSelected(address)" class="item">
+                            <!-- With Alt Shipping Address Form -->
+                            <span ng-if="!native_lookup && address.city_alt">{{address.street1}}, {{address.city_alt}} | {{address.mail_code}}</span>
+                            <span ng-if="native_lookup && address.city_alt">{{address.mail_code}} {{address.city_alt}} {{address.street1}}</span>
+
+                            <!-- With Normal Shipping Address Form -->
+                            <span ng-show="!native_lookup && !address.city_alt">{{address.street1}}, {{address.city_full}} | {{address.mail_code}}</span>
+                            <span ng-show="native_lookup && !address.city_alt">
                                 <span translate="pledge_campaign_Zip_symbol"></span>{{address.mail_code}} {{address.city_full}} {{address.street1}}
-                              </span>
-                            </div>
+                            </span>
                           </div>
                         </div>
-                        <div class="ui selection fluid dropdown address-select" ng-if="acceptExtraPledgeData && selectedAccountType == 'Organization'">
-                            <input name="choose_address" type="hidden">
-                            <div class="default text">
-                              Choose a shipping address
-                            </div>
-                            <i class="dropdown icon"></i>
-                            <div class="menu">
-                              <div ng-repeat="address in profileAddress.business" ng-click="setFlag('newAddress', true); addressSelected(address)" class="item">
-                                <!-- With Alt Shipping Address Form -->
-                                <span ng-if="!native_lookup && address.city_alt">{{address.street1}}, {{address.city_alt}} | {{address.mail_code}}</span>
-                                <span ng-if="native_lookup && address.city_alt">{{address.mail_code}} {{address.city_alt}} {{address.street1}}</span>
-    
-                                <!-- With Normal Shipping Address Form -->
-                                <span ng-show="!native_lookup && !address.city_alt">{{address.street1}}, {{address.city_full}} | {{address.mail_code}}</span>
-                                <span ng-show="native_lookup && !address.city_alt">
+                      </div>
+                      <div class="ui selection fluid dropdown address-select" ng-if="acceptExtraPledgeData && selectedAccountType == 'Organization'">
+                        <input name="choose_address" type="hidden">
+                        <div class="default text">
+                          Choose a shipping address
+                        </div>
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                          <div ng-repeat="address in profileAddress.business" ng-click="setFlag('newAddress', true); addressSelected(address)" class="item">
+                            <!-- With Alt Shipping Address Form -->
+                            <span ng-if="!native_lookup && address.city_alt">{{address.street1}}, {{address.city_alt}} | {{address.mail_code}}</span>
+                            <span ng-if="native_lookup && address.city_alt">{{address.mail_code}} {{address.city_alt}} {{address.street1}}</span>
+
+                            <!-- With Normal Shipping Address Form -->
+                            <span ng-show="!native_lookup && !address.city_alt">{{address.street1}}, {{address.city_full}} | {{address.mail_code}}</span>
+                            <span ng-show="native_lookup && !address.city_alt">
                                   <span translate="pledge_campaign_Zip_symbol"></span>{{address.mail_code}} {{address.city_full}} {{address.street1}}
-                                </span>
-                              </div>
-                            </div>
+                            </span>
                           </div>
+                        </div>
+                      </div>
                     </div>
                   </form>
 
@@ -1383,8 +1348,7 @@
                     <div class="two fields">
                       <div class="field">
                         <label translate="pledge_campaign_Phone_Number"></label>
-                        <input maxLength="25" type="text" ng-model="newNumberCreated.number" name="new_phone_number" placeholder="{{'pledge_campaign_Phone_Number_placeholder' | translate}}"
-                        />
+                        <input maxLength="25" type="text" ng-model="newNumberCreated.number" name="new_phone_number" placeholder="{{'pledge_campaign_Phone_Number_placeholder' | translate}}" />
                       </div>
                       <div class="field">
                         <label translate="pledge_campaign_Phone_Type"></label>
@@ -1496,11 +1460,14 @@
         </div>
       </div>
       <div class="ui column" ng-if="isContributionLayout1" id="contribution-layout-1">
+        <div class="campaign-disclaimer-text" ng-if="displayCampaignDisclaimer.toggle && displayCampaignDisclaimer.text">
+          <div class="ui warning message" ng-bind-html="displayCampaignDisclaimer.text"></div>
+        </div>
         <div class="pledge-campaign-top-header">
           <div class="ui two column stackable grid">
             <div class="four wide column campaign-img">
-              <img ng-if="campaign.files.length" ng-repeat="file in campaign.files | filter:{region_id: RESOURCE_REGIONS.campaign.thumbnail} | orderBy:'-file_id' | limitTo: 1"
-                ng-src="{{server + '/image/campaign_thumbnail_large/' + file.path_external}}" class="ui image" />
+              <img ng-if="campaign.files.length" ng-repeat="file in campaign.files | filter:{region_id: RESOURCE_REGIONS.campaign.thumbnail} | orderBy:'-file_id' | limitTo: 1" ng-src="{{server + '/image/campaign_thumbnail_large/' + file.path_external}}" class="ui image"
+              />
               <img ng-if="campaign.files.length == 0" src="images/placeholder-images/placeholder_campaign_thumb.png" class="ui image" />
             </div>
             <div class="twelve wide column">
@@ -1508,7 +1475,7 @@
               <h4 ng-if="!public_settings.site_campaign_enable_organization_name"> {{'pledge_campaign_by' | translate}} {{campaign.managers[0].first_name}} {{campaign.managers[0].last_name}}</h4>
               <h4 ng-if="public_settings.site_campaign_enable_organization_name"> {{'guest_contribution_by' | translate}} {{organization_name.value}}</h4>
               <p ng-if="public_settings.site_campaign_enable_organization_name">{{'ein_label' | translate}}{{organization_name.ein}}</p>
-              <p>{{campaign.blurb}}</p>
+              <p ng-bind-html="campaign.blurb"></p>
             </div>
           </div>
         </div>
@@ -1521,24 +1488,20 @@
                   <h3 class="ui header" translate>pledge_campaign_website_tip</h3>
                   <p translate>pledge_campaign_website_tip_note</p>
                   <div class="ui buttons tipping-options-selection field" ng-class="{'error': tipTypeError}" ng-if="(tippingOptions.toggle_dynamic && tippingOptions.toggle_tiers) || (tippingOptions.toggle_dynamic && tippingOptions.toggle_no_tip) || (tippingOptions.toggle_tiers && tippingOptions.toggle_no_tip)">
-                    <div class="ui button" ng-class="{ 'green': selectedTipType == 'tiers' }" ng-if="tippingOptions.toggle_tiers" ng-click="tipTypeSelection('tiers')"
-                      translate>
+                    <div class="ui button" ng-class="{ 'green': selectedTipType == 'tiers' }" ng-if="tippingOptions.toggle_tiers" ng-click="tipTypeSelection('tiers')" translate>
                       pledge_campaign_choose_tip
                     </div>
                     <div class="or" ng-if="tippingOptions.toggle_tiers && tippingOptions.toggle_dynamic"></div>
-                    <div class="ui button" ng-class="{ 'green': selectedTipType == 'dynamic' }" ng-if="tippingOptions.toggle_dynamic" ng-click="tipTypeSelection('dynamic')"
-                      translate>
+                    <div class="ui button" ng-class="{ 'green': selectedTipType == 'dynamic' }" ng-if="tippingOptions.toggle_dynamic" ng-click="tipTypeSelection('dynamic')" translate>
                       pledge_campaign_enter_tip_amount
                     </div>
                     <div class="or" ng-if="tippingOptions.toggle_no_tip"></div>
-                    <div class="ui button" ng-class="{ 'green': selectedTipType == 'no_tip' }" ng-if="tippingOptions.toggle_no_tip" ng-click="tipTypeSelection('no_tip')"
-                      translate>
+                    <div class="ui button" ng-class="{ 'green': selectedTipType == 'no_tip' }" ng-if="tippingOptions.toggle_no_tip" ng-click="tipTypeSelection('no_tip')" translate>
                       pledge_campaign_no_tip
                     </div>
                   </div>
                   <div class="ui red pointing prompt label transition visible" ng-if="tipTypeError" translate>pledge_campaign_select_tip_option</div>
-                  <div ng-if="(tippingOptions.toggle_dynamic && !tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'dynamic'"
-                    class="ui dynamic-tipping-form form tipping-option">
+                  <div ng-if="(tippingOptions.toggle_dynamic && !tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'dynamic'" class="ui dynamic-tipping-form form tipping-option">
                     <div class="field">
                       <div class="ui left labeled input">
                         <div class="ui label" ng-bind-html=" ' ' | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
@@ -1546,22 +1509,19 @@
                       </div>
                     </div>
                   </div>
-                  <div ng-if="(!tippingOptions.toggle_dynamic && tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'tiers'"
-                    class="tipping-option">
+                  <div ng-if="(!tippingOptions.toggle_dynamic && tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'tiers'" class="tipping-option">
                     <div class="tip-field field" ng-if="tippingOptions.tiers[0]">
                       <div class="ui selection dropdown tip-tiers">
                         <input type="hidden" name="tip_tier">
                         <i class="dropdown icon"></i>
                         <div class="default text">
-                          <span ng-if="tippingOptions.toggle_tier_names">{{tippingOptions.tiers[0].name}} -</span>
-                          <span>{{ ' ' | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}{{tippingOptions.tiers[0].dollar_amount
-                            | number : 2}}</span>
+                          <span ng-if="tippingOptions.toggle_tier_names">{{tipTiersDefaultName}} -</span>
+                          <span>{{tipTiersDefaultAmount | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}</span>
                         </div>
                         <div class="menu">
-                          <div class="item" data-value="{{$index}}" ng-repeat="tier in tippingOptions.tiers track by $index" ng-click="tipTierSelection(tier.value, tier.type, tier.dollar_amount, tier.name)">
+                          <div class="item" data-value="{{$index}}" ng-repeat="tier in tippingOptions.tiers track by $index" ng-click="tipTierSelection(tier.value, tier.type, tier.dollar_amount, tier.name, $index)">
                             <span ng-if="tippingOptions.toggle_tier_names">{{tier.name}} -</span>
-                            <span>{{ ' ' | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}{{tier.dollar_amount
-                              | number : 2}}</span>
+                            <span>{{tier.dollar_amount | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}</span>
                           </div>
                         </div>
                       </div>
@@ -1584,30 +1544,33 @@
                     <h4 class="title" translate>pledge_campaign_yourcontribution</h4>
                     <form class="ui form contribution-form">
                       <div class="field">
-                        <div ng-show="allowDecimalNotation == 2 || allowDecimalNotation == 3" class="ui big left labeled right labeled input contribution-input fluid">
-                          <div class="ui label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
-                          <input name="contribution_amount" ng-class="{'has-error': pledgeAmount < selectedReward.amount || !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}"
-                            type="text" min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}"
-                            ng-model="campaignFundingGoal.value" number-with-decimals>
-                          <div ng-if="allowDecimalNotation == 2" class="ui label" style="padding-top:1.5em;">
+                        <div ng-show="allowDecimalNotation == 2 || allowDecimalNotation == 3" class="contribution-input-decimal fluid">
+                          <div class="ui label currency-symbol" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
+                          <div class="input-wrap">
+                            <input name="contribution_amount" ng-class="{'has-error': pledgeAmount < selectedReward.amount || !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}" type="text" min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}"
+                              ng-model="campaignFundingGoal.value" number-with-decimals>
+                          </div>
+                          <div ng-if="allowDecimalNotation == 2" class="ui label decimal-value">
                             <span>.00</span>
                           </div>
                         </div>
                       </div>
                       <div class="field" ng-if="!pledgeReplace">
-                        <div ng-show="allowDecimalNotation == 1" class="ui big left labeled labeled input contribution-input fluid">
-                          <div class="ui label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
-                          <input name="contribution_amount_decimal" ng-class="{'has-error': pledgeAmount < selectedReward.amount || !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}"
-                            type="text" min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}"
-                            ng-model="campaignFundingGoal.value" number-with-decimals ng-attr-allow-decimal="true">
+                        <div ng-show="allowDecimalNotation == 1" class="contribution-input">
+                          <div class="ui label currency-symbol" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
+                          <div class="input-wrap">
+                            <input name="contribution_amount_decimal" ng-class="{'has-error': pledgeAmount < selectedReward.amount || !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}" type="text"
+                              min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}" ng-model="campaignFundingGoal.value" number-with-decimals ng-attr-allow-decimal="true">
+                          </div>
                         </div>
                       </div>
                       <div class="field" ng-if="pledgeReplace && pledgeAmount">
-                        <div ng-show="allowDecimalNotation == 1" class="ui big left labeled labeled input contribution-input fluid">
-                          <div class="ui label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
-                          <input name="contribution_amount_decimal" ng-class="{'has-error': pledgeAmount < selectedReward.amount || !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}"
-                            type="text" min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}"
-                            ng-model="campaignFundingGoal.value" number-with-decimals ng-attr-allow-decimal="true">
+                        <div ng-show="allowDecimalNotation == 1" class="contribution-input">
+                          <div class="ui currency-symbol label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
+                          <div class="input-wrap">
+                            <input name="contribution_amount_decimal" ng-class="{'has-error': pledgeAmount < selectedReward.amount || !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}" type="text"
+                              min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}" ng-model="campaignFundingGoal.value" number-with-decimals ng-attr-allow-decimal="true">
+                          </div>
                         </div>
                       </div>
                     </form>
@@ -1688,8 +1651,7 @@
                           <input type="checkbox" name="is_a_tax_payer">
                           <label translate>charity_helper_is_a_uk_taxpayer</label>
                         </div>
-                        <div class="ui checkbox charity-checkbox" ng-show="charity.is_a_gift && public_settings.site_campaign_charity_helper_alternate_form"
-                          ng-model="charity.is_a_tax_payer">
+                        <div class="ui checkbox charity-checkbox" ng-show="charity.is_a_gift && public_settings.site_campaign_charity_helper_alternate_form" ng-model="charity.is_a_tax_payer">
                           <input type="checkbox" name="is_a_tax_payer">
                           <label translate>charity_helper_is_a_uk_taxpayer_alternate</label>
                         </div>
@@ -1789,11 +1751,11 @@
 
                 <div class="ui segment reward-wrap" ng-if="campaign.pledges && !pledgeReplace">
                   <div ng-if="selectedReward">
-                    <div class="reward-etd" ng-if="selectedReward.estimated_delivery_time">{{'pledge_campaign_estimate_dlivery' | translate}} {{selectedReward.estimated_delivery_time | formatDate:"MMMM
-                      DD, YYYY" }}</div>
+                    <div class="reward-etd" ng-if="selectedReward.estimated_delivery_time">{{'pledge_campaign_estimate_dlivery' | translate}} {{selectedReward.estimated_delivery_time | formatDate:"MMMM DD, YYYY" }}</div>
                     <h3 class="reward-title ui header">{{selectedReward.name}}</h3>
                     <div class="reward-description fr-view" ng-hide="reward_html_editor" html-render html="selectedReward.description"></div>
-                    <div ng-show="reward_html_editor" ng-bind-html="selectedReward.description"></div>
+                    <!-- <div ng-show="reward_html_editor" ng-bind-html="selectedReward.description"></div> -->
+                    <div ng-show="reward_html_editor" html-render html="selectedReward.description"></div>
                   </div>
 
                   <div class="no-reward-text" ng-if="!selectedReward">
@@ -1839,9 +1801,9 @@
                         </div>
                       </div>
                       <div class="reward-description fr-view" ng-hide="reward_html_editor" html-render html="selectedReward.description"></div>
-                      <div ng-show="reward_html_editor" ng-bind-html="selectedReward.description"></div>
-                      <div class="reward-etd" ng-if="selectedReward.estimated_delivery_time">{{'pledge_campaign_estimate_dlivery' | translate}} {{selectedReward.estimated_delivery_time | formatDate:"MMMM
-                        DD, YYYY" }}</div>
+                      <!-- <div ng-show="reward_html_editor" ng-bind-html="selectedReward.description"></div> -->
+                      <div ng-show="reward_html_editor" html-render html="selectedReward.description"></div>
+                      <div class="reward-etd" ng-if="selectedReward.estimated_delivery_time">{{'pledge_campaign_estimate_dlivery' | translate}} {{selectedReward.estimated_delivery_time | formatDate:"MMMM DD, YYYY" }}</div>
                     </div>
 
                     <div ng-if="!selectedReward">
@@ -1884,38 +1846,32 @@
                   <div class="two fields">
                     <div class="field">
                       <label translate>pledge_campaign_First_Name</label>
-                      <input ng-class="{'has-error': !person.fname && (payment_gateway==2) }" type="text" placeholder="{{'pledge_campaign_First_Name'|translate }}"
-                        ng-model="person.fname">
+                      <input ng-class="{'has-error': !person.fname && (payment_gateway==2) }" type="text" placeholder="{{'pledge_campaign_First_Name'|translate }}" ng-model="person.fname">
                     </div>
                     <div class="field">
                       <label translate>pledge_campaign_Last_Name</label>
-                      <input ng-class="{'has-error': !person.lname && payment_gateway==2 }" type="text" placeholder="{{'pledge_campaign_Last_Name'| translate}}"
-                        ng-model="person.lname">
+                      <input ng-class="{'has-error': !person.lname && payment_gateway==2 }" type="text" placeholder="{{'pledge_campaign_Last_Name'| translate}}" ng-model="person.lname">
                     </div>
                   </div>
                   <div class="two fields">
                     <div class="field">
                       <label translate>pledge_campaign_Employer</label>
-                      <input ng-class="{'has-error': !person.employer && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_Employer' | translate}}"
-                        ng-model="person.employer">
+                      <input ng-class="{'has-error': !person.employer && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_Employer' | translate}}" ng-model="person.employer">
                     </div>
                     <div class="field">
                       <label translate>pledge_campaign_Occupation</label>
-                      <input ng-class="{'has-error': !person.occupation && payment_gateway==2 }" type="text" placeholder="{{'pledge_campaign_Occupation' | translate}}"
-                        ng-model="person.occupation">
+                      <input ng-class="{'has-error': !person.occupation && payment_gateway==2 }" type="text" placeholder="{{'pledge_campaign_Occupation' | translate}}" ng-model="person.occupation">
                     </div>
                   </div>
 
                   <div class="two fields">
                     <div class="field">
                       <label translate>pledge_campaign_Email</label>
-                      <input ng-class="{'has-error': !person.email && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_Email'| translate}}"
-                        ng-model="person.email">
+                      <input ng-class="{'has-error': !person.email && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_Email'| translate}}" ng-model="person.email">
                     </div>
                     <div class="field">
                       <label translate>pledge_campaign_Phone_Number</label>
-                      <input numbers-Only ng-class="{'has-error': !person.number && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_Phone_Number'|translate}}"
-                        ng-model="person.number">
+                      <input numbers-Only ng-class="{'has-error': !person.number && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_Phone_Number'|translate}}" ng-model="person.number">
                     </div>
                   </div>
                 </div>
@@ -1933,8 +1889,7 @@
                   <div class="two fields">
                     <div class="field">
                       <label translate>pledge_campaign_Address1</label>
-                      <input ng-class="{'has-error': !person.address1 && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_Address1' | translate}}"
-                        ng-model="person.address1">
+                      <input ng-class="{'has-error': !person.address1 && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_Address1' | translate}}" ng-model="person.address1">
                     </div>
                     <div class="field">
                       <label translate>pledge_campaign_Address2</label>
@@ -1957,8 +1912,7 @@
 
                     <div class="field">
                       <label translate>pledge_campaign_Zip</label>
-                      <input ng-class="{'has-error': !person.zip && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_Zip' | translate}}"
-                        ng-model="person.zip">
+                      <input ng-class="{'has-error': !person.zip && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_Zip' | translate}}" ng-model="person.zip">
                     </div>
                   </div>
 
@@ -2001,8 +1955,7 @@
                       <div class="two fields">
                         <div class="field">
                           <label translate="pledge_campaign_Phone_Number"></label>
-                          <input type="text" maxLength="25" ng-model="newNumberCreated.number" name="new_phone_number" placeholder="{{'pledge_campaign_Phone_Number_placeholder' | translate}}"
-                          />
+                          <input type="text" maxLength="25" ng-model="newNumberCreated.number" name="new_phone_number" placeholder="{{'pledge_campaign_Phone_Number_placeholder' | translate}}" />
                         </div>
                         <div class="field">
                           <label translate="pledge_campaign_Phone_Type"></label>
@@ -2262,8 +2215,7 @@
                               </div>
                               <i class="dropdown icon"></i>
                               <div class="menu">
-                                <div ng-repeat="card in pledgerCards" ng-click="cardSelected(card,$index)" id="cardinfo" class="item c{{card.stripe_account_card_type}}"
-                                  value="{{card.last4}}">
+                                <div ng-repeat="card in pledgerCards" ng-click="cardSelected(card,$index)" id="cardinfo" class="item c{{card.stripe_account_card_type}}" value="{{card.last4}}">
                                   <img src="images/cards/{{card.stripe_account_card_type}}.png" />**** **** ****
                                   <span ng-bind="card.last4"></span>
                                 </div>
@@ -2315,8 +2267,7 @@
                     <form class="ui form credit-card-form">
                       <div class="field">
                         <label translate> pledge_campaign_creditcard_card_number </label>
-                        <input name="card_number" type="text" placeholder="{{'pledge_campaign_creditcard_card_number'| translate}}" ng-model="creditCard.number"
-                          ng-change="checkCardType()" class="creditCardNumber">
+                        <input name="card_number" type="text" placeholder="{{'pledge_campaign_creditcard_card_number'| translate}}" ng-model="creditCard.number" ng-change="checkCardType()" class="creditCardNumber">
                       </div>
 
                       <div class="two fields">
@@ -2325,13 +2276,11 @@
                           <div class="two fields">
                             <div class="exp-date-field field">
                               <label translate>pledge_campaign_payment_expiration_month</label>
-                              <input name="card_exp_month" type="text" class="exp-date" placeholder="{{'pledge_campaign_creditcard_month_placeholder'| translate }}"
-                                ng-model="creditCard.exp_month" numbers-only maxlength="2">
+                              <input name="card_exp_month" type="text" class="exp-date" placeholder="{{'pledge_campaign_creditcard_month_placeholder'| translate }}" ng-model="creditCard.exp_month" numbers-only maxlength="2">
                             </div>
                             <div class="exp-date-field field">
                               <label translate>pledge_campaign_payment_expiration_year</label>
-                              <input name="card_exp_year" type="text" class="exp-date" placeholder="{{'pledge_campaign_creditcard_year_placeholder'| translate }}"
-                                ng-model="creditCard.exp_year" numbers-only maxlength="2">
+                              <input name="card_exp_year" type="text" class="exp-date" placeholder="{{'pledge_campaign_creditcard_year_placeholder'| translate }}" ng-model="creditCard.exp_year" numbers-only maxlength="2">
                             </div>
 
                           </div>
@@ -2342,8 +2291,7 @@
                             <i class="info circle icon" data-content="{{'pledge_campaign_creditcard_cvc_note'| translate }}"
                               sui-popup></i>
                           </label>
-                          <input name="card_cvc" placeholder="{{'pledge_campaign_creditcard_cvc_placeholder'| translate }}" type="text" class="cvv-code cardCVC"
-                            ng-model="creditCard.cvc" numbers-only>
+                          <input name="card_cvc" placeholder="{{'pledge_campaign_creditcard_cvc_placeholder'| translate }}" type="text" class="cvv-code cardCVC" ng-model="creditCard.cvc" numbers-only>
                         </div>
                       </div>
 
@@ -2391,8 +2339,7 @@
                     <div class="two fields">
                       <div class="field">
                         <label translate> pledge_campaign_cardholder_name </label>
-                        <input ng-class="{'has-error': !creditCard.name && payment_gateway==2 }" type="text" placeholder="{{'pledge_campaign_creditcard_name'|translate}}"
-                          ng-model="creditCard.name">
+                        <input ng-class="{'has-error': !creditCard.name && payment_gateway==2 }" type="text" placeholder="{{'pledge_campaign_creditcard_name'|translate}}" ng-model="creditCard.name">
                       </div>
                       <div class="field"></div>
                     </div>
@@ -2401,8 +2348,7 @@
                     <div class="two fields">
                       <div class="field">
                         <label translate> pledge_campaign_creditcard_card_number </label>
-                        <input class="creditCardNumber" ng-class="{'has-error': !creditCard.number && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_creditcard_card_number'| translate}}"
-                          ng-model="creditCard.number" maxlength="19">
+                        <input class="creditCardNumber" ng-class="{'has-error': !creditCard.number && payment_gateway==2}" type="text" placeholder="{{'pledge_campaign_creditcard_card_number'| translate}}" ng-model="creditCard.number" maxlength="19">
                       </div>
                     </div>
 
@@ -2413,12 +2359,10 @@
                         </label>
                         <div class="two fields">
                           <div class="exp-date-field field">
-                            <input ng-class="{'has-error': !creditCard.exp_month && payment_gateway==2}" type="text" class="exp-date" placeholder="{{'pledge_campaign_creditcard_month_placeholder'| translate }}"
-                              ng-model="creditCard.exp_month" numbers-only maxlength="2">
+                            <input ng-class="{'has-error': !creditCard.exp_month && payment_gateway==2}" type="text" class="exp-date" placeholder="{{'pledge_campaign_creditcard_month_placeholder'| translate }}" ng-model="creditCard.exp_month" numbers-only maxlength="2">
                           </div>
                           <div class="exp-date-field field">
-                            <input ng-class="{'has-error': !creditCard.exp_year && payment_gateway==2}" type="text" class="exp-date" placeholder="{{'pledge_campaign_creditcard_year_placeholder'| translate }}"
-                              ng-model="creditCard.exp_year" numbers-only maxlength="2">
+                            <input ng-class="{'has-error': !creditCard.exp_year && payment_gateway==2}" type="text" class="exp-date" placeholder="{{'pledge_campaign_creditcard_year_placeholder'| translate }}" ng-model="creditCard.exp_year" numbers-only maxlength="2">
                           </div>
 
                         </div>
@@ -2428,8 +2372,7 @@
                         <label id="cvc"> {{'pledge_campaign_creditcard_cvc'|translate}}
                           <i class="info circle icon" data-content="{{'pledge_campaign_creditcard_cvc_note'| translate }}"></i>
                         </label>
-                        <input ng-class="{'has-error': !creditCard.cvc && payment_gateway==2 }" placeholder="{{'pledge_campaign_creditcard_cvc_placeholder'| translate }}"
-                          type="text" class="cvv-code" ng-model="creditCard.cvc" numbers-only maxlength="5">
+                        <input ng-class="{'has-error': !creditCard.cvc && payment_gateway==2 }" placeholder="{{'pledge_campaign_creditcard_cvc_placeholder'| translate }}" type="text" class="cvv-code" ng-model="creditCard.cvc" numbers-only maxlength="5">
                       </div>
 
                     </div>
@@ -2517,14 +2460,13 @@
   <div class="content">
     <div class="ui two column stackable grid">
       <div class="four wide column campaign-img">
-        <img ng-if="campaign.files.length" ng-repeat="file in campaign.files | filter:{region_id: RESOURCE_REGIONS.campaign.thumbnail} | orderBy:'-file_id' | limitTo: 1"
-          ng-src="{{server + '/image/campaign_thumbnail_xl/' + file.path_external}}" class="ui image" />
-        <img ng-if="campaign.files.length == 0" src="/images/placeholder-images/placeholder_campaign_thumb.png" class="ui image"
+        <img ng-if="campaign.files.length" ng-repeat="file in campaign.files | filter:{region_id: RESOURCE_REGIONS.campaign.thumbnail} | orderBy:'-file_id' | limitTo: 1" ng-src="{{server + '/image/campaign_thumbnail_xl/' + file.path_external}}" class="ui image"
         />
+        <img ng-if="campaign.files.length == 0" src="/images/placeholder-images/placeholder_campaign_thumb.png" class="ui image" />
       </div>
       <div class="twelve wide column">
         <h1 class="ui header"> {{campaign.name}} </h1>
-        <p>{{campaign.blurb}}</p>
+        <p ng-bind-html="campaign.blurb"></p>
       </div>
     </div>
 

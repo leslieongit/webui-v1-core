@@ -1,4 +1,4 @@
-app.controller('ExploreCtrl', function($timeout, $scope, $rootScope, CampaignSettingsService, $routeParams, $translatePartialLoader, $translate, $location, $route, RESOURCE_REGIONS, Restangular, Geolocator, RestFullResponse, PortalSettingsService, RequestCacheService, VideoLinkService, $document) {
+app.controller('ExploreCtrl', function ($timeout, $scope, $rootScope, CampaignSettingsService, $routeParams, $translatePartialLoader, $translate, $location, $route, RESOURCE_REGIONS, Restangular, Geolocator, RestFullResponse, PortalSettingsService, RequestCacheService, VideoLinkService, $document) {
   var nativeLookup;
   //initialize theme color
   $scope.RESOURCE_REGIONS = RESOURCE_REGIONS;
@@ -6,10 +6,10 @@ app.controller('ExploreCtrl', function($timeout, $scope, $rootScope, CampaignSet
   $scope.loading = false;
   $scope.explore_page_text = {};
   //for translating
-  $scope.moment = function(value, suffix) {
-      return moment(value).fromNow(suffix);
-    }
-    //Text for days to minutes
+  $scope.moment = function (value, suffix) {
+    return moment(value).fromNow(suffix);
+  }
+  //Text for days to minutes
   $scope.days_text = "days ago";
   $scope.day_text = "day ago";
   $scope.rdays_text = "days to go";
@@ -22,7 +22,7 @@ app.controller('ExploreCtrl', function($timeout, $scope, $rootScope, CampaignSet
   $scope.minute_text = "minute ago";
   $scope.rminutes_text = "minutes to go";
   $scope.rminute_text = "minute to go";
-  $scope.dateInPast = function(value, sec) {
+  $scope.dateInPast = function (value, sec) {
     if (sec == 0 || sec == "00" || sec < 0) {
       return true;
     } else {
@@ -58,24 +58,24 @@ app.controller('ExploreCtrl', function($timeout, $scope, $rootScope, CampaignSet
   $scope.isDesktop = true;
 
   // Animated scroll to rewards section
-  $scope.scrollToCampaignCards = function() {
-    $timeout(function() {
+  $scope.scrollToCampaignCards = function () {
+    $timeout(function () {
       $('html, body').animate({
         scrollTop: $('#campaign-card-list').offset().top - 15
       }, 500);
     });
   }
 
-  $scope.loadMoreCampaigns = function() {
+  $scope.loadMoreCampaigns = function () {
     $scope.sortOrFilters.page_entries += 9;
 
     $scope.loading = true;
-    RestFullResponse.all('campaign').getList($scope.sortOrFilters).then(function(success) {
+    RestFullResponse.all('campaign').getList($scope.sortOrFilters).then(function (success) {
       if ($location.search().description && success.data.length === 0) {
         // if description search is done but no results
         $scope.sortOrFilters.filters.description = null;
         $scope.sortOrFilters.filters.name = $location.search().description;
-        RestFullResponse.all('campaign').getList($scope.sortOrFilters).then(function(success) {
+        RestFullResponse.all('campaign').getList($scope.sortOrFilters).then(function (success) {
           $scope.campaigns = success.data;
           if (success.data.length === 0) {
             $scope.noCampaign = true;
@@ -94,7 +94,7 @@ app.controller('ExploreCtrl', function($timeout, $scope, $rootScope, CampaignSet
       }
       $scope.campaigns = success.data;
 
-      angular.forEach($scope.campaigns, function(value, index) {
+      angular.forEach($scope.campaigns, function (value, index) {
         if (value.cities != null) {
           checkNative(value.cities[0]);
         }
@@ -132,7 +132,7 @@ app.controller('ExploreCtrl', function($timeout, $scope, $rootScope, CampaignSet
 
 
       $scope.loading = false;
-      setTimeout(function() {
+      setTimeout(function () {
         $('html, body').animate({
           scrollTop: $("#discover").offset().top + $("#discover").outerHeight(true) - $(window).height()
         }, 1500);
@@ -142,7 +142,7 @@ app.controller('ExploreCtrl', function($timeout, $scope, $rootScope, CampaignSet
 
   }
 
-  $scope.isDesktopScreen = function() {
+  $scope.isDesktopScreen = function () {
     var currentScreenWidth = $(window).width();
     var element = $('.mobile-collapsed');
 
@@ -157,9 +157,9 @@ app.controller('ExploreCtrl', function($timeout, $scope, $rootScope, CampaignSet
   $scope.isDesktopScreen();
 
   Restangular.one('portal/setting').getList().then(
-    function(success) {
+    function (success) {
       $scope.public_settings = {};
-      angular.forEach(success, function(value) {
+      angular.forEach(success, function (value) {
         if (value.setting_type_id == 3) {
           $scope.public_settings[value.name] = value.value;
         }
@@ -200,7 +200,7 @@ app.controller('ExploreCtrl', function($timeout, $scope, $rootScope, CampaignSet
       $scope.settingsLoaded = true;
 
     },
-    function(failure) {
+    function (failure) {
       if (failure.data != null) {
         $msg = {
           'header': failure.data.message
@@ -221,7 +221,7 @@ app.controller('ExploreCtrl', function($timeout, $scope, $rootScope, CampaignSet
   function processCategory(categories) {
     var categoriesCopy = angular.copy(categories);
     $scope.subcategories = {};
-    angular.forEach(categoriesCopy, function(value, key) {
+    angular.forEach(categoriesCopy, function (value, key) {
       if (value.parent_category_id) {
         if (!$scope.subcategories[value.parent_category_id]) {
           $scope.subcategories[value.parent_category_id] = [];
@@ -237,34 +237,33 @@ app.controller('ExploreCtrl', function($timeout, $scope, $rootScope, CampaignSet
     }
     categoryParam.active_only = !$scope.public_settings.site_theme_category_display_with_campaigns_only ? 1 : 0;
     Restangular.one("portal").customGET("category", categoryParam)
-      .then(function(categories) {
+      .then(function (categories) {
         $scope.categories = categories.plain();
         processCategory($scope.categories);
         $rootScope.checkexplore = $scope.categories;
         processParams();
       });
   }
-  $scope.translateSearchPlaceholder = function() {
-    $translate(['explore_search_bycampaignid', 'explore_search_bydescripton', 'explore_search_bymanager', 'explore_search_byname']).then(function(success) {
-      if ($scope.public_settings.site_search_explore == 'name') {
-        $scope.searchPlaceholder = success.explore_search_byname;
-      }
-      if ($scope.public_settings.site_search_explore == 'description') {
-        $scope.searchPlaceholder = success.explore_search_bydescripton;
-      }
-      if ($scope.public_settings.site_search_explore == 'campaign ID') {
-        $scope.searchPlaceholder = success.explore_search_bycampaignid;
-      }
-      if ($scope.public_settings.site_search_explore == 'manager') {
-        $scope.searchPlaceholder = success.explore_search_bymanager;
-      }
-    });
+  $scope.translateSearchPlaceholder = function () {
+    var translate = $translate.instant(['explore_search_bycampaignid', 'explore_search_bydescripton', 'explore_search_bymanager', 'explore_search_byname']);
+    if ($scope.public_settings.site_search_explore == 'name') {
+      $scope.searchPlaceholder = translate.explore_search_byname;
+    }
+    if ($scope.public_settings.site_search_explore == 'description') {
+      $scope.searchPlaceholder = translate.explore_search_bydescripton;
+    }
+    if ($scope.public_settings.site_search_explore == 'campaign ID') {
+      $scope.searchPlaceholder = translate.explore_search_bycampaignid;
+    }
+    if ($scope.public_settings.site_search_explore == 'manager') {
+      $scope.searchPlaceholder = translate.explore_search_bymanager;
+    }
   }
-  $scope.selectAllSubCategories = function(category_id) {
+  $scope.selectAllSubCategories = function (category_id) {
     // Check for Sub Cat Remaining
     var cat = $location.search().category || [];
     if ($scope.noSubs == 1) {
-      angular.forEach($scope.subcategories[category_id], function(value, key, obj) {
+      angular.forEach($scope.subcategories[category_id], function (value, key, obj) {
         for (var i = 0; i < cat.length; i++) {
           if (cat[i] == obj[key].category_id) {
             $location.search().category.splice(i, 1);
@@ -278,7 +277,7 @@ app.controller('ExploreCtrl', function($timeout, $scope, $rootScope, CampaignSet
     }
     array_cat = [];
     if ($(angular.element('#sub-cat-dropdown-' + category_id)).hasClass('active') == true) {
-      angular.forEach($scope.subcategories[category_id], function(value, key, obj) {
+      angular.forEach($scope.subcategories[category_id], function (value, key, obj) {
         for (var i = 0; i < cat.length; i++) {
           if (cat[i] == obj[key].category_id) {
             $location.search().category.splice(i, 1);
@@ -286,14 +285,14 @@ app.controller('ExploreCtrl', function($timeout, $scope, $rootScope, CampaignSet
         }
       });
     } else {
-      angular.forEach($scope.subcategories[category_id], function(value, key, obj) {
+      angular.forEach($scope.subcategories[category_id], function (value, key, obj) {
         $scope.updateCategoryFilters(obj[key]);
       });
     }
   }
 
   // Takes a property name for category or a boolean. If it's a boolean, it will set all category filters to that value.
-  $scope.updateCategoryFilters = function(category) {
+  $scope.updateCategoryFilters = function (category) {
     // if there is param
     if (typeof $location.search().category == 'object') {
       var categories = $location.search().category || [];
@@ -325,14 +324,14 @@ app.controller('ExploreCtrl', function($timeout, $scope, $rootScope, CampaignSet
           var sizeOfSubCats = $scope.subcategories[category.parent_category_id].length;
           var sizeDeducted = sizeOfSubCats;
           //Size of Sub Categories of the Parent
-          $('#sub-cat-' + category.parent_category_id + ' .content a').each(function(i, obj) {
-            angular.forEach($location.search().category, function(val, key, object) {
+          $('#sub-cat-' + category.parent_category_id + ' .content a').each(function (i, obj) {
+            angular.forEach($location.search().category, function (val, key, object) {
               if (val == obj.id)
                 sizeDeducted--;
             });
           });
           if (sizeOfSubCats == sizeDeducted) {
-            setTimeout(function() {
+            setTimeout(function () {
               $scope.noSubs = 1;
               angular.element('#sub-cat-dropdown-' + category.parent_category_id).click();
             }, 0);
@@ -350,28 +349,28 @@ app.controller('ExploreCtrl', function($timeout, $scope, $rootScope, CampaignSet
 
   }
 
-  $timeout(function() {
-    $(window).resize(function() {
+  $timeout(function () {
+    $(window).resize(function () {
       $scope.isDesktopScreen();
     });
   });
 
-  $scope.updateCampaignListing = function() {
+  $scope.updateCampaignListing = function () {
     updateCampaignListing();
   }
 
-  $scope.updateSort = function(sort, random) {
+  $scope.updateSort = function (sort, random) {
     var randomModulo = Math.floor(Math.random() * 77) + 7;
     if (random) {
       sort += randomModulo;
     }
-    if(sort) {
+    if (sort) {
       $location.search('sort', sort);
-    } 
+    }
   }
 
   // Set pagination limit based on the smallest of either page limit, or totalentries, depending on entriesperpage
-  $scope.getTotalItems = function() {
+  $scope.getTotalItems = function () {
     var desiredtotal = $scope.sortOrFilters.pagination.entriesperpage * $scope.sortOrFilters.page_limit;
     if (desiredtotal > $scope.sortOrFilters.pagination.totalentries)
       return $scope.sortOrFilters.pagination.totalentries;
@@ -381,12 +380,12 @@ app.controller('ExploreCtrl', function($timeout, $scope, $rootScope, CampaignSet
 
 
   // Look up city based on search term, then find the cityID and store it
-  $scope.searchCities = function(term) {
+  $scope.searchCities = function (term) {
     var cityID = null;
     if (term) {
-      Geolocator.searchCities(term, nativeLookup).then(function(cities) {
+      Geolocator.searchCities(term, nativeLookup).then(function (cities) {
         $scope.cities = cities;
-        angular.forEach($scope.cities, function(value, index) {
+        angular.forEach($scope.cities, function (value, index) {
           checkNative(value);
         });
       });
@@ -414,19 +413,19 @@ app.controller('ExploreCtrl', function($timeout, $scope, $rootScope, CampaignSet
   }
   // watching variable changes
   // Searching location
-$scope.$watch('cityNameFilter.selected', function (value, oldvalue) {
-  $scope.searchCities(value);
+  $scope.$watch('cityNameFilter.selected', function (value, oldvalue) {
+    $scope.searchCities(value);
 
-});
+  });
 
-  $scope.$watch(function() {
+  $scope.$watch(function () {
     return $location.search();
-  }, function(value) {
+  }, function (value) {
     processParams();
   }, true);
 
   //reset location filter select
-  $scope.resetLocation = function() {
+  $scope.resetLocation = function () {
     $scope.cityNameFilter.selected = undefined;
     $location.search('location', null);
     $('.ui.dropdown').dropdown('clear');
@@ -436,7 +435,7 @@ $scope.$watch('cityNameFilter.selected', function (value, oldvalue) {
   };
 
   // Look up matching campaign via name
-  $scope.searchTitles = function(term) {
+  $scope.searchTitles = function (term) {
     if (term)
       $location.search($scope.public_settings.site_search_explore, term);
     else
@@ -465,24 +464,24 @@ $scope.$watch('cityNameFilter.selected', function (value, oldvalue) {
     $scope.sortOrFilters.filters.category = [];
 
     // filter category by this custom url
-    if($routeParams.category_alias) {
-      
-      if($scope.categories){
-        angular.forEach($scope.categories, function(value) {
-          if(value.uri_paths && (value.uri_paths[0].path == $routeParams.category_alias)){
+    if ($routeParams.category_alias) {
+
+      if ($scope.categories) {
+        angular.forEach($scope.categories, function (value) {
+          if (value.uri_paths && (value.uri_paths[0].path == $routeParams.category_alias)) {
             $scope.sortOrFilters.filters.category.push(value.id);
           }
         });
-      }else{
+      } else {
         var categoryParam = {
           "active_only": 0
         }
         categoryParam.active_only = !$scope.public_settings.site_theme_category_display_with_campaigns_only ? 1 : 0;
         Restangular.one("portal").customGET("category", categoryParam)
-          .then(function(categories) {
+          .then(function (categories) {
             $scope.categories = categories.plain();
-            angular.forEach($scope.categories, function(value) {
-              if(value.uri_paths && (value.uri_paths[0].path == $routeParams.category_alias)){
+            angular.forEach($scope.categories, function (value) {
+              if (value.uri_paths && (value.uri_paths[0].path == $routeParams.category_alias)) {
                 $scope.sortOrFilters.filters.category.push(value.id);
               }
             });
@@ -492,7 +491,7 @@ $scope.$watch('cityNameFilter.selected', function (value, oldvalue) {
 
     // check if category is array
     if (params.category instanceof Array) {
-      angular.forEach(params.category, function(value) {
+      angular.forEach(params.category, function (value) {
         // check if value is number
         var temp = parseInt(value);
         if (temp && !isNaN(temp))
@@ -516,7 +515,7 @@ $scope.$watch('cityNameFilter.selected', function (value, oldvalue) {
   }
 
   // get portal settings from service
-  PortalSettingsService.getSettingsObj().then(function(success) {
+  PortalSettingsService.getSettingsObj().then(function (success) {
     $scope.progressHide = success.public_setting.site_campaign_progress_bar_hide;
     $scope.category_display = success.public_setting.site_theme_category_display_explore_sidebar;
     $scope.no_campaign_message = success.public_setting.site_theme_no_campaign_message;
@@ -531,7 +530,7 @@ $scope.$watch('cityNameFilter.selected', function (value, oldvalue) {
 
     // Remove active selected item when page is loaded
     if ((typeof $scope.setDefaultSort != 'undefined' && $scope.setDefaultSort) && $scope.setDefaultSort.default == 'default' && $scope.sortOrFilters.sort == '' && typeof $routeParams.sort == 'undefined') {
-      $timeout(function() {
+      $timeout(function () {
         $('#sort-campaigns').find('.item').removeClass('active selected');
       });
     }
@@ -539,7 +538,7 @@ $scope.$watch('cityNameFilter.selected', function (value, oldvalue) {
 
   function updateCampaignListing() {
     updatePage();
-    RestFullResponse.all('campaign').getList($scope.sortOrFilters).then(function(success) {
+    RestFullResponse.all('campaign').getList($scope.sortOrFilters).then(function (success) {
       // Set Selected dropdown if url params is defined
       if (typeof $routeParams.sort !== 'undefined') {
         $('#sort-campaigns').dropdown('set selected', $routeParams.sort)
@@ -559,7 +558,7 @@ $scope.$watch('cityNameFilter.selected', function (value, oldvalue) {
           $scope.updateSort($scope.setDefaultSort.default);
         }
         if ($location.search().sort == $scope.setDefaultSort.default) {
-          $timeout(function() {
+          $timeout(function () {
             $('#sort-campaigns').dropdown('set selected', $scope.setDefaultSort.default);
             $('#sort-campaigns').dropdown('set text', $scope.setDefaultSort.default_text);
           }, 0);
@@ -570,7 +569,7 @@ $scope.$watch('cityNameFilter.selected', function (value, oldvalue) {
         // if description search is done but no results
         $scope.sortOrFilters.filters.description = null;
         $scope.sortOrFilters.filters.name = $location.search().description;
-        RestFullResponse.all('campaign').getList($scope.sortOrFilters).then(function(success) {
+        RestFullResponse.all('campaign').getList($scope.sortOrFilters).then(function (success) {
           $scope.campaigns = success.data;
           if (success.data.length === 0) {
             $scope.noCampaign = true;
@@ -589,7 +588,7 @@ $scope.$watch('cityNameFilter.selected', function (value, oldvalue) {
       }
       $scope.campaigns = success.data;
 
-      angular.forEach($scope.campaigns, function(value, index) {
+      angular.forEach($scope.campaigns, function (value, index) {
         if (value.cities != null) {
           checkNative(value.cities[0]);
         }
@@ -630,16 +629,16 @@ $scope.$watch('cityNameFilter.selected', function (value, oldvalue) {
     });
   }
 
-  $scope.paginateUpdate = function() {
+  $scope.paginateUpdate = function () {
     updateCampaignListing();
-    setTimeout(function() {
+    setTimeout(function () {
       $('html, body').animate({
         scrollTop: $("#sort-campaigns").offset().top
       }, 100);
     }, 1000);
   }
 
-  $scope.getCampaignThumbnailSrc = function(file) {
+  $scope.getCampaignThumbnailSrc = function (file) {
     if (file.file_type === 'GIF Image') {
       return $scope.server + '/static/images/' + file.path_external;
     } else {
@@ -663,28 +662,28 @@ $scope.$watch('cityNameFilter.selected', function (value, oldvalue) {
   // Process any filter/sort parameters when the page loads
   function processParams() {
     updateFilter();
-    setTimeout(function(){ 
+    setTimeout(function () {
       updateCampaignListing();
     }, 1000);
   }
 
-  $scope.getTimeZoneAbbr = function(campaign) {
+  $scope.getTimeZoneAbbr = function (campaign) {
     if (campaign.campaign_started == 'f') {
       campaign.timezoneText = moment().tz(campaign.timezone).zoneAbbr();
     }
   }
 
   // translation for campaign top right corner text
-  $timeout(function() {
+  $timeout(function () {
     $scope.campaign_status_corner_closed = $rootScope.checkTranslation("index_closed", "index_status_corner_closed");
   }, 1000);
 });
 
 //explor page banner background controller
-app.controller('exploreHeadCtrl', function($scope, Restangular, PortalSettingsService, $rootScope) {
+app.controller('exploreHeadCtrl', function ($scope, Restangular, PortalSettingsService, $rootScope) {
 
   // get portal settings from service
-  PortalSettingsService.getSettingsObj().then(function(success) {
+  PortalSettingsService.getSettingsObj().then(function (success) {
     var url = success.public_setting.site_theme_explore_background.path_external;
     if (url) {
       $rootScope.ogMeta.image = $scope.server + "/static/images/" + url;
@@ -696,7 +695,7 @@ app.controller('exploreHeadCtrl', function($scope, Restangular, PortalSettingsSe
       $('.explore-head').css('background-repeat', 'no-repeat');
       $('.explore-head').css('background-position', 'center center');
     }
-  }, function(failure) {
+  }, function (failure) {
     $rootScope.ogMeta.image = "images/placeholder-images/placeholder_explore_bg.png";
     $('.explore-head').css('background-image', 'url(' + $rootScope.ogMeta.image + ')');
     $('.explore-head').css('background-size', 'cover');
@@ -706,8 +705,8 @@ app.controller('exploreHeadCtrl', function($scope, Restangular, PortalSettingsSe
 });
 
 //main page banner background controller
-app.controller('masthead2Ctrl', function($scope, Restangular, $timeout, PortalSettingsService, $rootScope) {
-  PortalSettingsService.getSettingsObj().then(function(success) {
+app.controller('masthead2Ctrl', function ($scope, Restangular, $timeout, PortalSettingsService, $rootScope) {
+  PortalSettingsService.getSettingsObj().then(function (success) {
     var url = success.public_setting.site_theme_explore_background.path_external;
     if (url) {
       $rootScope.ogMeta.image = $scope.server + "/static/images/" + url;
@@ -719,7 +718,7 @@ app.controller('masthead2Ctrl', function($scope, Restangular, $timeout, PortalSe
       $('.masthead').css('background-repeat', 'no-repeat');
       $('.masthead').css('background-position', 'center center');
     }
-  }, function(failure) {
+  }, function (failure) {
     $rootScope.ogMeta.image = "images/placeholder-images/placeholder_explore_bg.png";
     $('.masthead').css('background-image', 'url(' + $rootScope.ogMeta.image + ')');
     $('.masthead').css('background-size', 'cover');

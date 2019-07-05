@@ -71,7 +71,7 @@ gulp.task("concat-css", function() {
         "app/semantic/dist/components/table.min.css",
         "app/semantic/dist/components/transition.min.css",
         "node_modules/font-awesome/css/font-awesome.min.css",
-        "node_modules/froala-editor/css/froala_style.min.css",
+        "app/css/froala/froala_style.min.css",
         "app/css/main.css"
       ]
     )

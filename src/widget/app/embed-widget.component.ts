@@ -18,6 +18,8 @@ import { ProfileComponent } from "./components/modules/Profile.component";
 import { TranslationService } from './service/Translation.service';
 import { StripeElement } from './model/StripeElement';
 import { CurrencyPipe } from '@angular/common';
+import { CurrencySymbolNumberPipe } from "./Pipe/CurrencySymbolNumber.pipe";
+import { DecimalPipe } from '@angular/common';
 
 declare var Stripe: any;
 declare let jQuery: any;
@@ -34,7 +36,7 @@ export class GeneralLocalization extends NgLocalization {
 @Component({
   selector: "sedra-widget",
   template: require("raw-loader!./embed-widget.component.html"),
-  providers: [{ provide: NgLocalization, useClass: GeneralLocalization }, CurrencyPipe]
+  providers: [{ provide: NgLocalization, useClass: GeneralLocalization }, CurrencyPipe, DecimalPipe, CurrencySymbolNumberPipe]
 })
 
 export class AppComponent implements OnInit {
@@ -201,6 +203,7 @@ export class AppComponent implements OnInit {
   
   logginErrorMessage: string;
 
+  isContributionMessageEnabled: boolean = false;
   isShippingFeeExcluded: boolean = false;
   isRegisterFormValid: boolean = false;
   isDisqusLoaded: boolean = false;
@@ -271,10 +274,11 @@ export class AppComponent implements OnInit {
   tipInfo: any;
   contributeBehaviour: any;
   expressRegisterError: string;
+  disclaimerMsg: any;
 
-  constructor( @Inject(CampaignService) campaignService: CampaignService, @Inject(TranslationService) private translationService: TranslationService, @Inject(UserService) userService: UserService, @Inject(StripeService) stripeService: StripeService, @Inject(SettingsService) settingsService: SettingsService, private elementRef: ElementRef, private domSanitization: DomSanitizer, private http: Http, private cPipe: CurrencyPipe) {
+  constructor( @Inject(CampaignService) campaignService: CampaignService, @Inject(TranslationService) private translationService: TranslationService, @Inject(UserService) userService: UserService, @Inject(StripeService) stripeService: StripeService, @Inject(SettingsService) settingsService: SettingsService, private elementRef: ElementRef, private domSanitization: DomSanitizer, private http: Http, private cPipe: CurrencyPipe, private dPipe: DecimalPipe, private sPipe:CurrencySymbolNumberPipe) {
     if (process.env.ENV == "development") {
-      window["widgetHost"] = "https://sansar.thrinacia.com";
+      window["widgetHost"] = "https://coral.thrinacia.com";
       window["DefaultPreferredLang"] = {
         "defaultLang": "en",
         "preferredLang": "en"
@@ -335,6 +339,9 @@ export class AppComponent implements OnInit {
               if (this.siteSettings.hasOwnProperty("site_campaign_exclude_shipping_cost")) {
                 this.isShippingFeeExcluded = this.siteSettings["site_campaign_exclude_shipping_cost"];
               }
+              if (this.siteSettings.hasOwnProperty("site_campaign_allow_contribution_message")) {
+                this.isContributionMessageEnabled = this.siteSettings["site_campaign_allow_contribution_message"];
+              }
               if (this.siteSettings.hasOwnProperty("site_campaign_decimal_option")) {
                 this.settingDecimalOption = this.siteSettings["site_campaign_decimal_option"];
               }
@@ -376,6 +383,13 @@ export class AppComponent implements OnInit {
                 this.stripeTokenOn = this.siteSettings["site_stripe_tokenization"]['toggle'];
                 this.stripeElement = new StripeElement(this.stripeTokenOn, this.stripePublicKey);
               }
+              if(this.siteSettings.hasOwnProperty('site_tip_currency')) {
+                this.tipInfo = this.siteSettings['site_tip_currency'];
+              }
+              // Disclaimer setting
+              if(this.siteSettings.hasOwnProperty('site_campaign_campaign_toggle_disclaimer_text')) {
+                this.disclaimerMsg = this.siteSettings['site_campaign_campaign_toggle_disclaimer_text'];
+              }
               this.getCampaign(this.authToken);
             }
           },
@@ -388,11 +402,16 @@ export class AppComponent implements OnInit {
           res => {
             if(res[0]) {
               this.lowestAmount = parseFloat(res[0].minimum_charge_amount);
-              this.tipInfo = res[0];
+              if(typeof this.tipInfo === 'undefined' || this.tipInfo == null) {
+                this.tipInfo = res[0];
+              }
             } else {
               this.lowestAmount = 0.5;
               if(this.mCampaign) {
-                this.tipInfo = this.mCampaign.currencies[0];
+                if(typeof this.tipInfo === 'undefined' || this.tipInfo == null) {
+                  this.tipInfo = this.mCampaign.currencies[0];
+                }
+
               }
             }
           },
@@ -450,18 +469,23 @@ export class AppComponent implements OnInit {
       if(this.tippingOptions.tiers[0]) {
         this.updateTierValues();
         var dollarAmount = this.tippingOptions.tiers[0].value;
-        if(this.tippingOptions.tiers[0].type == "Percent"){
-          dollarAmount = (this.tippingOptions.tiers[0].value / 100) * this.contribution["amount"];
-          if(dollarAmount < this.lowestAmount) {
-            dollarAmount = this.lowestAmount;
-          }
-        }
+        // if(this.tippingOptions.tiers[0].type == "Percent"){
+        //   dollarAmount = (this.tippingOptions.tiers[0].value / 100) * this.contribution["amount"];
+        //   if(dollarAmount < this.lowestAmount) {
+        //     dollarAmount = this.lowestAmount;
+        //   }
+        // }
         this.tip = {value: this.tippingOptions.tiers[0].value, dollar_amount: dollarAmount, type: this.tippingOptions.tiers[0].type, name: this.tippingOptions.tiers[0].name};
       }
       this.tipType = 'tiers';
     } else if (!this.tippingOptions.toggle_dynamic && !this.tippingOptions.toggle_tiers && this.tippingOptions.toggle_no_tip) {
       this.tipType = 'no_tip';
     }
+
+    if(this.tippingOptions.toggle) {
+      this.pledgeParam['force_tip_processing'] = this.tippingOptions.toggle_process_tips_immediately;
+    }
+
   }
 
   /**
@@ -616,6 +640,7 @@ export class AppComponent implements OnInit {
     campaign.progressID = "campaign" + campaign.id;
     campaign.description = this.domSanitization.bypassSecurityTrustHtml(campaign.description);
     this.mCampaign = campaign;
+
     this.processCampaignSettings();
 
     this.remainingTimeMapping(this.getCampaignRemainingUnit());
@@ -1021,6 +1046,7 @@ export class AppComponent implements OnInit {
     for (let prop in stream) {
       this.selectedStream[prop] = stream[prop];
     }
+    this.selectedStream['message'] = this.domSanitization.bypassSecurityTrustHtml(stream['message']);
     this.selectedStream["index"] = index;
     this.isStreamSelected = true;
   }
@@ -1097,8 +1123,7 @@ export class AppComponent implements OnInit {
         this.isAddingAddress = false;
         this.isAddingPhone = false;
       }
-    }
-    else {
+    } else {
       this.contribution["amount"] = this.minContributionAmount;
       this.contribution["rewardName"] = "Contribution";
       this.contribution["attributes"] = null;
@@ -1109,7 +1134,7 @@ export class AppComponent implements OnInit {
       this.pledgeParam["phone_number_id"] = null;
       this.pledgeParam["pledge_level_id"] = null;
       this.shippingFee = 0;
-      this.calculateTotalPayment();
+      // this.calculateTotalPayment();
     }
     if(this.tippingOptions.toggle) {
       this.setUpTipping();
@@ -1267,7 +1292,9 @@ export class AppComponent implements OnInit {
                 widget.mUserService.disableUser(data).subscribe(
                   data => {
                     widget.isContributionSubmitting = false;
-                    widget.submitErrorMessage = widget.translate("campaign_page_stripe_elements_error");;
+                    if(!widget.submitErrorMessage) {
+                      widget.submitErrorMessage = widget.translate("campaign_page_stripe_elements_error");;
+                    }
                   },
                   error => {
                     let jsonError = error.json();
@@ -1279,8 +1306,9 @@ export class AppComponent implements OnInit {
             widget.mUserService.disableUser(data).subscribe(
               data => {
                 widget.isContributionSubmitting = false;
-                widget.submitErrorMessage = widget.translate("campaign_page_stripe_elements_error");;
-              },
+                if(!widget.submitErrorMessage) {
+                  widget.submitErrorMessage = widget.translate("campaign_page_stripe_elements_error");;
+                }              },
               error => {
                 let jsonError = error.json();
               }
@@ -1344,34 +1372,32 @@ export class AppComponent implements OnInit {
     if (isNaN(this.totalAmount)) {
       this.totalAmount = 0;
     }
-    if (this.tip.value && this.tip.value != 0 && this.tip.type == 'Percent') {
-      var tipAmount = (parseFloat(this.tip.value) / 100) * this.contribution["amount"];
-      var percentString = this.mCampaign.currencies[0]["code_iso4217_alpha"] + tipAmount.toFixed(2);
-      jQuery('.tip-tiers').dropdown('set text', percentString)
-    }
+
     if(this.tipType == 'tiers') {
       this.updateTierValues();
     }
     if(this.tip.value && this.tip.value != 0 && this.tip.type == 'Percent') {
-      var tipAmount: number;
-      if(((this.tippingOptions.tiers[0].value / 100) * this.contribution["amount"]) < this.lowestAmount) {
-        if(this.tip.value == this.tippingOptions.tiers[0].value) {
-          tipAmount = this.lowestAmount;
-        } else {
-          tipAmount = ((parseFloat(this.tip.value) / 100) * this.contribution["amount"]) + this.lowestAmount;
-        }
-      } else {
-        tipAmount = ((parseFloat(this.tip.value) / 100) * this.contribution["amount"])
+      var tipAmount: number = (parseFloat(this.tip.value) / 100) * parseFloat(this.contribution["amount"]);
+      
+      if(tipAmount < this.lowestAmount) {
+        tipAmount += this.lowestAmount;
       }
+
+      //Calculate dollar amount on init
       this.tip.dollar_amount = tipAmount;
+      
       if(this.tippingOptions.toggle_tier_names) {
         var percentString = this.tip.name + ' - ';
       } else {
         var percentString = ''
       }
-      percentString = percentString + this.cPipe.transform(tipAmount.toFixed(2), this.tipInfo.code_iso4217_alpha, true);
-      jQuery('.tip-tiers').dropdown('set text', percentString)
+
+      var percentString = percentString + this.sPipe.transform(this.tipInfo.code_iso4217_alpha) + ' ' + this.dPipe.transform(tipAmount, '1.2-2');
+      
+      jQuery('.tip-tiers').find('.item').first().click();
+      jQuery('.tip-tiers').dropdown('set text', percentString);
     }
+    
     this.pledgeParam["amount"] = this.totalAmount;
   }
 
@@ -2132,6 +2158,7 @@ export class AppComponent implements OnInit {
   submitContribution() {
     this.submitErrorMessage = "";
     this.isSubmitting = true;
+
     this.formValidation();
 
     if (this.isAddingCard && this.stripeElement.toggle && this.stripeElementError) {
@@ -2147,6 +2174,7 @@ export class AppComponent implements OnInit {
       this.pledgeParam["amount"] = this.totalAmount;
       if (this.tip.dollar_amount && this.tip.dollar_amount != 0) {
         this.pledgeParam["amount_tip"] = parseFloat(this.tip.dollar_amount).toFixed(2);
+        this.guestPledgeParam["amount_tip"] = parseFloat(this.tip.dollar_amount).toFixed(2);
       }
       let exp_month, exp_year;
       if (this.cardInfo["cardDate"]) {
@@ -2273,13 +2301,13 @@ export class AppComponent implements OnInit {
               card_token
             ).subscribe(
               res => {
-                widget.guestPledgeParam = {
-                  "card_id": res.card_id,
-                  "email": widget.cardInfo["email"],
-                  "amount": widget.totalAmount,
-                  "fingerprint": res.fingerprint
-                };
+                
+                widget.guestPledgeParam["card_id"] = res.card_id;
+                widget.guestPledgeParam["email"] = widget.cardInfo["email"];
+                widget.guestPledgeParam["amount"] = widget.totalAmount;
+                widget.guestPledgeParam["fingerprint"] = res.fingerprint;
                 widget.pledgeParam["card_id"] = res.card_id;
+                
                 if (widget.isAddingAddress) {
                   widget.mUserService.setGuestAddress(widget.addressInfo).subscribe(
                     res => {
@@ -2393,6 +2421,8 @@ export class AppComponent implements OnInit {
         this.isContributionSubmitting = false;
         this.isContributionView = false;
         this.resetPledgeParam();
+
+        this.campaignPledgeRedirect();
       },
       error => {
         this.pledgeError(error);
@@ -2415,6 +2445,8 @@ export class AppComponent implements OnInit {
         this.isContributionSubmitting = false;
         this.isContributionView = false;
         this.resetPledgeParam();
+
+        this.campaignPledgeRedirect();
       },
       error => {
         this.pledgeError(error);
@@ -2697,6 +2729,14 @@ export class AppComponent implements OnInit {
       "shipping_address_id": null
     };
 
+    this.cardInfo = {
+      "cardName": "",
+      "cardNumber": "",
+      "cardDate": "",
+      "cardCVC": "",
+      "email": ""
+    }
+
     this.addressInfo = {
       "city_id": 0,
       "street1": "",
@@ -2798,33 +2838,41 @@ export class AppComponent implements OnInit {
   }
 
   updateTierValues() {
+
     this.tippingOptions.tiers.forEach((value, index) => {
+
       if(value.type == "Percent") {
-        value.dollar_amount = ((value.value / 100) * this.contribution["amount"]);
+        value.dollar_amount = ((value.value / 100) * parseFloat(this.contribution["amount"]));
       } else {
         value.dollar_amount = value.value;
       }
     });
+    
+    //Sort deprecated
+    // this.tippingOptions.tiers.sort(function(a, b) {
+    //   return parseFloat(a.dollar_amount) - parseFloat(b.dollar_amount);
+    // });
 
-    this.tippingOptions.tiers.sort(function(a, b) {
-      return parseFloat(a.dollar_amount) - parseFloat(b.dollar_amount);
+    this.tippingOptions.tiers.forEach((value, index) => {
+      if(value.type == "Percent" && (value.dollar_amount < this.lowestAmount)) {
+        value.dollar_amount += this.lowestAmount;
+      }
     });
 
-    if(this.tippingOptions.tiers[0].type == "Percent" && this.tippingOptions.tiers[0].dollar_amount < this.lowestAmount) {
-      this.tippingOptions.tiers[0].dollar_amount = this.lowestAmount;
-      this.tippingOptions.tiers.forEach((value, index) => {
-        if(index != 0 && value.type == "Percent") {
-          value.dollar_amount += this.lowestAmount;
-        }
-      });
-    }
   }
 
   clearExpressForm() {
-
     this.expressRegisterInfo.first_name = "";
     this.expressRegisterInfo.last_name = "";
     this.expressRegisterInfo.email = "";
     jQuery('input[name=CardName').val("");
+  }
+
+  campaignPledgeRedirect() {
+    if(typeof this.siteSettings['site_campaign_pledge_redirect'] !== 'undefined' || !this.siteSettings['site_campaign_pledge_redirect']) {
+      if(this.siteSettings['site_campaign_pledge_redirect'].hasOwnProperty('toggle') && this.siteSettings['site_campaign_pledge_redirect'].toggle) {
+        window.location.href = this.siteSettings['site_campaign_pledge_redirect'].url;
+      } 
+    }
   }
 }

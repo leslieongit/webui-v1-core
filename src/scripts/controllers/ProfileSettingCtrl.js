@@ -335,7 +335,7 @@ app.controller('TabPersonCtrl', function ($translate, $scope, $timeout, $q, Rest
 
   var personalValidation = function () {
     var translation = $translate.instant(['tab_personal_setting_fname_validation', 'tab_personal_setting_lname_validation', 'tab_personal_setting_custom_field_validate', 'tab_personal_setting_custom_field_empty']);
-
+    
     $scope.form_validation = {
       first_name: {
         identifier: 'first_name',

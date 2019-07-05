@@ -8,7 +8,7 @@ app.controller('CompleteFundingCtrl', function($translate, CampaignSettingsServi
   $scope.path = paras[1];
 
   $scope.isLastStep = false;
-  if($scope.path == 'complete-funding') {
+  if ($scope.path == 'complete-funding') {
     $scope.isLastStep = true;
   }
 
@@ -32,6 +32,7 @@ app.controller('CompleteFundingCtrl', function($translate, CampaignSettingsServi
   });
   $scope.user = UserService;
   $scope.useremail = $scope.user.email;
+  $scope.showCampaignbankForm = false;
 
   // load portal settings to see which mode is allowed for campaign creation
   PortalSettingsService.getSettingsObj().then(function(success) {
@@ -41,10 +42,14 @@ app.controller('CompleteFundingCtrl', function($translate, CampaignSettingsServi
     $scope.direct_transaction = success.public_setting.site_campaign_fee_direct_transaction;
     $scope.reward_show = success.public_setting.site_theme_campaign_show_reward_section;
     $scope.displayPrevButtonHeader = success.public_setting.site_campaign_creation_display_previous_button_on_header;
-    $scope.isFieldDisplayStacked = success.public_setting.site_campaign_creation_field_display_stacked;
     $scope.moveLaunchButtonStep5 = success.public_setting.site_campaign_creation_launch_campaign_on_step5;
     if (typeof $scope.portalsetting.site_campaign_hide_profile === 'undefined' || $scope.portalsetting.site_campaign_hide_profile === null) {
       $scope.portalsetting.site_campaign_hide_profile = false;
+    }
+    if (typeof success.public_setting.site_campaign_creation_field_display_stacked !== 'undefined' || success.public_setting.site_campaign_creation_field_display_stacked) {
+      $scope.isFieldDisplayStacked = success.public_setting.site_campaign_creation_field_display_stacked;
+    } else {
+      $scope.isFieldDisplayStacked = false;
     }
     $scope.showProfile = !$scope.portalsetting.site_campaign_hide_profile;
     if (!$scope.showProfile) {
@@ -68,17 +73,22 @@ app.controller('CompleteFundingCtrl', function($translate, CampaignSettingsServi
       $scope.bank = {};
     }
 
-    if ($scope.direct_transaction && UserService.person_type_id !== 1) {
+
+    if (typeof $scope.portalsetting.site_campaign_country_funding_step !== 'undefined' || $scope.portalsetting.site_campaign_country_funding_step) {
+      $scope.showCampaignbankForm = $scope.portalsetting.site_campaign_country_funding_step;
+    }
+
+    if ($scope.direct_transaction && UserService.person_type_id !== 1 && !$scope.showCampaignbankForm) {
       $location.path('/404');
     }
   });
 
-  $scope.disallowStripeChanges = function disallowStripeChanges(){
+  $scope.disallowStripeChanges = function disallowStripeChanges() {
     $scope.enableStripeConnect = false;
     $("#stripeDropdownSelector").addClass("disabled");
   }
-  
-  $scope.allowStripeChanges = function disallowStripeChanges(){
+
+  $scope.allowStripeChanges = function disallowStripeChanges() {
     $scope.enableStripeConnect = true;
     $("#stripeDropdownSelector").removeClass("disabled");
   }
@@ -103,19 +113,22 @@ app.controller('CompleteFundingCtrl', function($translate, CampaignSettingsServi
     if ($scope.campaign.settings.bank) {
       $scope.bank = $scope.campaign.settings.bank;
     }
+    if ($scope.campaign.settings.country_bank_form) {
+      $scope.showCampaignbankForm = $scope.showCampaignbankForm && $scope.campaign.settings.country_bank_form;
+    }
     $scope.campaigndesc = $scope.name + " " + "-" + $scope.campaign.blurb;
 
     //check to see if campaign has donations - disable option to change stripe account if donations have already been accepted
-    if($scope.campaign.funded_amount > 0 && $scope.isPostProcessing) {
+    if ($scope.campaign.funded_amount > 0 && $scope.isPostProcessing) {
       //check if changing stripe settings are allowed in Admin Portal
-      if(!$scope.portalsetting.site_campaign_restrict_stripe_change) {
+      if (!$scope.portalsetting.site_campaign_restrict_stripe_change) {
         $scope.allowStripeReenable = true;
-      }else {
+      } else {
         $scope.allowStripeReenable = false;
       }
       //disable stripe changes
       $scope.disallowStripeChanges();
-    }else{
+    } else {
       //allow stripe changes
       $scope.allowStripeChanges();
     }
@@ -254,14 +267,14 @@ app.controller('CompleteFundingCtrl', function($translate, CampaignSettingsServi
     if ($scope.public_settings.site_campaign_country_funding_step && $scope.campaign.settings.country_bank_form) {
       if ($scope.campaign.settings.bank) {
         return "StripePlaceHolder";
-      } else {       
+      } else {
         return false;
       }
     }
 
     if ($scope.contributionEnabled) {
       if (isStepFundingDelayed) {
-        if ($scope.campaign.ever_published) {  
+        if ($scope.campaign.ever_published) {
           return $scope.campaign.stripe_account_id;
         }
       } else {
@@ -274,7 +287,7 @@ app.controller('CompleteFundingCtrl', function($translate, CampaignSettingsServi
   function hasImage() {
     var bool = false;
     if ($scope.campaign.files) {
-      angular.forEach($scope.campaign.files, function (file) {
+      angular.forEach($scope.campaign.files, function(file) {
         if (file.region_id == 3) {
           bool = true;
           return;
@@ -285,7 +298,7 @@ app.controller('CompleteFundingCtrl', function($translate, CampaignSettingsServi
     return bool;
   }
 
-  $scope.completionCheck = function () {
+  $scope.completionCheck = function() {
     $scope.cpath = $scope.campaign.uri_paths[0].path;
 
     var reqFieldsCheck;
@@ -315,7 +328,7 @@ app.controller('CompleteFundingCtrl', function($translate, CampaignSettingsServi
       $scope.confirmNotice = true;
       $scope.loadingText = false;
 
-      if($scope.isLastStep){
+      if ($scope.isLastStep) {
         window.location.href = "/" + $scope.cpath;
       }
       return;
@@ -330,27 +343,23 @@ app.controller('CompleteFundingCtrl', function($translate, CampaignSettingsServi
     // Toggle check for campaign steps with hidden required fields
     if ($scope.hideCampaignBlurbField && $scope.hideCampaignCategoryField && $scope.hideCampaignImageField) {
       reqFieldsCheck = (campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
-    }
-    else if ($scope.hideCampaignImageField) {
+    } else if ($scope.hideCampaignImageField) {
       basicsReqField = (campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
-    }
-    else if ($scope.hideCampaignBlurbField) {
+    } else if ($scope.hideCampaignBlurbField) {
       basicsReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.categories && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
-    }
-    else if ($scope.hideCampaignCategoryField) {
+    } else if ($scope.hideCampaignCategoryField) {
       basicsReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
-    }
-    else {
+    } else {
       reqFieldsCheck = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
     }
 
     if (reqFieldsCheck) {
       $scope.loadingText = true;
-      
-      CreateCampaignService.sendForReview().then(function (success) {
+
+      CreateCampaignService.sendForReview().then(function(success) {
         $scope.confirmNotice = true;
         $scope.loadingText = false;
-        if($scope.isLastStep){
+        if ($scope.isLastStep) {
           window.location.href = "/" + $scope.cpath;
         }
 
@@ -362,7 +371,7 @@ app.controller('CompleteFundingCtrl', function($translate, CampaignSettingsServi
         // $scope.hideFloatingMessage();
         // $scope.loadingText = false;
 
-      }, function (failed) {
+      }, function(failed) {
         $scope.errorNotice = failed.data.message;
         msg = {
           'header': failed.data.message
@@ -374,23 +383,19 @@ app.controller('CompleteFundingCtrl', function($translate, CampaignSettingsServi
     } else {
       var steps = [];
       var step1ReqField, step2ReqField, step3ReqField;
-      $timeout(function () {
-        $translate(['basics', 'details', 'rewards', 'funding', 'uprofile']).then(function (value) {
+      $timeout(function() {
+        $translate(['basics', 'details', 'rewards', 'funding', 'uprofile']).then(function(value) {
 
           // Toggle check for campaign step 1 with hidden required fields
           if ($scope.hideCampaignBlurbField && $scope.hideCampaignCategoryField && $scope.hideCampaignImageField) {
             step1ReqField = (campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.funding_goal && campaign.currency_id) ? true : false;
-          }
-          else if ($scope.hideCampaignImageField) {
+          } else if ($scope.hideCampaignImageField) {
             step1ReqField = (campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id) ? true : false;
-          }
-          else if ($scope.hideCampaignBlurbField) {
+          } else if ($scope.hideCampaignBlurbField) {
             step1ReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.categories && campaign.funding_goal && campaign.currency_id) ? true : false;
-          }
-          else if ($scope.hideCampaignCategoryField) {
+          } else if ($scope.hideCampaignCategoryField) {
             step1ReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.funding_goal && campaign.currency_id) ? true : false;
-          }
-          else {
+          } else {
             step1ReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id) ? true : false;
           }
           if (!step1ReqField) {
@@ -401,8 +406,7 @@ app.controller('CompleteFundingCtrl', function($translate, CampaignSettingsServi
           // Toggle check for campaign step 2 with hidden required fields
           if ($scope.showCampaignImageField) {
             step2ReqField = (hasImage()) ? true : false;
-          }
-          else {
+          } else {
             step2ReqField = (campaign.description) ? true : false;
           }
           if (!step2ReqField) {
@@ -472,7 +476,7 @@ app.controller('CompleteFundingCtrl', function($translate, CampaignSettingsServi
           $rootScope.floatingMessage = msg;
           $scope.hideFloatingMessage();
 
-          if(!$scope.backBtnEvent){
+          if (!$scope.backBtnEvent) {
             $scope.launchCheck();
           }
 
@@ -492,7 +496,7 @@ app.controller('CompleteFundingCtrl', function($translate, CampaignSettingsServi
           $rootScope.floatingMessage = msg;
           $scope.hideFloatingMessage();
 
-          if(!$scope.backBtnEvent){
+          if (!$scope.backBtnEvent) {
             $scope.launchCheck();
           }
         });
@@ -509,9 +513,9 @@ app.controller('CompleteFundingCtrl', function($translate, CampaignSettingsServi
       return false;
     }
   };
-  
-  $scope.launchCheck = function(){
-    if($scope.portalsetting.site_campaign_creation_launch_campaign_on_step5){
+
+  $scope.launchCheck = function() {
+    if ($scope.portalsetting.site_campaign_creation_launch_campaign_on_step5) {
       $scope.completionCheck();
     }
   }
@@ -550,7 +554,7 @@ app.controller('CompleteFundingCtrl', function($translate, CampaignSettingsServi
               }, 100);
             }
           } else {
-            if(stripe_accounts.length) {
+            if (stripe_accounts.length) {
               // if there are accounts but current user is not creator
               $scope.stripeAccounts = stripe_accounts;
               if (stripe_accounts.length) {

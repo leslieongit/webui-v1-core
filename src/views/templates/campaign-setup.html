@@ -32,7 +32,7 @@
                 <div class="ui fluid form">
                   <div class="field">
                     <h2 class="ui black header" ng-if="user.person_type_id != 1">{{owner.first_name + ' ' + owner.last_name}}</h2>
-                    <div class="ui fluid search selection dropdown recipient" ng-if="user.person_type_id == 1" ng-class="{'disabled' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id !== 1}">
+                    <div class="campaign-creator-user-select ui icon fluid search selection dropdown recipient" ng-if="user.person_type_id == 1" ng-class="{'disabled' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id !== 1}">
                       <input type="hidden" name="recipient" ng-value="campaign.managers[0].person_id">
                       <input type="text" ng-model="campaign.settings.campaign_manager_name" ng-change="updateUserList(campaign.settings.campaign_manager_name)"
                         style="background: transparent;box-shadow: none; border: 0; padding: 0;">
@@ -47,6 +47,10 @@
                             <i class="arrow large circle right icon"></i>
                           </a>
                         </div>
+                      </div>
+                      <div class="ui tiny label admin-only-label" sui-popup data-content="{{ 'admin_only_popup_msg'| translate }}">
+                        <i class="eye icon"></i>
+                        {{ 'admin_only_popup_label' | translate }}
                       </div>
                     </div>
                   </div>

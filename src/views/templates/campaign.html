@@ -3,6 +3,9 @@
     <div class="campaign-top-section">
       <div class="ui page grid">
         <div class="ui column">
+          <div class="campaign-disclaimer-text" ng-if="displayCampaignDisclaimer.toggle && displayCampaignDisclaimer.text">
+            <div class="ui warning message" ng-bind-html="displayCampaignDisclaimer.text"></div>
+          </div>
           <div ng-include src="'views/templates/partials/response-message.html'"></div>
           <div class="ui warning message" ng-show="!campaign.ever_published && campaign.created || campaign.entry_status_id == 3">
             <h2 class="ui header center aligned" translate>campaign_page_notapproved_message</h2>
@@ -51,8 +54,7 @@
               <div ng-repeat="manager in campaign.managers">
                 <a ng-if="!site_campaign_hide_creator_info && !isCreatorNameOnly" class="user-img-wrap" href="" ng-click="showManager()">
                   <img width="200" height="200" class="ui circular image pp_placeholder" ng-hide="manager.person_files[0]" src="images/placeholder-images/placeholder_profile_photo.png">
-                  <img width="200" height="200" ng-if="manager.person_files[0]" ng-src="{{server + '/image/campaign_profile/' + manager.person_files[0].path_external}}"
-                    class="ui circular image" id="campaign-user-pic">
+                  <img width="200" height="200" ng-if="manager.person_files[0]" ng-src="{{server + '/image/campaign_profile/' + manager.person_files[0].path_external}}" class="ui circular image" id="campaign-user-pic">
                 </a>
                 <p class="name top">By {{manager.first_name}}</p>
                 <p class="name">{{manager.last_name}}</p>
@@ -63,15 +65,13 @@
             <div class="campaign-description nine wide column">
               <div class="mobile-only img-wrap campaign-image">
                 <embed-video ng-if="campaign.video && campaign.video_type != 'custom'" class="campaign-video" ng-href="{{campaign.video}}"></embed-video>
-                <video ng-if="campaign.video && campaign.video_type == 'custom'" style="width:100%;height:100%;background:#000000;" id="custom-video-player"
-                  controls>
+                <video ng-if="campaign.video && campaign.video_type == 'custom'" style="width:100%;height:100%;background:#000000;" id="custom-video-player" controls>
                   <source ng-src="{{campaign.video}}">
                   </source>
                 </video>
-                <img ng-hide="campaign.video" ng-if="campaign.files.length" ng-repeat="file in campaign.files | filter:{region_id: RESOURCE_REGIONS.campaign.thumbnail} | orderBy:'-file_id' | limitTo: 1"
-                  ng-src="{{server + '/image/campaign_detail_large/' + file.path_external}}" class="ui image" />
-                <img ng-hide="campaign.video" ng-if="noMainImage" src="images/placeholder-images/placeholder_campaign.png" class="ui image"
-                />
+                <img ng-hide="campaign.video" ng-if="campaign.files.length" ng-repeat="file in campaign.files | filter:{region_id: RESOURCE_REGIONS.campaign.thumbnail} | orderBy:'-file_id' | limitTo: 1" ng-src="{{server + '/image/campaign_detail_large/' + file.path_external}}"
+                  class="ui image" />
+                <img ng-hide="campaign.video" ng-if="noMainImage" src="images/placeholder-images/placeholder_campaign.png" class="ui image" />
               </div>
               <h2 class="campaign-user-business" ng-click="showManager()" ng-if="!site_campaign_hide_creator_info && isCreatorNameOnly">
                 <span>{{campaign.managers[0].first_name}} {{campaign.managers[0].last_name}}</span>
@@ -132,8 +132,7 @@
                         <div class="bar"></div>
                       </div>
                       <div class="item item-value">
-                        <span class="c-value" ng-show="(campaign.funded_amount / (campaign.funding_goal || 1) * 100) < 99 || (campaign.funded_amount / (campaign.funding_goal || 1) * 100) > 100"
-                          ng-bind="(campaign.funded_amount / (campaign.funding_goal || 1) * 100 | number:0) + '%'"></span>
+                        <span class="c-value" ng-show="(campaign.funded_amount / (campaign.funding_goal || 1) * 100) < 99 || (campaign.funded_amount / (campaign.funding_goal || 1) * 100) > 100" ng-bind="(campaign.funded_amount / (campaign.funding_goal || 1) * 100 | number:0) + '%'"></span>
                         <span class="c-value" ng-show="(campaign.funded_amount / (campaign.funding_goal || 1) * 100) > 99 && (campaign.funded_amount / (campaign.funding_goal || 1) * 100) < 100">
                           99% </span>
                         <span class="c-value" ng-show="(campaign.funded_amount / (campaign.funding_goal || 1) * 100) == 100"> 100%
@@ -149,13 +148,10 @@
                     <div class="item" id="progress-status" ng-if="public_settings.site_campaign_state_hide">
                       <div ng-if="campaign.settings.state_current">
                         <!-- regular title without tool tip -->
-                        <h2 ng-if="!(campaign.settings.state_current.tooltip && campaign.settings.state_current.tooltip != '')" class="status-title"
-                          ng-bind-html="campaign.settings.state_current.title">
+                        <h2 ng-if="!(campaign.settings.state_current.tooltip && campaign.settings.state_current.tooltip != '')" class="status-title" ng-bind-html="campaign.settings.state_current.title">
                           </h4>
                           <!-- THIS COMMENT IS FOR TOOLTIP -->
-                          <h2 ng-if="campaign.settings.state_current.tooltip && campaign.settings.state_current.tooltip != ''" class="status-title"
-                            sui-popup data-content="{{campaign.settings.state_current.tooltip}}" data-position="bottom center"
-                            ng-bind-html="campaign.settings.state_current.title">
+                          <h2 ng-if="campaign.settings.state_current.tooltip && campaign.settings.state_current.tooltip != ''" class="status-title" sui-popup data-content="{{campaign.settings.state_current.tooltip}}" data-position="bottom center" ng-bind-html="campaign.settings.state_current.title">
                             </h4>
                             <img class="ui image" ng-src="{{server + '/image/campaign_progress_status/' + campaign.settings.state_current.path}}" alt="state_image"></img>
                       </div>
@@ -208,31 +204,24 @@
                           </span>
                         </div>
                       </div>
-                      <div class="item f-duration ui large red label" ng-if="dateInPast(campaign.ends,campaign.seconds_remaining)"> {{'campaign_pledge_campaign_end_message'
-                        | translate}}</div>
+                      <div class="item f-duration ui large red label" ng-if="dateInPast(campaign.ends,campaign.seconds_remaining)"> {{'campaign_pledge_campaign_end_message' | translate}}</div>
                     </div>
-                    <span ng-show="campaign.ends == null" ng-if="!public_settings.site_campaign_end_hide" class="item f-duration no-end-date-text" style="font-weight: 600;font-size: larger"
-                      translate="campaign_pledge_campaign_Continuous_Campaign"></span>
+                    <span ng-show="campaign.ends == null" ng-if="!public_settings.site_campaign_end_hide" class="item f-duration no-end-date-text" style="font-weight: 600;font-size: larger" translate="campaign_pledge_campaign_Continuous_Campaign"></span>
                   </div>
-                  <a class="fluid ui massive button contribute-button" ng-if="!(dateInPast(campaign.ends,campaign.seconds_remaining) || campaign.entry_status_id != 2 || thresholdallowedbtn || campaign.campaign_started=='f') && !hideThisContribButton"
-                    ng-click="dateInPast(campaign.ends,campaign.seconds_remaining) || campaign.entry_status_id != 2 || thresholdallowedbtn|| miniContributeReward()"
+                  <a class="fluid ui massive button contribute-button" ng-if="!(dateInPast(campaign.ends,campaign.seconds_remaining) || campaign.entry_status_id != 2 || thresholdallowedbtn || campaign.campaign_started=='f') && !hideThisContribButton" ng-click="dateInPast(campaign.ends,campaign.seconds_remaining) || campaign.entry_status_id != 2 || thresholdallowedbtn|| miniContributeReward()"
                     id="pledgelink" ng-show=" !campaign.pledges || public_settings.site_theme_campaign_min_button_show ||campaign.entry_status_id == 10 || campaign.entry_status_id == 1">
                     <span ng-show="!customText.toggle">{{'campaign_pledge_campaign_contribute'| translate}}</span>
                     <span ng-show="customText.toggle">{{contribution}}</span>
-                    <div class="ui label" style="background: none;" ng-show="!public_settings.site_theme_campaign_hide_min_contribute_message">{{'campaign_pledge_campaign_contribute_minimum'|
-                      translate}}
+                    <div class="ui label" style="background: none;" ng-show="!public_settings.site_theme_campaign_hide_min_contribute_message">{{'campaign_pledge_campaign_contribute_minimum'| translate}}
                       <span ng-bind-html=" minamount| formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
                     </div>
                   </a>
                 </div>
 
-                <div id="scroll-to-rewards" ng-if="campaign.pledges && !displayRewardsMobileTab" ng-click="scrollToRewards()" class="ui huge fluid green button">{{'scroll_to_rewards_label'
-                  | translate}}</div>
-                <div id="scroll-to-rewards" ng-if="campaign.pledges && displayRewardsMobileTab" ng-click="scrollToMobileRewardsTab()" class="ui huge fluid green button">{{'scroll_to_rewards_label'
-                  | translate}}</div>
+                <div id="scroll-to-rewards" ng-if="campaign.pledges && !displayRewardsMobileTab" ng-click="scrollToRewards()" class="ui huge fluid green button">{{'scroll_to_rewards_label' | translate}}</div>
+                <div id="scroll-to-rewards" ng-if="campaign.pledges && displayRewardsMobileTab" ng-click="scrollToMobileRewardsTab()" class="ui huge fluid green button">{{'scroll_to_rewards_label' | translate}}</div>
                 <div class="admin-explainer-text ui accordion" ng-Accord ng-if="campaign.settings.explainer_text.message && campaign.settings.explainer_text.title && isExplainerTextEnabled">
-                  <h3 class="sidebar-heading ui inverted block header title">{{'admin_only_explainer_text_title_default'
-                    | translate}}
+                  <h3 class="sidebar-heading ui inverted block header title">{{'admin_only_explainer_text_title_default' | translate}}
                     <i class="collapse-indicator icon"></i>
                   </h3>
                   <div class="content" ng-bind-html="campaign.settings.explainer_text.message"></div>
@@ -271,8 +260,7 @@
                       <script type="text/javascript" src="https://static.addtoany.com/menu/page.js"></script>
                     </div>
                   </div>
-                  <div ng-if="!moveEmbedBelowCommentsAccordionMobile && !displayOnlyFbTwitterEmailShare" class="embed-campaign ui floating dropdown labeled icon button huge fluid"
-                    id="mob-view1">
+                  <div ng-if="!moveEmbedBelowCommentsAccordionMobile && !displayOnlyFbTwitterEmailShare" class="embed-campaign ui floating dropdown labeled icon button huge fluid" id="mob-view1">
                     <i class="code icon"></i>
                     <span class="text" translate>campaign_page_embed</span>
                     <div class="menu">
@@ -292,11 +280,10 @@
               </div>
               <div class="campaign-top-header-image" ng-if="campaign.files.length">
                 <a ng-if="campaign.settings.top_header_link" ng-href="{{campaign.settings.top_header_link}}">
-                  <img ng-repeat="file in campaign.files | filter:{region_id: RESOURCE_REGIONS.campaign.top_header} | orderBy:'-file_id' | limitTo: 1"
-                    ng-src="{{server + '/image/campaign_top_header_image/' + file.path_external}}" class="ui image" />
+                  <img ng-repeat="file in campaign.files | filter:{region_id: RESOURCE_REGIONS.campaign.top_header} | orderBy:'-file_id' | limitTo: 1" ng-src="{{server + '/image/campaign_top_header_image/' + file.path_external}}" class="ui image" />
                 </a>
-                <img ng-if="!campaign.settings.top_header_link" ng-repeat="file in campaign.files | filter:{region_id: RESOURCE_REGIONS.campaign.top_header} | orderBy:'-file_id' | limitTo: 1"
-                  ng-src="{{server + '/image/campaign_top_header_image/' + file.path_external}}" class="ui image" />
+                <img ng-if="!campaign.settings.top_header_link" ng-repeat="file in campaign.files | filter:{region_id: RESOURCE_REGIONS.campaign.top_header} | orderBy:'-file_id' | limitTo: 1" ng-src="{{server + '/image/campaign_top_header_image/' + file.path_external}}"
+                  class="ui image" />
               </div>
             </div>
             <!-- column end -->
@@ -304,8 +291,7 @@
               <div class="cp-menu-tabs ui top attached tabular menu" ng-show="!site_campaign_hide_creator_info && !isCreatorNameOnly">
                 <a class="item" data-tab="personal-profile" ng-class="{active: campaign.profile_type_id == 1 && !campaign.toggle_profile_type_view_advance || !campaign.business_organizations || (campaign.toggle_profile_type_view_advance && campaign.profile_type_view_id == 2)|| (campaign.toggle_profile_type_view_advance && campaign.profile_type_view_id == 0 && campaign.profile_type_id == 1)}"
                   ng-show="!(campaign.toggle_profile_type_view_advance && campaign.profile_type_view_id == 1)" translate>campaign_page_creator</a>
-                <a class="item" data-tab="business-profile" ng-class="{active: campaign.profile_type_id == 2 && campaign.business_organizations || (campaign.toggle_profile_type_view_advance && campaign.profile_type_view_id == 1)}"
-                  ng-show="(campaign.business_organizations && !campaign.toggle_profile_type_view_advance) || (campaign.toggle_profile_type_view_advance && campaign.business_organizations && (campaign.profile_type_view_id == 0 || campaign.profile_type_view_id == 1))"
+                <a class="item" data-tab="business-profile" ng-class="{active: campaign.profile_type_id == 2 && campaign.business_organizations || (campaign.toggle_profile_type_view_advance && campaign.profile_type_view_id == 1)}" ng-show="(campaign.business_organizations && !campaign.toggle_profile_type_view_advance) || (campaign.toggle_profile_type_view_advance && campaign.business_organizations && (campaign.profile_type_view_id == 0 || campaign.profile_type_view_id == 1))"
                   translate>campaign_page_company</a>
               </div>
               <div class="ui bottom attached tab" ng-class="{active: (campaign.profile_type_id == 1 && !campaign.toggle_profile_type_view_advance) || !campaign.business_organizations || (campaign.toggle_profile_type_view_advance && campaign.profile_type_view_id == 2) || (campaign.toggle_profile_type_view_advance && campaign.profile_type_view_id == 0 && campaign.profile_type_id == 1)}"
@@ -313,11 +299,9 @@
                 <div ng-repeat="manager in campaign.managers">
                   <div class="campaign-user ui two column stackable grid">
                     <div class="user-info-col ten wide column" ng-if="!site_campaign_hide_creator_info && !isCreatorNameOnly">
-                      <h2 ng-if="!public_settings.site_campaign_enable_organization_name" class="ui campaign-user-name header">{{manager.first_name
-                        + ' ' + manager.last_name}}</h2>
+                      <h2 ng-if="!public_settings.site_campaign_enable_organization_name" class="ui campaign-user-name header">{{manager.first_name + ' ' + manager.last_name}}</h2>
                       <h2 ng-if="public_settings.site_campaign_enable_organization_name" class="ui campaign-user-name header">{{organization_name.value}}</h2>
-                      <p ng-if="public_settings.site_campaign_enable_organization_name" class="ui campaign-user-name header">{{'ein_label'
-                        | translate}}{{organization_name.ein}}</p>
+                      <p ng-if="public_settings.site_campaign_enable_organization_name" class="ui campaign-user-name header">{{'ein_label' | translate}}{{organization_name.ein}}</p>
 
                       <p ng-show="!public_settings.site_campaign_enable_campaign_bio">{{manager.bio}}</p>
                       <p ng-show="public_settings.site_campaign_enable_campaign_bio">{{campaign.settings.bio_enable}}</p>
@@ -335,8 +319,7 @@
                     <div class="user-img-col center aligned six wide column" ng-class="{'right floated': site_campaign_hide_creator_info || isCreatorNameOnly}">
                       <a ng-if="!site_campaign_hide_creator_info && !isCreatorNameOnly" class="user-img-wrap" href="" ng-click="showManager()">
                         <img width="200" height="200" class="ui circular image pp_placeholder" ng-hide="manager.person_files[0]" src="images/placeholder-images/placeholder_profile_photo.png">
-                        <img width="200" height="200" ng-if="manager.person_files[0]" ng-src="{{server + '/image/campaign_profile/' + manager.person_files[0].path_external}}"
-                          class="ui circular image" id="campaign-user-pic">
+                        <img width="200" height="200" ng-if="manager.person_files[0]" ng-src="{{server + '/image/campaign_profile/' + manager.person_files[0].path_external}}" class="ui circular image" id="campaign-user-pic">
                       </a>
                       <div class="contact-btn ui button" ng-click="showContactModal(manager);" ng-if="!removeContactUser" translate>campaign_page_contact_creator</div>
                       <div ng-if="campaign.charity_id && public_settings.site_campaign_charity_helper_enable" class="charity-badge">
@@ -371,10 +354,8 @@
                     </div>
                     <div class="company-img-col center aligned six wide column" ng-class="{'right floated': site_campaign_hide_creator_info || isCreatorNameOnly}">
                       <div class="company-img-wrap" ng-if="!site_campaign_hide_creator_info && !isCreatorNameOnly">
-                        <img width="200" height="200" class="ui circular image pp_placeholder" ng-hide="company.business_files[0]" src="images/placeholder-images/placeholder_profile_photo.png"
-                          ng-click="showManager()">
-                        <img width="200" height="200" ng-if="company.business_files[0]" ng-src="{{server + '/image/campaign_profile/' + company.business_files[0].path_external}}"
-                          class="ui circular image" id="campaign-company-pic">
+                        <img width="200" height="200" class="ui circular image pp_placeholder" ng-hide="company.business_files[0]" src="images/placeholder-images/placeholder_profile_photo.png" ng-click="showManager()">
+                        <img width="200" height="200" ng-if="company.business_files[0]" ng-src="{{server + '/image/campaign_profile/' + company.business_files[0].path_external}}" class="ui circular image" id="campaign-company-pic">
                       </div>
                       <div class="contact-btn ui button" ng-click="showContactModal(campaign.managers[0])" translate>campaign_page_contact_creator</div>
                       <div ng-if="campaign.charity_id && public_settings.site_campaign_charity_helper_enable" class="charity-badge">
@@ -400,75 +381,55 @@
         <div class="ui column">
           <div id="campaign-tabs">
             <div class="ui top attached pointing secondary menu menu-tabs mob-colps" ng-hide="hidef && hidec && hides && hideb">
-              <a class="item active" data-tab="campaign" translate ng-click="$location.search('').replace();makeLink('Campaign')" id="campaign"
-                ng-hide="hidef && hidec && hides && hideb">campaign_page_campaigntitle</a>
-              <a ng-show="displayRewardsMobileTab" class="item" data-tab="rewards" translate ng-click="$location.search('').replace();makeLink('Rewards')"
-                id="rewards">campaign_page_rewardstitle
+              <a class="item active" data-tab="campaign" ng-click="toggleHash('campaign_page_campaigntitle')" id="campaign" ng-hide="hidef && hidec && hides && hideb">{{'campaign_page_campaigntitle' | translate}}</a>
+              <a ng-show="displayRewardsMobileTab" class="item" data-tab="rewards" ng-click="toggleHash('campaign_page_rewardstitle')" id="rewards">{{'campaign_page_rewardstitle' | translate}}
               </a>
-              <a class="item" data-tab="faq" ng-click="$location.search('').replace();makeLink('FAQ')" id="faq" ng-show="(showFaq || ((showFaq || faqs)  && public_settings.site_theme_campaign_faq_option !='2')) && !isRemoveCampaignFaq">
+              <a class="item" data-tab="faq" ng-click="toggleHash('campaign_page_faq')" id="faq" ng-show="(showFaq || ((showFaq || faqs)  && public_settings.site_theme_campaign_faq_option !='2')) && !isRemoveCampaignFaq">
                 {{'campaign_page_faq' | translate }}
                 <span class="ui label">{{campaign.faqs[0].faq_pairs.length || 0}}</span>
               </a>
-              <a class="item" data-tab="backers" ng-click="$location.search('').replace();makeLink('Backers')" ng-show="backer_show && !isBackersOnSidebar"
-                id="backer">{{' campaign_page_backers' | translate}}
+              <a class="item" data-tab="backers" ng-click="toggleHash('campaign_page_backers')" ng-show="backer_show && !isBackersOnSidebar" id="backer">{{' campaign_page_backers' | translate}}
                 <span class="ui label">{{backer_length}}</span>
               </a>
-              <a class="item" data-tab="streams" ng-click="$location.search('').replace();makeLink('Streams')" ng-show="(showStream || (($scope.showStream || campaign.streams.length) && public_settings.site_theme_campaign_stream_option !='2'))  && !isUpdatesOnMainBlock"
-                id="stream"> {{ 'campaign_page_streams' | translate}}
+              <a class="item" data-tab="streams" ng-click="toggleHash('campaign_page_streams')" ng-show="(showStream || (($scope.showStream || campaign.streams.length) && public_settings.site_theme_campaign_stream_option !='2'))  && !isUpdatesOnMainBlock" id="stream"> {{ 'campaign_page_streams' | translate}}
                 <span class="ui label">{{campaign.streams.length}}</span>
               </a>
-              <a class="item" data-tab="comments" ng-click="$location.search('').replace();makeLink('Comments')" id="comment" ng-show="showComment && !isCommentsOnMainBlock && !public_settings.site_campaign_comments_display_replace_reward">{{
+              <a class="item" data-tab="comments" ng-click="toggleHash('campaign_page_comments')" id="comment" ng-show="showComment && !isCommentsOnMainBlock && !public_settings.site_campaign_comments_display_replace_reward">{{
                 'campaign_page_comments' | translate }}
                 <span ng-if="comment_system =='custom'" class="ui label">{{sortOrFiltersComments.pagination.totalentries}}</span>
               </a>
-              <a href="" class="item" data-tab="files" ng-click="$location.search('').replace();makeLink('Files')" id="file" translate="campaign_page_files"
-                ng-show="public_settings.dedicated_campaign_files && campaign.settings.campaign_files && campaign.settings.campaign_files.length">
+              <a class="item" data-tab="files" ng-click="toggleHash('campaign_page_files')" id="file" ng-show="public_settings.dedicated_campaign_files && campaign.settings.campaign_files && campaign.settings.campaign_files.length">
+                {{ 'campaign_page_files' | translate }}
+                <span class="ui label">{{campaign.settings.campaign_files.length}}</span>
               </a>
             </div>
-            <!-- ng-if="!isBackersOnSidebar && !isUpdatesOnMainBlock && !isCommentsOnMainBlock || campaign.settings.campaign_files" -->
-            <div class="mob-view menu-tabs" 
-              ng-hide="hidef && hidec && hides && hideb">
-              <div class="ui selection dropdown">
-                <input type="hidden" value="1">
-                <div class="text" id="default-text" translate="campaign_page_menu_campaign">
-                </div>
-                <i class="dropdown icon" id="iconclass" ng-show="hashcheck=='Streams' || hashcheck=='Backers'"></i>
-                <i class="dropdown icon" id="iconclass1" ng-show="hashcheck=='Rewards' || hashcheck=='Campaign' || hashcheck=='FAQ' || hashcheck=='Comments'|| hashcheck=='' "></i>
-                <div class="menu">
-
-                  <a class="item active" data-tab="campaign" translate ng-click="$location.search('').replace();makeLink('Campaign');tabactive('Campaign')"
-                    id="campaign" ng-hide="hidef && hidec && hides && hideb">campaign_page_campaigntitle
-                  </a>
-                  <a ng-show="displayRewardsMobileTab" class="item" data-tab="rewards" translate ng-click="$location.search('').replace();makeLink('Rewards')"
-                    id="rewards">campaign_page_rewardstitle
-                  </a>
-                  <a class="item" data-tab="faq" ng-click="$location.search('').replace();makeLink('FAQ');tabactive('FAQ')" id="faq" ng-show="(showFaq || ((showFaq || faqs)  && public_settings.site_theme_campaign_faq_option !='2'))  && !isRemoveCampaignFaq"
-                    ng-if="!isRemoveCampaignFaq">
-                    {{'campaign_page_faq' | translate }}
-                    <span class="ui label">{{campaign.faqs[0].faq_pairs.length || 0}}</span>
-                  </a>
-                  <a class="item" data-tab="backers" ng-click="$location.search('').replace();makeLink('Backers');tabactive('Backers')" ng-show="(showBacker || ((showBacker || backer_length) && public_settings.site_theme_campaign_backer_option !='2')) && !isBackersOnSidebar"
-                    id="backer">{{' campaign_page_backers' | translate}}
-                    <span class="count-label ui label">{{backer_length}}</span>
-                  </a>
-                  <a class="item" data-tab="streams" ng-click="$location.search('').replace();makeLink('Streams');tabactive('Streams')" ng-show="(showStream || (($scope.showStream || campaign.streams.length) && public_settings.site_theme_campaign_stream_option !='2')) && !isUpdatesOnMainBlock"
-                    id="stream"> {{ 'campaign_page_streams' | translate}}
-                    <span class="count-label ui label">{{campaign.streams.length}}</span>
-                  </a>
-                  <a class="item" data-tab="comments" ng-click="$location.search('').replace();makeLink('Comments');tabactive('Comments')"
-                    id="comment" ng-show="showComment && !isCommentsOnMainBlock">{{ 'campaign_page_comments'
-                    | translate }}
-                    <span ng-if="comment_system =='custom'" class="count-label ui label">{{sortOrFiltersComments.pagination.totalentries}}</span>
-                  </a>
-                  <a class="item" data-tab="files" ng-click="$location.search('').replace();makeLink('Files')" translate="campaign_page_files"
-                    ng-show="public_settings.dedicated_campaign_files && campaign.settings.campaign_files && campaign.settings.campaign_files.length">
-                  </a>
-                </div>
-              </div>
+            <div class="mob-view ui vertical menu fluid menu-tabs">
+              <a class="item active" data-tab="campaign" ng-click="toggleHash('campaign_page_campaigntitle')" id="mobile-campaign" ng-hide="hidef && hidec && hides && hideb">{{'campaign_page_campaigntitle' | translate}}
+              </a>
+              <a class="item" data-tab="rewards" ng-click="toggleHash('campaign_page_rewardstitle')" id="mobile-rewards" ng-show="displayRewardsMobileTab">{{'campaign_page_rewardstitle' | translate}}
+                <span class="count-label ui label">{{campaign.pledges.length || 0}}</span>
+              </a>
+              <a class="item" data-tab="faq" ng-click="toggleHash('campaign_page_faq')" id="mobile-faq" ng-show="(showFaq || ((showFaq || faqs)  && public_settings.site_theme_campaign_faq_option !='2'))  && !isRemoveCampaignFaq" ng-if="!isRemoveCampaignFaq">
+                {{'campaign_page_faq' | translate }}
+                <span class="count-label ui label">{{campaign.faqs[0].faq_pairs.length || 0}}</span>
+              </a>
+              <a class="item" data-tab="backers" ng-click="toggleHash('campaign_page_backers')" ng-show="(showBacker || ((showBacker || backer_length) && public_settings.site_theme_campaign_backer_option !='2')) && !isBackersOnSidebar" id="mobile-backer">{{' campaign_page_backers' | translate}}
+                <span class="count-label ui label">{{backer_length}}</span>
+              </a>
+              <a class="item" data-tab="streams" ng-click="toggleHash('campaign_page_streams')" ng-show="(showStream || (($scope.showStream || campaign.streams.length) && public_settings.site_theme_campaign_stream_option !='2')) && !isUpdatesOnMainBlock" id="mobile-stream"> {{ 'campaign_page_streams' | translate}}
+                <span class="count-label ui label">{{campaign.streams.length}}</span>
+              </a>
+              <a class="item" data-tab="comments" ng-click="toggleHash('campaign_page_comments')" id="mobile-comment" ng-show="showComment && !isCommentsOnMainBlock">{{ 'campaign_page_comments'
+                | translate }}
+                <span ng-if="comment_system =='custom'" class="count-label ui label">{{sortOrFiltersComments.pagination.totalentries}}</span>
+              </a>
+              <a class="item" data-tab="files" id="mobile-file" ng-click="toggleHash('campaign_page_files')" ng-show="public_settings.dedicated_campaign_files && campaign.settings.campaign_files && campaign.settings.campaign_files.length">
+                {{'campaign_page_files' | translate}}
+                <span class="count-label ui label">{{campaign.settings.campaign_files.length || 0}}</span>
+              </a>
             </div>
             <div class="ui middle attached tab segment" data-tab="rewards" id="rewards-seg">
-              <ul id="rewards-list" ng-show="campaign.pledges" class="rewards" ng-class="{'display_reward_tab_mob' : displayRewardsMobileTab}"
-                ng-if="!public_settings.site_campaign_comments_display_replace_reward">
+              <ul id="rewards-list" ng-show="campaign.pledges" class="rewards" ng-class="{'display_reward_tab_mob' : displayRewardsMobileTab}" ng-if="!public_settings.site_campaign_comments_display_replace_reward">
                 <h3 class="ui inverted top attached header center aligned" id="campaign-rewards" translate> campaign_pledge_campaign_reward</h3>
                 <div ng-repeat="pledge in campaign.pledges_to_show track by $index | orderBy:'amount'" id="rewards-section">
                   <div class="pledge-level" ng-if="enableRewardVariation" ng-class="{'ended': dateInPast(campaign.ends,campaign.seconds_remaining) || campaign.entry_status_id != 2 || campaign.campaign_started=='f'|| (thresholdallowed && campaign.funded_amount + pledge.amount > campaign.maximum_allowed_funds_raised), 'sold-out': pledge.total_pledges == pledge.item_limit, 'reward-var-enabled' : enableRewardVariation, 'sold-out': rewardExpired(pledge.expires)}">
@@ -493,7 +454,7 @@
                           </div>
                           <h4 class="ui header"> {{pledge.name}}</h4>
                           <p class="reward-desc fr-view" ng-hide="reward_html_editor" html-render html="pledge.description"></p>
-                          <div ng-show="reward_html_editor" html-render html="pledge.description" class="fr-view"></div>
+                          <div ng-show="reward_html_editor" html-render html="pledge.description" class="reward-desc fr-view"></div>
                           <div id="{{'reward-variation-' + $index}}" class="reward-variation">
                             <div class="reward-variation-item" ng-repeat="variation in pledge.attributes.variation">
                               <label>{{variation.name}}</label>
@@ -511,18 +472,14 @@
                             <div class="reward-backers" ng-if="pledge.total_backers>0">
                               <i class="users icon"></i>
                               <span class="backer-number"> {{pledge.total_backers}} </span>
-                              <span>{{'campaign_pledge_campaign_reward_backer' | translate}}
-                                <span ng-if="pledge.total_backers>1">s</span>
+                              <span>{{'campaign_pledge_campaign_reward_backer' | translate}}<span ng-if="pledge.total_backers>1">s</span>
                               </span>
                             </div>
 
                             <div class="reward-backers" ng-if="pledge.total_backers == 0">
                               <i class="users basic icon"></i>{{'campaign_pledge_campaign_nobacker' | translate}}</div>
-                            <div class="limit" ng-if="pledge.item_limit != null">{{'campaign_pledge_campaign_reward_limited'
-                              | translate}} {{pledge.item_limit - pledge.total_pledges}} {{'campaign_pledge_campaign_reward_limited_leftoff'
-                              | translate}} {{pledge.item_limit}}</div>
-                            <div class="reward-etd" ng-if="pledge.estimated_delivery_time"> {{'campaign_pledge_campaign_reward_estimated_shiping'
-                              | translate}}
+                            <div class="limit" ng-if="pledge.item_limit != null">{{'campaign_pledge_campaign_reward_limited' | translate}} {{pledge.item_limit - pledge.total_pledges}} {{'campaign_pledge_campaign_reward_limited_leftoff' | translate}} {{pledge.item_limit}}</div>
+                            <div class="reward-etd" ng-if="pledge.estimated_delivery_time"> {{'campaign_pledge_campaign_reward_estimated_shiping' | translate}}
                               <span class="f-delivery-date">{{pledge.estimated_delivery_time | formatDate:"MMMM YYYY"}} </span>
                             </div>
                           </div>
@@ -558,7 +515,7 @@
                           </div>
                           <h4 class="ui header"> {{pledge.name}}</h4>
                           <p class="reward-desc fr-view" ng-hide="reward_html_editor" html-render html="pledge.description"></p>
-                          <div ng-show="reward_html_editor" html-render html="pledge.description" class="fr-view"></div>
+                          <div ng-show="reward_html_editor" html-render html="pledge.description" class="reward-desc fr-view"></div>
                           <div class="bottom">
                             <div class="reward-backers" ng-if="pledge.total_backers>0">
                               <i class="users icon"></i>
@@ -570,11 +527,8 @@
 
                             <div class="reward-backers" ng-if="pledge.total_backers == 0">
                               <i class="users basic icon"></i>{{'campaign_pledge_campaign_nobacker' | translate}}</div>
-                            <div class="limit" ng-if="pledge.item_limit != null">{{'campaign_pledge_campaign_reward_limited'
-                              | translate}} {{pledge.item_limit - pledge.total_pledges}} {{'campaign_pledge_campaign_reward_limited_leftoff'
-                              | translate}} {{pledge.item_limit}}</div>
-                            <div class="reward-etd" ng-if="pledge.estimated_delivery_time"> {{'campaign_pledge_campaign_reward_estimated_shiping'
-                              | translate}}
+                            <div class="limit" ng-if="pledge.item_limit != null">{{'campaign_pledge_campaign_reward_limited' | translate}} {{pledge.item_limit - pledge.total_pledges}} {{'campaign_pledge_campaign_reward_limited_leftoff' | translate}} {{pledge.item_limit}}</div>
+                            <div class="reward-etd" ng-if="pledge.estimated_delivery_time"> {{'campaign_pledge_campaign_reward_estimated_shiping' | translate}}
                               <span class="f-delivery-date">{{pledge.estimated_delivery_time | formatDate:"MMMM YYYY"}} </span>
                             </div>
                           </div>
@@ -584,8 +538,7 @@
                   </div>
                 </div>
                 <div class="reward-pagination">
-                  <div semantic-pagination ng-model="rewardPagination.page" items-per-page-nav="3" total-pages="rewardPagination.pagination.numpages"
-                    update-function="filterRewards()" pagination-name="rewards"></div>
+                  <div semantic-pagination ng-model="rewardPagination.page" items-per-page-nav="3" total-pages="rewardPagination.pagination.numpages" update-function="filterRewards()" pagination-name="rewards"></div>
                 </div>
               </ul>
             </div>
@@ -662,8 +615,7 @@
               <div id="backer-list" class="campaign-info ui two column stackable grid addborder">
                 <div class="left ten wide column">
                   <div class="ui warning message" ng-show="backer_length==0" translate>campaign_page_nobackers </div>
-                  <div ng-repeat="backer in campaign.backers" class="campaign-backerbox" ng-class="{'no-profile-link' : isHideBackerProfileLink }"
-                    ng-click="visitProfile($index)">
+                  <div ng-repeat="backer in campaign.backers" class="campaign-backerbox" ng-class="{'no-profile-link' : isHideBackerProfileLink }" ng-click="visitProfile($index)">
                     <div class="campaign-backer ui segment">
                       <div class="campaign-backer-top ui two column stackable grid">
                         <div class="left-col five wide column">
@@ -679,19 +631,16 @@
                         </div>
                       </div>
                       <div class="backed-campaigns" ng-if="backer.total_backed<2 && !isHideBackedCampaignsAmount">
-                        <i class="certificate icon"></i>{{'campaign_page_backed' | translate}} {{backer.total_backed}} {{'campaign_page_backed_campaign'
-                        | translate}}</div>
+                        <i class="certificate icon"></i>{{'campaign_page_backed' | translate}} {{backer.total_backed}} {{'campaign_page_backed_campaign' | translate}}</div>
                       <div class="backed-campaigns" ng-if="backer.total_backed>1 && !isHideBackedCampaignsAmount">
-                        <i class="certificate icon"></i>{{'campaign_page_backed' | translate}} {{backer.total_backed}} {{'campaign_page_backed_campaigns'
-                        | translate}}</div>
+                        <i class="certificate icon"></i>{{'campaign_page_backed' | translate}} {{backer.total_backed}} {{'campaign_page_backed_campaigns' | translate}}</div>
                       <div class="ui message" ng-repeat="pledge in backer.notes" ng-if="pledge.note">
                         <small>{{pledge.created | formatDate:"MMM DD YYYY"}}</small>
                         <p>{{pledge.note}}</p>
                       </div>
                     </div>
                   </div>
-                  <div class="semantic-pagination" semantic-pagination ng-model="backers_pagination.page" total-pages="backers_pagination.numpages"
-                    update-function="getBackers()"></div>
+                  <div class="semantic-pagination" semantic-pagination ng-model="backers_pagination.page" total-pages="backers_pagination.numpages" update-function="getBackers()"></div>
                 </div>
                 <div class="right six wide column">
                   <div ng-include src="'views/templates/partials/campaign/pledge/campaign-pledge-contribute-share.html'"></div>
@@ -721,8 +670,7 @@
                     <div class="stream-item ui segment" ng-repeat="stream in campaign.streams" ng-click="show_section.streamDetail=true;showStreamDeail(stream, campaign.streams.length - $index)">
                       <div>
                         <div class="stream-header">
-                          <h4 class="ui header left floated">{{'campaign_page_stream_text' | translate}} #{{campaign.streams.length
-                            - $index}}
+                          <h4 class="ui header left floated">{{'campaign_page_stream_text' | translate}} #{{campaign.streams.length - $index}}
                           </h4>
                           <h4 class="ui header right floated">{{toDate(stream.modified)}}</h4>
                         </div>
@@ -735,9 +683,8 @@
                       </div>
                     </div>
                     <div class="stream-pagi">
-                      <pagination ng-show="stream_pagination.numpages.length>1" ng-model="stream_filter.page" total-items="campaign.streams.length"
-                        max-size="10" boundary-links="true" rotate="false" items-per-page="stream_pagination.entriesperpage"
-                        previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+                      <pagination ng-show="stream_pagination.numpages.length>1" ng-model="stream_filter.page" total-items="campaign.streams.length" max-size="10" boundary-links="true" rotate="false" items-per-page="stream_pagination.entriesperpage" previous-text="&lsaquo;"
+                        next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
                     </div>
                   </div>
                   <!-- stream-partial end -->
@@ -754,7 +701,7 @@
                 <div class="insert-fb-comments" ng-if="comment_system == 'facebook'">
                   <div id="fb-root"></div>
                   <script>
-                    (function (d, s, id) {
+                    (function(d, s, id) {
                       var js, fjs = d.getElementsByTagName(s)[0];
                       if (d.getElementById(id)) return;
                       js = d.createElement(s);
@@ -768,6 +715,11 @@
                 </div>
 
                 <!-- DISQUS start -->
+                <div ng-if="comment_system =='disqus' && !disqus_shortname" class="sixteen wide column">
+                  <div class="ui warning message">
+                      {{'campaign_comment_disqus_shortname_missing_msg'|translate}}
+                  </div>
+                </div>
                 <div id="insert_disqus" ng-if="comment_system =='disqus'">
                 </div>
                 <!-- DISQUS End -->
@@ -954,8 +906,7 @@
                 <div class="ui two column stackable grid">
                   <div class="six wide column">
                     <img ng-hide="manager.person_files[0]" src="images/placeholder-images/placeholder_profile_photo.png" class="ui right floated circular image">
-                    <img ng-if="manager.person_files[0]" ng-src="{{server + '/image/campaign_profile/' + manager.person_files[0].path_external}}"
-                      class="ui right floated circular image" id="campaign-user-pic">
+                    <img ng-if="manager.person_files[0]" ng-src="{{server + '/image/campaign_profile/' + manager.person_files[0].path_external}}" class="ui right floated circular image" id="campaign-user-pic">
                   </div>
                   <div class="ten wide column manager-name">
                     <h3 class="ui header">{{manager.first_name}} {{manager.last_name}}</h3>
@@ -1064,7 +1015,7 @@
                             </div>
                             <h4 class="ui header"> {{pledge.name}}</h4>
                             <p class="reward-desc fr-view" ng-hide="reward_html_editor" html-render html="pledge.description"></p>
-                            <div ng-show="reward_html_editor" html-render html="pledge.description" class="fr-view"></div>
+                            <div ng-show="reward_html_editor" html-render html="pledge.description" class="reward-desc fr-view"></div>
                             <div class="bottom">
                               <div class="reward-backers" ng-if="pledge.total_backers>0">
                                 <i class="users icon"></i>
@@ -1075,11 +1026,8 @@
                               </div>
                               <div class="reward-backers" ng-if="pledge.total_backers == 0">
                                 <i class="users basic icon"></i>{{'campaign_pledge_campaign_nobacker' | translate}}</div>
-                              <div class="limit" ng-if="pledge.item_limit != null">{{'campaign_pledge_campaign_reward_limited'
-                                | translate}} {{pledge.item_limit - pledge.total_pledges}} {{'campaign_pledge_campaign_reward_limited_leftoff'
-                                | translate}} {{pledge.item_limit}}</div>
-                              <div class="reward-etd" ng-if="pledge.estimated_delivery_time"> {{'campaign_pledge_campaign_reward_estimated_shiping'
-                                | translate}}
+                              <div class="limit" ng-if="pledge.item_limit != null">{{'campaign_pledge_campaign_reward_limited' | translate}} {{pledge.item_limit - pledge.total_pledges}} {{'campaign_pledge_campaign_reward_limited_leftoff' | translate}} {{pledge.item_limit}}</div>
+                              <div class="reward-etd" ng-if="pledge.estimated_delivery_time"> {{'campaign_pledge_campaign_reward_estimated_shiping' | translate}}
                                 <span class="f-delivery-date">{{pledge.estimated_delivery_time | formatDate:"MMMM YYYY"}}
                                 </span>
                               </div>
@@ -1090,8 +1038,7 @@
                     </div>
                   </div>
                   <div class="reward-pagination">
-                    <div semantic-pagination ng-model="rewardPagination.page" items-per-page-nav="3" total-pages="rewardPagination.pagination.numpages"
-                      update-function="filterRewards()" pagination-name="rewards"></div>
+                    <div semantic-pagination ng-model="rewardPagination.page" items-per-page-nav="3" total-pages="rewardPagination.pagination.numpages" update-function="filterRewards()" pagination-name="rewards"></div>
                   </div>
                 </ul>
                 <!-- CHANGES -->

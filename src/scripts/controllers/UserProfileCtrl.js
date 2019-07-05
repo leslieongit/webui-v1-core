@@ -1,4 +1,4 @@
-app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope, $location, $scope, $timeout, $translate, Geolocator, UserService, Restangular, CreateCampaignService, FileUploadService, PortalSettingsService, PHONE_TYPE) {
+app.controller('UserProfileCtrl', function($q, $route, $routeParams, $rootScope, $location, $scope, $timeout, $translate, Geolocator, UserService, Restangular, CreateCampaignService, FileUploadService, PortalSettingsService, PHONE_TYPE) {
 
   $(document).on("keydown", ".select2 .select2-search input", prevent_default_enter_key);
 
@@ -12,7 +12,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
 
   $scope.organization_name = {};
 
-  $scope.clearMessage = function () {
+  $scope.clearMessage = function() {
     $rootScope.floatingMessage = [];
   }
   var msg;
@@ -49,7 +49,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
   $scope.stepTwo = false;
 
   // load portal settings to see which mode is allowed for campaign creation
-  PortalSettingsService.getSettingsObj().then(function (success) {
+  PortalSettingsService.getSettingsObj().then(function(success) {
     $scope.public_settings = success.public_setting;
     $scope.native_lookup = success.public_setting.site_theme_shipping_native_lookup;
     $scope.contributionEnabled = success.public_setting.site_campaign_contributions;
@@ -61,6 +61,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     $scope.makeUserProfileAddressRequired = success.public_setting.site_campaign_creation_make_user_profile_address_required;
     $scope.displayPrevButtonHeader = success.public_setting.site_campaign_creation_display_previous_button_on_header;
     // $scope.displayLaunchCampaignOnStep4 = success.public_setting.site_campaign_creation_launch_campaign_on_step4;
+    $scope.bankFormEnabled = $scope.public_settings.site_campaign_country_funding_step;
 
     $scope.nextStepUrl = "complete-funding/" + $routeParams.campaign_id;
 
@@ -84,6 +85,9 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     if ($scope.direct_transaction) {
       $scope.nextStepUrl = "campaign-preview/" + $routeParams.campaign_id;
     }
+    if ($scope.bankFormEnabled) {
+      $scope.nextStepUrl = "complete-funding/" + $routeParams.campaign_id;
+    }
     $scope.default_country = success.public_setting.site_theme_default_shipping_country;
     $scope.alt_shipping = success.public_setting.site_theme_alt_shipping_layout;
     // Check alternative shipping setting
@@ -96,7 +100,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
 
   });
 
-  $scope.userProfileAddressValidation = function () {
+  $scope.userProfileAddressValidation = function() {
     var translation = $translate.instant(['profile_setup_address_1_prompt', 'profile_setup_address_mail_code_prompt']);
 
     $('.ui.form#user-profile-form').form({
@@ -115,18 +119,18 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
         }]
       }
     }, {
-        inline: true,
-        onSuccess: function () {
-          $scope.valcheck = true;
-        },
-        onFailure: function () {
-          $scope.valcheck = false;
-        }
-      }).form('validate form');
+      inline: true,
+      onSuccess: function() {
+        $scope.valcheck = true;
+      },
+      onFailure: function() {
+        $scope.valcheck = false;
+      }
+    }).form('validate form');
 
   }
 
-  $scope.inlineUserProfileAddressValidation = function () {
+  $scope.inlineUserProfileAddressValidation = function() {
     var translation = $translate.instant(['profile_setup_address_city_prompt', 'profile_setup_address_country_prompt', 'profile_setup_address_sub_country_prompt']);
 
     if ($('#user-address-select-country .select2-choice').hasClass('select2-default')) {
@@ -149,10 +153,10 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     }
   }
 
-  $scope.customFieldDropdown = function (option, field, name) {
+  $scope.customFieldDropdown = function(option, field, name) {
     field.value = option;
     if (name) {
-      $timeout(function () {
+      $timeout(function() {
         $("#field_" + name).dropdown('set selected', option);
       }, 0);
     }
@@ -161,12 +165,12 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
   $scope.phonetype = PHONE_TYPE;
   // Translate phone type, even on refresh
   var trans_array = [];
-  angular.forEach(PHONE_TYPE, function (value) {
+  angular.forEach(PHONE_TYPE, function(value) {
     trans_array.push(value.name);
   });
 
-  $translate(trans_array).then(function (translation) {
-    angular.forEach(translation, function (value, key) {
+  $translate(trans_array).then(function(translation) {
+    angular.forEach(translation, function(value, key) {
       for (var i = 0; i < $scope.phonetype.length; i++) {
         if ($scope.phonetype[i].name == key) {
           $scope.phonetype[i].name = value;
@@ -201,12 +205,12 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     profile_type_view_id: 2,
   }];
 
-  $scope.profileTypeViewSelected = function (typeID) {
+  $scope.profileTypeViewSelected = function(typeID) {
     $scope.campaign.profile_type_view_id = typeID;
     toggleProfileTypeViewText();
   };
 
-  $scope.toggleProfileTypeViewText = function () {
+  $scope.toggleProfileTypeViewText = function() {
     toggleProfileTypeViewText();
   };
 
@@ -240,7 +244,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
   // to generate the dropdown selection
 
   function getCompany() {
-    Restangular.one('account/').customGET('business', paramID.business_organization_id).then(function (success) {
+    Restangular.one('account/').customGET('business', paramID.business_organization_id).then(function(success) {
       $scope.companies = success;
       if ($scope.companies.length != 0) {
         $scope.companyFormToggle = true;
@@ -250,7 +254,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     });
   }
 
-  $scope.profileTypeSelected = function (typeID) {
+  $scope.profileTypeSelected = function(typeID) {
     if ($scope.campaign.profile_type_id != typeID) {
       clearAddress();
     }
@@ -271,13 +275,13 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     business_organization_id: '',
     person_id: ''
   }
-  $scope.phoneTypeSelected = function (type) {
+  $scope.phoneTypeSelected = function(type) {
     $scope.phoneInfo.phone_number_type_id = type;
   }
 
   function loadCampaign() {
     // load campaign
-    CreateCampaignService.load($routeParams.campaign_id).then(function (success) {
+    CreateCampaignService.load($routeParams.campaign_id).then(function(success) {
       // Emit event for hiding loader.
       $scope.$emit("loading_finished");
 
@@ -289,7 +293,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
       }
 
       // Grab Campaign Settings to use
-      angular.forEach($scope.campaign.settings, function (value, index) {
+      angular.forEach($scope.campaign.settings, function(value, index) {
         var setting_name = value.name;
         var setting_value = value.value;
         $scope.campaign[setting_name] = setting_value;
@@ -299,12 +303,12 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
       }
       //Show profile type message
       toggleProfileTypeViewText();
-      Restangular.one('campaign', $routeParams.campaign_id).one('stripe-account').customGET().then(function (stripe) {
+      Restangular.one('campaign', $routeParams.campaign_id).one('stripe-account').customGET().then(function(stripe) {
         if (stripe.length)
           $scope.campaign.stripe_account_id = stripe[0].id;
       });
       // find the current manager. for later version there will have mutiple managers for one campaign
-      angular.forEach($scope.campaign.managers, function (value, index) {
+      angular.forEach($scope.campaign.managers, function(value, index) {
         campaignManagerId[index] = value.id;
         $scope.manager = value;
         if (value.person_websites) {
@@ -337,7 +341,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
 
       //prefill business (prefilling one for now)
       if ($scope.campaign.business_organizations) {
-        
+
         if ($scope.campaign.business_organizations.length) {
           $scope.companyFormToggle = true;
         }
@@ -351,11 +355,11 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
       getAddress(paramID)
       getPhoneNumber(paramID);
       $scope.businessLinks = [];
-      // initBusiness();
+      initBusiness();
 
       // get custom fields
       $scope.custom_field = [];
-      Restangular.one('portal/person/attribute?filters={"person_id":"' + $scope.manager.person_id + '"}').customGET().then(function (success) {
+      Restangular.one('portal/person/attribute?filters={"person_id":"' + $scope.manager.person_id + '"}').customGET().then(function(success) {
         if (success) {
           $scope.custom_field = success;
         }
@@ -375,7 +379,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
         if ($scope.public_settings.site_campaign_business_section_custom) {
           if ($scope.public_settings.site_campaign_business_section_custom.length > 0) {
             $scope.bcustom = [];
-            angular.forEach($scope.public_settings.site_campaign_business_section_custom, function (value) {
+            angular.forEach($scope.public_settings.site_campaign_business_section_custom, function(value) {
               var fieldRequire = false;
               var fieldPlaceholder = '';
               if (value.placeholder) {
@@ -393,7 +397,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
               };
 
               // Compare if key matches setting.name
-              angular.forEach($scope.custom_field[0].attributes, function (val, key, obj) {
+              angular.forEach($scope.custom_field[0].attributes, function(val, key, obj) {
                 if (key) {
                   if (key == value.name) {
                     field.value = val;
@@ -409,7 +413,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
         if ($scope.public_settings.site_campaign_personal_section_custom) {
           if ($scope.public_settings.site_campaign_personal_section_custom.length > 0) {
             $scope.pcustom = [];
-            angular.forEach($scope.public_settings.site_campaign_personal_section_custom, function (value, key) {
+            angular.forEach($scope.public_settings.site_campaign_personal_section_custom, function(value, key) {
               var fieldRequire = false;
               var fieldPlaceholder = '';
               if (value.placeholder) {
@@ -445,7 +449,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
               }
 
               // Compare if key matches setting.name
-              angular.forEach($scope.custom_field[0].attributes, function (val, key, obj) {
+              angular.forEach($scope.custom_field[0].attributes, function(val, key, obj) {
                 if (key) {
                   if (key == value.name) {
                     field.value = val;
@@ -470,7 +474,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
       @params paramID - An object that contains person_id and business_organization_id
    */
   function getAddress(paramID) {
-    Restangular.one('account/').customGET('address', paramID).then(function (success) {
+    Restangular.one('account/').customGET('address', paramID).then(function(success) {
       if (success) {
         $scope.personal_address = success.personal;
         $scope.bussiness_address = success.business;
@@ -505,8 +509,8 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
       @params paramID - An object that contains person_id and business_organization_id
    */
   function getPhoneNumber(paramID) {
-    Restangular.one('account/').customGET('phone-number', paramID).then(function (success) {
-      
+    Restangular.one('account/').customGET('phone-number', paramID).then(function(success) {
+
       if (success.personal) {
         $scope.personalnumber = true;
         $scope.phoneInfo.number = success.personal[0].number;
@@ -534,7 +538,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
 
   function checkNumber(id) {
     var count = 0;
-    angular.forEach($scope.BusinessNumbers, function (v) {
+    angular.forEach($scope.BusinessNumbers, function(v) {
       if (v.business_organization_id == id) {
         $scope.businessnumber = true;
         $scope.business_number = v.number;
@@ -557,7 +561,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
 
   function checktype(id) {
     var type;
-    angular.forEach($scope.phonetype, function (value) {
+    angular.forEach($scope.phonetype, function(value) {
       if (value.id == id) {
         type = value.name;
       }
@@ -572,7 +576,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     if (id == 2) {
       if ($scope.bussiness_address) {
         var count = 0;
-        angular.forEach($scope.bussiness_address, function (value) {
+        angular.forEach($scope.bussiness_address, function(value) {
           if (value.business_organization_id == bID) {
             $scope.address_ID = value.address_id;
             $scope.baddress = {
@@ -700,7 +704,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
   }
 
   function getCountries() {
-    Geolocator.getCountries().then(function (countries) {
+    Geolocator.getCountries().then(function(countries) {
       if ($scope.native_lookup) {
         for (var i in countries) {
           if (countries[i].native_name != null) {
@@ -726,7 +730,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
   }
 
   function getSubcountries(countryID) {
-    Geolocator.getSubcountriesByCountry(countryID).then(function (subcountries) {
+    Geolocator.getSubcountriesByCountry(countryID).then(function(subcountries) {
       // Check which language to show
       if ($scope.native_lookup) {
         for (var i in subcountries) {
@@ -739,7 +743,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     });
   }
 
-  $scope.setCountry = function (country) {
+  $scope.setCountry = function(country) {
     $scope.selectedCountry.selected = country;
   }
 
@@ -753,15 +757,15 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     $scope.address.street2 = "";
   }
 
-  $scope.CompanyAddress = function (add) {
-    clearAddress();
-    checkAddress(2, add.business_organization_id);
-    checkNumber(add.business_organization_id);
-    $scope.company_selected = add.business_organization_id;
-    $scope.getBusinessImage();
-    $scope.getBusinessLinks(add.business_organization_id);
-  }
-  // set up objects to send through POST
+  $scope.CompanyAddress = function(add) {
+      clearAddress();
+      checkAddress(2, add.business_organization_id);
+      checkNumber(add.business_organization_id);
+      $scope.company_selected = add.business_organization_id;
+      $scope.getBusinessImage();
+      $scope.getBusinessLinks(add.business_organization_id);
+    }
+    // set up objects to send through POST
   $scope.address = {
     city_id: '',
     mail_code: '',
@@ -781,16 +785,24 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     person_id: ''
   };
 
-  $scope.getBusinessNameDescription = function (bid) {
-    Restangular.one("account/business", bid).customGET().then(function (success) {
-      $scope.company.name = success.name;
-      $scope.company.description = success.description;
+  $scope.getBusinessNameDescription = function(bid) {
+    Restangular.one("account/business", bid).customGET().then(function(success) {
+      var business = {};
+      if (success[0]) {
+        business = success[0];
+      }
+      if (success) {
+        business = success;
+      }
+
+      $scope.company.name = business.name;
+      $scope.company.description = business.description;
     });
   }
 
   // get links that is related to a business
-  $scope.getBusinessLinks = function (businessId) {
-    Restangular.all('account/website?business_organization_id=' + businessId).customGET().then(function (success) {
+  $scope.getBusinessLinks = function(businessId) {
+    Restangular.all('account/website?business_organization_id=' + businessId).customGET().then(function(success) {
       // assign them to the scope variable
       $scope.businessLinks = success.business;
       for (var n in $scope.businessLinks) {
@@ -806,7 +818,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
           }
         }
       }
-    }, function (failure) {
+    }, function(failure) {
       $scope.businessLinks = [];
     });
   }
@@ -821,7 +833,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
   };
 
   // add more business link
-  $scope.addBusinessLink = function (arr) {
+  $scope.addBusinessLink = function(arr) {
     /*    if(!$scope.company_selected.business_organization_id){
           $scope.company_selected.business_organization_id = $scope.company_selected;
         }*/
@@ -837,11 +849,11 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
   };
 
   // remove links
-  $scope.removeBusinessLink = function (link) {
+  $scope.removeBusinessLink = function(link) {
     if (link.uri_id) {
       Restangular.one('account/website').customDELETE(link.uri_id, {
         business_organization_id: link.business_organization_id
-      }).then(function (success) {
+      }).then(function(success) {
         $scope.businessLinks.splice($scope.businessLinks.indexOf(link), 1); // delete the item from the list
       }); // send delete request
     } else {
@@ -856,7 +868,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     } else {
       var selectedProtocols = Protocols;
     }
-    angular.forEach($scope.businessLinks, function (link, key) {
+    angular.forEach($scope.businessLinks, function(link, key) {
       // Concate the selected protocol to the user entered link/path.
       var new_link = {};
 
@@ -898,7 +910,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
   }
 
   //Regex Form Validation
-  $.fn.form.settings.rules.regexCustomValidation = function (value, validate) {
+  $.fn.form.settings.rules.regexCustomValidation = function(value, validate) {
     var regex = new RegExp(validate);
     if (!value) {
       return true;
@@ -908,7 +920,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     return false;
   }
 
-  var personalValidation = function () {
+  var personalValidation = function() {
     var translation = $translate.instant(['tab_personal_setting_fname_validation', 'tab_personal_setting_lname_validation', 'tab_personal_setting_custom_field_validate', 'tab_personal_setting_custom_field_empty']);
 
     $scope.form_validation = {
@@ -928,7 +940,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
       }
     }
 
-    angular.forEach($scope.pcustom, function (value, key) {
+    angular.forEach($scope.pcustom, function(value, key) {
       if (value.required && !value.validate) {
         var customValidate = {
           identifier: value.identifier,
@@ -965,10 +977,10 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     $('.ui.form#user-profile-form').form($scope.form_validation, {
       inline: true,
       keyboardShortcuts: true,
-      onSuccess: function () {
+      onSuccess: function() {
         $scope.valcheck = $scope.valcheck && true;
       },
-      onFailure: function () {
+      onFailure: function() {
         $scope.valcheck = $scope.valcheck && false;
         $scope.profileTypeSelected(1);
         $('html, body').animate({
@@ -979,7 +991,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     // return $scope.valcheck;
   }
 
-  var businessValidation = function () {
+  var businessValidation = function() {
     var translation = $translate.instant(['profile_setup_company_name_empty']);
 
     $scope.form_validation_business = {
@@ -992,7 +1004,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
       }
     };
 
-    angular.forEach($scope.bcustom, function (value, key) {
+    angular.forEach($scope.bcustom, function(value, key) {
       if (value.required) {
         var customValidate = {
           identifier: value.identifier,
@@ -1008,10 +1020,10 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     $('.ui.form#business-profile-form').form($scope.form_validation_business, {
       inline: true,
       keyboardShortcuts: true,
-      onSuccess: function () {
+      onSuccess: function() {
         $scope.valcheck = $scope.valcheck && true;
       },
-      onFailure: function () {
+      onFailure: function() {
         $scope.valcheck = $scope.valcheck && false;
         $scope.profileTypeSelected(2);
         $('html, body').animate({
@@ -1020,13 +1032,16 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
       }
     }).form('validate form');
     // return $scope.valcheck;
-
   }
 
-  var translation = $translate.instant(['profile_setup_name_terms_and_conditions']);
-  $('#terms-and-conditions').html(translation.profile_setup_name_terms_and_conditions);
+  $translate(['profile_setup_name_terms_and_conditions']).then(function(translation) {
+    if (translation.hasOwnProperty('profile_setup_name_terms_and_conditions') && translation.profile_setup_name_terms_and_conditions) {
+      $('#terms-and-conditions').html(translation.profile_setup_name_terms_and_conditions);
+      $('#terms-and-conditions').css('text-align', 'right');
+    }
+  });
 
-  $scope.switchProfileStep = function ($event) {
+  $scope.switchProfileStep = function($event) {
     $scope.valcheck = true;
 
     if ($scope.campaign.profile_type_id == 1) {
@@ -1038,8 +1053,8 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
 
     if ($event.currentTarget.id == "campaign-create-next-button") {
       $scope.originalPageTitle = $route.current.title;
-      $timeout(function () {
-        $translate($route.current.title + "2").then(function (translation) {
+      $timeout(function() {
+        $translate($route.current.title + "2").then(function(translation) {
           $rootScope.page_title = translation != $scope.originalPageTitle + "2" ? translation : $scope.originalPageTitle;
           $rootScope.ogMeta.title = $rootScope.page_title;
         });
@@ -1047,8 +1062,8 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     }
 
     if ($event.currentTarget.id == "campaign-create-prev-button") {
-      $timeout(function () {
-        $translate($scope.originalPageTitle).then(function (translation) {
+      $timeout(function() {
+        $translate($scope.originalPageTitle).then(function(translation) {
           $rootScope.page_title = translation != null ? translation : $route.current.title;
           $rootScope.ogMeta.title = $rootScope.page_title;
         });
@@ -1059,17 +1074,19 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
       $scope.stepTwo = !$scope.stepTwo;
 
       // change translation below 'next step' button
-      var translation = $translate.instant(['profile_setup_address_terms_and_conditions', 'profile_setup_name_terms_and_conditions']);
-      if ($scope.stepTwo) {
-        $('#terms-and-conditions').html(translation.profile_setup_address_terms_and_conditions);
-      } else {
-        $('#terms-and-conditions').html(translation.profile_setup_name_terms_and_conditions);
-      }
+      $translate(['profile_setup_address_terms_and_conditions', 'profile_setup_name_terms_and_conditions']).then(function(translation) {
+       if ($scope.stepTwo) {
+          $('#terms-and-conditions').html(translation.profile_setup_address_terms_and_conditions);
+        } else {
+          $('#terms-and-conditions').html(translation.profile_setup_name_terms_and_conditions);
+        }
+      });
     }
+
 
   }
 
-  $scope.saveData = function ($event) {
+  $scope.saveData = function($event) {
     $scope.valcheck = true;
 
     if ($scope.campaign.profile_type_id == 1) {
@@ -1099,7 +1116,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
         profile_type_view_id: $scope.campaign.profile_type_view_id,
         charity_id: $scope.campaign.charity_id
       }
-      Restangular.one("campaign/" + $routeParams.campaign_id + "/setting").customPUT(profile_type_data).then(function (success) {
+      Restangular.one("campaign/" + $routeParams.campaign_id + "/setting").customPUT(profile_type_data).then(function(success) {
         msg = {
           'header': "success_message_save_changes_button",
         }
@@ -1115,12 +1132,12 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
       var i = 0;
 
       if ($scope.bcustom) {
-        angular.forEach($scope.bcustom, function (v) {
+        angular.forEach($scope.bcustom, function(v) {
           custom_setting[v.name] = v.value;
         });
       }
       if ($scope.pcustom) {
-        angular.forEach($scope.pcustom, function (v) {
+        angular.forEach($scope.pcustom, function(v) {
           custom_setting[v.name] = v.value;
         });
       }
@@ -1142,6 +1159,14 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
         $scope.phoneInfo.number = $scope.business_number;
         // select from existing
         if ($scope.company_selected && $scope.companyFormToggle == true) {
+
+          if ($scope.company.name) {
+            $scope.company_selected['name'] = $scope.company.name;
+          }
+          if ($scope.company.description) {
+            $scope.company_selected['description'] = $scope.company.description;
+          }
+
           var data = {
             // business organization id takes an array
             business_organization_id: [$scope.company_selected],
@@ -1152,13 +1177,13 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
           $scope.phoneInfo.business_organization_id = $scope.company_selected;
           $scope.baddress.person_id = paramID.person_id;
           $scope.phoneInfo.person_id = paramID.person_id;
-          Restangular.one('campaign', $routeParams.campaign_id).customPUT(data).then(function (success) {
+          Restangular.one('campaign', $routeParams.campaign_id).customPUT(data).then(function(success) {
             CreateCampaignService.cacheIn(success.plain());
             if ($scope.address_ID && $scope.baddress.city_id && $scope.baddress.street1 != undefined && $scope.baddress.mail_code != undefined) {
               Restangular.one('account/address', $scope.address_ID).customPUT($scope.baddress);
             } else if ($scope.baddress.city_id && $scope.baddress.street1 != undefined && $scope.baddress.mail_code != undefined) {
               $scope.baddress.business_organization_id = $scope.company_selected;
-              Restangular.one('account/address').customPOST($scope.baddress).then(function (success) {
+              Restangular.one('account/address').customPOST($scope.baddress).then(function(success) {
                 $scope.address_ID = success.id;
               });
             }
@@ -1166,7 +1191,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
               Restangular.one('account/phone-number', $scope.bphone_number_id).customPUT($scope.phoneInfo);
               $scope.businessnumber = true;
             } else if ($scope.phoneInfo.number != undefined && $scope.phoneInfo.number != "") {
-              Restangular.one('account/phone-number').customPOST($scope.phoneInfo).then(function (success) {
+              Restangular.one('account/phone-number').customPOST($scope.phoneInfo).then(function(success) {
                 //checkNumber($scope.company_selected);
               });
             }
@@ -1174,7 +1199,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
               description: $scope.company.description
             }
             busParam.name = $scope.company.name;
-            
+
             //For some reason dropdown is removed from UI so this code is not needed anymore
             // for (var i in $scope.companies) {
             //   if ($scope.companies[i].id == $scope.company_selected) {
@@ -1182,11 +1207,11 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
             //     break;
             //   }
             // }
-            
+
             //Save Business Link
             saveBusinessLinks($scope.company_selected, selectedProtocols);
 
-            Restangular.one("account/business", $scope.company_selected).customPUT(busParam).then(function (success) {
+            Restangular.one("account/business", $scope.company_selected).customPUT(busParam).then(function(success) {
               getCompany();
             });
           });
@@ -1209,7 +1234,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
             resource_content_type: 'image'
           }
           if ($scope.companyFormToggle == false) {
-            Restangular.one('account/business').customPOST(data).then(function (success) {
+            Restangular.one('account/business').customPOST(data).then(function(success) {
               data = {
                 business_organization_id: [success.id],
                 profile_type_id: $scope.campaign.profile_type_id,
@@ -1219,7 +1244,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
               $scope.baddress.business_organization_id = success.id;
               $scope.phoneInfo.person_id = paramID.person_id;
               $scope.baddress.person_id = paramID.person_id;
-              Restangular.one('campaign', $routeParams.campaign_id).customPUT(data).then(function (success) {
+              Restangular.one('campaign', $routeParams.campaign_id).customPUT(data).then(function(success) {
                 CreateCampaignService.cacheIn(success.plain());
               });
               // After saving new company is done, change to existing company option
@@ -1235,12 +1260,12 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
               saveBusinessLinks($scope.company_selected, selectedProtocols);
 
               if ($scope.baddress.city_id && $scope.baddress.street1 != undefined && $scope.baddress.screet1 != "") {
-                Restangular.one('account/address').customPOST($scope.baddress).then(function (success) {
+                Restangular.one('account/address').customPOST($scope.baddress).then(function(success) {
                   $scope.address_ID = success.id;
                 });
               }
               if ($scope.business_number && $scope.business_number != undefined && $scope.business_number != "") {
-                Restangular.one('account/phone-number').customPOST($scope.phoneInfo).then(function (success) {
+                Restangular.one('account/phone-number').customPOST($scope.phoneInfo).then(function(success) {
                   //checkNumber($scope.company_selected);
                 });
               }
@@ -1249,7 +1274,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
                 $scope.modifyBusinessImage(imageFiles, fileParam);
               }
 
-            }, function (failure) {
+            }, function(failure) {
               msg = {
                 'header': failure.data.message
               }
@@ -1262,12 +1287,12 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
             $scope.phoneInfo.business_organization_id = $scope.company_selected;
             $scope.baddress.person_id = paramID.person_id;
             $scope.phoneInfo.person_id = paramID.person_id;
-            Restangular.one('account/business', $scope.company_selected).customPUT(data).then(function (success) {
+            Restangular.one('account/business', $scope.company_selected).customPUT(data).then(function(success) {
               if ($scope.address_ID && $scope.baddress.city_id && $scope.baddress.street1 != undefined && $scope.baddress.mail_code != undefined) {
                 Restangular.one('account/address', $scope.address_ID).customPUT($scope.baddress);
               } else if ($scope.baddress.city_id && $scope.baddress.street1 != undefined && $scope.baddress.mail_code != undefined) {
                 $scope.baddress.business_organization_id = $scope.company_selected;
-                Restangular.one('account/address').customPOST($scope.baddress).then(function (success) {
+                Restangular.one('account/address').customPOST($scope.baddress).then(function(success) {
                   $scope.address_ID = success.id;
                 });
               }
@@ -1277,7 +1302,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
               } else if ($scope.business_number != undefined && $scope.business_number != "") {
                 Restangular.one('account/phone-number').customPOST($scope.phoneInfo);
               }
-            }, function (failure) {
+            }, function(failure) {
               msg = {
                 'header': failure.data.message
               }
@@ -1295,8 +1320,8 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
             profile_type_id: $scope.campaign.profile_type_id,
             toggle_profile_type_view_advance: $scope.campaign.toggle_profile_type_view_advance
           }
-          Restangular.one("campaign", $routeParams.campaign_id).customPUT(data).then(function (success) {
-            
+          Restangular.one("campaign", $routeParams.campaign_id).customPUT(data).then(function(success) {
+
             // $scope.phoneInfo.number = $scope.personal_number;
             $scope.phoneInfo.person_id = $scope.manager.person_id;
             // if campaign uses personal type profile
@@ -1320,7 +1345,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
             // Check admin user type id
             if (UserService.id == $scope.manager.id) {
               accountData.person_id = $scope.manager.person_id;
-              Restangular.one('account').customPUT(accountData).then(function (success) {
+              Restangular.one('account').customPUT(accountData).then(function(success) {
                 if (UserService.id == $scope.manager.id) {
                   UserService.updateUserData(accountData);
                 }
@@ -1345,7 +1370,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     }
   }
 
-  $scope.savePersonAttributes = function (person_id, $data) {
+  $scope.savePersonAttributes = function(person_id, $data) {
     Restangular.one('portal/person/attribute', person_id).customPUT($data);
   }
 
@@ -1367,7 +1392,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
   }];
   $scope.profile_link_default_protocol = $scope.profile_protocols[0];
 
-  $scope.addLink = function (arr) {
+  $scope.addLink = function(arr) {
     var link = {
       uri: '',
       uri_text: ''
@@ -1379,10 +1404,10 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
   };
 
   // remove links
-  $scope.removeProfileLink = function (link, index) {
+  $scope.removeProfileLink = function(link, index) {
     // send delete request if id exists
     if (link.id) {
-      Restangular.one('account/website', link.id).customDELETE().then(function (success) {
+      Restangular.one('account/website', link.id).customDELETE().then(function(success) {
         // delete the item from the list
       });
     }
@@ -1395,7 +1420,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     } else {
       var selectedProtocols = Protocols;
     }
-    angular.forEach($scope.customlinks, function (link, key) {
+    angular.forEach($scope.customlinks, function(link, key) {
       var new_link = {};
 
       for (var prop in link) {
@@ -1426,7 +1451,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
         // else send POST to create new
         else {
           new_link.person_id = $scope.manager.id;
-          Restangular.one('account/website').customPOST(new_link).then(function (success) {
+          Restangular.one('account/website').customPOST(new_link).then(function(success) {
             //$scope.customlinks[key] = success;
           });
         }
@@ -1435,22 +1460,22 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
   }
 
   // set dimmer on and off
-  $scope.dimmerOn = function () {
+  $scope.dimmerOn = function() {
     $('.image').dimmer('show');
   };
-  $scope.dimmerOff = function () {
+  $scope.dimmerOff = function() {
     $('.image').dimmer('hide');
   };
 
   function getNotes() {
-    Restangular.one('campaign', $routeParams.campaign_id).one('note').customGET().then(function (success) {
+    Restangular.one('campaign', $routeParams.campaign_id).one('note').customGET().then(function(success) {
       if (success) {
         $scope.notes = success[0].value;
       }
     });
   }
 
-  $scope.uploadProfileImage = function (files) {
+  $scope.uploadProfileImage = function(files) {
     if ($scope.manager.id == UserService.id || UserService.person_type_id == 1) {
       if (files.length) {
         if ($scope.allowedImage(files[0].type)) {
@@ -1460,14 +1485,14 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
           };
           var $picNode = $('.profileSetup');
           if ($scope.manager.person_files == null || $scope.manager.person_files.length == 0) {
-            FileUploadService.upload('account/resource/file/', files, params, $picNode).then(function (success) {
+            FileUploadService.upload('account/resource/file/', files, params, $picNode).then(function(success) {
               if (success.length) {
                 $scope.manager.person_files = [];
                 $scope.manager.person_files.push(success[0].data);
               }
             });
           } else {
-            FileUploadService.modify('account/resource/file/', files, params, $scope.manager.person_files[0].id, $picNode).then(function (success) {
+            FileUploadService.modify('account/resource/file/', files, params, $scope.manager.person_files[0].id, $picNode).then(function(success) {
               if (success.length) {
                 $scope.manager.person_files = [];
                 $scope.manager.person_files.push(success[0].data);
@@ -1482,7 +1507,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     }
   }
 
-  $scope.allowedImage = function (file_type) {
+  $scope.allowedImage = function(file_type) {
     var allowed_type = ['image/vnd.microsoft.icon', 'image/x-icon', 'image/png', 'image/pjpeg', 'image/jpeg', 'image/gif'];
     if (allowed_type.indexOf(file_type) > -1) {
       return true;
@@ -1491,7 +1516,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     }
   }
 
-  $scope.deleteProfileImage = function (files) {
+  $scope.deleteProfileImage = function(files) {
     if (files && files.length) {
       var file = files.pop();
       Restangular.one('account/resource/file').customDELETE(file.id);
@@ -1503,7 +1528,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
 
   // Check companyFormToggle to determine what option the user is at
   // If at add new then disregard business id
-  $scope.uploadBusinessImage = function (files) {
+  $scope.uploadBusinessImage = function(files) {
     $scope.files = files;
     if (UserService.id == $scope.manager.id || UserService.person_type_id == 1) {
       if (files.length) {
@@ -1520,30 +1545,30 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
             // person_id: paramID.person_id
           }
         }
-        
+
         // If creating a new company
         if (!$scope.companyFormToggle) {
           $scope.company_selected = {};
           $scope.company_selected.name = "Placeholder";
-          if($scope.newCompany.hasOwnProperty('name')) {
+          if ($scope.newCompany.hasOwnProperty('name')) {
             $scope.company_selected.name = $scope.newCompany.name;
           }
-          if($scope.newCompany.hasOwnProperty('description')) {
+          if ($scope.newCompany.hasOwnProperty('description')) {
             $scope.company_selected.description = $scope.newCompany.description;
           }
-          
-          Restangular.one('account/business').customPOST($scope.company_selected).then(function (success) {
+
+          Restangular.one('account/business').customPOST($scope.company_selected).then(function(success) {
             $scope.company_selected = success.id;
             params.business_organization_id = $scope.company_selected;
             var $picNode = $('.profileCompany');
             if ($scope.businessImage.length == 0) {
-              FileUploadService.upload('account/resource/file/', files, params, $picNode).then(function (success) {
+              FileUploadService.upload('account/resource/file/', files, params, $picNode).then(function(success) {
                 // $scope.businessImage.push(success[0].data);
                 $scope.getBusinessImage();
                 $scope.newCompanyLogoID = success[0].data.id;
               });
             } else {
-              FileUploadService.modify('account/resource/file/', files, params, $scope.businessImage[0].id, $picNode).then(function (success) {
+              FileUploadService.modify('account/resource/file/', files, params, $scope.businessImage[0].id, $picNode).then(function(success) {
                 // $scope.businessIamge = [];
                 // $scope.businessImage.push(success[0].data);
                 $scope.getBusinessImage();
@@ -1555,7 +1580,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
               business_organization_id: [$scope.company_selected],
               entry_id: $routeParams.campaign_id
             };
-            Restangular.one('campaign', $routeParams.campaign_id).customPUT(data).then(function (success) { }, function (failure) {
+            Restangular.one('campaign', $routeParams.campaign_id).customPUT(data).then(function(success) {}, function(failure) {
               msg = {
                 'header': failure.data.message
               }
@@ -1567,12 +1592,12 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
           // Upload to existing company
           var $picNode = $('.profileCompany');
           if ($scope.businessImage.length == 0) {
-            FileUploadService.upload('account/resource/file/', files, params, $picNode).then(function (success) {
+            FileUploadService.upload('account/resource/file/', files, params, $picNode).then(function(success) {
               $scope.getBusinessImage();
               $scope.newCompanyLogoID = success[0].data.id;
             });
           } else {
-            FileUploadService.modify('account/resource/file/', files, params, $scope.businessImage[0].id, $picNode).then(function (success) {
+            FileUploadService.modify('account/resource/file/', files, params, $scope.businessImage[0].id, $picNode).then(function(success) {
               $scope.getBusinessImage();
               $scope.newCompanyLogoID = success[0].data.id;
             });
@@ -1583,12 +1608,12 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     }
   }
 
-  $scope.modifyBusinessImage = function (files, params) {
+  $scope.modifyBusinessImage = function(files, params) {
     var picNode = $('.profileCompany');
     $scope.uploadBusinessImage($scope.files);
   }
 
-  $scope.deleteBusinessImage = function (files) {
+  $scope.deleteBusinessImage = function(files) {
     if (files && files.length) {
       var file = files.pop();
       var param = {
@@ -1601,7 +1626,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     }
   }
 
-  $scope.getBusinessImage = function () {
+  $scope.getBusinessImage = function() {
     // get the profile image
     $scope.businessImage = [];
     if ($scope.company_selected != null && $scope.company_selected != undefined) {
@@ -1609,7 +1634,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
         business_organization_id: $scope.company_selected,
         // person_id: paramID.person_id
       }
-      Restangular.one('account/resource').customGET('file', dataParam).then(function (success) {
+      Restangular.one('account/resource').customGET('file', dataParam).then(function(success) {
         if (success.length) {
           $scope.businessImage.push(success[0]);
         }
@@ -1623,7 +1648,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
 
   // Look up city based on search term, then find the cityID and store it
   // This will check the setting to see if native_lookup is needed for search
-  $scope.searchCities = function (term) {
+  $scope.searchCities = function(term) {
     var cityID = null; // variable to hold city ID
     var countryID = null;
     var native_lookup = $scope.native_lookup == true ? 1 : 0;
@@ -1631,10 +1656,10 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
       // Check setting here to choose which one to use, check the layout
       // This one is to search cities directly
       if (!$scope.alt_shipping) {
-        Geolocator.searchCities(term, native_lookup).then(function (cities) {
+        Geolocator.searchCities(term, native_lookup).then(function(cities) {
           if (native_lookup) {
             // To change the order displayed to country subcountry, city
-            cities.forEach(function (value, index) {
+            cities.forEach(function(value, index) {
               value = getNativeName(value);
             });
           }
@@ -1643,7 +1668,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
       }
       // This one is to search with subcountry id to limit the area
       else {
-        Geolocator.searchCitiesBySubcountry(term, $scope.selectedSubcountry.selected.id, native_lookup).then(function (cities) {
+        Geolocator.searchCitiesBySubcountry(term, $scope.selectedSubcountry.selected.id, native_lookup).then(function(cities) {
           if (native_lookup) {
             for (var i in cities) {
               if (cities[i].city_native_name != null) {
@@ -1663,7 +1688,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     }
   }
 
-  $scope.searchCitiesbusiness = function (term) {
+  $scope.searchCitiesbusiness = function(term) {
     var cityID = null; // variable to hold city ID
     var countryID = null;
     var native_lookup = $scope.native_lookup == true ? 1 : 0;
@@ -1671,10 +1696,10 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
       // Check setting here to choose which one to use, check the layout
       // This one is to search cities directly
       if (!$scope.alt_shipping) {
-        Geolocator.searchCities(term, native_lookup).then(function (cities) {
+        Geolocator.searchCities(term, native_lookup).then(function(cities) {
           if (native_lookup) {
             // To change the order displayed to country subcountry, city
-            cities.forEach(function (value, index) {
+            cities.forEach(function(value, index) {
               value = getNativeName(value);
             });
           }
@@ -1683,7 +1708,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
       }
       // This one is to search with subcountry id to limit the area
       else {
-        Geolocator.searchCitiesBySubcountry(term, $scope.selectedSubcountry.selected.id, native_lookup).then(function (cities) {
+        Geolocator.searchCitiesBySubcountry(term, $scope.selectedSubcountry.selected.id, native_lookup).then(function(cities) {
           if (native_lookup) {
             for (var i in cities) {
               if (cities[i].city_native_name != null) {
@@ -1705,7 +1730,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
 
   // Clear data and repopulate data when switching between new or existing options
   // in business detail in profile-setup
-  $scope.newOrExistComp = function () {
+  $scope.newOrExistComp = function() {
     var $compBtn = $('#compBtn');
     // companyFormToggle is false means you are on add new company option
     // companyFormToggle is true means you are on existing company option
@@ -1731,14 +1756,14 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     }
   }
 
-  $scope.$watch("selectedCountry.selected", function (value, oldValue) {
+  $scope.$watch("selectedCountry.selected", function(value, oldValue) {
     if (value != oldValue && value) {
       getSubcountries(value.id);
     }
   });
 
   // watching variable changes
-  $scope.$watch('selectedCity.selected', function (value) {
+  $scope.$watch('selectedCity.selected', function(value) {
     if (value) {
       cityID = Geolocator.lookupCityID(value.name);
       if (cityID) {
@@ -1763,7 +1788,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
 
     }
   });
-  $scope.$watch('bselectedCity.selected', function (value) {
+  $scope.$watch('bselectedCity.selected', function(value) {
     if (value) {
 
       cityID = Geolocator.lookupCityID(value.name);
@@ -1778,12 +1803,12 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     }
   });
 
-  $scope.$watch('address.country_id', function (countryID) {
+  $scope.$watch('address.country_id', function(countryID) {
     var worldWide = null;
     var country = null;
     if (countryID) {
       // find out the index
-      angular.forEach($scope.shippingOption, function (item, key) {
+      angular.forEach($scope.shippingOption, function(item, key) {
         if (item.country_id == countryID) {
           country = key;
           // return; // break loop when match country found
@@ -1803,21 +1828,21 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     }
   });
 
-  $scope.$watch('selectedCity.selected', function (newValue, oldValue) {
+  $scope.$watch('selectedCity.selected', function(newValue, oldValue) {
     if (newValue) {
       $('#select-user-city .select-error').remove();
       $('#select-user-city').removeClass('error');
     }
   });
 
-  $scope.$watch('selectedCountry.selected', function (newValue, oldValue) {
+  $scope.$watch('selectedCountry.selected', function(newValue, oldValue) {
     if (newValue) {
       $('#select-user-country .select-error').remove();
       $('#select-user-country').removeClass('error');
     }
   });
 
-  $scope.$watch('selectedSubcountry.selected', function (newValue, oldValue) {
+  $scope.$watch('selectedSubcountry.selected', function(newValue, oldValue) {
     if (newValue) {
       $('#select-user-subcountry .select-error').remove();
       $('#select-user-subcountry').removeClass('error');
@@ -1826,9 +1851,10 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
 
   function initBusiness() {
     if ($scope.company_selected.business_organization_id == "") {
-      Restangular.one('account/').customGET('business', paramID).then(function (success) {
+      Restangular.one('account/').customGET('business', paramID).then(function(success) {
         $scope.companies = success;
         if ($scope.companies != 0) {
+          $scope.company = $scope.companies[0];
           $scope.company_selected = $scope.companies[0];
           $scope.CompanyAddress($scope.company_selected);
           $scope.getBusinessNameDescription($scope.company_selected.id);
@@ -1837,7 +1863,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     }
   }
 
-  $scope.completionCheck = function () {
+  $scope.completionCheck = function() {
 
     var reqFieldsCheck;
 
@@ -1876,26 +1902,22 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     // Toggle check for campaign steps with hidden required fields
     if ($scope.hideCampaignBlurbField && $scope.hideCampaignCategoryField && $scope.hideCampaignImageField) {
       reqFieldsCheck = (campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
-    }
-    else if ($scope.hideCampaignImageField) {
+    } else if ($scope.hideCampaignImageField) {
       basicsReqField = (campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
-    }
-    else if ($scope.hideCampaignBlurbField) {
+    } else if ($scope.hideCampaignBlurbField) {
       basicsReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.categories && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
-    }
-    else if ($scope.hideCampaignCategoryField) {
+    } else if ($scope.hideCampaignCategoryField) {
       basicsReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
-    }
-    else {
+    } else {
       reqFieldsCheck = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
     }
     if (reqFieldsCheck) {
       $scope.loadingText = true;
 
-      CreateCampaignService.sendForReview().then(function (success) {
+      CreateCampaignService.sendForReview().then(function(success) {
         $scope.confirmNotice = true;
         $scope.loadingText = false;
-      }, function (failed) {
+      }, function(failed) {
         $scope.errorNotice = failed.data.message;
         msg = {
           'header': failed.data.message
@@ -1906,23 +1928,19 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
     } else {
       var steps = [];
       var step1ReqField, step2ReqField, step3ReqField;
-      $timeout(function () {
-        $translate(['basics', 'details', 'rewards', 'funding', 'uprofile']).then(function (value) {
+      $timeout(function() {
+        $translate(['basics', 'details', 'rewards', 'funding', 'uprofile']).then(function(value) {
 
           // Toggle check for campaign step 1 with hidden required fields
           if ($scope.hideCampaignBlurbField && $scope.hideCampaignCategoryField && $scope.hideCampaignImageField) {
             step1ReqField = (campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.funding_goal && campaign.currency_id) ? true : false;
-          }
-          else if ($scope.hideCampaignImageField) {
+          } else if ($scope.hideCampaignImageField) {
             step1ReqField = (campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id) ? true : false;
-          }
-          else if ($scope.hideCampaignBlurbField) {
+          } else if ($scope.hideCampaignBlurbField) {
             step1ReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.categories && campaign.funding_goal && campaign.currency_id) ? true : false;
-          }
-          else if ($scope.hideCampaignCategoryField) {
+          } else if ($scope.hideCampaignCategoryField) {
             step1ReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.funding_goal && campaign.currency_id) ? true : false;
-          }
-          else {
+          } else {
             step1ReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id) ? true : false;
           }
           if (!step1ReqField) {
@@ -1932,8 +1950,7 @@ app.controller('UserProfileCtrl', function ($q, $route, $routeParams, $rootScope
           // Toggle check for campaign step 2 with hidden required fields
           if ($scope.showCampaignImageField) {
             step2ReqField = (hasImage()) ? true : false;
-          }
-          else {
+          } else {
             step2ReqField = (campaign.description) ? true : false;
           }
           if (!step2ReqField) {

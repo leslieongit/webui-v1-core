@@ -1,31 +1,43 @@
-@mixin theme($name, $main-color, $link-color, $main-color-hover, $main-color-table-alter){
-	.container.main-color.#{$name}{
-		/* Reward block ------------------*/
-		.rewards{
-			.pledge-level{
-				> li {
-					&:hover { 
-						background: $main-color !important; 
-						color: $main-color !important; 
-					}	
-				}
-        .choose-reward-btn {
-          background: $main-color!important;
-          color: #fff;
+@mixin theme($name, $main-color, $link-color, $main-color-hover, $main-color-table-alter) {
+  .container.main-color.#{$name} {
+
+    /* Reward block ------------------*/
+    .rewards {
+      .pledge-level {
+        >li {
+          &:hover {
+            @if $main-color != #ffffff {
+              background: $main-color !important;
+              color: $main-color !important;
+            }
+          }
         }
-				&.ended,
-				&.sold-out {
-					> li {
-						&:hover {
-							background: #f1f1f1 !important;
-							color: #555555 !important;
-							cursor: default !important;
-						}
-					}
-				}	
-			}
-		}
-	}
+
+        .choose-reward-btn {
+          @if $main-color==#ffffff {
+            background-color: #ffffff !important;
+            color: rgba(0, 0, 0, .8);
+          }
+
+          @else {
+            background: $main-color !important;
+            color: #fff;
+          }
+        }
+
+        &.ended,
+        &.sold-out {
+          >li {
+            &:hover {
+              background: #f1f1f1 !important;
+              color: #555555 !important;
+              cursor: default !important;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 @include theme(theme-reward-1, $main-color-one, $main-color-one, $main-color-one-hover, $main-color-one-table-alter);

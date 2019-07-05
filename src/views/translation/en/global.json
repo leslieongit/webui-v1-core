@@ -105,6 +105,8 @@
   "tab_portalsetting_custom_reward_text_error": "Please enter text or token",
   "tab_portalsetting_custom_contribution_text_error": "Please enter text or token",
   "tab_portalsetting_post_processing_interval_error": "Please select a number between 1 and 6",
+  "tab_portalsetting_tipping_error": "If you enable tipping, you must select manual tipping or tipping tiers",
+  "tab_portalsetting_tipping_tier_specify": "Tipping tier needs to be specified",
   "tab_stripeconnect_connect_srtipe": "Connect with Stripe",
   "added": "has been added",
   "modified": "has been modified",
@@ -133,8 +135,10 @@
   "organization_name_label": "Organization Name",
   "ein_field_label": "EIN",
   "cookie_consent_message_text": "This website uses cookies to ensure you get the best experience on our website.",
-	"cookie_consent_dismiss_text": "Got it!",
-	"cookie_consent_link_text": "Learn more",
-	"cookie_consent_link": "/cookies",
-	"document_write_prompt_msg": "Code snippets which use \"document.write\" are not supported with existing framework. Please let your vendor know to switch or upgrade their code."
+  "cookie_consent_dismiss_text": "Got it!",
+  "cookie_consent_link_text": "Learn more",
+  "cookie_consent_link": "/cookies",
+  "document_write_prompt_msg": "Code snippets which use \"document.write\" are not supported with existing framework. Please let your vendor know to switch or upgrade their code.",
+  "admin_only_popup_msg": "This field can only be viewed by website administrator",
+  "admin_only_popup_label": "Admin Only"
 }

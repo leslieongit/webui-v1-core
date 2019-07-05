@@ -2,14 +2,16 @@
   <div class="background-wrap">
     <div class="ui page grid">
       <div class="ui column" ng-if="!isContributionLayout1" id="default-contribution">
+        <div class="campaign-disclaimer-text" ng-if="displayCampaignDisclaimer.toggle && displayCampaignDisclaimer.text">
+          <div class="ui warning message" ng-bind-html="displayCampaignDisclaimer.text"></div>
+        </div>
         <div class="pledge-campaign-top-header">
           <div class="ui two column stackable grid">
             <div class="four wide column campaign-img">
               <a ng-href="{{campaign_loc}}">
-                <img ng-if="campaign.files.length" ng-repeat="file in campaign.files | filter:{region_id: RESOURCE_REGIONS.campaign.thumbnail} | orderBy:'-file_id' | limitTo: 1"
-                  ng-src="{{server + '/image/campaign_thumbnail_xl/' + file.path_external}}" class="ui image" />
-                <img ng-if="campaign.files.length == 0" src="/images/placeholder-images/placeholder_campaign_thumb.png" class="ui image"
+                <img ng-if="campaign.files.length" ng-repeat="file in campaign.files | filter:{region_id: RESOURCE_REGIONS.campaign.thumbnail} | orderBy:'-file_id' | limitTo: 1" ng-src="{{server + '/image/campaign_thumbnail_xl/' + file.path_external}}" class="ui image"
                 />
+                <img ng-if="campaign.files.length == 0" src="/images/placeholder-images/placeholder_campaign_thumb.png" class="ui image" />
               </a>
             </div>
             <div class="twelve wide column">
@@ -17,7 +19,7 @@
               <h4 ng-if="!public_settings.site_campaign_enable_organization_name"> {{'guest_contribution_by' | translate}} {{campaign.managers[0].first_name}} {{campaign.managers[0].last_name}}</h4>
               <h4 ng-if="public_settings.site_campaign_enable_organization_name"> {{'guest_contribution_by' | translate}} {{organization_name.value}}</h4>
               <p ng-if="public_settings.site_campaign_enable_organization_name"> {{'ein_label' | translate}}{{organization_name.ein}}</p>
-              <p>{{campaign.blurb}}</p>
+              <p ng-bind-html="campaign.blurb"></p>
             </div>
           </div>
         </div>
@@ -25,7 +27,7 @@
           <div class="ic-contribution-summary">
             <h2 class="section-header ui inverted top attached header">
               <span class="section-label-header">{{'guest_contribution_contribution_summary'|translate}}</span>
-              <div class="contribution-selection" ng-show="(guestOption == 2 || guestOption ==4) && !contributionTypeRadio && !anonymousContributionTypeOnly">
+              <div class="contribution-selection" ng-show="(guestOption == 2 || guestOption == 4) && !contributionTypeRadio && !anonymousContributionTypeOnly">
                 <div class="ui dropdown card-type" id="contributionMethod">
                   <div class="text"> {{contribution[0].name | translate}}</div>
                   <i class="dropdown icon" style="margin-left: 10px;"></i>
@@ -44,24 +46,20 @@
                 </div>
                 <div class="eleven wide column right-col" ng-if="tippingOptions.toggle && !tippingOptions.toggle_bottom_tip">
                   <div class="ui buttons tipping-options-selection field" ng-class="{'error' : tipTypeError}" ng-if="(tippingOptions.toggle_dynamic && tippingOptions.toggle_tiers) || (tippingOptions.toggle_dynamic && tippingOptions.toggle_no_tip) || (tippingOptions.toggle_tiers && tippingOptions.toggle_no_tip)">
-                    <div class="ui button" ng-class="{ 'green': selectedTipType == 'tiers' }" ng-if="tippingOptions.toggle_tiers" ng-click="tipTypeSelection('tiers')"
-                      translate>
+                    <div class="ui button" ng-class="{ 'green': selectedTipType == 'tiers' }" ng-if="tippingOptions.toggle_tiers" ng-click="tipTypeSelection('tiers')" translate>
                       guest_contribution_choose_tip
                     </div>
                     <div class="or" ng-if="tippingOptions.toggle_tiers && tippingOptions.toggle_dynamic"></div>
-                    <div class="ui button" ng-class="{ 'green': selectedTipType == 'dynamic' }" ng-if="tippingOptions.toggle_dynamic" ng-click="tipTypeSelection('dynamic')"
-                      translate>
+                    <div class="ui button" ng-class="{ 'green': selectedTipType == 'dynamic' }" ng-if="tippingOptions.toggle_dynamic" ng-click="tipTypeSelection('dynamic')" translate>
                       guest_contribution_enter_tip_amount
                     </div>
                     <div class="or" ng-if="tippingOptions.toggle_no_tip"></div>
-                    <div class="ui button" ng-class="{ 'green': selectedTipType == 'no_tip' }" ng-if="tippingOptions.toggle_no_tip" ng-click="tipTypeSelection('no_tip')"
-                      translate>
+                    <div class="ui button" ng-class="{ 'green': selectedTipType == 'no_tip' }" ng-if="tippingOptions.toggle_no_tip" ng-click="tipTypeSelection('no_tip')" translate>
                       guest_contribution_no_tip
                     </div>
                   </div>
                   <div class="ui red pointing prompt label transition visible" ng-if="tipTypeError" translate>guest_contribution_select_tip_option</div>
-                  <div ng-if="(tippingOptions.toggle_dynamic && !tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'dynamic'"
-                    class="ui dynamic-tipping-form form tipping-option">
+                  <div ng-if="(tippingOptions.toggle_dynamic && !tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'dynamic'" class="ui dynamic-tipping-form form tipping-option">
                     <div class="field">
                       <div class="ui left labeled input">
                         <div class="ui label" ng-bind-html=" ' ' | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
@@ -69,22 +67,19 @@
                       </div>
                     </div>
                   </div>
-                  <div ng-if="(!tippingOptions.toggle_dynamic && tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'tiers'"
-                    class="tipping-option">
+                  <div ng-if="(!tippingOptions.toggle_dynamic && tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'tiers'" class="tipping-option">
                     <div class="tip-field field" ng-if="tippingOptions.tiers[0]">
                       <div class="ui selection dropdown tip-tiers">
                         <input type="hidden" name="tip_tier">
                         <i class="dropdown icon"></i>
                         <div class="default text">
-                          <span ng-if="tippingOptions.toggle_tier_names">{{tippingOptions.tiers[0].name}} -</span>
-                          <span>{{ ' ' | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}{{tippingOptions.tiers[0].dollar_amount
-                            | number : 2}}</span>
+                          <span ng-if="tippingOptions.toggle_tier_names">{{tipTiersDefaultName}} -</span>
+                          <span>{{ tipTiersDefaultAmount | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}</span>
                         </div>
                         <div class="menu">
-                          <div class="item" data-value="{{$index}}" ng-repeat="tier in tippingOptions.tiers track by $index" ng-click="tipTierSelection(tier.value, tier.type, tier.dollar_amount, tier.name)">
+                          <div class="item" data-value="{{$index}}" ng-repeat="tier in tippingOptions.tiers track by $index" ng-click="tipTierSelection(tier.value, tier.type, tier.dollar_amount, tier.name, $index)">
                             <span ng-if="tippingOptions.toggle_tier_names">{{tier.name}} -</span>
-                            <span>{{ ' ' | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}{{tier.dollar_amount
-                              | number : 2}}</span>
+                            <span>{{tier.dollar_amount | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}</span>
                           </div>
                         </div>
                       </div>
@@ -118,8 +113,7 @@
                         </div>
                       </div>
                       <div class="reward-description fr-view" html-render html="campaign.pledges[pledgeindex].description"></div>
-                      <div class="reward-etd" ng-if="campaign.pledges[pledgeindex].estimated_delivery_time">{{'guest_contribution_estimate_delivery' | translate}} {{campaign.pledges[pledgeindex].estimated_delivery_time
-                        | formatDate:"MMMM DD, YYYY" }}</div>
+                      <div class="reward-etd" ng-if="campaign.pledges[pledgeindex].estimated_delivery_time">{{'guest_contribution_estimate_delivery' | translate}} {{campaign.pledges[pledgeindex].estimated_delivery_time | formatDate:"MMMM DD, YYYY" }}</div>
                     </div>
                     <div ng-if="!pledgeLevel">
                       <div translate> guest_contribution_noreward_message</div>
@@ -130,24 +124,24 @@
                       <h4 class="title" translate> guest_contribution_your_contribution </h4>
                       <form class="ui form contribution-form">
                         <div class="field">
-                          <div ng-show="allowDecimalNotation == 2 || allowDecimalNotation == 3" class="ui big left labeled  labeled input contribution-input fluid">
-                            <div class="ui label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"
-                              style="padding-top:1.3em;"></div>
-                            <input name="contribution_amount" ng-class="{'has-error': pledgeAmount < campaign.pledges[pledgeindex].amount  || pledgeAmount == null ||pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}"
-                              type="text" min="{{campaign.pledges[pledgeindex].amount || 1}}" ng-model="campaignFundingGoal.value"
-                              number-with-decimals>
-                            <div ng-if="allowDecimalNotation == 2" class="ui label" style="padding-top:1.5em;">
+                          <div ng-show="allowDecimalNotation == 2 || allowDecimalNotation == 3" class="contribution-input with-decimals">
+                            <div class="ui currency-symbol label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
+                            <div class="input-wrap">
+                              <input name="contribution_amount" ng-class="{'has-error': pledgeAmount < campaign.pledges[pledgeindex].amount  || pledgeAmount == null ||pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}"
+                                type="text" min="{{campaign.pledges[pledgeindex].amount || 1}}" ng-model="campaignFundingGoal.value" number-with-decimals>
+                            </div>
+                            <div ng-if="allowDecimalNotation == 2" class="ui label decimal-value">
                               <span>.00</span>
                             </div>
                           </div>
                         </div>
                         <div class="field">
-                          <div ng-show="allowDecimalNotation == 1" class="ui big left labeled labeled input contribution-input fluid">
-                            <div class="ui label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"
-                              style="padding-top:1.3em;"></div>
-                            <input name="contribution_amount_decimal" ng-class="{'has-error': pledgeAmount < campaign.pledges[pledgeindex].amount  || pledgeAmount == null ||pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}"
-                              type="text" min="{{campaign.pledges[pledgeindex].amount || 1}}" ng-model="campaignFundingGoal.value"
-                              number-with-decimals ng-attr-allow-decimal="true">
+                          <div ng-show="allowDecimalNotation == 1" class="contribution-input">
+                            <div class="ui label currency-symbol" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
+                            <div class="input-wrap">
+                              <input name="contribution_amount_decimal" ng-class="{'has-error': pledgeAmount < campaign.pledges[pledgeindex].amount  || pledgeAmount == null ||pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}"
+                                type="text" min="{{campaign.pledges[pledgeindex].amount || 1}}" ng-model="campaignFundingGoal.value" number-with-decimals ng-attr-allow-decimal="true">
+                            </div>
                           </div>
                         </div>
                       </form>
@@ -224,8 +218,7 @@
                           <input type="checkbox" name="is_a_tax_payer">
                           <label translate>charity_helper_is_a_uk_taxpayer</label>
                         </div>
-                        <div class="ui checkbox charity-checkbox" ng-show="charity.is_a_gift && public_settings.site_campaign_charity_helper_alternate_form"
-                          ng-model="charity.is_a_tax_payer">
+                        <div class="ui checkbox charity-checkbox" ng-show="charity.is_a_gift && public_settings.site_campaign_charity_helper_alternate_form" ng-model="charity.is_a_tax_payer">
                           <input type="checkbox" name="is_a_tax_payer">
                           <label translate>charity_helper_is_a_uk_taxpayer_alternate</label>
                         </div>
@@ -329,24 +322,20 @@
                 <div class="eleven wide column right-col" ng-if="tippingOptions.toggle && tippingOptions.toggle_bottom_tip">
                   <div class="tipping-options-wrap" ng-if="tippingOptions.toggle">
                     <div class="ui buttons tipping-options-selection field" ng-class="{'error' : tipTypeError}" ng-if="(tippingOptions.toggle_dynamic && tippingOptions.toggle_tiers) || (tippingOptions.toggle_dynamic && tippingOptions.toggle_no_tip) || (tippingOptions.toggle_tiers && tippingOptions.toggle_no_tip)">
-                      <div class="ui button" ng-class="{ 'green': selectedTipType == 'tiers' }" ng-if="tippingOptions.toggle_tiers" ng-click="tipTypeSelection('tiers')"
-                        translate>
+                      <div class="ui button" ng-class="{ 'green': selectedTipType == 'tiers' }" ng-if="tippingOptions.toggle_tiers" ng-click="tipTypeSelection('tiers')" translate>
                         guest_contribution_choose_tip
                       </div>
                       <div class="or" ng-if="tippingOptions.toggle_tiers && tippingOptions.toggle_dynamic"></div>
-                      <div class="ui button" ng-class="{ 'green': selectedTipType == 'dynamic' }" ng-if="tippingOptions.toggle_dynamic" ng-click="tipTypeSelection('dynamic')"
-                        translate>
+                      <div class="ui button" ng-class="{ 'green': selectedTipType == 'dynamic' }" ng-if="tippingOptions.toggle_dynamic" ng-click="tipTypeSelection('dynamic')" translate>
                         guest_contribution_enter_tip_amount
                       </div>
                       <div class="or" ng-if="tippingOptions.toggle_no_tip"></div>
-                      <div class="ui button" ng-class="{ 'green': selectedTipType == 'no_tip' }" ng-if="tippingOptions.toggle_no_tip" ng-click="tipTypeSelection('no_tip')"
-                        translate>
+                      <div class="ui button" ng-class="{ 'green': selectedTipType == 'no_tip' }" ng-if="tippingOptions.toggle_no_tip" ng-click="tipTypeSelection('no_tip')" translate>
                         guest_contribution_no_tip
                       </div>
                     </div>
                     <div class="ui red pointing prompt label transition visible" ng-if="tipTypeError" translate>guest_contribution_select_tip_option</div>
-                    <div ng-if="(tippingOptions.toggle_dynamic && !tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'dynamic'"
-                      class="ui dynamic-tipping-form form tipping-option">
+                    <div ng-if="(tippingOptions.toggle_dynamic && !tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'dynamic'" class="ui dynamic-tipping-form form tipping-option">
                       <div class="field">
                         <div class="ui left labeled input">
                           <div class="ui label" ng-bind-html=" ' ' | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
@@ -354,22 +343,19 @@
                         </div>
                       </div>
                     </div>
-                    <div ng-if="(!tippingOptions.toggle_dynamic && tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'tiers'"
-                      class="tipping-option">
+                    <div ng-if="(!tippingOptions.toggle_dynamic && tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'tiers'" class="tipping-option">
                       <div class="tip-field field" ng-if="tippingOptions.tiers[0]">
                         <div class="ui selection dropdown tip-tiers">
                           <input type="hidden" name="tip_tier">
                           <i class="dropdown icon"></i>
                           <div class="default text">
-                            <span ng-if="tippingOptions.toggle_tier_names">{{tippingOptions.tiers[0].name}} -</span>
-                            <span>{{ ' ' | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}{{tippingOptions.tiers[0].dollar_amount
-                              | number : 2}}</span>
+                            <span ng-if="tippingOptions.toggle_tier_names">{{tipTiersDefaultName}} -</span>
+                            <span>{{ tipTiersDefaultAmount | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}</span>
                           </div>
                           <div class="menu">
-                            <div class="item" data-value="{{$index}}" ng-repeat="tier in tippingOptions.tiers track by $index" ng-click="tipTierSelection(tier.value, tier.type, tier.dollar_amount, tier.name)">
+                            <div class="item" data-value="{{$index}}" ng-repeat="tier in tippingOptions.tiers track by $index" ng-click="tipTierSelection(tier.value, tier.type, tier.dollar_amount, tier.name, $index)">
                               <span ng-if="tippingOptions.toggle_tier_names">{{tier.name}} -</span>
-                              <span>{{ ' ' | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}{{tier.dollar_amount
-                                | number : 2}}</span>
+                              <span>{{tier.dollar_amount | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}</span>
                             </div>
                           </div>
                         </div>
@@ -384,8 +370,8 @@
             </div>
           </div>
           <div class="ic-contribution-summary">
-            <h2 class="section-header ui inverted top attached header"> 
-              <span class="section-label-header">{{'guest_contribution_account_info'|translate}}</span> 
+            <h2 class="section-header ui inverted top attached header">
+              <span class="section-label-header">{{'guest_contribution_account_info'|translate}}</span>
               <div class="contribution-selection" ng-if="acceptExtraPledgeData" ng-show="(guestOption == 2 || guestOption == 4)">
                 <div class="ui dropdown card-type" id="contributionMethod">
                   <div class="text"> {{ accountInformationCapture[0].translation | translate }} </div>
@@ -456,7 +442,7 @@
                     <div class="ui green button" ng-click="loginUser()" id="loginbtn" translate> guest_contribution_login</div>
                     <div class="ui grey button" ng-click="forgotPassword()" id="loginbtn" translate>guest_contribution_forgot_password</div>
                   </form>
-                  <form class="ui form create-new-account-info-form" ng-show="guestOption == 2">
+                  <form class="ui form create-new-account-info-form" ng-if="guestOption == 2">
                     <div class="two fields">
                       <div class="field">
                         <label translate> guest_contribution_fname </label>
@@ -470,19 +456,17 @@
                     <div class="two fields">
                       <div class="field">
                         <label translate> guest_contribution_email </label>
-                        <input name="email" type="text" placeholder="{{'guest_contribution_email_message' | translate}}" ng-model="accountInfo.email"
-                          id="newemail">
+                        <input name="email" type="text" placeholder="{{'guest_contribution_email_message' | translate}}" ng-model="accountInfo.email" id="newemail">
                       </div>
                       <div class="field" ng-show="payment_gateway == 2">
-                        <label>Phone Number</label>
-                        <input name="phone_number" numbers-Only type="text" placeholder="Number" ng-model="person.number">
+                        <label translate>guest_campaign_Phone_Number</label>
+                        <input name="phone_number" numbers-Only type="text" placeholder="{{'guest_campaign_Phone_Number_placeholder'|translate}}" ng-model="person.number">
                       </div>
                     </div>
                     <div class="two fields">
                       <div class="field">
                         <label translate> guest_contribution_password </label>
-                        <input name="password" type="password" placeholder="{{'guest_contribution_password_placeholder' | translate}} " ng-model="accountInfo.password"
-                          id="newpass">
+                        <input name="password" type="password" placeholder="{{'guest_contribution_password_placeholder' | translate}} " ng-model="accountInfo.password" id="newpass">
                       </div>
                       <div class="field">
                         <label translate> guest_contribution_confirm_password </label>
@@ -491,12 +475,12 @@
                     </div>
                     <div class="two fields" ng-show="payment_gateway == 2">
                       <div class="field">
-                        <label>Employer</label>
-                        <input name="employer" type="text" placeholder="Employer" ng-model="person.employer">
+                        <label translate>guest_contribution_employer</label>
+                        <input name="employer" type="text" placeholder="{{'guest_contribution_employer_placeholder'|translate}}" ng-model="person.employer">
                       </div>
                       <div class="field">
-                        <label>Occupation</label>
-                        <input name="occupation" type="text" placeholder="Occupation" ng-model="person.occupation">
+                        <label translate>guest_contribution_occupation</label>
+                        <input name="occupation" type="text" placeholder="{{'guest_contribution_occupation_placeholder'|translate}}" ng-model="person.occupation">
                       </div>
                     </div>
                   </form>
@@ -513,9 +497,9 @@
                           <label translate> guest_contribution_organization_email </label>
                           <input name="organization_email" type="text" placeholder="{{'guest_contribution_organization_email' | translate}}" ng-model="accountInfo.organization_email">
                         </div>
-                      </div> 
-                    </form>            
-                  </div> 
+                      </div>
+                    </form>
+                  </div>
 
                   <form class="ui form guest-info-form" ng-show="guestOption == 3">
                     <div class="two fields" ng-show="payment_gateway == 1">
@@ -529,37 +513,31 @@
                       <div class="field">
                         <label translate> guest_contribution_fname </label>
                         <input ng-class="{'has-error': !accountInfo.first_name
-                          && guestOption == 3 && payment_gateway == 2}" type="text" placeholder="{{'guest_contribution_fname_placeholder' | translate}}"
-                          ng-model="accountInfo.first_name">
+                          && guestOption == 3 && payment_gateway == 2}" type="text" placeholder="{{'guest_contribution_fname_placeholder' | translate}}" ng-model="accountInfo.first_name">
                       </div>
                       <div class="field">
                         <label translate> guest_contribution_lname </label>
-                        <input ng-class="{'has-error': !accountInfo.last_name && guestOption == 3 && payment_gateway == 2}" type="text" placeholder="{{'guest_contribution_lname_placeholder'| translate}} "
-                          ng-model="accountInfo.last_name">
+                        <input ng-class="{'has-error': !accountInfo.last_name && guestOption == 3 && payment_gateway == 2}" type="text" placeholder="{{'guest_contribution_lname_placeholder'| translate}} " ng-model="accountInfo.last_name">
                       </div>
                     </div>
-                    <div class="two fields" ng-show="payment_gateway == 2">
+                    <div class="two fields" ng-if="payment_gateway == 2">
                       <div class="field">
                         <label translate> guest_contribution_email </label>
-                        <input ng-class="{'has-error': !accountInfo.email && guestOption == 3 && payment_gateway == 2}" type="text" placeholder="{{'guest_contribution_email_message' | translate}}"
-                          ng-model="accountInfo.email" id="newemail">
+                        <input ng-class="{'has-error': !accountInfo.email && guestOption == 3 && payment_gateway == 2}" type="text" placeholder="{{'guest_contribution_email_message' | translate}}" ng-model="accountInfo.email" id="newemail">
                       </div>
                       <div class="field">
-                        <label>Phone Number</label>
-                        <input numbers-Only ng-class="{'has-error': !person.number  && guestOption == 3 && payment_gateway == 2}" type="text" placeholder="Number"
-                          ng-model="person.number">
+                        <label translate>guest_campaign_Phone_Number</label>
+                        <input numbers-Only ng-class="{'has-error': !person.number  && guestOption == 3 && payment_gateway == 2}" type="text" placeholder="{{'guest_campaign_Phone_Number_placeholder'|translate}}" ng-model="person.number">
                       </div>
                     </div>
                     <div class="two fields" ng-show="payment_gateway == 2">
                       <div class="field">
-                        <label>Employer</label>
-                        <input ng-class="{'has-error': !person.employer && guestOption == 3 && payment_gateway == 2 }" type="text" placeholder="Employer"
-                          ng-model="person.employer">
+                        <label translate>guest_contribution_employer</label>
+                        <input ng-class="{'has-error': !person.employer && guestOption == 3 && payment_gateway == 2 }" type="text" placeholder="{{'guest_contribution_employer_placeholder'|translate}}" ng-model="person.employer">
                       </div>
                       <div class="field">
-                        <label>Occupation</label>
-                        <input ng-class="{'has-error': !person.occupation && guestOption == 3 && payment_gateway == 2}" type="text" placeholder="Occupation"
-                          ng-model="person.occupation">
+                        <label translate>guest_contribution_occupation</label>
+                        <input ng-class="{'has-error': !person.occupation && guestOption == 3 && payment_gateway == 2}" type="text" placeholder="{{'guest_contribution_occupation_placeholder'|translate}}" ng-model="person.occupation">
                       </div>
                     </div>
                   </form>
@@ -595,9 +573,9 @@
                           <label translate> guest_contribution_organization_email </label>
                           <input name="organization_email" type="text" placeholder="{{'guest_contribution_organization_email' | translate}}" ng-model="accountInfo.organization_email">
                         </div>
-                      </div> 
-                    </form>            
-                  </div> 
+                      </div>
+                    </form>
+                  </div>
                   <!-- Form Express Checkout End -->
                 </div>
               </div>
@@ -620,8 +598,7 @@
                   <div class="two fields">
                     <div class="field">
                       <label translate> guest_contribution_payment_card_number </label>
-                      <input name="card_number" type="text" placeholder="{{'guest_contribution_payment_card_number'|translate}}" ng-model="creditCard.number"
-                        ng-change="checkCardType()" class="creditCardNumber">
+                      <input name="card_number" type="text" placeholder="{{'guest_contribution_payment_card_number'|translate}}" ng-model="creditCard.number" ng-change="checkCardType()" class="creditCardNumber">
                     </div>
                     <div class="field"></div>
                   </div>
@@ -631,14 +608,12 @@
                         <div class="exp-date-field field">
                           <label translate>guest_contribution_payment_expiration_month</label>
                           <div class="input-wrap">
-                            <input name="card_exp_month" type="text" class="exp-date" placeholder="{{'guest_contribution_payment_expiration_date_month' | translate}}"
-                            ng-model="creditCard.exp_month" numbers-only maxlength="2">
+                            <input name="card_exp_month" type="text" class="exp-date" placeholder="{{'guest_contribution_payment_expiration_date_month' | translate}}" ng-model="creditCard.exp_month" numbers-only maxlength="2">
                           </div>
                         </div>
                         <div class="exp-date-field field">
                           <label translate>guest_contribution_payment_expiration_year</label>
-                          <input name="card_exp_year" type="text" class="exp-date" placeholder="{{'guest_contribution_payment_expiration_date_year' | translate}}"
-                            ng-model="creditCard.exp_year" numbers-only maxlength="2">
+                          <input name="card_exp_year" type="text" class="exp-date" placeholder="{{'guest_contribution_payment_expiration_date_year' | translate}}" ng-model="creditCard.exp_year" numbers-only maxlength="2">
                         </div>
                       </div>
                     </div>
@@ -646,8 +621,7 @@
                       <label id="cvc"> {{'guest_contribution_payment_cvc'| translate}}
                         <i class="info circle icon" data-content="{{'pledge_campaign_creditcard_cvc_note'| translate }}" sui-popup></i>
                       </label>
-                      <input name="cvc" placeholder="{{'guest_contribution_payment_cvc_placeholder'| translate}}" type="text" class="cvc-code cardCVC"
-                        ng-model="creditCard.cvc" numbers-only>
+                      <input name="cvc" placeholder="{{'guest_contribution_payment_cvc_placeholder'| translate}}" type="text" class="cvc-code cardCVC" ng-model="creditCard.cvc" numbers-only>
                     </div>
                   </div>
                 </form>
@@ -701,16 +675,14 @@
                   <div class="two fields">
                     <div class="field">
                       <label translate>guest_contribution_payment_card__name</label>
-                      <input ng-class="{'has-error': !creditCard.name  && payment_gateway ==2 }" type="text" placeholder="{{'guest_contribution_payment_card__name'|translate}}"
-                        ng-model="creditCard.name">
+                      <input ng-class="{'has-error': !creditCard.name  && payment_gateway ==2 }" type="text" placeholder="{{'guest_contribution_payment_card__name'|translate}}" ng-model="creditCard.name">
                     </div>
                     <div class="field"></div>
                   </div>
                   <div class="two fields">
                     <div class="field">
                       <label translate> guest_contribution_payment_card_number </label>
-                      <input class="creditCardNumber" ng-class="{'has-error': !creditCard.number  && payment_gateway ==2 }" type="text" placeholder="{{'guest_contribution_payment_card_number'| translate}}"
-                        ng-model="creditCard.number">
+                      <input class="creditCardNumber" ng-class="{'has-error': !creditCard.number  && payment_gateway ==2 }" type="text" placeholder="{{'guest_contribution_payment_card_number'| translate}}" ng-model="creditCard.number">
                     </div>
                   </div>
                   <div class="fields">
@@ -720,12 +692,10 @@
                       </label>
                       <div class="two fields">
                         <div class="exp-date-field field">
-                          <input ng-class="{'has-error': !creditCard.exp_month  && payment_gateway ==2}" type="text" class="exp-date" placeholder="{{'guest_contribution_payment_expiration_date_month'|translate}}"
-                            ng-model="creditCard.exp_month" numbers-only maxlength="2">
+                          <input ng-class="{'has-error': !creditCard.exp_month  && payment_gateway ==2}" type="text" class="exp-date" placeholder="{{'guest_contribution_payment_expiration_date_month'|translate}}" ng-model="creditCard.exp_month" numbers-only maxlength="2">
                         </div>
                         <div class="exp-date-field field">
-                          <input ng-class="{'has-error': !creditCard.exp_year  && payment_gateway ==2}" type="text" class="exp-date" placeholder="{{'guest_contribution_payment_expiration_date_year'|translate}}"
-                            ng-model="creditCard.exp_year" numbers-only maxlength="2">
+                          <input ng-class="{'has-error': !creditCard.exp_year  && payment_gateway ==2}" type="text" class="exp-date" placeholder="{{'guest_contribution_payment_expiration_date_year'|translate}}" ng-model="creditCard.exp_year" numbers-only maxlength="2">
                         </div>
                       </div>
                     </div>
@@ -733,16 +703,21 @@
                       <label id="cvc"> {{'guest_contribution_payment_cvc'|translate}}
                         <i class="info circle icon" data-content="{{'pledge_campaign_creditcard_cvc_note'| translate }}"></i>
                       </label>
-                      <input ng-class="{'has-error': !creditCard.cvc  && payment_gateway ==2 }" placeholder="{{'guest_contribution_payment_cvc'|translate}}"
-                        type="text" class="cvv-code" ng-model="creditCard.cvc" numbers-only maxlength="5">
+                      <input ng-class="{'has-error': !creditCard.cvc  && payment_gateway ==2 }" placeholder="{{'guest_contribution_payment_cvc'|translate}}" type="text" class="cvv-code" ng-model="creditCard.cvc" numbers-only maxlength="5">
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <h2 class="section-header ui inverted top attached header" translate ng-if="(campaign.pledges[pledgeindex].shipping.length && guestOption != 1) || (acceptExtraPledgeData && guestOption != 1)">
+          <h2 class="section-header ui inverted top attached header" translate ng-if="(campaign.pledges[pledgeindex].shipping.length && guestOption != 1) && !(acceptExtraPledgeData && guestOption != 1)">
             guest_contribution_shipping_info
+          </h2>
+          <h2 class="section-header ui inverted top attached header" translate ng-if="(campaign.pledges[pledgeindex].shipping.length && guestOption != 1) && (acceptExtraPledgeData && guestOption != 1)">
+            guest_contribution_shipping_info
+          </h2>
+          <h2 class="section-header ui inverted top attached header" translate ng-if="!(campaign.pledges[pledgeindex].shipping.length && guestOption != 1) && (acceptExtraPledgeData && guestOption != 1)">
+            guest_contribution_address_info
           </h2>
           <div class="shipping-info campaign-bg ui middle attached basic segment" ng-if="(campaign.pledges[pledgeindex].shipping.length && guestOption != 1) || (acceptExtraPledgeData && guestOption != 1)">
             <div class="formbg ui two column stackable grid">
@@ -751,14 +726,14 @@
               </div>
               <div class="five wide column left-col">
                 <h3 class="ui header" translate> guest_contribution_shipping_address </h3>
+                <p translate>guest_contribution_shipping_address_message</p>
               </div>
               <div class="eleven wide column right-col">
                 <div ng-if="!alt_shipping && !site_campaign_alt_city_input_toggle">
                   <form class="ui form new-shipping-address-form">
                     <div class="field">
                       <label translate> guest_contribution_shipping_address </label>
-                      <input type="text" placeholder="{{'guest_contribution_shipping_street_address' | translate}} " ng-model="address.street1"
-                        name="street_address">
+                      <input type="text" placeholder="{{'guest_contribution_shipping_street_address' | translate}} " ng-model="address.street1" name="street_address">
                     </div>
                     <div class="two fields">
                       <div class="field" id="select-city">
@@ -783,8 +758,7 @@
                   <form class="ui form new-shipping-address-form">
                     <div class="field">
                       <label translate> guest_contribution_shipping_address </label>
-                      <input type="text" placeholder="{{'guest_contribution_shipping_street_address' | translate}} " ng-model="address.street1"
-                        name="street_address">
+                      <input type="text" placeholder="{{'guest_contribution_shipping_street_address' | translate}} " ng-model="address.street1" name="street_address">
                     </div>
                     <div class="two fields">
                       <div class="field" id="select-city">
@@ -916,11 +890,11 @@
             <div class="formbg ui two column stackable grid">
               <div class="five wide column left-col">
                 <h3 class="ui header" translate="guest_campaign_Phone_Number"></h3>
+                <p translate>guest_campaign_phone_number_message</p>
               </div>
               <div class="eleven wide column right-col">
                 <div ng-if="hasNumber">
-                  <div class="ui red message error-message" ng-if="(!toggle.selectedNumber && toggle.newNumber) || !(toggle.newNumber||newNumberCreated.number && newNumberCreated.phonetype )"
-                    translate="guest_campaign_phone_number_message"></div>
+                  <div class="ui red message error-message" ng-if="(!toggle.selectedNumber && toggle.newNumber) || !(toggle.newNumber||newNumberCreated.number && newNumberCreated.phonetype )" translate="guest_campaign_phone_number_message"></div>
                   <div class="ui selection fluid dropdown number-select">
                     <div class="default text" translate="guest_campaign_shipping_choose_phone_number">
                     </div>
@@ -940,8 +914,7 @@
                     <div class="two fields">
                       <div class="field">
                         <label translate="guest_campaign_Phone_Number"></label>
-                        <input type="text" maxLength="25" ng-model="newNumberCreated.number" name="new_phone_number" placeholder="{{'guest_campaign_Phone_Number' | translate}}"
-                        />
+                        <input type="text" maxLength="25" ng-model="newNumberCreated.number" name="new_phone_number" placeholder="{{'guest_campaign_Phone_Number' | translate}}" />
                       </div>
                       <div class="field">
                         <label translate="guest_campaign_Phone_Type"></label>
@@ -1023,11 +996,14 @@
         </div>
       </div>
       <div class="ui column" ng-if="isContributionLayout1" id="contribution-layout-1">
+        <div class="campaign-disclaimer-text" ng-if="displayCampaignDisclaimer.toggle && displayCampaignDisclaimer.text">
+          <div class="ui warning message" ng-bind-html="displayCampaignDisclaimer.text"></div>
+        </div>
         <div class="pledge-campaign-top-header">
           <div class="ui two column stackable grid">
             <div class="four wide column campaign-img">
-              <img ng-if="campaign.files.length" ng-repeat="file in campaign.files | filter:{region_id: RESOURCE_REGIONS.campaign.thumbnail} | orderBy:'-file_id' | limitTo: 1"
-                ng-src="{{server + '/image/campaign_thumbnail_xl/' + file.path_external}}" class="ui image" />
+              <img ng-if="campaign.files.length" ng-repeat="file in campaign.files | filter:{region_id: RESOURCE_REGIONS.campaign.thumbnail} | orderBy:'-file_id' | limitTo: 1" ng-src="{{server + '/image/campaign_thumbnail_xl/' + file.path_external}}" class="ui image"
+              />
               <img ng-if="campaign.files.length == 0" src="images/placeholder-images/placeholder_campaign_thumb.png" class="ui image" />
             </div>
             <div class="twelve wide column">
@@ -1035,7 +1011,7 @@
               <h4 ng-if="!public_settings.site_campaign_enable_organization_name"> {{'guest_contribution_by' | translate}} {{campaign.managers[0].first_name}} {{campaign.managers[0].last_name}}</h4>
               <h4 ng-if="public_settings.site_campaign_enable_organization_name"> {{'guest_contribution_by' | translate}} {{organization_name.value}}</h4>
               <p ng-if="public_settings.site_campaign_enable_organization_name">{{'ein_label' | translate}}{{organization_name.ein}}</p>
-              <p>{{campaign.blurb}}</p>
+              <p ng-bind-html="campaign.blurb"></p>
             </div>
           </div>
         </div>
@@ -1049,24 +1025,20 @@
                     <p translate>guest_contribution_website_tip_note</p>
 
                     <div class="ui buttons tipping-options-selection field" ng-class="{'error' : tipTypeError}" ng-if="(tippingOptions.toggle_dynamic && tippingOptions.toggle_tiers) || (tippingOptions.toggle_dynamic && tippingOptions.toggle_no_tip) || (tippingOptions.toggle_tiers && tippingOptions.toggle_no_tip)">
-                      <div class="ui button" ng-class="{ 'green': selectedTipType == 'tiers' }" ng-if="tippingOptions.toggle_tiers" ng-click="tipTypeSelection('tiers')"
-                        translate>
+                      <div class="ui button" ng-class="{ 'green': selectedTipType == 'tiers' }" ng-if="tippingOptions.toggle_tiers" ng-click="tipTypeSelection('tiers')" translate>
                         guest_contribution_choose_tip
                       </div>
                       <div class="or" ng-if="tippingOptions.toggle_tiers && tippingOptions.toggle_dynamic"></div>
-                      <div class="ui button" ng-class="{ 'green': selectedTipType == 'dynamic' }" ng-if="tippingOptions.toggle_dynamic" ng-click="tipTypeSelection('dynamic')"
-                        translate>
+                      <div class="ui button" ng-class="{ 'green': selectedTipType == 'dynamic' }" ng-if="tippingOptions.toggle_dynamic" ng-click="tipTypeSelection('dynamic')" translate>
                         guest_contribution_enter_tip_amount
                       </div>
                       <div class="or" ng-if="tippingOptions.toggle_no_tip"></div>
-                      <div class="ui button" ng-class="{ 'green': selectedTipType == 'no_tip' }" ng-if="tippingOptions.toggle_no_tip" ng-click="tipTypeSelection('no_tip')"
-                        translate>
+                      <div class="ui button" ng-class="{ 'green': selectedTipType == 'no_tip' }" ng-if="tippingOptions.toggle_no_tip" ng-click="tipTypeSelection('no_tip')" translate>
                         guest_contribution_no_tip
                       </div>
                     </div>
                     <div class="ui red pointing prompt label transition visible" ng-if="tipTypeError" translate>guest_contribution_select_tip_option</div>
-                    <div ng-if="(tippingOptions.toggle_dynamic && !tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'dynamic'"
-                      class="ui dynamic-tipping-form form tipping-option">
+                    <div ng-if="(tippingOptions.toggle_dynamic && !tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'dynamic'" class="ui dynamic-tipping-form form tipping-option">
                       <div class="field">
                         <div class="ui left labeled input">
                           <div class="ui label" ng-bind-html=" ' ' | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
@@ -1074,22 +1046,19 @@
                         </div>
                       </div>
                     </div>
-                    <div ng-if="(!tippingOptions.toggle_dynamic && tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'tiers'"
-                      class="tipping-option">
+                    <div ng-if="(!tippingOptions.toggle_dynamic && tippingOptions.toggle_tiers && !tippingOptions.toggle_no_tip) || selectedTipType == 'tiers'" class="tipping-option">
                       <div class="tip-field field" ng-if="tippingOptions.tiers[0]">
                         <div class="ui selection dropdown tip-tiers">
                           <input type="hidden" name="tip_tier">
                           <i class="dropdown icon"></i>
                           <div class="default text">
-                            <span ng-if="tippingOptions.toggle_tier_names">{{tippingOptions.tiers[0].name}} -</span>
-                            <span>{{ ' ' | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}{{tippingOptions.tiers[0].dollar_amount
-                              | number : 2}}</span>
+                            <span ng-if="tippingOptions.toggle_tier_names">{{tipTiersDefaultName}} -</span>
+                            <span>{{tipTiersDefaultAmount | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}</span>
                           </div>
                           <div class="menu">
-                            <div class="item" data-value="{{$index}}" ng-repeat="tier in tippingOptions.tiers track by $index" ng-click="tipTierSelection(tier.value, tier.type, tier.dollar_amount, tier.name)">
+                            <div class="item" data-value="{{$index}}" ng-repeat="tier in tippingOptions.tiers track by $index" ng-click="tipTierSelection(tier.value, tier.type, tier.dollar_amount, tier.name, $index)">
                               <span ng-if="tippingOptions.toggle_tier_names">{{tier.name}} -</span>
-                              <span>{{ ' ' | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}{{tier.dollar_amount
-                                | number : 2}}</span>
+                              <span>{{tier.dollar_amount | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option}}</span>
                             </div>
                           </div>
                         </div>
@@ -1108,22 +1077,24 @@
                       <h4 class="title" translate> guest_contribution_your_contribution </h4>
                       <form class="ui form contribution-form">
                         <div class="field">
-                          <div ng-show="allowDecimalNotation == 2 || allowDecimalNotation == 3" class="ui big left labeled  labeled input contribution-input fluid">
-                            <div class="ui label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
-                            <input name="contribution_amount" ng-class="{'has-error': pledgeAmount < campaign.pledges[pledgeindex].amount  || pledgeAmount == null ||pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}"
-                              type="text" min="{{campaign.pledges[pledgeindex].amount || 1}}" ng-model="campaignFundingGoal.value"
-                              number-with-decimals>
-                            <div ng-if="allowDecimalNotation == 2" class="ui label">
+                          <div ng-show="allowDecimalNotation == 2 || allowDecimalNotation == 3" class="contribution-input with-decimal">
+                            <div class="ui currency label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
+                            <div class="input-wrap">
+                              <input name="contribution_amount" ng-class="{'has-error': pledgeAmount < campaign.pledges[pledgeindex].amount  || pledgeAmount == null ||pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}"
+                                type="text" min="{{campaign.pledges[pledgeindex].amount || 1}}" ng-model="campaignFundingGoal.value" number-with-decimals>
+                            </div>
+                            <div ng-if="allowDecimalNotation == 2" class="ui label decimal-value">
                               <span>.00</span>
                             </div>
                           </div>
                         </div>
                         <div class="field">
-                          <div ng-show="allowDecimalNotation == 1" class="ui big left labeled labeled input contribution-input fluid">
-                            <div class="ui label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
-                            <input name="contribution_amount_decimal" ng-class="{'has-error': pledgeAmount < campaign.pledges[pledgeindex].amount  || pledgeAmount == null ||pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}"
-                              type="text" min="{{campaign.pledges[pledgeindex].amount || 1}}" ng-model="campaignFundingGoal.value"
-                              number-with-decimals ng-attr-allow-decimal="true">
+                          <div ng-show="allowDecimalNotation == 1" class="contribution-input">
+                            <div class="ui currency-symbol label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
+                            <div class="input-wrap">
+                              <input name="contribution_amount_decimal" ng-class="{'has-error': pledgeAmount < campaign.pledges[pledgeindex].amount  || pledgeAmount == null ||pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}"
+                                type="text" min="{{campaign.pledges[pledgeindex].amount || 1}}" ng-model="campaignFundingGoal.value" number-with-decimals ng-attr-allow-decimal="true">
+                            </div>
                           </div>
                         </div>
                       </form>
@@ -1199,8 +1170,7 @@
                             <input type="checkbox" name="is_a_tax_payer">
                             <label translate>charity_helper_is_a_uk_taxpayer</label>
                           </div>
-                          <div class="ui checkbox charity-checkbox" ng-show="charity.is_a_gift && public_settings.site_campaign_charity_helper_alternate_form"
-                            ng-model="charity.is_a_tax_payer">
+                          <div class="ui checkbox charity-checkbox" ng-show="charity.is_a_gift && public_settings.site_campaign_charity_helper_alternate_form" ng-model="charity.is_a_tax_payer">
                             <input type="checkbox" name="is_a_tax_payer">
                             <label translate>charity_helper_is_a_uk_taxpayer_alternate</label>
                           </div>
@@ -1299,8 +1269,7 @@
                 <div class="eight wide column right-col">
                   <div class="ui segment reward-wrap" ng-if="campaign.pledges">
                     <div ng-if="pledgeLevel">
-                      <div class="reward-etd" ng-if="campaign.pledges[pledgeindex].estimated_delivery_time">{{'guest_contribution_estimate_delivery' | translate}} {{campaign.pledges[pledgeindex].estimated_delivery_time
-                        | formatDate:"MMMM DD, YYYY" }}</div>
+                      <div class="reward-etd" ng-if="campaign.pledges[pledgeindex].estimated_delivery_time">{{'guest_contribution_estimate_delivery' | translate}} {{campaign.pledges[pledgeindex].estimated_delivery_time | formatDate:"MMMM DD, YYYY" }}</div>
                       <h3 class="reward-title ui header">{{campaign.pledges[pledgeindex].name}}</h3>
                       <div class="reward-description fr-view" html-render html="campaign.pledges[pledgeindex].description"></div>
                     </div>
@@ -1379,9 +1348,9 @@
                     <div class="ui green button" ng-click="loginUser()" id="loginbtn" translate> guest_contribution_login</div>
                     <div class="ui grey button" ng-click="forgotPassword()" id="loginbtn" translate>guest_contribution_forgot_password</div>
                   </form>
-                  
+
                   <!-- Form Create Account Checkout Start -->
-                  <form class="ui form create-new-account-info-form" ng-show="guestOption == 2">
+                  <form class="ui form create-new-account-info-form" ng-if="guestOption == 2">
                     <div class="field">
                       <label translate> guest_contribution_fname </label>
                       <input name="first_name" type="text" placeholder="{{'guest_contribution_fname_placeholder' | translate}}" ng-model="accountInfo.first_name">
@@ -1392,33 +1361,31 @@
                     </div>
                     <div class="field">
                       <label translate> guest_contribution_email </label>
-                      <input name="email" type="text" placeholder="{{'guest_contribution_email_message' | translate}}" ng-model="accountInfo.email"
-                        id="newemail">
+                      <input name="email" type="text" placeholder="{{'guest_contribution_email_message' | translate}}" ng-model="accountInfo.email" id="newemail">
                     </div>
                     <div class="field" ng-show="payment_gateway == 2">
-                      <label>Phone Number</label>
-                      <input name="phone_number" numbers-Only type="text" placeholder="Number" maxLength="25" ng-model="person.number">
+                      <label translate>guest_campaign_Phone_Number</label>
+                      <input name="phone_number" numbers-Only type="text" placeholder="{{'guest_campaign_Phone_Number_placeholder'|translate}}" maxLength="25" ng-model="person.number">
                     </div>
                     <div class="field">
                       <label translate> guest_contribution_password </label>
-                      <input name="password" type="password" placeholder="{{'guest_contribution_password_placeholder' | translate}} " ng-model="accountInfo.password"
-                        id="newpass">
+                      <input name="password" type="password" placeholder="{{'guest_contribution_password_placeholder' | translate}} " ng-model="accountInfo.password" id="newpass">
                     </div>
                     <div class="field">
                       <label translate> guest_contribution_confirm_password </label>
                       <input name="confirm_password" type="password" placeholder="{{'guest_contribution_confirm_password' | translate}}" ng-model="accountInfo.password_confirm">
                     </div>
                     <div class="field" ng-show="payment_gateway == 2">
-                      <label>Employer</label>
-                      <input name="employer" type="text" placeholder="Employer" ng-model="person.employer">
+                      <label translate>guest_contribution_employer</label>
+                      <input name="employer" type="text" placeholder="{{'guest_contribution_employer_placeholder'|translate}}" ng-model="person.employer">
                     </div>
                     <div class="field" ng-show="payment_gateway == 2">
-                      <label>Occupation</label>
-                      <input name="occupation" type="text" placeholder="Occupation" ng-model="person.occupation">
+                      <label translate>guest_contribution_occupation</label>
+                      <input name="occupation" type="text" placeholder="{{'guest_contribution_occupation_placeholder'|translate}}" ng-model="person.occupation">
                     </div>
                   </form>
                   <!-- Form Create Account Checkout End -->
-                  
+
                   <!-- Form Guest Checkout Start -->
                   <form class="ui form guest-info-form" ng-show="guestOption == 3">
                     <div class="field" ng-show="payment_gateway == 1">
@@ -1427,33 +1394,27 @@
                     </div>
                     <div class="field" ng-show="payment_gateway == 2">
                       <label translate> guest_contribution_fname </label>
-                      <input ng-class="{'has-error': !accountInfo.first_name && guestOption == 3 && payment_gateway == 2}" type="text" placeholder="{{'guest_contribution_fname_placeholder' | translate}}"
-                        ng-model="accountInfo.first_name">
+                      <input ng-class="{'has-error': !accountInfo.first_name && guestOption == 3 && payment_gateway == 2}" type="text" placeholder="{{'guest_contribution_fname_placeholder' | translate}}" ng-model="accountInfo.first_name">
                     </div>
                     <div class="field" ng-show="payment_gateway == 2">
                       <label translate> guest_contribution_lname </label>
-                      <input ng-class="{'has-error': !accountInfo.last_name && guestOption == 3 && payment_gateway == 2}" type="text" placeholder="{{'guest_contribution_lname_placeholder'| translate}} "
-                        ng-model="accountInfo.last_name">
+                      <input ng-class="{'has-error': !accountInfo.last_name && guestOption == 3 && payment_gateway == 2}" type="text" placeholder="{{'guest_contribution_lname_placeholder'| translate}} " ng-model="accountInfo.last_name">
                     </div>
-                    <div class="field" ng-show="payment_gateway == 2">
+                    <div class="field" ng-if="payment_gateway == 2">
                       <label translate> guest_contribution_email </label>
-                      <input ng-class="{'has-error': !accountInfo.email && guestOption == 3 && payment_gateway == 2}" type="text" placeholder="{{'guest_contribution_email_message' | translate}}"
-                        ng-model="accountInfo.email" id="newemail">
+                      <input ng-class="{'has-error': !accountInfo.email && guestOption == 3 && payment_gateway == 2}" type="text" placeholder="{{'guest_contribution_email_message' | translate}}" ng-model="accountInfo.email" id="newemail">
                     </div>
                     <div class="field" ng-show="payment_gateway == 2">
-                      <label>Phone Number</label>
-                      <input numbers-Only ng-class="{'has-error': !person.number  && guestOption == 3 && payment_gateway == 2}" type="text" placeholder="Number"
-                        ng-model="person.number">
+                      <label translate>guest_campaign_Phone_Number</label>
+                      <input numbers-Only ng-class="{'has-error': !person.number  && guestOption == 3 && payment_gateway == 2}" type="text" placeholder="{{'guest_campaign_Phone_Number_placeholder'|translate}}" ng-model="person.number">
                     </div>
                     <div class="field" ng-show="payment_gateway == 2">
-                      <label>Employer</label>
-                      <input ng-class="{'has-error': !person.employer && guestOption == 3 && payment_gateway == 2 }" type="text" placeholder="Employer"
-                        ng-model="person.employer">
+                      <label translate>guest_contribution_employer</label>
+                      <input ng-class="{'has-error': !person.employer && guestOption == 3 && payment_gateway == 2 }" type="text" placeholder="{{'guest_contribution_employer_placeholder'|translate}}" ng-model="person.employer">
                     </div>
                     <div class="field" ng-show="payment_gateway == 2">
-                      <label>Occupation</label>
-                      <input ng-class="{'has-error': !person.occupation && guestOption == 3 && payment_gateway == 2}" type="text" placeholder="Occupation"
-                        ng-model="person.occupation">
+                      <label translate>guest_contribution_occupation</label>
+                      <input ng-class="{'has-error': !person.occupation && guestOption == 3 && payment_gateway == 2}" type="text" placeholder="{{'guest_contribution_occupation_placeholder'|translate}}" ng-model="person.occupation">
                     </div>
                   </form>
                   <!-- Form Guest Checkout End -->
@@ -1477,8 +1438,7 @@
                 </div>
                 <div class="phone-info" ng-if="campaign.pledges[pledgeindex].shipping.length && guestOption != 1">
                   <div ng-if="hasNumber">
-                    <div class="ui red message error-message" ng-if="(!toggle.selectedNumber && toggle.newNumber) || !(toggle.newNumber||newNumberCreated.number && newNumberCreated.phonetype )"
-                      translate="guest_campaign_phone_number_message"></div>
+                    <div class="ui red message error-message" ng-if="(!toggle.selectedNumber && toggle.newNumber) || !(toggle.newNumber||newNumberCreated.number && newNumberCreated.phonetype )" translate="guest_campaign_phone_number_message"></div>
                     <div class="ui selection fluid dropdown number-select">
                       <div class="default text" translate="guest_campaign_shipping_choose_phone_number">
                       </div>
@@ -1499,8 +1459,7 @@
                       <div class="two fields">
                         <div class="field">
                           <label translate="guest_campaign_Phone_Number"></label>
-                          <input maxLength="25" type="text" ng-model="newNumberCreated.number" name="new_phone_number" placeholder="{{'guest_campaign_Phone_Number_placeholder' | translate}}"
-                          />
+                          <input maxLength="25" type="text" ng-model="newNumberCreated.number" name="new_phone_number" placeholder="{{'guest_campaign_Phone_Number_placeholder' | translate}}" />
                         </div>
                         <div class="field">
                           <label translate="guest_campaign_Phone_Type"></label>
@@ -1524,8 +1483,7 @@
                   <form class="ui form new-shipping-address-form">
                     <div class="field">
                       <label translate> guest_contribution_shipping_address </label>
-                      <input type="text" placeholder="{{'guest_contribution_shipping_street_address' | translate}} " ng-model="address.street1"
-                        name="street_address">
+                      <input type="text" placeholder="{{'guest_contribution_shipping_street_address' | translate}} " ng-model="address.street1" name="street_address">
                     </div>
                     <div class="two fields">
                       <div class="field" id="select-city">
@@ -1550,8 +1508,7 @@
                   <form class="ui form new-shipping-address-form">
                     <div class="field">
                       <label translate> guest_contribution_shipping_address </label>
-                      <input type="text" placeholder="{{'guest_contribution_shipping_street_address' | translate}} " ng-model="address.street1"
-                        name="street_address">
+                      <input type="text" placeholder="{{'guest_contribution_shipping_street_address' | translate}} " ng-model="address.street1" name="street_address">
                     </div>
                     <div class="two fields">
                       <div class="field" id="select-city">
@@ -1676,21 +1633,18 @@
                   <form ng-if="!site_stripe_tokenization_settings.toggle" class="ui credit-card-form form" ng-init="initStripePayment()">
                     <div class="field">
                       <label translate> guest_contribution_payment_card_number </label>
-                      <input name="card_number" type="text" placeholder="{{'guest_contribution_payment_card_number'|translate}}" ng-model="creditCard.number"
-                        ng-change="checkCardType()" class="creditCardNumber">
+                      <input name="card_number" type="text" placeholder="{{'guest_contribution_payment_card_number'|translate}}" ng-model="creditCard.number" ng-change="checkCardType()" class="creditCardNumber">
                     </div>
                     <div class="two fields">
                       <div class="expdate-field-wrap field">
                         <div class="two fields">
                           <div class="exp-date-field field">
                             <label translate>guest_contribution_payment_expiration_month</label>
-                            <input name="card_exp_month" type="text" class="exp-date" placeholder="{{'guest_contribution_payment_expiration_date_month' | translate}}"
-                              ng-model="creditCard.exp_month" numbers-only maxlength="2">
+                            <input name="card_exp_month" type="text" class="exp-date" placeholder="{{'guest_contribution_payment_expiration_date_month' | translate}}" ng-model="creditCard.exp_month" numbers-only maxlength="2">
                           </div>
                           <div class="exp-date-field field">
                             <label translate>guest_contribution_payment_expiration_year</label>
-                            <input name="card_exp_year" type="text" class="exp-date" placeholder="{{'guest_contribution_payment_expiration_date_year' | translate}}"
-                              ng-model="creditCard.exp_year" numbers-only maxlength="2">
+                            <input name="card_exp_year" type="text" class="exp-date" placeholder="{{'guest_contribution_payment_expiration_date_year' | translate}}" ng-model="creditCard.exp_year" numbers-only maxlength="2">
                           </div>
                         </div>
                       </div>
@@ -1698,8 +1652,7 @@
                         <label id="cvc"> {{'guest_contribution_payment_cvc'| translate}}
                           <i class="info circle icon" data-content="{{'pledge_campaign_creditcard_cvc_note'| translate }}" sui-popup></i>
                         </label>
-                        <input name="cvc" placeholder="{{'guest_contribution_payment_cvc_placeholder'| translate}}" type="text" class="cvc-code cardCVC"
-                          ng-model="creditCard.cvc" numbers-only>
+                        <input name="cvc" placeholder="{{'guest_contribution_payment_cvc_placeholder'| translate}}" type="text" class="cvc-code cardCVC" ng-model="creditCard.cvc" numbers-only>
                       </div>
                     </div>
                   </form>
@@ -1708,11 +1661,11 @@
                       <input type="text" name="namecard" placeholder="{{'pledge_campaign_name_on_card'| translate}}" ng-model="stripeExtraDetails.name">
                     </div>
                     <div class="field">
-                        <label translate> guest_contribution_payment_card_number </label>
-                        <div id="card-number-element-wrap">
-                          <i class="pf pf-credit-card" id="brand-icon"></i>
-                        </div>
-                        <div id="card-number-element"></div>
+                      <label translate> guest_contribution_payment_card_number </label>
+                      <div id="card-number-element-wrap">
+                        <i class="pf pf-credit-card" id="brand-icon"></i>
+                      </div>
+                      <div id="card-number-element"></div>
                     </div>
 
                     <div class="two fields">
@@ -1737,14 +1690,12 @@
                   <div class="ui credit-card form">
                     <div class="field">
                       <label translate>guest_contribution_payment_card__name</label>
-                      <input ng-class="{'has-error': !creditCard.name  && payment_gateway ==2 }" type="text" placeholder="{{'guest_contribution_payment_card__name'|translate}}"
-                        ng-model="creditCard.name">
+                      <input ng-class="{'has-error': !creditCard.name  && payment_gateway ==2 }" type="text" placeholder="{{'guest_contribution_payment_card__name'|translate}}" ng-model="creditCard.name">
                     </div>
                     <div class="two fields">
                       <div class="field">
                         <label translate> guest_contribution_payment_card_number </label>
-                        <input class="creditCardNumber" ng-class="{'has-error': !creditCard.number  && payment_gateway ==2 }" type="text" placeholder="{{'guest_contribution_payment_card_number'| translate}}"
-                          ng-model="creditCard.number">
+                        <input class="creditCardNumber" ng-class="{'has-error': !creditCard.number  && payment_gateway ==2 }" type="text" placeholder="{{'guest_contribution_payment_card_number'| translate}}" ng-model="creditCard.number">
                       </div>
                     </div>
                     <div class="fields">
@@ -1754,12 +1705,10 @@
                         </label>
                         <div class="two fields">
                           <div class="exp-date-field field">
-                            <input ng-class="{'has-error': !creditCard.exp_month  && payment_gateway ==2}" type="text" class="exp-date" placeholder="{{'guest_contribution_payment_expiration_date_month'|translate}}"
-                              ng-model="creditCard.exp_month" numbers-only maxlength="2">
+                            <input ng-class="{'has-error': !creditCard.exp_month  && payment_gateway ==2}" type="text" class="exp-date" placeholder="{{'guest_contribution_payment_expiration_date_month'|translate}}" ng-model="creditCard.exp_month" numbers-only maxlength="2">
                           </div>
                           <div class="exp-date-field field">
-                            <input ng-class="{'has-error': !creditCard.exp_year  && payment_gateway ==2}" type="text" class="exp-date" placeholder="{{'guest_contribution_payment_expiration_date_year'|translate}}"
-                              ng-model="creditCard.exp_year" numbers-only maxlength="2">
+                            <input ng-class="{'has-error': !creditCard.exp_year  && payment_gateway ==2}" type="text" class="exp-date" placeholder="{{'guest_contribution_payment_expiration_date_year'|translate}}" ng-model="creditCard.exp_year" numbers-only maxlength="2">
                           </div>
                         </div>
                       </div>
@@ -1767,8 +1716,7 @@
                         <label id="cvc"> {{'guest_contribution_payment_cvc'|translate}}
                           <i class="info circle icon" data-content="{{'pledge_campaign_creditcard_cvc_note'| translate }}"></i>
                         </label>
-                        <input ng-class="{'has-error': !creditCard.cvc  && payment_gateway ==2 }" placeholder="{{'guest_contribution_payment_cvc'|translate}}"
-                          type="text" class="cvv-code" ng-model="creditCard.cvc" numbers-only maxlength="5">
+                        <input ng-class="{'has-error': !creditCard.cvc  && payment_gateway ==2 }" placeholder="{{'guest_contribution_payment_cvc'|translate}}" type="text" class="cvv-code" ng-model="creditCard.cvc" numbers-only maxlength="5">
                       </div>
                     </div>
                   </div>
@@ -1850,14 +1798,13 @@
   <div class="content">
     <div class="ui two column stackable grid">
       <div class="four wide column campaign-img">
-        <img ng-if="campaign.files.length" ng-repeat="file in campaign.files | filter:{region_id: RESOURCE_REGIONS.campaign.thumbnail} | orderBy:'-file_id' | limitTo: 1"
-          ng-src="{{server + '/image/campaign_thumbnail_xl/' + file.path_external}}" class="ui image" />
-        <img ng-if="campaign.files.length == 0" src="/images/placeholder-images/placeholder_campaign_thumb.png" class="ui image"
+        <img ng-if="campaign.files.length" ng-repeat="file in campaign.files | filter:{region_id: RESOURCE_REGIONS.campaign.thumbnail} | orderBy:'-file_id' | limitTo: 1" ng-src="{{server + '/image/campaign_thumbnail_xl/' + file.path_external}}" class="ui image"
         />
+        <img ng-if="campaign.files.length == 0" src="/images/placeholder-images/placeholder_campaign_thumb.png" class="ui image" />
       </div>
       <div class="twelve wide column">
         <h1 class="ui header"> {{campaign.name}} </h1>
-        <p>{{campaign.blurb}}</p>
+        <p ng-bind-html="campaign.blurb"></p>
       </div>
     </div>
     <div class="ui three column stackable grid contribution">
@@ -1954,6 +1901,5 @@
   var id = stringArray[1].split('eid=');
   var myurl = stringArray[0] + window.b;
   a2a_config.linkurl = myurl;
-
 </script>
 <script type="text/javascript" src="https://static.addtoany.com/menu/page.js"></script>

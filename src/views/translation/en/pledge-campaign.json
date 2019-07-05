@@ -32,6 +32,8 @@
   "pledge_campaign_creditcard_cvc": "CVC Security Code",
   "pledge_campaign_creditcard_cvc_note": "The three or four security digits at the back of your card",
   "pledge_campaign_creditcard_name": "Name on card",
+  "pledge_campaign_address_info": "Address Information",
+  "pledge_campaign_your_address": "Your Address",
   "pledge_campaign_shipping_info": "Shipping Information",
   "pledge_campaign_shipping_address": "Shipping Address",
   "pledge_campaign_shipping_address_message": "Please choose an existing address or create new address.",
@@ -161,7 +163,7 @@
   "pledge_camapaign_contribution_account_information_title": "Account Type",
   "pledge_camapaign_contribution_account_information_note": "Contribute as individual or organization.",
   "pledge_campaign_business_email": "Business Email Address",
-  "pledge_campaign_account_type_individual": "Individual", 
+  "pledge_campaign_account_type_individual": "Individual",
   "pledge_campaign_account_type_business": "Organization",
   "pledge_campaign_entity_not_found_error": "There was an internal error with mis-configured campaign or website. Please contact website administrator for more information.",
   "pledge_campaign_missing_connect": "Pledge failed because campaign does not have connected account and Direct Transaction is turned off."

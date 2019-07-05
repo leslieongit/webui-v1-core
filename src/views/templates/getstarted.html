@@ -26,11 +26,13 @@
                 <p translate>
                   admin_only_explainer_text_notes
                 </p>
+                <div class="ui tiny label admin-only-label" sui-popup data-content="{{ 'admin_only_popup_msg'| translate }}">
+                  <i class="eye icon"></i> {{ 'admin_only_popup_label' | translate }}
+                </div>
               </div>
               <div class="right-col eleven wide column">
                 <div class="field">
-                  <input type="text" name="explainer_text_title" ng-model="campaign.settings.explainer_text.title"
-                    ng-attr-placeholder="{{'explainer_text_title_placeholder'| translate}}">
+                  <input type="text" name="explainer_text_title" ng-model="campaign.settings.explainer_text.title" ng-attr-placeholder="{{'explainer_text_title_placeholder'| translate}}">
                 </div>
                 <div class="field">
                   <div class="ui checkbox" ng-model="campaign.settings.explainer_text.close">
@@ -39,8 +41,7 @@
                   </div>
                 </div>
                 <div class="field">
-                  <textarea name="explainer_text_msg" ng-model="campaign.settings.explainer_text.message"
-                    ng-attr-placeholder="{{'explainer_text_msg_placeholder'| translate}}"></textarea>
+                  <textarea name="explainer_text_msg" ng-model="campaign.settings.explainer_text.message" ng-attr-placeholder="{{'explainer_text_msg_placeholder'| translate}}"></textarea>
                 </div>
               </div>
             </div>
@@ -55,6 +56,9 @@
                 <p translate>
                   admin_only_enable_withdraw_button_notes
                 </p>
+                <div class="ui tiny label admin-only-label" sui-popup data-content="{{ 'admin_only_popup_msg'| translate }}">
+                  <i class="eye icon"></i> {{ 'admin_only_popup_label' | translate }}
+                </div>
               </div>
               <div class="right-col eleven wide column">
                 <div class="field">
@@ -69,8 +73,7 @@
 
           <h2 class="ui inverted top attached header" translate>get_started_mainheader</h2>
           <div class="campaign-bg ui middle attached basic segment">
-            <div class="formbg ui two column stackable grid required-field" ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}"
-              ng-if="public_settings.site_theme_campaign_contract_number_enable">
+            <div class="formbg ui two column stackable grid required-field" ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}" ng-if="public_settings.site_theme_campaign_contract_number_enable">
               <div class="ui corner red label">
                 <i class="white asterisk icon"></i>
               </div>
@@ -86,8 +89,7 @@
               <div class="right-col eleven wide column">
                 <div class="ui form">
                   <div class="field">
-                    <input type="text" name="contract_number" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"
-                      ng-model="campaign.settings.contract_number" onkeydown="if (event.keyCode == 13) return false;">
+                    <input type="text" name="contract_number" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2" ng-model="campaign.settings.contract_number" onkeydown="if (event.keyCode == 13) return false;">
                   </div>
                 </div>
               </div>
@@ -106,20 +108,17 @@
               </div>
 
               <div class="right-col eleven wide column campaignBasics">
-                <div class="ui yellow message" ng-if="notes.files">
+                <div class="ui yellow message" ng-if="notes.image">
                   <div class="ui small header" translate>get_started_note</div>
-                  {{notes.files}}
+                  {{notes.image}}
                 </div>
                 <div class="field" id="featured-img-field">
-                  <span class="campaign-revision-note ui blue label" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 1 && isCampaignRevised"
-                    translate="campaign_creation_revised_note"></span>
-                  <div class="campaign-thumbnail ui imagePlace" ng-file-drop="uploadCampaignThumnail($files)"
-                    ng-file-drag-over-class="file-drag">
+                  <span class="campaign-revision-note ui blue label" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 1 && isCampaignRevised" translate="campaign_creation_revised_note"></span>
+                  <div class="campaign-thumbnail ui imagePlace" ng-file-drop="uploadCampaignThumnail($files)" ng-file-drag-over-class="file-drag">
                     <span class="img-note">{{'get_started_imagetext'| translate}}</span>
                     <img class="ui image" ng-if="campaignImages && !campaignImages.length" src="images/placeholder-images/placeholder_campaign.png" />
 
-                    <img class="ui image image-uploaded" ng-if="campaignImages.length" ng-src="{{server + '/image/campaign_detail_large/' + campaignImages[0].path_external}}"
-                      imageonload />
+                    <img class="ui image image-uploaded" ng-if="campaignImages.length" ng-src="{{server + '/image/campaign_detail_large/' + campaignImages[0].path_external}}" imageonload />
                     <div class="ui dimmer">
                       <div class="content">
                         <div class="center">
@@ -134,8 +133,7 @@
                 </div>
 
                 <div class="campaign-image-upload-wrap ui center aligned basic segment">
-                  <thrinacia-file-upload upload-id="campaignFeaturedImage" upload-file="uploadCampaignThumnail"
-                    upload-translate=" get_started_uploadimage"></thrinacia-file-upload>
+                  <thrinacia-file-upload upload-id="campaignFeaturedImage" upload-file="uploadCampaignThumnail" upload-translate=" get_started_uploadimage"></thrinacia-file-upload>
                   <button class="ui red labeled icon button" ng-click="deleteCampaignThumnail(campaignImages)">
                     <i class="remove sign icon"></i>{{'get_started_deleteimage'|translate}}
                   </button>
@@ -164,13 +162,9 @@
                 </div>
 
                 <div class="field">
-                  <span class="campaign-revision-note ui blue label" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 1 && isCampaignRevised"
-                    translate="campaign_creation_revised_note"></span>
-                  <input ng-attr-placeholder="{{'get_started_campaign_title_placeholder'| translate}}" maxlength="60"
-                    type="text" name="title" ng-model="revision.name" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && in_revision"
-                    onkeydown="if (event.keyCode == 13) return false;">
-                  <input ng-attr-placeholder="{{'get_started_campaign_title_placeholder'| translate}}" maxlength="60"
-                    type="text" name="title" ng-model="campaign.name" ng-if="!in_revision" onkeydown="if (event.keyCode == 13) return false;">
+                  <span class="campaign-revision-note ui blue label" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 1 && isCampaignRevised" translate="campaign_creation_revised_note"></span>
+                  <input ng-attr-placeholder="{{'get_started_campaign_title_placeholder'| translate}}" maxlength="60" type="text" name="title" ng-model="revision.name" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && in_revision" onkeydown="if (event.keyCode == 13) return false;">
+                  <input ng-attr-placeholder="{{'get_started_campaign_title_placeholder'| translate}}" maxlength="60" type="text" name="title" ng-model="campaign.name" ng-if="!in_revision" onkeydown="if (event.keyCode == 13) return false;">
                   <label class="character-counter" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && in_revision">{{revision.name.length||0}}/60
                     <span translate="get_started_max_characters"></span>
                   </label>
@@ -194,13 +188,9 @@
                 </div>
 
                 <div class="field">
-                  <span class="campaign-revision-note ui blue label" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 1 && isCampaignRevised"
-                    translate="campaign_creation_revised_note"></span>
-                  <textarea ng-attr-placeholder="{{'get_started_campaign_title_placeholder'| translate}}" maxlength="60"
-                    type="text" name="title" ng-model="revision.name" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && in_revision"
-                    onkeydown="if (event.keyCode == 13) return false;"></textarea>
-                  <textarea ng-attr-placeholder="{{'get_started_campaign_title_placeholder'| translate}}" maxlength="60"
-                    type="text" name="title" ng-model="campaign.name" ng-if="!in_revision" onkeydown="if (event.keyCode == 13) return false;"></textarea>
+                  <span class="campaign-revision-note ui blue label" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 1 && isCampaignRevised" translate="campaign_creation_revised_note"></span>
+                  <textarea ng-attr-placeholder="{{'get_started_campaign_title_placeholder'| translate}}" maxlength="60" type="text" name="title" ng-model="revision.name" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && in_revision" onkeydown="if (event.keyCode == 13) return false;"></textarea>
+                  <textarea ng-attr-placeholder="{{'get_started_campaign_title_placeholder'| translate}}" maxlength="60" type="text" name="title" ng-model="campaign.name" ng-if="!in_revision" onkeydown="if (event.keyCode == 13) return false;"></textarea>
                   <label class="character-counter" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && in_revision">{{revision.name.length||0}}/60
                     <span translate="get_started_max_characters"></span>
                   </label>
@@ -214,8 +204,7 @@
               </div>
             </div>
 
-            <div class="formbg ui two column stackable grid optional-field" ng-show="public_settings.site_campaign_custom_uri"
-              ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
+            <div class="formbg ui two column stackable grid optional-field" ng-show="public_settings.site_campaign_custom_uri" ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
               <div class="left-col five wide column">
                 <h3 class="ui header">
                   <span translate>get_started_custom_uri</span>
@@ -236,9 +225,7 @@
                   <div class="nine wide column">
                     <div class="ui fluid form">
                       <div class="field">
-                        <input type="text" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"
-                          id="pathID" value="" ng-attr-placeholder=" {{'get_started_custom_uri_placeholder'| translate}}"
-                          ng-model="campaign.uri_path" onkeydown="if (event.keyCode == 13) return false;">
+                        <input type="text" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2" id="pathID" value="" ng-attr-placeholder=" {{'get_started_custom_uri_placeholder'| translate}}" ng-model="campaign.uri_path" onkeydown="if (event.keyCode == 13) return false;">
                         <div class="ui error message" ng-show="duplicatePath">
                           {{duplicatePath_message| translate}}
                         </div>
@@ -249,8 +236,7 @@
               </div>
             </div>
 
-            <div class="formbg ui two column stackable grid optional-field" ng-show="public_settings.site_campaign_private"
-              ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
+            <div class="formbg ui two column stackable grid optional-field" ng-show="public_settings.site_campaign_private" ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
               <div class="left-col five wide column">
                 <h3 class="ui header">
                   <span translate="get_started_private_campaign"></span>
@@ -285,9 +271,8 @@
                 </div>
                 <div class="ui fluid form">
                   <div class="field" id="campaign-video">
-                    <input ng-class="{'has-error': invalidVideo}" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"
-                      type="text" name="campaign_video" ng-model="campaign.video.uri" ng-blur="videoCheck(campaign.video.uri)"
-                      ng-attr-placeholder="{{'get_started_videotext' | translate}}" auto-link onkeydown="if (event.keyCode == 13) return false;">
+                    <input ng-class="{'has-error': invalidVideo}" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2" type="text" name="campaign_video" ng-model="campaign.video.uri" ng-blur="videoCheck(campaign.video.uri)" ng-attr-placeholder="{{'get_started_videotext' | translate}}"
+                      auto-link onkeydown="if (event.keyCode == 13) return false;">
                     <div class="ui red pointing above ui label" ng-if="invalidVideo">
                       <div translate>get_started_invalidvideo</div>
                     </div>
@@ -296,8 +281,7 @@
               </div>
             </div>
 
-            <div class="formbg ui two column stackable grid optional-field" ng-if="public_settings.site_campaign_allow_thumbnail_video"
-              ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
+            <div class="formbg ui two column stackable grid optional-field" ng-if="public_settings.site_campaign_allow_thumbnail_video" ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
               <div class="left-col five wide column">
                 <h3 class="ui header">
                   <span translate>get_started_thumbnail_video</span>
@@ -308,8 +292,7 @@
               <div class="right-col eleven wide column">
                 <div class="ui fluid form">
                   <div class="field" id="campaign-thumbnail-video">
-                    <input ng-class="{'has-error': invalidThumbnailVideo}" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"
-                      type="text" ng-model="campaignThumbnailVideo.uri" ng-blur="validLink(campaignThumbnailVideo.uri)"
+                    <input ng-class="{'has-error': invalidThumbnailVideo}" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2" type="text" ng-model="campaignThumbnailVideo.uri" ng-blur="validLink(campaignThumbnailVideo.uri)"
                       ng-attr-placeholder="{{'get_started_thumbnail_video_text' | translate}}" auto-link onkeydown="if (event.keyCode == 13) return false;">
                     <div class="ui red pointing above ui label" ng-if="invalidThumbnailVideo">
                       <div translate>get_started_invalid_thumbnail_video</div>
@@ -337,12 +320,9 @@
                   {{notes.blurb}}
                 </div>
                 <div class="field">
-                  <span class="campaign-revision-note ui blue label" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 1 && isCampaignRevised"
-                    translate="campaign_creation_revised_note"></span>
-                  <textarea maxlength="150" ng-attr-placeholder="{{'get_started_blurbplaceholder' | translate}}" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && in_revision"
-                    ng-model="revision.blurb" name="blurb"></textarea>
-                  <textarea maxlength="150" ng-attr-placeholder="{{'get_started_blurbplaceholder' | translate}}" ng-if="!in_revision"
-                    ng-model="campaign.blurb" name="blurb"></textarea>
+                  <span class="campaign-revision-note ui blue label" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 1 && isCampaignRevised" translate="campaign_creation_revised_note"></span>
+                  <textarea maxlength="150" ng-attr-placeholder="{{'get_started_blurbplaceholder' | translate}}" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && in_revision" ng-model="revision.blurb" name="blurb"></textarea>
+                  <textarea maxlength="150" ng-attr-placeholder="{{'get_started_blurbplaceholder' | translate}}" ng-if="!in_revision" ng-model="campaign.blurb" name="blurb"></textarea>
                   <label class="character-counter" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && in_revision">{{revision.blurb.length
                     || 0}}/150 max characters</label>
                   <label class="character-counter" ng-if="!in_revision">{{campaign.blurb.length || 0}}/150 max
@@ -370,15 +350,12 @@
                 <p translate>get_started_top_header_image_notes</p>
               </div>
               <div class="center aligned eleven wide column">
-                <span class="campaign-revision-note ui blue label" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 1 && isCampaignRevised"
-                  translate="campaign_creation_revised_note"></span>
+                <span class="campaign-revision-note ui blue label" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 1 && isCampaignRevised" translate="campaign_creation_revised_note"></span>
                 <div class="image-thumbnail campaignHeaderImage">
-                  <div class="campaign-header-image image-upload imagePlace" ng-file-drop="uploadCampaignHeaderImage($files)"
-                    ng-file-drag-over-class="file-drag">
+                  <div class="campaign-header-image image-upload imagePlace" ng-file-drop="uploadCampaignHeaderImage($files)" ng-file-drag-over-class="file-drag">
                     <span class="img-note">{{'get_started_imagetext'| translate}}</span>
                     <img class="ui image" ng-if="!campaignHeaderImages.length" src="images/placeholder-images/placeholder_header_banner_img_thumb.png" />
-                    <img class="ui image" ng-if="campaignHeaderImages.length" ng-src="{{server + '/image/campaign_top_header_image/' + campaignHeaderImages[0].path_external}}"
-                      imageonload />
+                    <img class="ui image" ng-if="campaignHeaderImages.length" ng-src="{{server + '/image/campaign_top_header_image/' + campaignHeaderImages[0].path_external}}" imageonload />
                     <div class="ui dimmer">
                       <div class="content">
                         <div class="center">
@@ -391,8 +368,7 @@
                     </div>
                   </div>
                   <div class="action-btns">
-                    <thrinacia-file-upload upload-id="campaignHeader" upload-file="uploadCampaignHeaderImage"
-                      upload-translate=" get_started_uploadimage"></thrinacia-file-upload>
+                    <thrinacia-file-upload upload-id="campaignHeader" upload-file="uploadCampaignHeaderImage" upload-translate=" get_started_uploadimage"></thrinacia-file-upload>
                     <button class="ui red labeled icon button" ng-click="deleteCampaignHeaderImage(campaignHeaderImages)">
                       <i class="remove icon"></i>
                       <span translate>get_started_deleteimage</span>
@@ -408,8 +384,7 @@
                     </div>
                     <i class="dropdown icon"></i>
                   </div>
-                  <input type="text" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"
-                    ng-blur="remove_link_protocals($event)" ng-model="$parent.top_header_link" ng-attr-placeholder="{{'get_started_top_header_link' | translate}}"
+                  <input type="text" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2" ng-blur="remove_link_protocals($event)" ng-model="$parent.top_header_link" ng-attr-placeholder="{{'get_started_top_header_link' | translate}}"
                     onkeydown="if (event.keyCode == 13){return false;}" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2">
                 </div>
               </div>
@@ -442,8 +417,7 @@
                     <i class="dropdown icon"></i>
                     <input type="hidden" name="funding_mode" value="{{campaign.raise_mode_id}}">
                     <div class="menu">
-                      <div class="item" ng-repeat="mode in fundingMode" ng-show="mode.allowed" data-value="{{mode.raise_mode_id}}"
-                        ng-click="setRaiseMode(mode)" translate>{{mode.description}}</div>
+                      <div class="item" ng-repeat="mode in fundingMode" ng-show="mode.allowed" data-value="{{mode.raise_mode_id}}" ng-click="setRaiseMode(mode)" translate>{{mode.description}}</div>
                     </div>
                   </div>
                   <div ng-show="!run_mode">
@@ -467,24 +441,20 @@
               <div class="eleven wide column">
                 <div class="ui fluid form">
                   <div class="field">
-                    <div ui-select multiple style="width:100%;" ng-model="multipleCity.selected" theme="select2"
-                      reset-search-input="true" onkeydown="if (event.keyCode == 13) return false;" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2  && user.person_type_id !== 1">
+                    <div ui-select multiple style="width:100%;" ng-model="multipleCity.selected" theme="select2" reset-search-input="true" onkeydown="if (event.keyCode == 13) return false;" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2  && user.person_type_id !== 1">
                       <div ui-select-match ng-attr-placeholder=" {{'get_started_locationtext' | translate}}" id="location">
                         <span ng-bind="$item.name"></span>
                       </div>
-                      <div ui-select-choices repeat="city in cities | filter: $select.search" refresh="searchCities($select.search)"
-                        refresh-delay="200">
+                      <div ui-select-choices repeat="city in cities | filter: $select.search" refresh="searchCities($select.search)" refresh-delay="200">
                         <div ng-bind-html="city.name"></div>
                       </div>
                     </div>
-
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="formbg ui two column stackable grid required-field" ng-show="!hideCampaignCategoryField"
-              ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
+            <div class="formbg ui two column stackable grid required-field" ng-show="!hideCampaignCategoryField" ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
               <div class="ui corner red label">
                 <i class="white asterisk icon"></i>
               </div>
@@ -497,15 +467,13 @@
               </div>
               <div class="eleven wide column">
                 <div class="field" id="category-field" ng-show="!public_settings.site_campaign_categories_limit_1">
-                  <select multiple ng-model="category_ids" ui-select2="categorypicker" ng-attr-placeholder="{{'get_started_categorytext1' | translate}}"
-                    ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2">
+                  <select multiple ng-model="category_ids" ui-select2="categorypicker" ng-attr-placeholder="{{'get_started_categorytext1' | translate}}" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2">
                     <option ng-if="!category.parent_category_id" value="{{category.category_id}}" class="item"
                       ng-repeat="category in categories | orderBy:'display_priority'">{{category.name}}</option>
                   </select>
                 </div>
                 <div class="field" id="category-field" ng-show="public_settings.site_campaign_categories_limit_1">
-                  <select multiple ng-model="category_ids" ui-select2="{placeholder: 'Please select one category',width: '100%', maximumSelectionSize: 1}"
-                    ng-attr-placeholder="{{'get_started_categorytext1' | translate}}" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2">
+                  <select multiple ng-model="category_ids" ui-select2="{placeholder: 'Please select one category',width: '100%', maximumSelectionSize: 1}" ng-attr-placeholder="{{'get_started_categorytext1' | translate}}" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2">
                     <option ng-if="!category.parent_category_id" value="{{category.category_id}}" class="item"
                       ng-repeat="category in categories | orderBy:'display_priority'">{{category.name}}</option>
                   </select>
@@ -513,8 +481,7 @@
               </div>
             </div>
 
-            <div class="formbg ui two column stackable grid optional-field" ng-show="category_ids.length && subcategories.length"
-              ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
+            <div class="formbg ui two column stackable grid optional-field" ng-show="category_ids.length && subcategories.length" ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
               <div class="five wide column">
                 <h3 class="ui header">
                   <span translate="get_started_subcategory"></span>
@@ -524,8 +491,7 @@
               </div>
               <div class="eleven wide column">
                 <div class="field" id="sub-category-field">
-                  <select multiple ng-model="sub_category_ids" ui-select2="subcategorypicker" ng-attr-placeholder="{{'get_started_categorytext1' | translate}}"
-                    ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2">
+                  <select multiple ng-model="sub_category_ids" ui-select2="subcategorypicker" ng-attr-placeholder="{{'get_started_categorytext1' | translate}}" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2">
                     <option value="{{subcategory.category_id}}" class="item" ng-repeat="subcategory in subcategories | orderBy:'display_priority'">{{subcategory.name}}</option>
                   </select>
                 </div>
@@ -535,8 +501,7 @@
 
           <h2 class="ui inverted top attached header" translate ng-show="isRemoveFundraise"> get_started_fundraising</h2>
           <div class="campaign-bg ui middle attached basic segment" ng-show="isRemoveFundraise">
-            <div class="formbg ui two column stackable grid required-field campaign-funding-goal-form-field" ng-if="!isFieldDisplayStacked"
-              ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
+            <div class="formbg ui two column stackable grid required-field campaign-funding-goal-form-field" ng-if="!isFieldDisplayStacked" ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
               <div class="ui corner red label">
                 <i class="white asterisk icon"></i>
               </div>
@@ -562,13 +527,10 @@
                   <div class="column">
                     <div class="field">
                       <div class="ui left labeled  input">
-                        <div class="ui label" ng-bind-html=" ' ' | formatCurrency:ccode:public_setting.site_campaign_decimal_option"
-                          style="padding-top:1.3em;" id="lbaelid"></div>
-                        <input ng-disabled="campaign.total_backers > 0 && user.person_type_id != 1 || (enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2)"
-                          ng-if="public_setting.site_campaign_decimal_option == 1" type="text" name="goal" ng-model="campaignFundingGoal.value"
+                        <div class="ui label" ng-bind-html=" ' ' | formatCurrency:ccode:public_setting.site_campaign_decimal_option" style="padding-top:1.3em;" id="lbaelid"></div>
+                        <input ng-disabled="campaign.total_backers > 0 && user.person_type_id != 1 || (enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2)" ng-if="public_setting.site_campaign_decimal_option == 1" type="text" name="goal" ng-model="campaignFundingGoal.value"
                           ng-attr-allow-decimal="true" numbers-only onkeydown="if (event.keyCode == 13) return false;">
-                        <input ng-disabled="campaign.total_backers > 0 && user.person_type_id != 1 || (enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2)"
-                          ng-if="public_setting.site_campaign_decimal_option == 2||public_setting.site_campaign_decimal_option == 3"
+                        <input ng-disabled="campaign.total_backers > 0 && user.person_type_id != 1 || (enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2)" ng-if="public_setting.site_campaign_decimal_option == 2||public_setting.site_campaign_decimal_option == 3"
                           type="text" name="goal" ng-model="campaignFundingGoal.value" numbers-only onkeydown="if (event.keyCode == 13) return false;">
                         <!-- ng-class="{'has-error': campaign.funding_goal <= 0}" -->
                         <div ng-if="public_setting.site_campaign_decimal_option == 2" class="ui label" style="padding-top:1.5em;">.00</div>
@@ -582,8 +544,7 @@
                       <label id="maxlabel" translate>get_started_max_raise_threshold </label>
                     </div>
                     <div class="ui fluid input" ng-show="showt.value && !public_settings.site_campaign_max_threshold_hide">
-                      <input type="text" name="goal" id="maxvalue" ng-model="thresholdvalue" numbers-only onkeydown="if (event.keyCode == 13) return false;"
-                        ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2">
+                      <input type="text" name="goal" id="maxvalue" ng-model="thresholdvalue.value" numbers-only onkeydown="if (event.keyCode == 13) return false;" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2">
                     </div>
                   </div>
                   <div class="f-currency-btn column">
@@ -621,13 +582,10 @@
                   <div class="column">
                     <div class="field">
                       <div class="ui left labeled  input">
-                        <div class="ui label" ng-bind-html=" ' ' | formatCurrency:ccode:public_setting.site_campaign_decimal_option"
-                          style="padding-top:1.3em;" id="lbaelid"></div>
-                        <input ng-disabled="campaign.total_backers > 0 && user.person_type_id != 1 || (enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2)"
-                          ng-if="public_setting.site_campaign_decimal_option == 1" type="text" name="goal" ng-model="campaignFundingGoal.value"
+                        <div class="ui label" ng-bind-html=" ' ' | formatCurrency:ccode:public_setting.site_campaign_decimal_option" style="padding-top:1.3em;" id="lbaelid"></div>
+                        <input ng-disabled="campaign.total_backers > 0 && user.person_type_id != 1 || (enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2)" ng-if="public_setting.site_campaign_decimal_option == 1" type="text" name="goal" ng-model="campaignFundingGoal.value"
                           ng-attr-allow-decimal="true" numbers-only onkeydown="if (event.keyCode == 13) return false;">
-                        <input ng-disabled="campaign.total_backers > 0 && user.person_type_id != 1 || (enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2)"
-                          ng-if="public_setting.site_campaign_decimal_option == 2||public_setting.site_campaign_decimal_option == 3"
+                        <input ng-disabled="campaign.total_backers > 0 && user.person_type_id != 1 || (enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2)" ng-if="public_setting.site_campaign_decimal_option == 2||public_setting.site_campaign_decimal_option == 3"
                           type="text" name="goal" ng-model="campaignFundingGoal.value" numbers-only onkeydown="if (event.keyCode == 13) return false;">
                         <!-- ng-class="{'has-error': campaign.funding_goal <= 0}" -->
                         <div ng-if="public_setting.site_campaign_decimal_option == 2" class="ui label" style="padding-top:1.5em;">.00</div>
@@ -641,8 +599,7 @@
                       <label id="maxlabel" translate>get_started_max_raise_threshold </label>
                     </div>
                     <div class="ui fluid input" ng-show="showt.value && !public_settings.site_campaign_max_threshold_hide">
-                      <input type="text" name="goal" id="maxvalue" ng-model="thresholdvalue" numbers-only onkeydown="if (event.keyCode == 13) return false;"
-                        ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2">
+                      <input type="text" name="goal" id="maxvalue" ng-model="thresholdvalue.value" numbers-only onkeydown="if (event.keyCode == 13) return false;" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2">
                     </div>
                   </div>
                   <div class="f-currency-btn column">
@@ -672,8 +629,7 @@
               </div>
             </div>
 
-            <div class="formbg ui two column stackable grid optional-field" ng-if="public_settings.site_theme_campaign_per_min"
-              ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
+            <div class="formbg ui two column stackable grid optional-field" ng-if="public_settings.site_theme_campaign_per_min" ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
               <div class="five wide column">
                 <h3 class="ui header">
                   <span translate>get_started_min_contribution</span>
@@ -688,16 +644,11 @@
                 <div class="ui fluid form">
                   <div class="field">
                     <div class="ui left labeled  input">
-                      <div class="ui label" ng-bind-html=" ' ' | formatCurrency:ccode:public_setting.site_campaign_decimal_option"
-                        style="padding-top:1.3em;" id="lbaelid"></div>
-                      <input ng-disabled="campaign.total_backers > 0 && user.person_type_id != 1 || (enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2)"
-                        ng-if="public_setting.site_campaign_decimal_option == 1" type="text" name="campaign_min"
-                        ng-model="campaign.settings.min_contribution" ng-attr-allow-decimal="true" numbers-only
-                        onkeydown="if (event.keyCode == 13) return false;">
-                      <input ng-disabled="campaign.total_backers > 0 && user.person_type_id != 1 || (enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2)"
-                        ng-if="public_setting.site_campaign_decimal_option == 2||public_setting.site_campaign_decimal_option == 3"
-                        type="text" name="campaign_min" ng-model="campaign.settings.min_contribution" numbers-only
-                        onkeydown="if (event.keyCode == 13) return false;">
+                      <div class="ui label" ng-bind-html=" ' ' | formatCurrency:ccode:public_setting.site_campaign_decimal_option" style="padding-top:1.3em;" id="lbaelid"></div>
+                      <input ng-disabled="campaign.total_backers > 0 && user.person_type_id != 1 || (enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2)" ng-if="public_setting.site_campaign_decimal_option == 1" type="text" name="campaign_min"
+                        ng-model="campaign.settings.min_contribution" ng-attr-allow-decimal="true" numbers-only onkeydown="if (event.keyCode == 13) return false;">
+                      <input ng-disabled="campaign.total_backers > 0 && user.person_type_id != 1 || (enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2)" ng-if="public_setting.site_campaign_decimal_option == 2||public_setting.site_campaign_decimal_option == 3"
+                        type="text" name="campaign_min" ng-model="campaign.settings.min_contribution" numbers-only onkeydown="if (event.keyCode == 13) return false;">
                       <!-- ng-class="{'has-error': campaign.funding_goal <= 0}" -->
                       <div ng-if="public_setting.site_campaign_decimal_option == 2" class="ui label" style="padding-top:1.5em;">.00</div>
                     </div>
@@ -705,8 +656,7 @@
                 </div>
               </div>
             </div>
-            <div class="formbg ui two column stackable grid optional-field" ng-if="public_settings.site_theme_campaign_per_max"
-              ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
+            <div class="formbg ui two column stackable grid optional-field" ng-if="public_settings.site_theme_campaign_per_max" ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
               <div class="five wide column">
                 <h3 class="ui header">
                   <span translate>get_started_max_contribution</span>
@@ -721,16 +671,11 @@
                 <div class="ui fluid form">
                   <div class="field">
                     <div class="ui left labeled  input">
-                      <div class="ui label" ng-bind-html=" ' ' | formatCurrency:ccode:public_setting.site_campaign_decimal_option"
-                        style="padding-top:1.3em;" id="lbaelid"></div>
-                      <input ng-disabled="campaign.total_backers > 0 && user.person_type_id != 1 || (enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2)"
-                        ng-if="public_setting.site_campaign_decimal_option == 1" type="text" name="campaign_max"
-                        ng-model="campaign.settings.max_contribution" ng-attr-allow-decimal="true" numbers-only
-                        onkeydown="if (event.keyCode == 13) return false;">
-                      <input ng-disabled="campaign.total_backers > 0 && user.person_type_id != 1 || (enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2)"
-                        ng-if="public_setting.site_campaign_decimal_option == 2||public_setting.site_campaign_decimal_option == 3"
-                        type="text" name="campaign_max" ng-model="campaign.settings.max_contribution" numbers-only
-                        onkeydown="if (event.keyCode == 13) return false;">
+                      <div class="ui label" ng-bind-html=" ' ' | formatCurrency:ccode:public_setting.site_campaign_decimal_option" style="padding-top:1.3em;" id="lbaelid"></div>
+                      <input ng-disabled="campaign.total_backers > 0 && user.person_type_id != 1 || (enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2)" ng-if="public_setting.site_campaign_decimal_option == 1" type="text" name="campaign_max"
+                        ng-model="campaign.settings.max_contribution" ng-attr-allow-decimal="true" numbers-only onkeydown="if (event.keyCode == 13) return false;">
+                      <input ng-disabled="campaign.total_backers > 0 && user.person_type_id != 1 || (enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2)" ng-if="public_setting.site_campaign_decimal_option == 2||public_setting.site_campaign_decimal_option == 3"
+                        type="text" name="campaign_max" ng-model="campaign.settings.max_contribution" numbers-only onkeydown="if (event.keyCode == 13) return false;">
                       <!-- ng-class="{'has-error': campaign.funding_goal <= 0}" -->
                       <div ng-if="public_setting.site_campaign_decimal_option == 2" class="ui label" style="padding-top:1.5em;">.00</div>
                     </div>
@@ -738,8 +683,7 @@
                 </div>
               </div>
             </div>
-            <div class="formbg ui two column stackable grid optional-field" ng-show="public_settings.site_campaign_continuous_run_mode"
-              ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
+            <div class="formbg ui two column stackable grid optional-field" ng-show="public_settings.site_campaign_continuous_run_mode" ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
               <div class="five wide column">
                 <h3 class="ui header">
                   <span translate>get_started_run_mode</span>
@@ -757,8 +701,8 @@
                       <i class="dropdown icon"></i>
                       <input type="hidden" name="campaign-mode" value="{{campaign.run_mode_name}}" onkeydown="if (event.keyCode == 13) return false;">
                       <div class="menu">
-                        <div class="item" ng-repeat="mode in runMode" data-value="{{mode.id}}" ng-click="setRunMode(mode)">{{mode.name|
-                          translate}}</div>
+                        <div class="item" ng-repeat="mode in runMode" data-value="{{mode.id}}" ng-click="setRunMode(mode)">{{mode.name| translate}}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -775,12 +719,14 @@
                 <p translate>
                   get_started_hide_progress_note
                 </p>
+                <div class="ui tiny label admin-only-label" sui-popup data-content="{{ 'admin_only_popup_msg'| translate }}">
+                  <i class="eye icon"></i> {{ 'admin_only_popup_label' | translate }}
+                </div>
               </div>
 
               <div class="five wide column">
                 <div class="ui fluid form">
-                  <div class="ui checkbox" id="progresscheckbox" ng-model="campaign.settings.progress_bar_hide"
-                    ng-class="{'disabled' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
+                  <div class="ui checkbox" id="progresscheckbox" ng-model="campaign.settings.progress_bar_hide" ng-class="{'disabled' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
                     <input type="checkbox" id="maxcheckbox">
                     <label id="maxlabel" translate>get_started_hide_progress_block</label>
                   </div>
@@ -792,22 +738,24 @@
               <div class="five wide column">
                 <h3 class="ui header">
                   <span translate>get_started_redirect_header</span>
+                  <span class="optional-text" translate="campaign_creation_optional_text"></span>
                 </h3>
                 <p translate>
                   get_started_redirect_note
                 </p>
+                <div class="ui tiny label admin-only-label" sui-popup data-content="{{ 'admin_only_popup_msg'| translate }}">
+                  <i class="eye icon"></i> {{ 'admin_only_popup_label' | translate }}
+                </div>
               </div>
 
               <div class="eleven wide column">
                 <div class="ui fluid form">
-                  <input ng-attr-placeholder="{{'get_started_redirect_placeholder'| translate}}"
-                    type="text" name="contribution_redirect" ng-model="campaign.settings.contribution_redirect" ng-if="!in_revision" onkeydown="if (event.keyCode == 13) return false;">
+                  <input ng-attr-placeholder="{{'get_started_redirect_placeholder'| translate}}" type="text" name="contribution_redirect" ng-model="campaign.settings.contribution_redirect" ng-if="!in_revision" onkeydown="if (event.keyCode == 13) return false;">
                 </div>
               </div>
             </div>
 
-            <div class="formbg ui two column stackable grid optional-field" ng-if="user.person_type_id == 1 && campaign.featured"
-              ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
+            <div class="formbg ui two column stackable grid optional-field" ng-if="user.person_type_id == 1 && campaign.featured" ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
               <div class="five wide column">
                 <h3 class="ui header">
                   <span translate>get_started_hide_featured_star</span>
@@ -816,12 +764,14 @@
                 <p translate>
                   get_started_hide_featured_note
                 </p>
+                <div class="ui tiny label admin-only-label" sui-popup data-content="{{ 'admin_only_popup_msg'| translate }}">
+                  <i class="eye icon"></i> {{ 'admin_only_popup_label' | translate }}
+                </div>
               </div>
 
               <div class="five wide column">
                 <div class="ui fluid form">
-                  <div class="ui checkbox" id="progresscheckbox" ng-model="campaign.settings.featured_star_hide"
-                    ng-class="{'disabled' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
+                  <div class="ui checkbox" id="progresscheckbox" ng-model="campaign.settings.featured_star_hide" ng-class="{'disabled' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
                     <input type="checkbox" id="maxcheckbox">
                     <label id="maxlabel" translate>get_started_hide_featured_label</label>
                   </div>
@@ -838,6 +788,9 @@
                 <p translate>
                   get_started_hide_days_to_go_note
                 </p>
+                <div class="ui tiny label admin-only-label" sui-popup data-content="{{ 'admin_only_popup_msg'| translate }}">
+                  <i class="eye icon"></i> {{ 'admin_only_popup_label' | translate }}
+                </div>
               </div>
 
               <div class="five wide column">
@@ -850,8 +803,7 @@
               </div>
             </div>
 
-            <div class="formbg ui two column stackable grid optional-field" ng-if="enableContribButtonPerCampaign"
-              ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
+            <div class="formbg ui two column stackable grid optional-field" ng-if="enableContribButtonPerCampaign" ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
               <div class="five wide column">
                 <h3 class="ui header">
                   <span translate>get_started_enable_campaign_contribute_button_header</span>
@@ -872,8 +824,7 @@
               </div>
             </div>
 
-            <div class="formbg ui two column stackable grid optional-field" ng-if="public_settings.site_campaign_state_hide && (user.person_type_id == 1)"
-              ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
+            <div class="formbg ui two column stackable grid optional-field" ng-if="public_settings.site_campaign_state_hide && (user.person_type_id == 1)" ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
               <div class="five wide column">
                 <h3 class="ui header">
                   <span translate>get_started_state_header</span>
@@ -882,6 +833,9 @@
                 <p translate>
                   get_started_state_note
                 </p>
+                <div class="ui tiny label admin-only-label" sui-popup data-content="{{ 'admin_only_popup_msg'| translate }}">
+                  <i class="eye icon"></i> {{ 'admin_only_popup_label' | translate }}
+                </div>
               </div>
               <!-- Fix drop down list to show my settings  -->
               <div class="five wide column">
@@ -889,14 +843,12 @@
                   <!--<select ng-model="campaign.settings.state_current" ng-options="states.title for states in public_settings.site_campaign_state_settings">
                   </select>-->
 
-                  <div class="ui fluid selection dropdown state-current" ng-model="campaign.settings.state_current"
-                    ng-class="{'disabled' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
+                  <div class="ui fluid selection dropdown state-current" ng-model="campaign.settings.state_current" ng-class="{'disabled' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
                     <div class="text" id="duration_dtext" ng-bind-html="campaign.settings.state_current.title"></div>
                     <i class="dropdown icon"></i>
                     <input type="hidden" name="state" value="{{campaign.settings.state_current}}">
                     <div class="menu">
-                      <div ng-repeat="state in public_settings.site_campaign_state_settings track by $index" data-value="{{$index}}"
-                        ng-click="stateSelected($index)" class="item" ng-bind-html="state.title"></div>
+                      <div ng-repeat="state in public_settings.site_campaign_state_settings track by $index" data-value="{{$index}}" ng-click="stateSelected($index)" class="item" ng-bind-html="state.title"></div>
                     </div>
                   </div>
                 </div>
@@ -921,8 +873,7 @@
               <div class="five wide column" ng-if="(isCampaignPercetangeEnabled && user.person_type_id == 1) || (isCampaignPercetangeEnabled && public_settings.site_campaign_percentage_enabled_nonadmin)">
                 <div class="field">
                   <div class="ui input">
-                    <input name="percentage_fee" type="text" ng-model="campaign.settings.campaign_fee_percentage"
-                      numbers-only allow-decimal="true" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2" />
+                    <input name="percentage_fee" type="text" ng-model="campaign.settings.campaign_fee_percentage" numbers-only allow-decimal="true" ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2" />
                     <div class="ui label" style="padding-top:1.2em">
                       %
                     </div>
@@ -939,8 +890,7 @@
               </div>
             </div>
 
-            <div class="ui two column stackable formbg grid required-field campaign-duration-form-field" ng-if="!isFieldDisplayStacked"
-              ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
+            <div class="ui two column stackable formbg grid required-field campaign-duration-form-field" ng-if="!isFieldDisplayStacked" ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
               <div class="ui corner red label">
                 <i class="white asterisk icon"></i>
               </div>
@@ -956,7 +906,7 @@
                 <div class="funding-dur-desc">
                   <p translate> get_started_fundingduration_detail1</p>
                   <p>
-                    <span class="notice-sign">Note :</span> {{'get_started_fundingduration_detail2'| translate}} </p>
+                    {{'get_started_fundingduration_detail2'| translate}} </p>
                 </div>
               </div>
 
@@ -970,21 +920,15 @@
                 <div class="field start-date" id="start-date-field" ng-show="(!public_settings.site_campaign_fixed_campaign_duration_enable && !public_settings.site_campaign_defaults.toggle) || user.person_type_id == 1">
                   <label> {{'get_started_funding_startdate'|translate}} ({{campaign.timezoneText}})</label>
                   <!-- public_settings.site_theme_campaign_display_iso_date -->
-                  <quick-datepicker ng-class="{'startdate-selected' : campaign.starts_date_time}" ng-model="campaign.starts_date_time"
-                    disable-clear-button="true" date-format='EEEE, yyyy/MM/d' placeholder="{{get_started_funding_startdate_placeholder}}"
-                    date-filter="noPastDates" ng-if="public_settings.site_theme_campaign_display_iso_date && (!public_settings.allow_admin_past_dates || !user.portal_admin)"></quick-datepicker>
+                  <quick-datepicker ng-class="{'startdate-selected' : campaign.starts_date_time}" ng-model="campaign.starts_date_time" disable-clear-button="true" date-format='EEEE, yyyy/MM/d' placeholder="{{get_started_funding_startdate_placeholder}}" date-filter="noPastDates"
+                    ng-if="public_settings.site_theme_campaign_display_iso_date && (!public_settings.allow_admin_past_dates || !user.portal_admin)"></quick-datepicker>
 
-                  <quick-datepicker ng-class="{'startdate-selected' : campaign.starts_date_time}" ng-model="campaign.starts_date_time"
-                    disable-clear-button="true" date-format='EEEE, yyyy/MM/d' placeholder="{{get_started_funding_startdate_placeholder}}"
-                    ng-if="public_settings.site_theme_campaign_display_iso_date && (public_settings.allow_admin_past_dates && user.portal_admin)"></quick-datepicker>
+                  <quick-datepicker ng-class="{'startdate-selected' : campaign.starts_date_time}" ng-model="campaign.starts_date_time" disable-clear-button="true" date-format='EEEE, yyyy/MM/d' placeholder="{{get_started_funding_startdate_placeholder}}" ng-if="public_settings.site_theme_campaign_display_iso_date && (public_settings.allow_admin_past_dates && user.portal_admin)"></quick-datepicker>
 
-                  <quick-datepicker ng-class="{'startdate-selected' : campaign.starts_date_time}" ng-model="campaign.starts_date_time"
-                    disable-clear-button="true" date-format='EEEE, MMMM d, yyyy' placeholder="{{get_started_funding_startdate_placeholder}}"
-                    date-filter="noPastDates" ng-if="!public_settings.site_theme_campaign_display_iso_date && (!public_settings.allow_admin_past_dates || !user.portal_admin)"></quick-datepicker>
+                  <quick-datepicker ng-class="{'startdate-selected' : campaign.starts_date_time}" ng-model="campaign.starts_date_time" disable-clear-button="true" date-format='EEEE, MMMM d, yyyy' placeholder="{{get_started_funding_startdate_placeholder}}" date-filter="noPastDates"
+                    ng-if="!public_settings.site_theme_campaign_display_iso_date && (!public_settings.allow_admin_past_dates || !user.portal_admin)"></quick-datepicker>
 
-                  <quick-datepicker ng-class="{'startdate-selected' : campaign.starts_date_time}" ng-model="campaign.starts_date_time"
-                    disable-clear-button="true" date-format='EEEE, MMMM d, yyyy' placeholder="{{get_started_funding_startdate_placeholder}}"
-                    ng-if="!public_settings.site_theme_campaign_display_iso_date && (public_settings.allow_admin_past_dates && user.portal_admin)"></quick-datepicker>
+                  <quick-datepicker ng-class="{'startdate-selected' : campaign.starts_date_time}" ng-model="campaign.starts_date_time" disable-clear-button="true" date-format='EEEE, MMMM d, yyyy' placeholder="{{get_started_funding_startdate_placeholder}}" ng-if="!public_settings.site_theme_campaign_display_iso_date && (public_settings.allow_admin_past_dates && user.portal_admin)"></quick-datepicker>
                   <div class="disabled-overlay" ng-show="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"></div>
                 </div>
 
@@ -997,8 +941,7 @@
                 <div class="two fields date-time-period" ng-if="run_mode && !isRemoveTimePeriod" ng-show="!public_settings.site_campaign_fixed_campaign_duration_enable && !public_settings.site_campaign_defaults.toggle">
                   <div class="field">
                     <label> {{'get_started_funding_numberdays' | translate}}</label>
-                    <input type="text" name="runtime_days" ng-attr-placeholder="{{'get_started_funding_numberdays_placeholder' | translate}}"
-                      ng-model="campaign.runtime_days" ng-attr-value="campaign.runtime_days" 365-only onkeydown="if (event.keyCode == 13) return false;"
+                    <input type="text" name="runtime_days" ng-attr-placeholder="{{'get_started_funding_numberdays_placeholder' | translate}}" ng-model="campaign.runtime_days" ng-attr-value="campaign.runtime_days" 365-only onkeydown="if (event.keyCode == 13) return false;"
                       ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2  && user.person_type_id !== 1">
 
                     <div>{{numberOfDays}}</div>
@@ -1010,8 +953,7 @@
                       <i class="dropdown icon"></i>
                       <input type="hidden" name="profile-type" value="{{campaign.duration_type_id}}">
                       <div class="menu">
-                        <div ng-repeat="type in duration_type" data-value="{{type.id}}" ng-click="durationTypeSelected(type.id)"
-                          class="item">{{type.type | translate}}</div>
+                        <div ng-repeat="type in duration_type" data-value="{{type.id}}" ng-click="durationTypeSelected(type.id)" class="item">{{type.type | translate}}</div>
                       </div>
                     </div>
                   </div>
@@ -1020,8 +962,7 @@
                   <div class="field">
                     <label> {{'get_started_funding_numberdays' | translate}}</label>
                     <div ng-show="!public_settings.site_campaign_fixed_campaign_duration_enable">{{campaign.runtime_days}}</div>
-                    <div ng-show="public_settings.site_campaign_fixed_campaign_duration_enable">{{'get_started_funding_numberdays_unavailable'
-                      | translate}}</div>
+                    <div ng-show="public_settings.site_campaign_fixed_campaign_duration_enable">{{'get_started_funding_numberdays_unavailable' | translate}}</div>
                   </div>
                   <div class="field" ng-show="run_mode">
                     <label translate>get_started_duration_Type </label>
@@ -1030,22 +971,16 @@
                 </div>
                 <div class="field end-date" id="end-date-field" ng-if="run_mode" ng-show="(!public_settings.site_campaign_fixed_campaign_duration_enable && !public_settings.site_campaign_defaults.toggle) || user.person_type_id == 1">
                   <label> {{'get_started_funding_enddate' |translate}} ({{campaign.timezoneText}})</label>
-                  <quick-datepicker ng-class="{'enddate-selected' : campaign.ends_date_time}" ng-model="campaign.ends_date_time"
-                    disable-clear-button="true" date-format='EEEE, yyyy/MM/d' date-filter="noPastDates " placeholder="{{get_started_funding_enddate_placeholder}}"
-                    read-only="true" ng-click="check();" ng-if="public_settings.site_theme_campaign_display_iso_date && (!public_settings.allow_admin_past_dates || !user.portal_admin)"
-                    disable-timepicker="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"></quick-datepicker>
-                  <quick-datepicker ng-class="{'enddate-selected' : campaign.ends_date_time}" ng-model="campaign.ends_date_time"
-                    disable-clear-button="true" date-format='EEEE, yyyy/MM/d' date-filter="noPastDates " placeholder="{{get_started_funding_enddate_placeholder}}"
-                    read-only="true" ng-click="check();" ng-if="public_settings.site_theme_campaign_display_iso_date && (public_settings.allow_admin_past_dates && user.portal_admin)"
-                    disable-timepicker="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"></quick-datepicker>
-                  <quick-datepicker ng-class="{'enddate-selected' : campaign.ends_date_time}" ng-model="campaign.ends_date_time"
-                    disable-clear-button="true" date-format='EEEE, MMMM d, yyyy' date-filter="noPastDates " placeholder="{{get_started_funding_enddate_placeholder}}"
-                    read-only="true" ng-click="check();" ng-if="!public_settings.site_theme_campaign_display_iso_date && (!public_settings.allow_admin_past_dates || !user.portal_admin)"
-                    disable-timepicker="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"></quick-datepicker>
-                  <quick-datepicker ng-class="{'enddate-selected' : campaign.ends_date_time}" ng-model="campaign.ends_date_time"
-                    disable-clear-button="true" date-format='EEEE, MMMM d, yyyy' date-filter="noPastDates " placeholder="{{get_started_funding_enddate_placeholder}}"
-                    read-only="true" ng-click="check();" ng-if="!public_settings.site_theme_campaign_display_iso_date && (public_settings.allow_admin_past_dates && user.portal_admin)"
-                    disable-timepicker="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"></quick-datepicker>
+
+                  <quick-datepicker ng-class="{'enddate-selected' : campaign.ends_date_time}" ng-model="campaign.ends_date_time" disable-clear-button="true" date-format='EEEE, yyyy/MM/d' date-filter="noPastDates" placeholder="{{get_started_funding_enddate_placeholder}}"
+                    read-only="true" ng-click="check();" ng-if="public_settings.site_theme_campaign_display_iso_date && (!public_settings.allow_admin_past_dates || !user.portal_admin)" disable-timepicker="{{enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}}"></quick-datepicker>
+                  <quick-datepicker ng-class="{'enddate-selected' : campaign.ends_date_time}" ng-model="campaign.ends_date_time" disable-clear-button="true" date-format='EEEE, yyyy/MM/d' date-filter="noPastDates" placeholder="{{get_started_funding_enddate_placeholder}}"
+                    read-only="true" ng-click="check();" ng-if="public_settings.site_theme_campaign_display_iso_date && (public_settings.allow_admin_past_dates && user.portal_admin)" disable-timepicker="{{enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}}"></quick-datepicker>
+                  <quick-datepicker ng-class="{'enddate-selected' : campaign.ends_date_time}" ng-model="campaign.ends_date_time" disable-clear-button="true" date-format='EEEE, MMMM d, yyyy' date-filter="noPastDates" placeholder="{{get_started_funding_enddate_placeholder}}"
+                    read-only="true" ng-click="check();" ng-if="!public_settings.site_theme_campaign_display_iso_date && (!public_settings.allow_admin_past_dates || !user.portal_admin)" disable-timepicker="{{enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}}"></quick-datepicker>
+                  <quick-datepicker ng-class="{'enddate-selected' : campaign.ends_date_time}" ng-model="campaign.ends_date_time" disable-clear-button="true" date-format='EEEE, MMMM d, yyyy' date-filter="noPastDates" placeholder="{{get_started_funding_enddate_placeholder}}"
+                    read-only="true" ng-click="check();" ng-if="!public_settings.site_theme_campaign_display_iso_date && (public_settings.allow_admin_past_dates && user.portal_admin)" disable-timepicker="{{enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}}"></quick-datepicker>
+
                   <div class="disabled-overlay" ng-show="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"></div>
                 </div>
                 <div class="field start-date" id="start-date-field" ng-if="run_mode" ng-show="(public_settings.site_campaign_fixed_campaign_duration_enable || public_settings.site_campaign_defaults.toggle) && user.person_type_id == 2">
@@ -1055,8 +990,7 @@
               </div>
             </div>
 
-            <div class="ui formbg grid stacked-ui-field required-field campaign-duration-form-field" ng-if="isFieldDisplayStacked"
-              ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
+            <div class="ui formbg grid stacked-ui-field required-field campaign-duration-form-field" ng-if="isFieldDisplayStacked" ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
 
               <div class="column">
                 <h3 class="ui header">
@@ -1073,21 +1007,15 @@
                 <div class="field start-date" id="start-date-field" ng-show="(!public_settings.site_campaign_fixed_campaign_duration_enable && !public_settings.site_campaign_defaults.toggle) || user.person_type_id == 1">
                   <label> {{'get_started_funding_startdate'|translate}} ({{campaign.timezoneText}})</label>
                   <!-- public_settings.site_theme_campaign_display_iso_date -->
-                  <quick-datepicker ng-class="{'startdate-selected' : campaign.starts_date_time}" ng-model="campaign.starts_date_time"
-                    disable-clear-button="true" date-format='EEEE, yyyy/MM/d' placeholder="{{get_started_funding_startdate_placeholder}}"
-                    date-filter="noPastDates" ng-if="public_settings.site_theme_campaign_display_iso_date && (!public_settings.allow_admin_past_dates || !user.portal_admin)"></quick-datepicker>
+                  <quick-datepicker ng-class="{'startdate-selected' : campaign.starts_date_time}" ng-model="campaign.starts_date_time" disable-clear-button="true" date-format='EEEE, yyyy/MM/d' placeholder="{{get_started_funding_startdate_placeholder}}" date-filter="noPastDates"
+                    ng-if="public_settings.site_theme_campaign_display_iso_date && (!public_settings.allow_admin_past_dates || !user.portal_admin)"></quick-datepicker>
 
-                  <quick-datepicker ng-class="{'startdate-selected' : campaign.starts_date_time}" ng-model="campaign.starts_date_time"
-                    disable-clear-button="true" date-format='EEEE, yyyy/MM/d' placeholder="{{get_started_funding_startdate_placeholder}}"
-                    ng-if="public_settings.site_theme_campaign_display_iso_date && (public_settings.allow_admin_past_dates && user.portal_admin)"></quick-datepicker>
+                  <quick-datepicker ng-class="{'startdate-selected' : campaign.starts_date_time}" ng-model="campaign.starts_date_time" disable-clear-button="true" date-format='EEEE, yyyy/MM/d' placeholder="{{get_started_funding_startdate_placeholder}}" ng-if="public_settings.site_theme_campaign_display_iso_date && (public_settings.allow_admin_past_dates && user.portal_admin)"></quick-datepicker>
 
-                  <quick-datepicker ng-class="{'startdate-selected' : campaign.starts_date_time}" ng-model="campaign.starts_date_time"
-                    disable-clear-button="true" date-format='EEEE, MMMM d, yyyy' placeholder="{{get_started_funding_startdate_placeholder}}"
-                    date-filter="noPastDates" ng-if="!public_settings.site_theme_campaign_display_iso_date && (!public_settings.allow_admin_past_dates || !user.portal_admin)"></quick-datepicker>
+                  <quick-datepicker ng-class="{'startdate-selected' : campaign.starts_date_time}" ng-model="campaign.starts_date_time" disable-clear-button="true" date-format='EEEE, MMMM d, yyyy' placeholder="{{get_started_funding_startdate_placeholder}}" date-filter="noPastDates"
+                    ng-if="!public_settings.site_theme_campaign_display_iso_date && (!public_settings.allow_admin_past_dates || !user.portal_admin)"></quick-datepicker>
 
-                  <quick-datepicker ng-class="{'startdate-selected' : campaign.starts_date_time}" ng-model="campaign.starts_date_time"
-                    disable-clear-button="true" date-format='EEEE, MMMM d, yyyy' placeholder="{{get_started_funding_startdate_placeholder}}"
-                    ng-if="!public_settings.site_theme_campaign_display_iso_date && (public_settings.allow_admin_past_dates && user.portal_admin)"></quick-datepicker>
+                  <quick-datepicker ng-class="{'startdate-selected' : campaign.starts_date_time}" ng-model="campaign.starts_date_time" disable-clear-button="true" date-format='EEEE, MMMM d, yyyy' placeholder="{{get_started_funding_startdate_placeholder}}" ng-if="!public_settings.site_theme_campaign_display_iso_date && (public_settings.allow_admin_past_dates && user.portal_admin)"></quick-datepicker>
                   <div class="disabled-overlay" ng-show="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"></div>
                 </div>
 
@@ -1100,8 +1028,7 @@
                 <div class="two fields date-time-period" ng-if="run_mode && !isRemoveTimePeriod" ng-show="!public_settings.site_campaign_fixed_campaign_duration_enable && !public_settings.site_campaign_defaults.toggle">
                   <div class="field">
                     <label> {{'get_started_funding_numberdays' | translate}}</label>
-                    <input type="text" name="runtime_days" ng-attr-placeholder="{{'get_started_funding_numberdays_placeholder' | translate}}"
-                      ng-model="campaign.runtime_days" ng-attr-value="campaign.runtime_days" 365-only onkeydown="if (event.keyCode == 13) return false;"
+                    <input type="text" name="runtime_days" ng-attr-placeholder="{{'get_started_funding_numberdays_placeholder' | translate}}" ng-model="campaign.runtime_days" ng-attr-value="campaign.runtime_days" 365-only onkeydown="if (event.keyCode == 13) return false;"
                       ng-disabled="enableCampaignRevisions && campaign.entry_status_id == 2  && user.person_type_id !== 1">
 
                     <div>{{numberOfDays}}</div>
@@ -1113,8 +1040,7 @@
                       <i class="dropdown icon"></i>
                       <input type="hidden" name="profile-type" value="{{campaign.duration_type_id}}">
                       <div class="menu">
-                        <div ng-repeat="type in duration_type" data-value="{{type.id}}" ng-click="durationTypeSelected(type.id)"
-                          class="item">{{type.type | translate}}</div>
+                        <div ng-repeat="type in duration_type" data-value="{{type.id}}" ng-click="durationTypeSelected(type.id)" class="item">{{type.type | translate}}</div>
                       </div>
                     </div>
                   </div>
@@ -1123,8 +1049,7 @@
                   <div class="field">
                     <label> {{'get_started_funding_numberdays' | translate}}</label>
                     <div ng-show="!public_settings.site_campaign_fixed_campaign_duration_enable">{{campaign.runtime_days}}</div>
-                    <div ng-show="public_settings.site_campaign_fixed_campaign_duration_enable">{{'get_started_funding_numberdays_unavailable'
-                      | translate}}</div>
+                    <div ng-show="public_settings.site_campaign_fixed_campaign_duration_enable">{{'get_started_funding_numberdays_unavailable' | translate}}</div>
                   </div>
                   <div class="field" ng-show="run_mode">
                     <label translate>get_started_duration_Type </label>
@@ -1133,22 +1058,14 @@
                 </div>
                 <div class="field end-date" id="end-date-field" ng-if="run_mode" ng-show="(!public_settings.site_campaign_fixed_campaign_duration_enable && !public_settings.site_campaign_defaults.toggle) || user.person_type_id == 1">
                   <label> {{'get_started_funding_enddate' |translate}} ({{campaign.timezoneText}})</label>
-                  <quick-datepicker ng-class="{'enddate-selected' : campaign.ends_date_time}" ng-model="campaign.ends_date_time"
-                    disable-clear-button="true" date-format='EEEE, yyyy/MM/d' date-filter="noPastDates " placeholder="{{get_started_funding_enddate_placeholder}}"
-                    read-only="true" ng-click="check();" ng-if="public_settings.site_theme_campaign_display_iso_date && (!public_settings.allow_admin_past_dates || !user.portal_admin)"
-                    disable-timepicker="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"></quick-datepicker>
-                  <quick-datepicker ng-class="{'enddate-selected' : campaign.ends_date_time}" ng-model="campaign.ends_date_time"
-                    disable-clear-button="true" date-format='EEEE, yyyy/MM/d' date-filter="noPastDates " placeholder="{{get_started_funding_enddate_placeholder}}"
-                    read-only="true" ng-click="check();" ng-if="public_settings.site_theme_campaign_display_iso_date && (public_settings.allow_admin_past_dates && user.portal_admin)"
-                    disable-timepicker="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"></quick-datepicker>
-                  <quick-datepicker ng-class="{'enddate-selected' : campaign.ends_date_time}" ng-model="campaign.ends_date_time"
-                    disable-clear-button="true" date-format='EEEE, MMMM d, yyyy' date-filter="noPastDates " placeholder="{{get_started_funding_enddate_placeholder}}"
-                    read-only="true" ng-click="check();" ng-if="!public_settings.site_theme_campaign_display_iso_date && (!public_settings.allow_admin_past_dates || !user.portal_admin)"
-                    disable-timepicker="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"></quick-datepicker>
-                  <quick-datepicker ng-class="{'enddate-selected' : campaign.ends_date_time}" ng-model="campaign.ends_date_time"
-                    disable-clear-button="true" date-format='EEEE, MMMM d, yyyy' date-filter="noPastDates " placeholder="{{get_started_funding_enddate_placeholder}}"
-                    read-only="true" ng-click="check();" ng-if="!public_settings.site_theme_campaign_display_iso_date && (public_settings.allow_admin_past_dates && user.portal_admin)"
-                    disable-timepicker="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"></quick-datepicker>
+                  <quick-datepicker ng-class="{'enddate-selected' : campaign.ends_date_time}" ng-model="campaign.ends_date_time" disable-clear-button="true" date-format='EEEE, yyyy/MM/d' date-filter="noPastDates " placeholder="{{get_started_funding_enddate_placeholder}}"
+                    read-only="true" ng-click="check();" ng-if="public_settings.site_theme_campaign_display_iso_date && (!public_settings.allow_admin_past_dates || !user.portal_admin)" disable-timepicker="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"></quick-datepicker>
+                  <quick-datepicker ng-class="{'enddate-selected' : campaign.ends_date_time}" ng-model="campaign.ends_date_time" disable-clear-button="true" date-format='EEEE, yyyy/MM/d' date-filter="noPastDates " placeholder="{{get_started_funding_enddate_placeholder}}"
+                    read-only="true" ng-click="check();" ng-if="public_settings.site_theme_campaign_display_iso_date && (public_settings.allow_admin_past_dates && user.portal_admin)" disable-timepicker="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"></quick-datepicker>
+                  <quick-datepicker ng-class="{'enddate-selected' : campaign.ends_date_time}" ng-model="campaign.ends_date_time" disable-clear-button="true" date-format='EEEE, MMMM d, yyyy' date-filter="noPastDates " placeholder="{{get_started_funding_enddate_placeholder}}"
+                    read-only="true" ng-click="check();" ng-if="!public_settings.site_theme_campaign_display_iso_date && (!public_settings.allow_admin_past_dates || !user.portal_admin)" disable-timepicker="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"></quick-datepicker>
+                  <quick-datepicker ng-class="{'enddate-selected' : campaign.ends_date_time}" ng-model="campaign.ends_date_time" disable-clear-button="true" date-format='EEEE, MMMM d, yyyy' date-filter="noPastDates " placeholder="{{get_started_funding_enddate_placeholder}}"
+                    read-only="true" ng-click="check();" ng-if="!public_settings.site_theme_campaign_display_iso_date && (public_settings.allow_admin_past_dates && user.portal_admin)" disable-timepicker="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"></quick-datepicker>
                   <div class="disabled-overlay" ng-show="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2"></div>
                 </div>
                 <div class="field start-date" id="start-date-field" ng-if="run_mode" ng-show="(public_settings.site_campaign_fixed_campaign_duration_enable || public_settings.site_campaign_defaults.toggle) && user.person_type_id == 2">
@@ -1159,7 +1076,7 @@
                 <div class="funding-dur-desc">
                   <p translate> get_started_fundingduration_detail1</p>
                   <p>
-                    <span class="notice-sign">Note :</span> {{'get_started_fundingduration_detail2'| translate}} </p>
+                    {{'get_started_fundingduration_detail2'| translate}} </p>
                 </div>
               </div>
             </div>

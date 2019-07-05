@@ -108,7 +108,7 @@ app.controller('PledgeHistoryCtrl', function ($routeParams, $location, $timeout,
   };
 
   $scope.openPledgeDetail = function (parent, index, campaignIndex) {
-    if ([5, 6, 7, 8, 9, 13].indexOf(parent.campaign.entry_status_id) > -1) {
+    if ([2, 5, 6, 7, 8, 9, 13].indexOf(parent.campaign.entry_status_id) > -1) {
       $scope.hideWithdraw = true;
     } else {
       $scope.hideWithdraw = false;
@@ -126,7 +126,7 @@ app.controller('PledgeHistoryCtrl', function ($routeParams, $location, $timeout,
     // open the modal
     $timeout(function () {
       $('#pledge-details').modal('show');
-    });
+    },100);
 
     $scope.currentCampaign = {
       currency: $scope.campaigns[campaignIndex].currencies[0],

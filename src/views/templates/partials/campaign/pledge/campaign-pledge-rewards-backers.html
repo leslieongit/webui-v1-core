@@ -8,8 +8,7 @@
     {{'campaign_review_notes'|translate}}
     <i class="delete icon" ng-click="removeNote('pledges')" ng-if="note.pledges"></i>
   </div>
-  <div class="notes" ng-class="{'has-note ui basic segment' : note.pledges}" title="{{'campaign_review_rewards_note_title' | translate}}"
-    ng-click="addNotes($event, 'pledges')">
+  <div class="notes" ng-class="{'has-note ui basic segment' : note.pledges}" ng-click="addNotes('campaign_review_rewards_note_title', 'pledges')">
     <ul id="rewards-list" ng-show="campaign.pledges" class="rewards" ng-class="{'display_reward_tab_mob' : displayRewardsMobileTab}"
       ng-if="!public_settings.site_campaign_comments_display_replace_reward">
       <h3 class="ui inverted top attached header center aligned" id="campaign-rewards" translate> campaign_pledge_campaign_reward</h3>
@@ -36,7 +35,7 @@
                 </div>
                 <h4 class="ui header"> {{pledge.name}}</h4>
                 <p class="reward-desc fr-view" ng-hide="reward_html_editor" html-render html="pledge.description"></p>
-                <div ng-show="reward_html_editor" html-render html="pledge.description" class="fr-view"></div>
+                <div ng-show="reward_html_editor" html-render html="pledge.description" class="reward-desc fr-view"></div>
                 <div id="{{'reward-variation-' + $index}}" class="reward-variation">
                   <div class="reward-variation-item" ng-repeat="variation in pledge.attributes.variation">
                     <label>{{variation.name}}</label>
@@ -54,9 +53,7 @@
                   <div class="reward-backers" ng-if="pledge.total_backers>0">
                     <i class="users icon"></i>
                     <span class="backer-number"> {{pledge.total_backers}} </span>
-                    <span>{{'campaign_pledge_campaign_reward_backer' | translate}}
-                      <span ng-if="pledge.total_backers>1">s</span>
-                    </span>
+                    <span>{{'campaign_pledge_campaign_reward_backer' | translate}}<span ng-if="pledge.total_backers>1">s</span></span>
                   </div>
 
                   <div class="reward-backers" ng-if="pledge.total_backers == 0">
@@ -101,14 +98,12 @@
                 </div>
                 <h4 class="ui header"> {{pledge.name}}</h4>
                 <p class="reward-desc fr-view" ng-hide="reward_html_editor" html-render html="pledge.description"></p>
-                <div ng-show="reward_html_editor" html-render html="pledge.description" class="fr-view"></div>
+                <div ng-show="reward_html_editor" html-render html="pledge.description" class="reward-desc fr-view"></div>
                 <div class="bottom">
                   <div class="reward-backers" ng-if="pledge.total_backers>0">
                     <i class="users icon"></i>
                     <span class="backer-number"> {{pledge.total_backers}} </span>
-                    <span>{{'campaign_pledge_campaign_reward_backer' | translate}}
-                      <span ng-if="pledge.total_backers>1">s</span>
-                    </span>
+                    <span>{{'campaign_pledge_campaign_reward_backer' | translate}}<span ng-if="pledge.total_backers>1">s</span></span>
                   </div>
 
                   <div class="reward-backers" ng-if="pledge.total_backers == 0">

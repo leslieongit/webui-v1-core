@@ -26,7 +26,7 @@ app.constant('BLOG_SETTINGS', {
   posts_per_page: '5',
 });
 
-app.run(function ($sce, $http, $window, $rootScope, $route, $location, $templateCache, $timeout, Restangular, API_URL, RequestCacheService, PortalSettingsService, $translate, $translatePartialLoader, $q) {
+app.run(function($sce, $http, $window, $rootScope, $route, $location, $templateCache, $timeout, Restangular, API_URL, RequestCacheService, PortalSettingsService, $translate, $translatePartialLoader, $q) {
   // Translate the texts shown in moment so it needs to wait for $translate to finish translating
 
   $rootScope.partsDone = false;
@@ -78,9 +78,9 @@ app.run(function ($sce, $http, $window, $rootScope, $route, $location, $template
   $translatePartialLoader.addPart('campaign-widget');
   $translatePartialLoader.addPart('charity-helper');
 
-  $translate.refresh().then(function (success) {
+  $translate.refresh().then(function(success) {
     $rootScope.partsDone = true;
-    $translate(["moment_time_future", "moment_time_past", "moment_time_s", "moment_time_m", "moment_time_mm", "moment_time_h", "moment_time_hh", "moment_time_d", "moment_time_dd", "moment_time_M", "moment_time_MM", "moment_time_y", "moment_time_yy"]).then(function (translation) {
+    $translate(["moment_time_future", "moment_time_past", "moment_time_s", "moment_time_m", "moment_time_mm", "moment_time_h", "moment_time_hh", "moment_time_d", "moment_time_dd", "moment_time_M", "moment_time_MM", "moment_time_y", "moment_time_yy"]).then(function(translation) {
       // over write angularMoment formats
       moment.locale('en', {
         relativeTime: {
@@ -106,7 +106,7 @@ app.run(function ($sce, $http, $window, $rootScope, $route, $location, $template
   var loadedVar = false;
   var translatedVar = false;
   // Disable route caching
-  $rootScope.$on('$routeChangeStart', function (event, next, current) {
+  $rootScope.$on('$routeChangeStart', function(event, next, current) {
     $rootScope.ogMeta = {
       "url": "",
       "title": "",
@@ -115,7 +115,7 @@ app.run(function ($sce, $http, $window, $rootScope, $route, $location, $template
       "image": ""
     };
 
-    if (typeof (current) !== 'undefined') {
+    if (typeof(current) !== 'undefined') {
       $templateCache.remove(current.templateUrl);
       if (current.$$route && current.$$route.originalPath == '/api-docs') {
         $('#api-menu').remove();
@@ -129,7 +129,7 @@ app.run(function ($sce, $http, $window, $rootScope, $route, $location, $template
 
   // Handle dynamic URLs via route
   // Set page title depending on whether the route has a title specified
-  $rootScope.$on('$routeChangeSuccess', function (ev, data) {
+  $rootScope.$on('$routeChangeSuccess', function(ev, data) {
     initiateTwitter();
     $('body >.modals').remove();
     $rootScope.currentURL = $location.absUrl();
@@ -163,14 +163,14 @@ app.run(function ($sce, $http, $window, $rootScope, $route, $location, $template
   }
 
   function fullLoaderEnd(timems) {
-    $("#myloader").fadeOut(timems, function () {
+    $("#myloader").fadeOut(timems, function() {
       $('body').removeClass("loading");
       $('#myloader .spinner').remove();
       $('#myloader').removeAttr('style');
     });
   }
 
-  PortalSettingsService.getSettingsObj().then(function (success) {
+  PortalSettingsService.getSettingsObj().then(function(success) {
     // wordpress api url
     //look up component settings
     if (success.public_setting.site_widget_wp_api) {
@@ -180,7 +180,7 @@ app.run(function ($sce, $http, $window, $rootScope, $route, $location, $template
     $rootScope.ogMeta.site_name = $rootScope.site_company;
 
     // Site Name Meta translation
-    $translate("site_name_meta").then(function (translation) {
+    $translate("site_name_meta").then(function(translation) {
       if (translation != "site_name_meta" && translation != "") {
         $rootScope.site_company = translation;
         $rootScope.ogMeta.site_name = $rootScope.site_company;
@@ -190,8 +190,8 @@ app.run(function ($sce, $http, $window, $rootScope, $route, $location, $template
   });
 
   function pageTitleLookup() {
-    RequestCacheService.getPage().then(function (success) {
-      $("meta.jMeta").each(function () {
+    RequestCacheService.getPage().then(function(success) {
+      $("meta.jMeta").each(function() {
         $(this).remove();
       });
       // if path is null after slice, use original path. Otherwise use sliced path.
@@ -200,7 +200,7 @@ app.run(function ($sce, $http, $window, $rootScope, $route, $location, $template
       var pages = {};
       var pagesTitle = {};
       // put the response data in object format
-      angular.forEach(success, function (value) {
+      angular.forEach(success, function(value) {
         if (value.id == 1) {
           value.path = "/";
         }
@@ -236,7 +236,7 @@ app.run(function ($sce, $http, $window, $rootScope, $route, $location, $template
       } else {
         // use pre-defined title otherwise
         // Title meta translation
-        $translate($route.current.title).then(function (translation) {
+        $translate($route.current.title).then(function(translation) {
           $rootScope.page_title = translation != null ? translation : $rootScope.page_title;
           $rootScope.ogMeta.title = $rootScope.page_title;
         });
@@ -249,16 +249,15 @@ app.run(function ($sce, $http, $window, $rootScope, $route, $location, $template
           if (current_route.includes("explore/category")) {
             var category_alias = current_route.split("/");
             var category_url = "category?path=" + category_alias[2] + "&use_path_lookup=1";
-          }
-          else if ($location.search().category.constructor == Array) {
+          } else if ($location.search().category.constructor == Array) {
             var category_url = "category/" + $location.search().category[0];
           } else {
             var category_url = "category/" + $location.search().category;
           }
           Restangular.one("portal").customGET(category_url)
-            .then(function (categories) {
+            .then(function(categories) {
               var category_metatags = [];
-              $.each(categories.attributes, function (index, value) {
+              $.each(categories.attributes, function(index, value) {
                 category_metatags.push({
                   name: index.replace("og", "og:"),
                   type: "property",
@@ -298,7 +297,7 @@ app.run(function ($sce, $http, $window, $rootScope, $route, $location, $template
             });
         } else {
           var metaTags = pages[current_route];
-          if(metaTags) {
+          if (metaTags) {
             for (var i = 0; i < metaTags.length; i++) {
               var metaName = metaTags[i].name.substr(3);
               if (metaTags[i].name.indexOf("og:") == 0 && $rootScope.ogMeta.hasOwnProperty(metaName)) {
@@ -343,15 +342,15 @@ app.run(function ($sce, $http, $window, $rootScope, $route, $location, $template
 
   //prerender flag
   window.prerenderReady = false;
-  $timeout(function () {
+  $timeout(function() {
     window.prerender = true;
   }, 2000);
 
   function initiateTwitter() {
     //twitter widget init
     $('#twitter-wjs').remove();
-    $timeout(function () {
-      ! function (d, s, id) {
+    $timeout(function() {
+      ! function(d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0],
           p = /^http:/.test(d.location) ? 'http' : 'https';
         if (!d.getElementById(id)) {
@@ -369,7 +368,7 @@ app.run(function ($sce, $http, $window, $rootScope, $route, $location, $template
    * 
    * @param {any} goal value in the input
    */
-  $rootScope.formatFundingGoal = function (goal) {
+  $rootScope.formatFundingGoal = function(goal) {
     return goal.replace(/[\,\s]/g, "");
   }
 
@@ -432,10 +431,10 @@ app.constant("SOCIAL_SHARING_OPTIONS", {
   "sharing_disabled": "disabled"
 });
 
-app.factory('authHttpInterceptor', function ($q, $location, $injector, ipCookie) {
+app.factory('authHttpInterceptor', function($q, $location, $injector, ipCookie) {
   return {
     // Set auth token for all requests
-    request: function (config) {
+    request: function(config) {
       var User = $injector.get('UserService');
       if ($location.path().split("/")[1] !== 'login') {
         // if(ipCookie('current.user'))
@@ -449,7 +448,7 @@ app.factory('authHttpInterceptor', function ($q, $location, $injector, ipCookie)
       return config;
     },
     // Ensure auth token is still valid
-    responseError: function (response) {
+    responseError: function(response) {
       var lst = response.config.url.split('/');
       var User = $injector.get('UserService');
       //////////// server not available
@@ -472,12 +471,12 @@ app.factory('authHttpInterceptor', function ($q, $location, $injector, ipCookie)
   };
 });
 
-app.filter('unique', function () {
-  return function (collection, keyname) {
+app.filter('unique', function() {
+  return function(collection, keyname) {
     var output = [],
       keys = [];
 
-    angular.forEach(collection, function (item) {
+    angular.forEach(collection, function(item) {
       var key = item[keyname];
       if (keys.indexOf(key) === -1) {
         keys.push(key);
@@ -489,7 +488,7 @@ app.filter('unique', function () {
 });
 
 app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular', 'API_URL', 'USER_ROLES', '$timeout', 'themeService', 'redirectService', '$translatePartialLoader', '$translate', 'RequestCacheService', 'LANG', '$rootScope', "$window", "$q", "PortalSettingsService", "SiteLogoService",
-  function ($scope, $location, User, Restangular, API, roles, $timeout, themeService, redirectService, $translatePartialLoader, $translate, RequestCacheService, LANG, $rootScope, $window, $q, PortalSettingsService, SiteLogoService) {
+  function($scope, $location, User, Restangular, API, roles, $timeout, themeService, redirectService, $translatePartialLoader, $translate, RequestCacheService, LANG, $rootScope, $window, $q, PortalSettingsService, SiteLogoService) {
     $scope.User = User; // Set the User data
     $scope.server = API.url;
     $scope.server_loc = API.loc;
@@ -508,19 +507,19 @@ app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular',
       $scope.loader_enabled = API.loader_enabled;
     }
 
-    $rootScope.removeFloatingMessage = function () {
+    $rootScope.removeFloatingMessage = function() {
       $rootScope.floatingMessage = {};
     }
 
-    $rootScope.hideFloatingMessage = function () {
-      $timeout(function () {
+    $rootScope.hideFloatingMessage = function() {
+      $timeout(function() {
         $rootScope.removeFloatingMessage();
       }, 30000);
     }
 
-    $rootScope.scrollToError = function () {
+    $rootScope.scrollToError = function() {
       // Check for error on the .field element
-      $timeout(function () {
+      $timeout(function() {
         if ($('.field').hasClass('error')) {
           $('html, body').animate({
             scrollTop: $('.field.error').offset().top - 15
@@ -529,7 +528,7 @@ app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular',
       });
     }
 
-    $rootScope.checkTranslation = function (base_translation, new_translation) {
+    $rootScope.checkTranslation = function(base_translation, new_translation) {
       // Return new translation if translated in json file. Otherwise, use base translation
       var value = $translate.instant([base_translation, new_translation]);
       if (value[new_translation] === "" || value[new_translation] === new_translation) {
@@ -539,7 +538,7 @@ app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular',
       }
     }
 
-    var show_loader = function () {
+    var show_loader = function() {
       $("body.container #loader.dimmer").dimmer({
         opacity: 1,
         closable: false,
@@ -550,11 +549,11 @@ app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular',
       }).dimmer("show");
     }
 
-    var hide_loader = function () {
+    var hide_loader = function() {
       $("body.container #loader.dimmer").dimmer("hide");
     }
 
-    $scope.$on('$routeChangeSuccess', function (ev, next, current) {
+    $scope.$on('$routeChangeSuccess', function(ev, next, current) {
       var custom_emit = ["views/templates/campaign.html", "views/templates/explore.html", "views/templates/index.html", "views/templates/getstarted.html", "views/templates/profile-setup.html", "views/templates/campaign-preview.html", "views/templates/custom-page.html"];
       // Loader excluded from these pages.
       var no_loader = [];
@@ -583,11 +582,11 @@ app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular',
       }
     });
 
-    $scope.$on('loading_finished', function () {
+    $scope.$on('loading_finished', function() {
       hide_loader();
     });
 
-    PortalSettingsService.getSettingsObj(true).then(function (success) {
+    PortalSettingsService.getSettingsObj(true).then(function(success) {
       $scope.public_setting = success.public_setting;
 
       $scope.site_load_icon = {};
@@ -606,9 +605,9 @@ app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular',
       $scope.stickyMenu = $scope.public_setting.site_theme_sticky_menu;
 
       if ($scope.public_setting.site_admin_campaign_management_only) {
-        $scope.$watch(function () {
+        $scope.$watch(function() {
           return $location.path();
-        }, function (newValue, oldValue) {
+        }, function(newValue, oldValue) {
           var url = newValue.split("/")[1];
           if (User.portal_admin != roles.admin && (url == "start" || url == "getstarted" || url == "campaign-setup" || url == "rewards" || url == "profile-setup" || url == "complete-funding" || url == "campaign-preview" || url == "campaign-review")) {
             $location.path("/");
@@ -617,9 +616,9 @@ app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular',
       }
 
       if (!$scope.public_setting.site_campaign_contributions) {
-        $scope.$watch(function () {
+        $scope.$watch(function() {
           return $location.path();
-        }, function (newValue, oldValue) {
+        }, function(newValue, oldValue) {
           var url = newValue.split("/")[1];
           if (url == "pledge-campaign" || url == "inline-contribution") {
             $location.path("/explore");
@@ -636,10 +635,10 @@ app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular',
 
       //I put this block of code at the of the success function of the PortalSettingsService
       if ($scope.enableCookieConsent) {
-        $translate.refresh().then(function () {
+        $translate.refresh().then(function() {
           var cookieConsentTranslation = $translate.instant(['cookie_consent_message_text', 'cookie_consent_dismiss_text', 'cookie_consent_link_text', 'cookie_consent_link']);
-          $scope.$on('loading_finished', function () {
-            if($("[aria-label='cookieconsent']").length == 0) {
+          $scope.$on('loading_finished', function() {
+            if ($("[aria-label='cookieconsent']").length == 0) {
               window.cookieconsent.initialise({
                 "palette": {
                   "popup": {
@@ -663,10 +662,10 @@ app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular',
             }
           });
         });
-      } 
+      }
     });
 
-    $scope.$on('$routeChangeStart', function (event, current, previous) {
+    $scope.$on('$routeChangeStart', function(event, current, previous) {
       currentLoadedPart = "";
 
       // Hide mobile menu when change routes.
@@ -688,19 +687,19 @@ app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular',
 
       // Show loader when changing routes.
       if ((prevent_loader_on.indexOf(current.templateUrl) <= -1 &&
-        !exclude_on_url &&
-        $scope.loader_enabled) ||
+          !exclude_on_url &&
+          $scope.loader_enabled) ||
         force_loader_on.indexOf(current.templateUrl) >= 0) {
         show_loader();
       }
     });
 
-    RequestCacheService.getPage().then(function (success) {
+    RequestCacheService.getPage().then(function(success) {
       $scope.portal_page = success;
     });
-    $scope.$watch(function () {
+    $scope.$watch(function() {
       return $location.path();
-    }, function (newValue, oldValue) {
+    }, function(newValue, oldValue) {
       var url = newValue.split("/")[1];
       // if user is not loggin, make them login when they want to create a new campaign
       if (!User.isLoggedIn()) {
@@ -735,12 +734,12 @@ app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular',
       // if variable is not array, that means it is returning a promise
       if (!$.isArray($scope.theme_classes)) {
         // resolve promise then assign class
-        $scope.theme_classes.then(function () {
+        $scope.theme_classes.then(function() {
           $scope.theme_classes = themeService.theme_classes;
         });
       }
     });
-    $(window).scroll(function () {
+    $(window).scroll(function() {
       if ($(this).scrollTop() > 220) {
         $('#back-to-top').fadeIn();
       } else {
@@ -749,23 +748,23 @@ app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular',
     });
 
     // back to top button
-    $scope.backToTop = function () {
+    $scope.backToTop = function() {
       $('html,body').animate({
         scrollTop: 0
       }, 800);
       return false;
     }
 
-    $scope.clearMessage = function () {
+    $scope.clearMessage = function() {
       $scope.successMessage = [];
       $scope.errorMessage = [];
       $scope.floatingMessage = [];
     }
 
-    $scope.closeSuccessMessage = function () {
+    $scope.closeSuccessMessage = function() {
       $scope.successMessage = [];
     }
-    $scope.closeErrorMessage = function () {
+    $scope.closeErrorMessage = function() {
       $scope.errorMessage = [];
     }
 
@@ -801,26 +800,26 @@ app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular',
     var xhr = new XMLHttpRequest();
     var path = "views/translation/" + LANG.PREFERRED_LANG + "/froala.json";
     xhr.open("GET", path);
-    xhr.onreadystatechange = function () {
+    xhr.onreadystatechange = function() {
       if (xhr.readyState == 4 && xhr.status == 200) {
         try {
           var jsondata = JSON.parse(xhr.responseText);
           $.FroalaEditor.LANGUAGE["custom"] = jsondata;
-        } catch (e) { }
+        } catch (e) {}
       }
     }
     xhr.send();
 
     // Override the HTML sanitize function so it doesn't filter "<" and ">"
-    $rootScope.froalaOptions.events["froalaEditor.initialized"] = function (e, editor) {
-      editor.helpers.sanitizeURL = function (url) {
+    $rootScope.froalaOptions.events["froalaEditor.initialized"] = function(e, editor) {
+      editor.helpers.sanitizeURL = function(url) {
         if (url == "link" || url == "link_pledges") {
           return "<tmplvar>" + url + "</tmplvar>";
         }
         return url;
       }
 
-      editor.events.on("keydown", function () {
+      editor.events.on("keydown", function() {
         // This is the tag we are checking
         var customTag = "TMPLVAR";
 
@@ -840,8 +839,8 @@ app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular',
       });
     }
 
-    $timeout(function () {
-      var removeStickyOnScreenResize = function () {
+    $timeout(function() {
+      var removeStickyOnScreenResize = function() {
         var currentScreenW = $(window).width();
         if (currentScreenW <= 1024) {
           // If the current screen width is less/equal than 1024 then remove sticky menu class
@@ -855,7 +854,7 @@ app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular',
       }
 
       // Remove sticky menu class when resizing
-      $(window).resize(function () {
+      $(window).resize(function() {
         removeStickyOnScreenResize();
       });
     });
@@ -863,15 +862,15 @@ app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular',
 ]);
 
 // set Restangular to use setFullResponse on specific services (to read headers)
-app.factory('RestFullResponse', function (Restangular) {
-  return Restangular.withConfig(function (RestangularConfigurer) {
+app.factory('RestFullResponse', function(Restangular) {
+  return Restangular.withConfig(function(RestangularConfigurer) {
     RestangularConfigurer.setFullResponse(true);
   });
 });
 
 // Requires moment.js
-app.filter('formatDate', ['$translate', function ($translate) {
-  return function (input, formatting) {
+app.filter('formatDate', ['$translate', function($translate) {
+  return function(input, formatting) {
     if (formatting == "MMMM YYYY") {
       var date_formatted = moment(input).format(formatting);
       var translated_month = $translate.instant(date_formatted.split(" ")[0]);
@@ -886,10 +885,10 @@ app.filter('formatDate', ['$translate', function ($translate) {
 // also make it accept iso currency and change currency symbol according to iso
 // Note: This only works for currency symbols that are displayed before the number
 app.filter('noFractionCurrency', ['$filter', '$locale',
-  function (filter, locale) {
+  function(filter, locale) {
     var currencyFilter = filter('currency');
     var formats = locale.NUMBER_FORMATS;
-    return function (amount, currencySymbol) {
+    return function(amount, currencySymbol) {
       // check ()
       var matches = /\(([^)]+)\)/.exec(currencySymbol);
       if (matches) {
@@ -916,9 +915,9 @@ app.filter('noFractionCurrency', ['$filter', '$locale',
   }
 ]);
 
-app.filter('stringCurrency', function ($filter, $locale) {
+app.filter('stringCurrency', function($filter, $locale) {
 
-  return function (amount, currency_iso) {
+  return function(amount, currency_iso) {
     if (currency_iso && MoneySymbols[currency_iso]) {
 
       var symbol = MoneySymbols[currency_iso].money_format;
@@ -940,17 +939,17 @@ app.filter('stringCurrency', function ($filter, $locale) {
   }
 });
 
-app.directive('format', ['$filter', function ($filter) {
+app.directive('format', ['$filter', function($filter) {
   return {
     require: '?ngModel',
-    link: function (scope, elem, attrs, ctrl) {
+    link: function(scope, elem, attrs, ctrl) {
       if (!ctrl) return;
 
-      ctrl.$formatters.unshift(function (a) {
+      ctrl.$formatters.unshift(function(a) {
         return $filter(attrs.format)(ctrl.$modelValue)
       });
 
-      ctrl.$parsers.unshift(function (viewValue) {
+      ctrl.$parsers.unshift(function(viewValue) {
         elem.priceFormat({
           prefix: '',
           centsSeparator: '.',
@@ -963,20 +962,22 @@ app.directive('format', ['$filter', function ($filter) {
   };
 }]);
 
-app.filter('formatCurrency', ['$filter', '$locale', function (filter, locale) {
+app.filter('formatCurrency', ['$filter', '$locale', function(filter, locale) {
   var currencyFilter = filter('currency');
   var formats = locale.NUMBER_FORMATS;
-  return function (amount, currency_iso, hide_decimal) {
+  return function(amount, currency_iso, hide_decimal) {
+
     var symbol_only = false;
     if (amount === ' ') {
       symbol_only = true;
     }
+
     var value = currencyFilter(amount, "");
     if (typeof value == 'undefined' || value === null) {
       return;
     }
     //var currencySymbol = getSymbolFromCurrency(currency_iso);
-    if (currency_iso) {
+    if (currency_iso && currency_iso !== " ") {
       var symbol = MoneySymbols[currency_iso].money_symbol;
       //var symbol = currencySymbol;
 
@@ -1016,17 +1017,17 @@ app.filter('formatCurrency', ['$filter', '$locale', function (filter, locale) {
 }]);
 
 // Filter that would return the countries that is already taken for specific shipping
-app.filter("excludeDupCountry", function () {
+app.filter("excludeDupCountry", function() {
   // Array filter callback function
-  var OnFilter = function (countryID) {
-    return function (country) {
+  var OnFilter = function(countryID) {
+    return function(country) {
       // Keep the country that has the came countryID or it doesn't have shipping_status
       return country.refid == countryID || country.refid == -1;
     }
   }
 
   // Actual filter function
-  return function (allCountries, rewardIndex, countryID, shippingTypeID) {
+  return function(allCountries, rewardIndex, countryID, shippingTypeID) {
     if (allCountries) {
       // Create another array of countries so we don't modify the original data
       var countries = [];
@@ -1054,40 +1055,40 @@ app.filter("excludeDupCountry", function () {
 });
 
 // Filters months so it can be translated
-app.filter('monthName', ['$translate', function ($translate) {
-  return function (monthNumber) {
+app.filter('monthName', ['$translate', function($translate) {
+  return function(monthNumber) {
     var value = $translate.instant(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']);
     var monthNames = [value.January, value.February, value.March, value.April, value.May, value.June,
-    value.July, value.August, value.September, value.October, value.November, value.December
+      value.July, value.August, value.September, value.October, value.November, value.December
     ];
     return monthNames[monthNumber];
   }
 }]);
 
-app.controller('SiteErrorCtrl', function ($scope, Restangular, $location, API_URL) {
-  $scope.goBack = function () {
+app.controller('SiteErrorCtrl', function($scope, Restangular, $location, API_URL) {
+  $scope.goBack = function() {
     window.history.go(-2);
   }
-  $scope.goToHome = function () {
+  $scope.goToHome = function() {
     $location.path('/');
   }
 });
 
-app.service('themeService', function (Restangular, $timeout, PortalSettingsService) {
+app.service('themeService', function(Restangular, $timeout, PortalSettingsService) {
   var number_theme = 8;
   var scope = {};
   scope.theme_classes = [];
   scope.top_nav_theme = {};
 
 
-  scope.topNav = function () {
-    PortalSettingsService.getSettingsObj().then(function (success) {
+  scope.topNav = function() {
+    PortalSettingsService.getSettingsObj().then(function(success) {
       return success.public_setting.site_top_nav_theme;
     });
   }
 
-  scope.themeColor = function () {
-    return PortalSettingsService.getSettingsObj().then(function (success) {
+  scope.themeColor = function() {
+    return PortalSettingsService.getSettingsObj().then(function(success) {
       scope.theme_classes = [
         'theme-button-' + success.public_setting.site_theme_color.button_color.index,
         'theme-table-' + success.public_setting.site_theme_color.table_color.index,
@@ -1102,17 +1103,17 @@ app.service('themeService', function (Restangular, $timeout, PortalSettingsServi
       return scope.theme_classes;
     });
   }
-  scope.refresh = function () {
+  scope.refresh = function() {
     this.themeColor();
   }
 
   return scope;
 });
 
-app.controller('FavIconCtrl', function ($scope, Restangular, API_URL, PortalSettingsService) {
+app.controller('FavIconCtrl', function($scope, Restangular, API_URL, PortalSettingsService) {
   $scope.server = API_URL.url;
   // load settings
-  PortalSettingsService.getSettingsObj().then(function (success) {
+  PortalSettingsService.getSettingsObj().then(function(success) {
     if (success.public_setting.site_favicon.path_external) {
       $scope.faviconURL = $scope.server + "/image/site_logo/" + success.public_setting.site_favicon.path_external;
     } else {
@@ -1122,19 +1123,19 @@ app.controller('FavIconCtrl', function ($scope, Restangular, API_URL, PortalSett
 });
 
 
-app.service('redirectService', function () {
+app.service('redirectService', function() {
   var url = "";
-  this.getUrl = function () {
+  this.getUrl = function() {
     return url;
   }
-  this.setUrl = function (s) {
+  this.setUrl = function(s) {
     url = s;
   }
 });
 
-app.directive("scroll", function ($window) {
-  return function (scope, element, attrs) {
-    angular.element($window).bind("scroll", function () {
+app.directive("scroll", function($window) {
+  return function(scope, element, attrs) {
+    angular.element($window).bind("scroll", function() {
       var bottom = $(window).scrollTop() + $(window).height();
       var height1 = $(element).offset().top + $(element).outerHeight();
       var height2 = $(element).parent().offset().top + $(element).parent().outerHeight();
@@ -1149,8 +1150,8 @@ app.directive("scroll", function ($window) {
 });
 
 // anchor scroll with animation
-app.service('anchorSmoothScroll', function () {
-  this.scrollTo = function (eID) {
+app.service('anchorSmoothScroll', function() {
+  this.scrollTo = function(eID) {
 
     // This scrolling function
     // is from http://www.itnewb.com/tutorial/Creating-the-Smooth-Scroll-Effect-with-JavaScript

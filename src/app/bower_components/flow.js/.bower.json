@@ -15,12 +15,12 @@
     "Gruntfile.js"
   ],
   "homepage": "https://github.com/flowjs/flow.js",
-  "version": "2.11.2",
-  "_release": "2.11.2",
+  "version": "2.13.1",
+  "_release": "2.13.1",
   "_resolution": {
     "type": "version",
-    "tag": "v2.11.2",
-    "commit": "bb839a6c09f46e74c606be8e6a7e183532e04570"
+    "tag": "v2.13.1",
+    "commit": "868281a4fc10e7b3546240dcf9a0a6a4274cb297"
   },
   "_source": "https://github.com/flowjs/flow.js.git",
   "_target": "~2",

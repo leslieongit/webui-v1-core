@@ -26,7 +26,7 @@ export class CardComponent implements OnInit {
   }
   ngOnChanges(changes: SimpleChanges) {
     let widget = this;
-    if(changes.isSubmitting.currentValue) {
+    if(changes.isSubmitting && changes.isSubmitting.currentValue) {
       if(widget.hasError) {
         var displayError = document.getElementById('card-errors');
         if(displayError) {
@@ -89,7 +89,7 @@ export class CardComponent implements OnInit {
         });
       // }
     } catch(error) {
-      console.log(error);
+      console.error(error);
     }
   }
   

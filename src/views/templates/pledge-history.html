@@ -66,7 +66,7 @@
 
   <div class="actions">
     <div class="ui blue button" ng-hide="!portalsetting.public_setting.site_campaign_pledge_update || pledgeDetails.ends == null || pledgeDetails.ends.substring(0,10) <= today" translate ng-click="replaceContribution()">pledge_history_replace_button</div>
-    <div class="ui red button" ng-click="openModalById('confirm-withdraw')" ng-if="portalsetting.public_setting.site_campaign_raise_modes.pledge_processing.default[pledgeDetails.raise_mode_id]==1 && (!hideWithdraw || !campaignWithdrawContribution) && pledgeDetails.settings.admin_enable_withdraw_button" translate>
+    <div class="ui red button" ng-click="openModalById('confirm-withdraw')" ng-if="portalsetting.public_setting.site_campaign_raise_modes.pledge_processing.default[pledgeDetails.raise_mode_id]==1 && ((!hideWithdraw || !campaignWithdrawContribution) || pledgeDetails.settings.admin_enable_withdraw_button)" translate>
       pledge_history_withdraw_contribution
     </div>
     <div class="ui button" translate>
@@ -97,7 +97,7 @@
       </div>
       <div class="right floated left aligned nine wide column">
         <div style="text-align: right">
-          <span translate="tab_pledge_replace_contribution_value"></span>: <span class="data-text" style="font-weight: bold" ng-bind-html="currentCampaign.amount | formatCurrency:currentCampaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
+          <span translate="tab_pledge_replace_contribution_value"></span>: <span class="data-text" style="font-weight: bold" ng-bind-html="currentCampaign.amount | formatCurrency:currentCampaign.currency.code_iso4217_alpha:portalsetting.public_setting.site_campaign_decimal_option"></span>
         </div>
       </div>
     </div>
@@ -115,14 +115,14 @@
           <td translate="tab_pledge_replace_summary_direct_contribution"></td>
           <td></td>
           <td>
-            <span class="data-text" ng-bind-html="submitReplacement.amount | formatCurrency:currentCampaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
+            <span class="data-text" ng-bind-html="submitReplacement.amount | formatCurrency:currentCampaign.currency.code_iso4217_alpha:portalsetting.public_setting.site_campaign_decimal_option"></span>
           </td>
         </tr>
         <tr ng-repeat="reward in rewardQueue">
           <td>{{reward.name}}</td>
           <td>{{reward.quantity}}</td>
           <td>
-            <span class="data-text" ng-bind-html="reward.amount | formatCurrency:currentCampaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
+            <span class="data-text" ng-bind-html="reward.amount | formatCurrency:currentCampaign.currency.code_iso4217_alpha:portalsetting.public_setting.site_campaign_decimal_option"></span>
           </td>
           <td class="ui red button" ng-click="removeReward(reward)">X
             <!-- <div class="ui red button" ng-click="removeReward(reward)" translate>X</div> -->
@@ -134,7 +134,7 @@
           <td>Total</td>
           <td></td>
           <td>
-            <span class="data-text" ng-bind-html="totalReplaced | formatCurrency:currentCampaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
+            <span class="data-text" ng-bind-html="totalReplaced | formatCurrency:currentCampaign.currency.code_iso4217_alpha:portalsetting.public_setting.site_campaign_decimal_option"></span>
           </td>
         </tr>
       </tfoot>
@@ -143,7 +143,7 @@
   <div class="amount-contribution-content content ui bottom attached tab" ng-class="{'active' : isAmountContribution}" ng-if="isAmountContribution">
     <h3 class="ui header" translate>tab_pledge_replace_amount_contributed</h3>
     <div class="ui big left labeled right labeled input contribution-input">
-      <div class="ui label">$</div>
+      <div class="ui label" ng-bind-html=" ' ' | formatCurrency:currentCampaign.currency.code_iso4217_alpha:portalsetting.public_setting.site_campaign_decimal_option"></div>
       <input id="amountContributed" name="contribution_amount" type="text" ng-model="submitReplacement.amount">
       <div class="ui label"><span>.00</span></div>
     </div>

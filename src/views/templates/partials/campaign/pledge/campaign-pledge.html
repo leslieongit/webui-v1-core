@@ -307,7 +307,7 @@
               </div>
               <h4 class="ui header"> {{pledge.name}}</h4>
               <p class="reward-desc fr-view" ng-hide="reward_html_editor" html-render html="pledge.description"></p>
-              <div ng-show="reward_html_editor" html-render html="pledge.description" class="fr-view"></div>
+              <div ng-show="reward_html_editor" html-render html="pledge.description" class="reward-desc fr-view"></div>
               <div id="{{'reward-variation-' + $index}}" class="reward-variation">
                 <div class="reward-variation-item" ng-repeat="variation in pledge.attributes.variation">
                   <label>{{variation.name}}</label>
@@ -372,7 +372,7 @@
               </div>
               <h4 class="ui header"> {{pledge.name}}</h4>
               <p class="reward-desc fr-view" ng-hide="reward_html_editor" html-render html="pledge.description"></p>
-              <div ng-show="reward_html_editor" html-render html="pledge.description" class="fr-view"></div>
+              <div ng-show="reward_html_editor" html-render html="pledge.description" class="reward-desc fr-view"></div>
               <div class="bottom">
                 <div class="reward-backers" ng-if="pledge.total_backers>0">
                   <i class="users icon"></i>
@@ -543,6 +543,9 @@
       </div>
     </div>
     <!-- DISQUS start -->
+    <div ng-if="comment_system =='disqus' && !disqus_shortname">
+        {{'campaign_comment_disqus_shortname_missing_msg'|translate}}
+    </div>
     <div id="insert_disqus" ng-if="comment_system =='disqus'">
     </div>
     <div class="insert-fb-comments" ng-if="comment_system == 'facebook'">

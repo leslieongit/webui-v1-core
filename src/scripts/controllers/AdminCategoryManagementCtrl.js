@@ -78,11 +78,10 @@ app.controller('AdminCategoriesCtrl', function($q, $scope, $rootScope, $timeout,
 
     formValidation();
     if ($scope.formValCheck) {
-
       categoryAttributes = {};
       categoryAttributes['ogtype'] = $scope.formData.ogtype;
       categoryAttributes['ogtitle'] = $scope.formData.ogtitle;
-      categoryAttributes['ogdescription'] = $scope.formData.description;
+      categoryAttributes['ogdescription'] = $scope.formData.ogdescription;
       categoryAttributes['ogimage'] = $scope.formData.ogimage;
 
       var formData = {
@@ -157,8 +156,18 @@ app.controller('AdminCategoriesCtrl', function($q, $scope, $rootScope, $timeout,
       $scope.formData.ogtitle = category.attributes["ogtitle"];
       $scope.formData.ogdescription = category.attributes["ogdescription"];
       $scope.formData.ogimage = category.attributes["ogimage"];
+
+      $('[name="formDatacategory_ogtype"]').val($scope.formData.ogtype);
+      $('[name="formDatacategory_ogtitle"]').val($scope.formData.ogtitle);
+      $('[name="formDatacategory_ogdescription"]').val($scope.formData.ogdescription);
+      $('[name="formDatacategory_ogimage"]').val($scope.formData.ogimage);
     }
-    
+    $('[name="category_name"]').val($scope.formData.category_name);
+    $('[name="category_description"]').val($scope.formData.description);
+    if(category.uri_paths) {
+      $('[name="formDatacategory_url"]').val($scope.formData.uri_path);
+    }
+
     //$('.dropdown').dropdown({'set selected': category.parent_category_id});
     $('.edit-category-modal').modal('show');
     // $('.ui.form#add-category, .ui.form#edit-category').form('clear');
@@ -181,7 +190,7 @@ app.controller('AdminCategoriesCtrl', function($q, $scope, $rootScope, $timeout,
       categoryAttributes = {};
       categoryAttributes['ogtype'] = $scope.formData.ogtype;
       categoryAttributes['ogtitle'] = $scope.formData.ogtitle;
-      categoryAttributes['ogdescription'] = $scope.formData.description;
+      categoryAttributes['ogdescription'] = $scope.formData.ogdescription;
       categoryAttributes['ogimage'] = $scope.formData.ogimage;
 
 

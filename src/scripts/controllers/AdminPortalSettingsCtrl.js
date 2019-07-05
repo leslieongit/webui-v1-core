@@ -1,12 +1,12 @@
 //------------------------------------------------------
 //      PORTAL SETTINGS TAB / SETTINGS CONTROLLER
 //------------------------------------------------------
-app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $location, $timeout, $window, Restangular, $translatePartialLoader, $translate, $q, SiteLogoService, themeService, UserService, DisqusShortnameService, FileUploadService, PortalSettingsService, StripeService, CurrencyService, Geolocator, LANG, AUTH_SCHEME, VideoLinkService, API_URL, ANONYMOUS_COMMENT, SOCIAL_SHARING_OPTIONS) {
+app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location, $timeout, $window, Restangular, $translatePartialLoader, $translate, $q, SiteLogoService, themeService, UserService, DisqusShortnameService, FileUploadService, PortalSettingsService, StripeService, CurrencyService, Geolocator, LANG, AUTH_SCHEME, VideoLinkService, API_URL, ANONYMOUS_COMMENT, SOCIAL_SHARING_OPTIONS) {
   $scope.froalaOptionsMain = {};
   $scope.froalaOptionsBot = {};
   $scope.froalaOptionsExplore = {};
   $scope.froalaFooterCustomHtmlBlock = {};
-  $scope.clearMessage = function () {
+  $scope.clearMessage = function() {
     $rootScope.floatingMessage = [];
   }
   var user = UserService;
@@ -41,8 +41,10 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     express: false
   }
 
+  $scope.stripe_no_keys = false;
+
   // Set default explore sort
-  $translate(['tab_portalsetting_set_explore_default_sort_dropdown_random', 'tab_portalsetting_set_explore_default_sort_dropdown', 'tab_portalsetting_set_explore_default_sort_dropdown_featured']).then(function (value) {
+  $translate(['tab_portalsetting_set_explore_default_sort_dropdown_random', 'tab_portalsetting_set_explore_default_sort_dropdown', 'tab_portalsetting_set_explore_default_sort_dropdown_featured']).then(function(value) {
     var defaultText = value.tab_portalsetting_set_explore_default_sort_dropdown;
     var featured_text = value.tab_portalsetting_set_explore_default_sort_dropdown_featured;
     var random_text = value.tab_portalsetting_set_explore_default_sort_dropdown_random;
@@ -65,7 +67,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
   $('.site-attributes-non-admin-disallow')
     .popup();
 
-  $scope.setRunMode = function (mode) {
+  $scope.setRunMode = function(mode) {
     $scope.runModeSelected = mode.id;
     $scope.public_settings.site_campaign_defaults_runMode = $scope.runModeSelected;
     if (mode.id == 2) {
@@ -84,7 +86,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
   }
 
   if ($rootScope.isConnectWithStripe) {
-    $timeout(function () {
+    $timeout(function() {
       $("a[data-tab='portal-settings/payment-settings']").click();
     });
   }
@@ -106,7 +108,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
 
   var refreshCount = 0;
 
-  $scope.selectTab = function ($event) {
+  $scope.selectTab = function($event) {
     var $elem = $event.target;
     var elem = angular.element($elem);
     var data_tab = elem.attr('data-tab');
@@ -118,7 +120,8 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     $("[data-tab='" + data_tab + "']").addClass('active');
   }
 
-  $scope.showDirectTransaction = false;
+  $scope.showDirectTransaction = true;
+  $scope.showMarketPlace = false;
   $scope.stripe_test_clientId = '';
   $scope.stripe_test_secretkey = '';
   $scope.stripe_test_publishkey = '';
@@ -144,12 +147,14 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
   }];
 
   $scope.paymenttype = [{
-    name: 'Stripe',
-    type_id: 1
-  }, {
-    name: 'Widget Makr',
-    type_id: 2
-  }];
+      name: 'Stripe',
+      type_id: 1
+    },
+    // {
+    //   name: 'Widget Makr',
+    //   type_id: 2
+    // }
+  ];
 
   //Decimal Option
   $scope.decimal_option_modes = [{
@@ -175,7 +180,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
 
   $scope.auth_scheme = AUTH_SCHEME;
   $scope.cur_type = 1;
-  $scope.customType = function (type) {
+  $scope.customType = function(type) {
     if (type.type_id == 1) {
       $scope.cur_type = 1;
       $scope.custom_section_id = 1;
@@ -215,14 +220,14 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
   }
   $scope.customTypeOption = ['Text', 'Dropdown'];
-  $scope.customFieldType = function (index, link) {
+  $scope.customFieldType = function(index, link) {
     link.option = $scope.customTypeOption[index];
   }
-  $scope.removeCustomFiled = function (link, index) {
+  $scope.removeCustomFiled = function(link, index) {
     $scope.custom_link.splice(index, 1);
   }
 
-  $scope.addCustomField = function (arr) {
+  $scope.addCustomField = function(arr) {
     var link = {
       name: '',
       option: 'Text',
@@ -237,7 +242,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       arr.push(angular.copy(link));
   }
 
-  $scope.saveCustomField = function () {
+  $scope.saveCustomField = function() {
     $scope.customFieldSaveAttrPermission();
     //$scope.clearMessage();
     var valcheck = true;
@@ -247,7 +252,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
     $rootScope.floatingMessage = msg;
 
-    angular.forEach($scope.custom_link, function (val, key, obj) {
+    angular.forEach($scope.custom_link, function(val, key, obj) {
       if (obj[key].dropdown_array && !Array.isArray(obj[key].dropdown_array)) {
         var array = obj[key].dropdown_array.split(",");
         obj[key].dropdown_array = array;
@@ -267,14 +272,14 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
 
     if ($scope.public_settings.site_campaign_personal_section_enhanced) {
-      angular.forEach($scope.custom_link, function (value) {
+      angular.forEach($scope.custom_link, function(value) {
         if (!value.name.length) {
           valcheck = false;
         }
       });
       if (!valcheck) {
 
-        $timeout(function () {
+        $timeout(function() {
           $rootScope.removeFloatingMessage();
           // Inform the user if there was an error
           msg = {
@@ -287,7 +292,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       }
     }
 
-    Restangular.one('portal/setting/public').customPUT(publicSettings).then(function (success) {
+    Restangular.one('portal/setting/public').customPUT(publicSettings).then(function(success) {
       msg = {
         'header': "success_message_save_changes_button",
       }
@@ -296,7 +301,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     });
 
   }
-  $scope.paymentType = function (type) {
+  $scope.paymentType = function(type) {
 
     $scope.paymentId = type.type_id;
     if ($scope.paymentId == 1) {
@@ -309,7 +314,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
   }
 
-  $rootScope.$on('$locationChangeSuccess', function () {
+  $rootScope.$on('$locationChangeSuccess', function() {
     updateSiteMenu();
   });
 
@@ -346,7 +351,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     for (var menuFaq in arrayObj) {
       menuOptionsFaq.push(arrayObj[menuFaq]);
     }
-    $translate(menuOptionsFaq).then(function (success) {
+    $translate(menuOptionsFaq).then(function(success) {
       for (var menuFaq in arrayObj) {
         arrayObj[menuFaq] = success[menuOptionsFaq[menuFaq]];
       }
@@ -395,9 +400,9 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     name: 'pink',
   }];
 
-  setTimeout(function () {
+  setTimeout(function() {
 
-    $translate(['button_color', 'table_color', 'banner_color', 'font_color', 'reward_block_color', 'top_nav_background_color', 'top_nav_font_color', 'footer_background_color', 'footer_font_color']).then(function (value) {
+    $translate(['button_color', 'table_color', 'banner_color', 'font_color', 'reward_block_color', 'top_nav_background_color', 'top_nav_font_color', 'footer_background_color', 'footer_font_color']).then(function(value) {
 
       $scope.color_sections = [{
         name: value.button_color,
@@ -461,26 +466,27 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       // retrieve stripe currency
       $scope.setStripeCountry($scope.stripe_setting.country_id);
     }
-
-    Restangular.one('account/stripe/connect').customGET().then(function (stripe_accounts) {
+    Restangular.one('account/stripe/connect').customGET().then(function(stripe_accounts) {
       stripeAdminAccounts = stripe_accounts.plain();
       $scope.admin_stripe_accounts = stripe_accounts.plain();
 
       filterStripeAccount(stripeAdminAccounts, $scope.livemode);
       if ($rootScope.isConnectWithStripe) {
-        $timeout(function () {
+        $timeout(function() {
           $(".direct-transaction").dropdown("set selected", 0);
         }, 1000);
       }
     });
+    var cur_mode = (typeof $scope.livemode === 'defined' || !$scope.livemode) ? 'test' : 'live';
+    $scope.setMode(cur_mode);
   }
   // portal settings stripe settings request
   function getStripeApplication() {
-    Restangular.one('account/stripe/application').customGET().then(function (success) {
+    Restangular.one('account/stripe/application').customGET().then(function(success) {
       $scope.stripe_setting = success.plain();
       $scope.stripe_setting_origin = angular.copy(success);
       processStripeApplicationAccount();
-    }, function (failure) {
+    }, function(failure) {
       if (failure.data.code == "entity_not_found") {
         //If stripe application is removed or does not exist, use dummy
         if (typeof $scope.stripe_setting == 'undefined' || !$scope.stripe_setting) {
@@ -510,19 +516,20 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
         }
       }
     });
+
   }
 
   function filterStripeAccount(stripeAccounts, isLiveMode) {
-    $scope.admin_stripe_accounts = stripeAdminAccounts.filter(function (account) {
+    $scope.admin_stripe_accounts = stripeAdminAccounts.filter(function(account) {
       return isLiveMode ? /sk_live/.test(account.access_token) : /sk_test/.test(account.access_token);
     });
   }
 
   // used in portal settings. campaign raise mode
-  Restangular.one('campaign/raise-mode').customGET().then(function (success) {
+  Restangular.one('campaign/raise-mode').customGET().then(function(success) {
     $scope.raise_modes = success;
-    PortalSettingsService.getSettingsObj().then(function (success) {
-      angular.forEach($scope.raise_modes, function (mode, index) {
+    PortalSettingsService.getSettingsObj().then(function(success) {
+      angular.forEach($scope.raise_modes, function(mode, index) {
         // id toString
         if (success.public_setting.site_campaign_raise_modes.allowed.indexOf(mode.id) > -1) {
           mode.allowed = true;
@@ -539,12 +546,12 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
   function updateSiteMenu() {
     //site_campaign_hide_creator_info
     Restangular.one('portal/setting').getList().then(
-      function (success) {
+      function(success) {
         // seperate settings into two categories
         $scope.public_settings = {};
         $scope.private_settings = {};
         // loop and categorize the response data. put them into object
-        angular.forEach(success, function (value) {
+        angular.forEach(success, function(value) {
           if (value.setting_type_id == 3) {
             $scope.public_settings[value.name] = value.value;
 
@@ -644,7 +651,6 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
         if (typeof $scope.public_settings.site_theme_sticky_menu == "undefined") {
           $scope.public_settings.site_theme_sticky_menu = false;
         }
-
         if (typeof $scope.public_settings.site_tipping == "undefined") {
           $scope.public_settings.site_tipping = { type: 1, tier_type: 1, tiers: [] };
         } else {
@@ -683,8 +689,8 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
         }
         $scope.crimson = $scope.private_settings.site_crimson_setting;
 
-        $scope.selected_mode = $scope.public_settings.site_campaign_raise_modes.default - 1;
-        
+        $scope.selected_mode = $scope.public_settings.site_campaign_raise_modes.default-1;
+
         if ($scope.raise_modes) {
           $('#mode_dtext').text($scope.raise_modes[$scope.selected_mode].description);
         }
@@ -718,14 +724,14 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
         }
 
         if (typeof $scope.public_settings.site_payment_gateway == 'undefined') {
-          $timeout(function () {
+          $timeout(function() {
             $('#card-type').dropdown('set text', $scope.paymenttype[0].name);
             $('#card-type').dropdown('set selected', $scope.paymenttype[0].type_id);
           });
           $scope.showStripe = true;
         } else {
 
-          angular.forEach($scope.paymenttype, function (value) {
+          angular.forEach($scope.paymenttype, function(value) {
             if (value.type_id == $scope.public_settings.site_payment_gateway) {
               $('#default-payment-text').text(value.name);
               $scope.paymentId = $scope.public_settings.site_payment_gateway;
@@ -806,7 +812,6 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
           // set default text if button enabled but no custom text
           $scope.public_settings.site_home_page_text.bottom_banner.learn_more_display_button = true;
         }
-
         if (typeof $scope.private_settings.site_stripe == "undefined") {
           $scope.stripe_test_clientId = $scope.stripe_test1_clientId;
           $scope.stripe_test_secretkey = $scope.stripe_test1_secretkey;
@@ -815,7 +820,11 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
           $scope.stripe_live_clientId = $scope.stripe_live1_clientId;
           $scope.stripe_live_secretkey = $scope.stripe_live1_secretkey;
           $scope.stripe_live_publishkey = $scope.stripe_live1_publishkey;
+
+          $scope.stripe_no_keys = true;
+
         } else {
+
           $scope.stripe_test_clientId = $scope.private_settings.site_stripe.test.clientId;
           $scope.stripe_test_secretkey = $scope.private_settings.site_stripe.test.secretkey;
           $scope.stripe_test_publishkey = $scope.private_settings.site_stripe.test.publishkey;
@@ -857,6 +866,12 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
 
         if (typeof $scope.public_settings.payment_setting_enabled == "undefined") {
           $scope.public_settings.payment_setting_enabled = true;
+        }
+
+        if (typeof $scope.public_settings.site_footer_custom_html_block == 'undefined' || !$scope.public_settings.site_footer_custom_html_block.hasOwnProperty('html')) {
+          $scope.public_settings.site_footer_custom_html_block = {
+            html: ''
+          };
         }
 
         for (var i = 0; i < success.length; i++) {
@@ -931,11 +946,11 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
 
           // Video related setting
           if ($scope.public_settings.site_theme_banner_video_mute == true) {
-            $translate("tab_portalsetting_video_toggle_mute_on").then(function (success) {
+            $translate("tab_portalsetting_video_toggle_mute_on").then(function(success) {
               $scope.videoMuteToggle = success;
             });
           } else {
-            $translate("tab_portalsetting_video_toggle_mute_off").then(function (success) {
+            $translate("tab_portalsetting_video_toggle_mute_off").then(function(success) {
               $scope.videoMuteToggle = success;
             });
           }
@@ -980,10 +995,10 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
         }
 
         $scope.anonymousValuesObject = ANONYMOUS_COMMENT;
-        $scope.setAnonymousSetting = function (anonymousValue) {
+        $scope.setAnonymousSetting = function(anonymousValue) {
           if (anonymousValue == $scope.anonymousValuesObject.anonymous_disabled) {
             $scope.public_settings.custom_comment_anonymous_commenting_force = false;
-            $timeout(function () {
+            $timeout(function() {
               $("#custom-comment-anonymous-force").checkbox("uncheck");
             });
           }
@@ -991,7 +1006,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
         }
 
         $scope.sharingOptions = SOCIAL_SHARING_OPTIONS;
-        $timeout(function () {
+        $timeout(function() {
           // initiate accordion
           // $('.ui.accordion').accordion();
           if ($scope.widgetdefault_id) {
@@ -1035,7 +1050,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
         });
 
       },
-      function (failure) {
+      function(failure) {
         msg = {
           'header': failure.data.message,
 
@@ -1048,26 +1063,26 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
   }
 
 
-  $scope.checkChecked = function ($event) {
+  $scope.checkChecked = function($event) {
     var $label = $($event.currentTarget);
     var $parentDiv = $label.parent();
 
     // False means checked bacause click event happens before semantic class changes
     if (!$parentDiv.hasClass("checked")) {
-      $translate("tab_portalsetting_video_toggle_mute_on").then(function (success) {
+      $translate("tab_portalsetting_video_toggle_mute_on").then(function(success) {
         $scope.videoMuteToggle = success;
       });
     } else {
-      $translate("tab_portalsetting_video_toggle_mute_off").then(function (success) {
+      $translate("tab_portalsetting_video_toggle_mute_off").then(function(success) {
         $scope.videoMuteToggle = success;
       });
     }
   }
 
-  $scope.stripeSettingsValidation = function () {
+  $scope.stripeSettingsValidation = function() {
     var translation = $translate.instant(['tab_portalsetting_stripe_country_error']);
     var postTranslation = $translate.instant(['tab_portalsetting_post_processing_interval_error']);
-    $.fn.form.settings.rules.postProcessingRule = function (param) {
+    $.fn.form.settings.rules.postProcessingRule = function(param) {
       if (param < 1) {
         return false;
       } else if (param > 6) {
@@ -1085,14 +1100,14 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
         }]
       }
     }, {
-        inline: true,
-        onSuccess: function () {
-          $scope.valcheck = $scope.valcheck && true;
-        },
-        onFailure: function () {
-          $scope.valcheck = $scope.valcheck && false;
-        }
-      }).form('validate form');
+      inline: true,
+      onSuccess: function() {
+        $scope.valcheck = $scope.valcheck && true;
+      },
+      onFailure: function() {
+        $scope.valcheck = $scope.valcheck && false;
+      }
+    }).form('validate form');
 
     $('#post-processing-interval.ui.form').form({
       processing_days: {
@@ -1103,14 +1118,14 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
         }]
       }
     }, {
-        inline: true,
-        onSuccess: function () {
-          $scope.valcheck = $scope.valcheck && true;
-        },
-        onFailure: function () {
-          $scope.valcheck = $scope.valcheck && false;
-        }
-      }).form('validate form');
+      inline: true,
+      onSuccess: function() {
+        $scope.valcheck = $scope.valcheck && true;
+      },
+      onFailure: function() {
+        $scope.valcheck = $scope.valcheck && false;
+      }
+    }).form('validate form');
   }
 
   /**
@@ -1132,10 +1147,10 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     return isValid;
   }
 
-  $scope.stripeTokenizationValidation = function () {
+  $scope.stripeTokenizationValidation = function() {
     if ($scope.livemode) {
       if ($scope.public_settings.site_stripe_tokenization.toggle &&
-        (!$scope.stripe_live_publishkey.length || !$scope.stripe_live_secretkey.length || !$scope.stripe_live_clientId.length)) {
+        (($scope.stripe_live_publishkey && !$scope.stripe_live_publishkey.length) || ($scope.stripe_live_secretkey && !$scope.stripe_live_secretkey.length))) {
         msg = {
           'header': "stripe_tokenize_error",
         }
@@ -1145,7 +1160,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       }
     } else if ($scope.testmode) {
       if ($scope.public_settings.site_stripe_tokenization.toggle &&
-        (!$scope.stripe_test_publishkey.length || !$scope.stripe_test_secretkey.length || !$scope.stripe_test_clientId.length)) {
+        (($scope.stripe_test_publishkey && !$scope.stripe_test_publishkey.length) || ($scope.stripe_test_secretkey && !$scope.stripe_test_secretkey.length))) {
         msg = {
           'header': "stripe_tokenize_error",
         }
@@ -1158,41 +1173,42 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
   };
 
 
-  $scope.checkBank = function () {
+  $scope.checkBank = function() {
     if ($scope.public_settings.site_campaign_country_funding_step) {
       $('.toggle-bank').checkbox('uncheck');
       $scope.public_settings.site_campaign_country_funding_step = false;
     }
   }
 
-  $scope.checkDirect = function () {
-    if ($scope.public_settings.site_campaign_fee_direct_transaction) {
-      $('.toggle-stripe').checkbox('uncheck');
-      $scope.public_settings.site_campaign_fee_direct_transaction = false;
+  $scope.checkDirect = function() {
+    if (!$scope.public_settings.site_campaign_fee_direct_transaction) {
+      // $('.toggle-stripe').checkbox('uncheck');
+      $('.toggle-stripe').checkbox('check');
+      $scope.public_settings.site_campaign_fee_direct_transaction = true;
     }
   }
 
-  $scope.savePayment = function () {
+  $scope.savePayment = function() {
     $scope.valcheck = true;
-    $scope.stripeSettingsValidation();
 
-    var translation = $translate.instant(['tab_portalsetting_currency_prompt_empty']);
+    $scope.countryCurrencyValidate();
 
-    if (!$('#campaign-currency-field .select2-choices li').hasClass('select2-search-choice')) {
-      $('.select-error').remove();
-      $('#campaign-currency-field').append('<div class="select-error ui red pointing prompt label transition visible">' + translation.tab_portalsetting_currency_prompt_empty + '</div>');
-      $('#campaign-currency-field').addClass('error');
+    if ($scope.public_settings.payment_setting_enabled) {
+
+      $scope.stripeSettingsValidation();
+
+      $scope.directTransactionValidation();
+
+      // Check Stripe Tokenization Validation
+      if (!$scope.stripeTokenizationValidation()) {
+        $scope.valcheck = false;
+      };
     }
 
-
-    // Check Stripe Tokenization Validation
-    if (!$scope.stripeTokenizationValidation()) {
-      $scope.valcheck = false;
-    };
     // Check for error on the .field element
     $rootScope.scrollToError();
 
-    if ($scope.valcheck && $('#campaign-currency-field .select2-choices li').hasClass('select2-search-choice')) {
+    if ($scope.valcheck) {
 
       //$scope.clearMessage();
       var privateSettings = {
@@ -1200,25 +1216,37 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       };
 
       // save private settings
-      Restangular.one('portal/setting').customPUT(privateSettings).then(function (success) {
+      Restangular.one('portal/setting').customPUT(privateSettings).then(function(success) {
+
+        if (!$scope.public_settings.payment_setting_enabled) {
+          msg = {
+            'header': "success_message_save_changes_button",
+          }
+          $rootScope.floatingMessage = msg;
+          $scope.hideFloatingMessage();
+
+          $scope.stripe_setting['']
+        }
+
+        // $scope.stripe_api_first_save
 
         //Once save is complete check if direct transaction is saved - need to refresh to reflect properly
         if ($scope.public_settings.site_campaign_fee_direct_transaction) {
           filterStripeAccount(stripeAdminAccounts, $scope.livemode);
           if ($rootScope.isConnectWithStripe) {
-            $timeout(function () {
+            $timeout(function() {
               $(".direct-transaction").dropdown("set selected", 0);
             }, 1000);
           }
         }
       });
 
-      if ($scope.testmode && $scope.stripe_test_publishkey){
+      if ($scope.testmode && $scope.stripe_test_publishkey) {
         $scope.public_settings.site_stripe_tokenization = {
           'toggle': true,
           'public_stripe_key': $scope.stripe_test_publishkey
         }
-      } else if ($scope.livemode && $scope.stripe_live_publishkey){
+      } else if ($scope.livemode && $scope.stripe_live_publishkey) {
         $scope.public_settings.site_stripe_tokenization = {
           'toggle': true,
           'public_stripe_key': $scope.stripe_live_publishkey
@@ -1234,9 +1262,11 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
         site_stripe_tokenization: $scope.public_settings.site_stripe_tokenization,
         site_campaign_country_funding_step: $scope.public_settings.site_campaign_country_funding_step,
         site_campaign_country_ids: $scope.public_settings.site_campaign_country_ids,
+        site_campaign_contributions: $scope.public_settings.site_campaign_contributions,
+        site_campaign_contributions_instruction: $scope.public_settings.site_campaign_contributions_instruction,
       };
 
-      Restangular.one('portal/setting/public').customPUT(publicSettings).then(function (success) {
+      Restangular.one('portal/setting/public').customPUT(publicSettings).then(function(success) {
         if ($scope.paymentId == 2) {
           $scope.saveWidgetMkr();
         } else {
@@ -1247,7 +1277,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
   }
 
-  Restangular.one('account/widgetmakr/widget').customGET().then(function (success) {
+  Restangular.one('account/widgetmakr/widget').customGET().then(function(success) {
     if (success.length > 0) {
       $scope.widget_accountID = success[0].widgetmakr_account_id;
       $scope.widgetMakr_link = success;
@@ -1260,7 +1290,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       }];
     }
   });
-  $scope.saveWidgetMkr = function () {
+  $scope.saveWidgetMkr = function() {
     msg = {
       'loading': true,
       'loading_message': 'saving_settings'
@@ -1272,11 +1302,11 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     };
     // save private settings
     Restangular.one('portal/setting').customPUT(privateSettings);
-    $scope.widgetMakr_link.forEach(function (link, index) {
+    $scope.widgetMakr_link.forEach(function(link, index) {
 
       if (link.widgetmakr_account_id > 0) {
         $scope.widget_makr_links.widgetmakr_account_id = link.widget_accountID;
-        Restangular.one('account/widgetmakr/widget', link.widgetmakr_account_id).customPUT(link).then(function (success) {
+        Restangular.one('account/widgetmakr/widget', link.widgetmakr_account_id).customPUT(link).then(function(success) {
           msg = {
             'header': "success_message_save_changes_button",
           }
@@ -1284,7 +1314,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
           $scope.hideFloatingMessage();
         });
       } else {
-        Restangular.one('account/widgetmakr/widget').customPOST(link).then(function (success) {
+        Restangular.one('account/widgetmakr/widget').customPOST(link).then(function(success) {
           msg = {
             'header': "success_message_save_changes_button",
           }
@@ -1295,14 +1325,14 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     });
   };
 
-  $scope.removeLink = function (link, index) {
+  $scope.removeLink = function(link, index) {
     $scope.widgetMakr_link.splice(index, 1);
     if (link.widgetmakr_account_id) {
       Restangular.one('account/widgetmakr/widget', link.widgetmakr_account_id).customDELETE();
     }
   }
 
-  $scope.addWLink = function (arr) {
+  $scope.addWLink = function(arr) {
     var link = {
       name: '',
       widget_instance_id: '',
@@ -1313,7 +1343,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       arr.push(angular.copy(link));
   }
 
-  $scope.setMode = function (id) {
+  $scope.setMode = function(id) {
     // Switch Stripe settings
     if (id === "live") {
       $scope.livemode = true;
@@ -1356,14 +1386,14 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     $scope.loader_enabled = API_URL.loader_enabled;
   }
 
-  $scope.uploadLoadIcon = function (files) {
+  $scope.uploadLoadIcon = function(files) {
 
     if (files.length) {
       var params = {
         resource_content_type: 'image',
       };
       var $picNode = $('.loadScreenIcon');
-      FileUploadService.upload('portal/resource/file', files, params, $picNode).then(function (success) {
+      FileUploadService.upload('portal/resource/file', files, params, $picNode).then(function(success) {
         var data = {
           site_load_icon: success[0].data,
         }
@@ -1376,21 +1406,21 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
   }
 
-  $scope.deleteLoadIcon = function () {
+  $scope.deleteLoadIcon = function() {
     $scope.site_load_icon = {};
     SiteLogoService.setLoadIcon({
       site_load_icon: {}
     });
   }
 
-  $scope.uploadFavIcon = function (files) {
+  $scope.uploadFavIcon = function(files) {
 
     if (files.length) {
       var params = {
         resource_content_type: 'image',
       };
       var $picNode = $('.websiteFavicon');
-      FileUploadService.upload('portal/resource/file', files, params, $picNode).then(function (success) {
+      FileUploadService.upload('portal/resource/file', files, params, $picNode).then(function(success) {
         var data = {
           site_favicon: success[0].data,
         }
@@ -1436,18 +1466,18 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
   }
 
 
-  $scope.uploadStateFile = function (files) {
+  $scope.uploadStateFile = function(files) {
     if (files.length) {
       $scope.isUploading = true;
       var url = "portal/resource/file";
-      FileUploadService.uploadFile(url, files).then(function (success) {
+      FileUploadService.uploadFile(url, files).then(function(success) {
         $scope.currentUploadFile.resourceId = success.data.id;
         $scope.currentUploadFile.title = $scope.currentUploadFile.title ? $scope.currentUploadFile.title : success.data.name;
         $scope.currentUploadFile.fileName = success.data.name;
         $scope.currentUploadFile.path = success.data.path_external;
         setFileIconType(success.data.mime_type);
         $scope.isUploading = false;
-      }, function (error) {
+      }, function(error) {
         $scope.isUploading = false;
       });
     }
@@ -1457,7 +1487,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     reqDeleteFileArr.push(resourceId);
   }
 
-  $scope.addStateFile = function () {
+  $scope.addStateFile = function() {
     if ($("#currentUploadeFileTitleEditor").froalaEditor('codeView.isActive') && $("#currentUploadeFileTitleEditor").froalaEditor('codeView.get') != "") {
       $scope.currentUploadFile.title = $("#currentUploadeFileTitleEditor").froalaEditor('codeView.get');
     }
@@ -1480,32 +1510,32 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       "resourceId": -1
     };
   }
-  $scope.cancelStateFile = function () {
+  $scope.cancelStateFile = function() {
     Restangular.one("portal").one("resource/file", $scope.currentUploadFile.resourceId).customDELETE();
     resetFileUpload();
   }
-  $scope.removeFileFromSetting = function (fileObjIndex) {
+  $scope.removeFileFromSetting = function(fileObjIndex) {
     addToDeleteFileQueue($scope.public_settings.site_campaign_state_settings[fileObjIndex].resourceId);
     $scope.public_settings.site_campaign_state_settings.splice(fileObjIndex, 1);
   }
 
-  $scope.makedefault = function (link) {
+  $scope.makedefault = function(link) {
     $scope.widget_default_id = link.widgetmakr_account_id;
   }
-  $scope.deleteFavIcon = function () {
+  $scope.deleteFavIcon = function() {
     $scope.site_favicon = {};
     SiteLogoService.setFavIcon({
       site_favicon: {}
     });
   }
 
-  $scope.uploadLogo = function (files) {
+  $scope.uploadLogo = function(files) {
     if (files.length) {
       var params = {
         resource_content_type: 'image',
       };
       var $picNode = $('.websiteLogo');
-      FileUploadService.upload('portal/resource/file', files, params, $picNode).then(function (success) {
+      FileUploadService.upload('portal/resource/file', files, params, $picNode).then(function(success) {
         var data = {
           site_logo: success[0].data,
         }
@@ -1518,7 +1548,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
   }
 
-  $scope.deleteLogo = function () {
+  $scope.deleteLogo = function() {
     $scope.site_logo = {};
     SiteLogoService.setLogoUrl({
       site_logo: {}
@@ -1528,13 +1558,13 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     $('.ui.loader.download-loader').hide();
   }
 
-  $scope.uploadMainBackground = function (files) {
+  $scope.uploadMainBackground = function(files) {
     if (files.length) {
       var params = {
         resource_content_type: 'image',
       };
       var $picNode = $('#home-media-image, #home-media-video');
-      FileUploadService.upload('portal/resource/file', files, params, $picNode).then(function (success) {
+      FileUploadService.upload('portal/resource/file', files, params, $picNode).then(function(success) {
         var data = {
           site_theme_main_background: success[0].data,
         }
@@ -1547,7 +1577,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
   }
 
-  $scope.deleteMainBackground = function () {
+  $scope.deleteMainBackground = function() {
     $scope.main_background = {};
     SiteLogoService.setMainBackground({
       site_theme_main_background: {}
@@ -1557,13 +1587,13 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     $('.ui.loader.download-loader').hide();
   }
 
-  $scope.uploadExploreBackground = function (files) {
+  $scope.uploadExploreBackground = function(files) {
     if (files.length) {
       var params = {
         resource_content_type: 'image',
       };
       var $picNode = $('#explore-media-image, #explore-media-video');
-      FileUploadService.upload('portal/resource/file', files, params, $picNode).then(function (success) {
+      FileUploadService.upload('portal/resource/file', files, params, $picNode).then(function(success) {
         var data = {
           site_theme_explore_background: success[0].data,
         }
@@ -1576,7 +1606,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
   }
 
-  $scope.deleteExploreBackground = function () {
+  $scope.deleteExploreBackground = function() {
     $scope.explore_background = {};
     SiteLogoService.setExploreBackground({
       site_theme_explore_background: {}
@@ -1586,7 +1616,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     $('.ui.loader.download-loader').hide();
   }
 
-  $scope.menuManage = function (menu) {
+  $scope.menuManage = function(menu) {
     $scope.menuShow = true;
     $scope.menu_selected = menu;
     if (menu == 'Navigation') {
@@ -1598,7 +1628,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
   }
 
-  $scope.findPageByID = function (id) {
+  $scope.findPageByID = function(id) {
     for (var i = 0; i < $scope.pages.length; i++) {
       if ($scope.pages[i].id == id) {
         return $scope.pages[i];
@@ -1608,7 +1638,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     return {};
   }
 
-  $scope.showExternalLinkFields = function () {
+  $scope.showExternalLinkFields = function() {
     $scope.externalLink = {
       "name": "",
       "path": ""
@@ -1616,7 +1646,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     $scope.isAddExternalLink = true;
   }
 
-  $scope.setExternalLink = function () {
+  $scope.setExternalLink = function() {
     if ($scope.externalLink.name != "" && $scope.externalLink.path != "") {
       $scope.menu_links.push($scope.externalLink);
       $scope.isAddExternalLink = false;
@@ -1627,7 +1657,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
   }
 
-  $scope.clearExternalLink = function () {
+  $scope.clearExternalLink = function() {
     $scope.isAddExternalLink = false;
     $scope.externalLink = {
       "name": "",
@@ -1635,7 +1665,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     };
   }
 
-  $scope.addLink = function (page) {
+  $scope.addLink = function(page) {
     var $form = {
       id: page.id,
     };
@@ -1653,7 +1683,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       //TODO: update the menus when add, remove or reorder the links
       if ($scope.menu_selected == 'Navigation') {
         if (page.name.length > 16) {
-          $translate(['title_too_long']).then(function (value) {
+          $translate(['title_too_long']).then(function(value) {
 
             $scope.$parent.formData.error = value.title_too_long;
           });
@@ -1661,7 +1691,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
           insert = false;
         }
         if ($scope.menu_links.length >= 7) {
-          $translate(['too_many_links']).then(function (value) {
+          $translate(['too_many_links']).then(function(value) {
             $scope.$parent.formData.error = value.too_many_links;
           });
           $('.response-error-modal').modal('show');
@@ -1669,7 +1699,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
         }
       } else {
         if (page.name.length > 16) {
-          $translate(['footer_title_long']).then(function (value) {
+          $translate(['footer_title_long']).then(function(value) {
             $scope.$parent.formData.error = value.footer_title_long;
           });
           $('.response-error-modal').modal('show');
@@ -1682,7 +1712,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
   }
 
-  $scope.deleteLink = function (link) {
+  $scope.deleteLink = function(link) {
     for (var i = 0; i < $scope.menu_links.length; i++) {
       if (link.id != undefined && $scope.menu_links[i].id == link.id) {
         $scope.menu_links.splice(i, 1);
@@ -1692,15 +1722,15 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
   }
 
-  $scope.deleteMultiLink = function () {
-    $('.menu-item').each(function () {
+  $scope.deleteMultiLink = function() {
+    $('.menu-item').each(function() {
       if ($(this).find('.t-check-box input').prop('checked')) {
         $scope.deleteLink($(this).scope().link);
       }
     });
   }
 
-  $scope.editLink = function (link) {
+  $scope.editLink = function(link) {
     if (!link.edit) {
       link.edit = true;
     } else {
@@ -1708,7 +1738,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
   }
 
-  $scope.showContent = function (e) {
+  $scope.showContent = function(e) {
     var tar = $(e.target);
     var content = tar.closest(".portal-settings-wrap").find('.setting-content');
     content.toggle(400);
@@ -1727,38 +1757,38 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
   }
 
   // Decimal Notation
-  $scope.decimalNotationSelected = function (index) {
+  $scope.decimalNotationSelected = function(index) {
     $scope.public_settings.site_campaign_decimal_option = index;
   }
-  $scope.faqSelected = function (index) {
+  $scope.faqSelected = function(index) {
     $scope.public_settings.site_faq_option = index;
   }
-  $scope.backerSelected = function (index) {
+  $scope.backerSelected = function(index) {
     $scope.public_settings.site_backer_option = index;
   }
-  $scope.commentSelected = function (index) {
+  $scope.commentSelected = function(index) {
     index = index + 1;
     $scope.public_settings.site_comment_option = index;
   }
-  $scope.streamSelected = function (index) {
+  $scope.streamSelected = function(index) {
     $scope.public_settings.site_stream_option = index;
   }
 
-  $scope.setRaiseMode = function (mode) {
+  $scope.setRaiseMode = function(mode) {
     $scope.public_settings.site_campaign_raise_modes.default = mode.id;
   }
 
-  $scope.setSharingOptions = function (sharingOption) {
+  $scope.setSharingOptions = function(sharingOption) {
     $scope.public_settings.site_campaign_sharing_options = sharingOption;
   }
 
   // only allow one comment option max
-  $('input.comment_display_replace_reward').on('change', function () {
+  $('input.comment_display_replace_reward').on('change', function() {
     $('input.comment_display').not(this).prop('checked', false);
     $scope.public_settings.site_campaign_comments_display = false;
   });
 
-  $('input.comment_display').on('change', function () {
+  $('input.comment_display').on('change', function() {
     $('input.comment_display_replace_reward').not(this).prop('checked', false);
     $scope.public_settings.site_campaign_comments_display_replace_reward = false;
   });
@@ -1773,7 +1803,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
   //   }
   // }
 
-  $scope.customFormattingValidation = function () {
+  $scope.customFormattingValidation = function() {
     var translation = $translate.instant(['tab_portalsetting_custom_reward_text_error', 'tab_portalsetting_custom_contribution_text_error']);
 
     $('.ui.form#custom-formatting-form').form({
@@ -1792,21 +1822,21 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
         }]
       },
     }, {
-        inline: true,
-        onSuccess: function () {
-          $scope.valcheck = $scope.valcheck && true;
-        },
-        onFailure: function () {
-          $scope.valcheck = $scope.valcheck && false;
-        }
-      }).form('validate form');
+      inline: true,
+      onSuccess: function() {
+        $scope.valcheck = $scope.valcheck && true;
+      },
+      onFailure: function() {
+        $scope.valcheck = $scope.valcheck && false;
+      }
+    }).form('validate form');
   }
 
-  $scope.selectTipCurrency = function (currency) {
+  $scope.selectTipCurrency = function(currency) {
     $scope.public_settings.site_tip_currency = currency;
   }
 
-  $scope.saveCampaignSetting = function () {
+  $scope.saveCampaignSetting = function() {
 
     msg = {
       'loading': true,
@@ -1831,14 +1861,14 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     //Check Raise Modes
     var raise_modes_selected = [];
     $scope.raise_modes.forEach(function(v) {
-      if(v.allowed) {
+      if (v.allowed) {
         raise_modes_selected.push(v);
       }
     });
     //Only one selected
-    if(raise_modes_selected.length == 1) {
+    if (raise_modes_selected.length == 1) {
       $scope.setRaiseMode(raise_modes_selected[0]);
-    } else if(raise_modes_selected.length == 0) {
+    } else if (raise_modes_selected.length == 0) {
       //Show error message
       var translate = $translate.instant(['tab_portalsetting_campaign_raise_mode_error_msg']);
       msg = {
@@ -1888,8 +1918,6 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       site_admin_campaign_management_only: $scope.public_settings.site_admin_campaign_management_only,
       campaign_keep_status: $scope.public_settings.campaign_keep_status,
       campaign_always_capture: $scope.public_settings.campaign_always_capture,
-      site_campaign_contributions: $scope.public_settings.site_campaign_contributions,
-      site_campaign_contributions_instruction: $scope.public_settings.site_campaign_contributions_instruction,
       site_campaign_categories_limit_1: $scope.public_settings.site_campaign_categories_limit_1,
       site_campaign_group_management_non_admin: $scope.public_settings.site_campaign_group_management_non_admin,
       site_campaign_always_anonymous_contribution: $scope.public_settings.site_campaign_always_anonymous_contribution,
@@ -2001,9 +2029,11 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       site_campaign_creation_start_campaign_on_current_date: $scope.public_settings.site_campaign_creation_start_campaign_on_current_date,
       site_campaign_enable_contribute_button_per_campaign: $scope.public_settings.site_campaign_enable_contribute_button_per_campaign,
       site_campaign_display_funding_goal_amount_on_campaign_cards: $scope.public_settings.site_campaign_display_funding_goal_amount_on_campaign_cards,
-      site_tip_currency: $scope.public_settings.site_tip_currency,
+
       site_campaign_profile_data_on_pledge: $scope.public_settings.site_campaign_profile_data_on_pledge,
-      site_campaign_pledge_redirect: $scope.public_settings.site_campaign_pledge_redirect
+      site_campaign_pledge_redirect: $scope.public_settings.site_campaign_pledge_redirect,
+      site_campaign_campaign_toggle_disclaimer_text: $scope.public_settings.site_campaign_campaign_toggle_disclaimer_text,
+
     };
     if (!$scope.public_settings.site_campaign_defaults.toggle) {
       $scope.public_settings.site_campaign_defaults.hide_fundraise = false;
@@ -2026,7 +2056,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
         return;
       }
     }
-  
+
     // Check if custom formatting toggle is enabled
     // Show fields if enabled then validate otherwise hide it
     if (typeof publicSettings.site_campaign_custom_button !== 'undefined') {
@@ -2070,14 +2100,14 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
 
     var request = Restangular.one('portal/setting/public').customPUT(publicSettings);
-    request.then(function () {
+    request.then(function() {
       msg = {
         'header': "success_message_save_changes_button",
       }
 
       // Delete state images
       if (reqDeleteFileArr.length) {
-        reqDeleteFileArr.forEach(function (value) {
+        reqDeleteFileArr.forEach(function(value) {
           Restangular.one("portal").one("resource/file", value).customDELETE();
         });
         reqDeleteFileArr = [];
@@ -2085,7 +2115,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
 
       $rootScope.floatingMessage = msg;
       $scope.hideFloatingMessage();
-    }, function (failed) {
+    }, function(failed) {
       msg = {
         'header': failed.data.message,
       }
@@ -2094,7 +2124,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     });
   }
 
-  $scope.saveCompanyInfo = function () {
+  $scope.saveCompanyInfo = function() {
 
     msg = {
       'loading': true,
@@ -2106,14 +2136,14 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       site_theme_portal_company_number: $scope.public_settings.site_theme_portal_company_number
     };
     var request = Restangular.one('portal/setting/public').customPUT(publicSettings);
-    request.then(function () {
+    request.then(function() {
       // $('.save-site-setting-success-modal').modal('show');
       msg = {
         'header': "success_message_save_changes_button",
       }
       $rootScope.floatingMessage = msg;
       $scope.hideFloatingMessage();
-    }, function (failed) {
+    }, function(failed) {
       msg = {
         'header': failed.data.message,
       }
@@ -2122,11 +2152,11 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     });
   }
 
-  $scope.setBlockAlign = function (config) {
+  $scope.setBlockAlign = function(config) {
     $scope.public_settings.site_home_page_text.main_banner.block_alignment = config;
   }
 
-  $scope.confirmAPISetting = function (tab) {
+  $scope.confirmAPISetting = function(tab) {
     //boolean for checking if links are secure
     var protocol_secure = true;
 
@@ -2142,7 +2172,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
 
     // Test if each link is valid and if protocol is secure
-    angular.forEach(api_array, function (value, key) {
+    angular.forEach(api_array, function(value, key) {
       //open warning unsecure modal if not secure https link
       var webhook_uri = value.uri;
 
@@ -2154,7 +2184,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     if (!protocol_secure) {
       $('.ui.modal.api-setting-unsecure-modal').modal('show');
       $('.api-setting-unsecure-modal').modal('setting', {
-        onApprove: function () {
+        onApprove: function() {
           $scope.saveAPISetting(tab);
         }
       });
@@ -2163,7 +2193,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
   }
 
-  $scope.saveAPISetting = function (tab) {
+  $scope.saveAPISetting = function(tab) {
     var api_settings = {};
 
     switch (tab) {
@@ -2182,13 +2212,13 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
     $rootScope.floatingMessage = msg;
     // Save API settings
-    Restangular.one('portal/setting').customPUT(api_settings).then(function (success) {
+    Restangular.one('portal/setting').customPUT(api_settings).then(function(success) {
       msg = {
         'header': "success_message_save_changes_button",
       }
       $rootScope.floatingMessage = msg;
       $scope.hideFloatingMessage();
-    }, function (failed) {
+    }, function(failed) {
       msg = {
         'header': failed.data.message,
       }
@@ -2210,7 +2240,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     return false;
   }
 
-  $scope.saveThemeSetting = function () {
+  $scope.saveThemeSetting = function() {
     msg = {
       'loading': true,
       'loading_message': 'saving_settings'
@@ -2257,21 +2287,22 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     var loadIcon = SiteLogoService.getLoadIcon();
 
     // Clear edit property in the link objects
-    angular.forEach($scope.public_settings.site_menu_header, function (link) {
+    angular.forEach($scope.public_settings.site_menu_header, function(link) {
       if (link.hasOwnProperty("edit")) {
         delete link.edit;
       }
     });
-    angular.forEach($scope.public_settings.site_menu_footer.left, function (link) {
+    angular.forEach($scope.public_settings.site_menu_footer.left, function(link) {
       if (link.hasOwnProperty("edit")) {
         delete link.edit;
       }
     });
-    angular.forEach($scope.public_settings.site_menu_footer.right, function (link) {
+    angular.forEach($scope.public_settings.site_menu_footer.right, function(link) {
       if (link.hasOwnProperty("edit")) {
         delete link.edit;
       }
     });
+
     if ($scope.public_settings.site_theme_banner_video_link == "") {
       $scope.public_settings.site_theme_banner_video_link = "__NULL__";
     }
@@ -2368,13 +2399,13 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       updateThemeColor();
       $scope.loadPreviewVideo();
 
-      request.then(function () {
+      request.then(function() {
         msg = {
           'header': "success_message_save_changes_button",
         }
         $rootScope.floatingMessage = msg;
         $scope.hideFloatingMessage();
-      }, function (failed) {
+      }, function(failed) {
         msg = {
           'header': failed.data.message,
         }
@@ -2384,12 +2415,12 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
   }
 
-  $scope.setBannerIsImage = function (val) {
+  $scope.setBannerIsImage = function(val) {
     $scope.public_settings.site_theme_banner_is_image = val;
   }
 
-  setTimeout(function () {
-    $translate(['allow_registereduser', 'allow_guest', 'allow_both', 'disabledguest']).then(function (value) {
+  setTimeout(function() {
+    $translate(['allow_registereduser', 'allow_guest', 'allow_both', 'disabledguest']).then(function(value) {
       $scope.registeruser = value.allow_registereduser;
       $scope.guest = value.allow_guest;
       $scope.both = value.allow_both;
@@ -2411,18 +2442,65 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     });
   }, 1000);
 
-  $scope.setExploreDefaultSort = function (item) {
+  $scope.setExploreDefaultSort = function(item) {
     $scope.public_settings.site_set_explore_default_sort.default = item.value;
     $scope.public_settings.site_set_explore_default_sort.default_text = item.type;
   }
 
-  $scope.customFieldSaveAttrPermission = function () {
+  $scope.customFieldSaveAttrPermission = function() {
     $scope.public_settings.site_person_attributes_non_admin = true;
     $scope.saveSiteSetting();
   }
 
-  $scope.saveSiteSetting = function () {
+  $scope.validateTipTier = function() {
+    var translation = $translate.instant(['tab_portalsetting_tipping_tier_specify']);
+    msg = {
+      'header': translation.tab_portalsetting_tipping_tier_specify
+    }
+    $rootScope.floatingMessage = msg;
+    $('html, body').animate({
+      scrollTop: $(".campaign-tipping-form.ui.form").offset().top
+    }, 1000);
+  }
 
+  $scope.validateTippingOptions = function() {
+    var translation = $translate.instant(['tab_portalsetting_tipping_error']);
+    $('.campaign-tipping-form.ui.form').form({
+      no_tip: {
+        identifier: 'tip_manual',
+        rules: [{
+          type: 'checked',
+          prompt: translation.tab_portalsetting_tipping_error
+        }]
+      },
+      toggle_tiers: {
+        identifier: 'toggle_tiers',
+        rules: [{
+          type: 'checked',
+          prompt: translation.tab_portalsetting_tipping_error
+        }]
+      }
+    }, {
+      inline: true,
+      onFailure: function() {
+        $('html, body').animate({
+          scrollTop: $(".field.error").offset().top
+        }, 1000);
+      }
+    }).form('validate form');
+  }
+
+  $scope.saveSiteSetting = function() {
+
+    if ($scope.public_settings.site_tipping.toggle_tiers && ($scope.public_settings.site_tipping.tiers.length == 0)) {
+      $scope.validateTipTier();
+      return;
+    }
+    //Return if you fail validation for website tipping
+    if ($scope.public_settings.site_tipping.toggle && (!$scope.public_settings.site_tipping.toggle_tiers && !$scope.public_settings.site_tipping.toggle_dynamic)) {
+      $scope.validateTippingOptions();
+      return;
+    }
     //need placeholder to save
     if (!$scope.public_settings.site_analytics_code) {
       $scope.public_settings.site_analytics_code = "<script></script>";
@@ -2458,7 +2536,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       guest = false,
       express = false;
 
-    angular.forEach($scope.inlineContributionOptions, function (value, key, obj) {
+    angular.forEach($scope.inlineContributionOptions, function(value, key, obj) {
       if (value && key == 'register') {
         register = true;
       }
@@ -2502,7 +2580,6 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     if (register && guest && express) {
       $scope.public_settings.site_contribute_behaviour.default = 8 //(Register and Guest and Express)
     }
-
     // save partial settings
     var publicSettings = {
       site_social_media_links: $scope.public_settings.site_social_media_links,
@@ -2535,6 +2612,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       site_default_campaign_rows: $scope.public_settings.site_default_campaign_rows,
       site_enable_cookie_consent: $scope.public_settings.site_enable_cookie_consent,
       site_tipping: $scope.public_settings.site_tipping,
+      site_tip_currency: $scope.public_settings.site_tip_currency
     };
 
     $scope.isCodeValid = !isDocumentWrite($scope.public_settings.site_analytics_code);
@@ -2552,14 +2630,14 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       // save private settings
       requestQueue.push(Restangular.one('portal/setting').customPUT(privateSettings));
 
-      $q.all(requestQueue).then(function () {
+      $q.all(requestQueue).then(function() {
         // $('.save-site-setting-success-modal').modal('show');
         msg = {
           'header': "success_message_save_changes_button",
         }
         $rootScope.floatingMessage = msg;
         $scope.hideFloatingMessage();
-      }, function (failed) {
+      }, function(failed) {
         msg = {
           'header': failed.data.message,
         }
@@ -2569,23 +2647,23 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
   }
 
-  $scope.getStripeCountry = function () {
-    return Restangular.one('account/stripe/country').customGET().then(function (success) {
+  $scope.getStripeCountry = function() {
+    return Restangular.one('account/stripe/country').customGET().then(function(success) {
       $scope.stripeCountries = success;
     });
   }
 
   $scope.getStripeCountry();
 
-  $scope.setStripeCountry = function (cid) {
+  $scope.setStripeCountry = function(cid) {
     $scope.stripe_setting.country_id = cid;
     $scope.stripe_setting_origin.country_id = cid;
 
     Restangular.one('account/stripe').customGET("currency", {
       country_id: cid
-    }).then(function (success) {
+    }).then(function(success) {
       if ($scope.public_settings.site_theme_shipping_native_lookup) {
-        success.forEach(function (value) {
+        success.forEach(function(value) {
           value.name = value.native_name ? value.native_name : value.name;
         });
       }
@@ -2593,14 +2671,14 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     });
   }
 
-  $scope.stripeCountryEnter = function (event) {
+  $scope.stripeCountryEnter = function(event) {
     if (event.keyCode == 13) {
       var country_id = event.target.querySelector("input").value;
       $scope.setStripeCountry(country_id);
     }
   }
 
-  $scope.saveStripePortalSettings = function () {
+  $scope.saveStripePortalSettings = function() {
     var privateSettings = {
       site_stripe: {
         test: {
@@ -2616,12 +2694,18 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       }
     };
 
-    Restangular.one('portal/setting').customPUT(privateSettings);
+    Restangular.one('portal/setting').customPUT(privateSettings).then(function() {
+      angular.copy($scope.stripe_setting_origin, $scope.stripe_setting);
+    });
   }
 
-  $scope.updateStripeApplication = function () {
+  $scope.updateStripeApplication = function() {
+
+    //Remove the errors for key formats
+    resetStripeKeyErrors();
+
     Restangular.one('account/stripe/application').customPUT($scope.stripe_setting).then(
-      function (success) {
+      function(success) {
 
         $scope.saveStripePortalSettings();
 
@@ -2657,13 +2741,13 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
         var private_setting_call = Restangular.one('portal/setting').customPUT(private_data);
 
         // wait for all requests
-        $q.all([public_setting_call, private_setting_call]).then(function (success) {
+        $q.all([public_setting_call, private_setting_call]).then(function(success) {
           msg = {
             'header': "success_message_save_changes_button",
           }
           $rootScope.floatingMessage = msg;
           $scope.hideFloatingMessage();
-        }, function (failure) {
+        }, function(failure) {
           msg = {
             'header': failure.data.message,
           }
@@ -2671,23 +2755,75 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
           $scope.hideFloatingMessage();
         });
       },
-      function (failure) {
+      function(failure) {
         msg = {
           'header': failure.data.message,
         }
-        
-        if(failure.data.code == "account_profile_stripe_application_update") {
+        if (failure.data.code == "account_profile_stripe_application_update" || failure.data.code == "account_profile_stripe_group_application_update") {
           msg.header = $translate.instant('tab_portalsetting_payment_Setting_stripe_keys_incorrect');
         }
 
+        triggerStripeKeyErrors();
+
         $rootScope.floatingMessage = msg;
         $scope.hideFloatingMessage();
+
+        // Check for error on the .field element
+        $rootScope.scrollToError();
       });
   }
 
-  $scope.createStripeApplication = function () {
+  function resetStripeKeyErrors() {
+    $('.secret-key-error').remove();
+    $('.publish-key-error').remove();
+    $('.client-key-error').remove();
+
+    $('#live_secret_key').removeClass('error');
+    $('#live_publish_key').removeClass('error');
+    $('#live_client_id').removeClass('error');
+
+    $('#test_secret_key').removeClass('error');
+    $('#test_publish_key').removeClass('error');
+    $('#test_client_id').removeClass('error');
+  }
+
+  function triggerStripeKeyErrors() {
+    var translation = $translate.instant(['tab_portalsetting_payment_Setting_public_key_format', 'tab_portalsetting_payment_Setting_secret_key_format', 'tab_portalsetting_payment_Setting_client_key_format']);
+
+    if ($scope.livemode) {
+      $('.secret-key-error').remove();
+      $('#live_secret_key').append('<div class="secret-key-error ui red pointing prompt label transition visible">' + translation.tab_portalsetting_payment_Setting_secret_key_format + '</div>');
+      $('#live_secret_key').addClass('error');
+
+      $('.publish-key-error').remove();
+      $('#live_publish_key').append('<div class="publish-key-error ui red pointing prompt label transition visible">' + translation.tab_portalsetting_payment_Setting_public_key_format + '</div>');
+      $('#live_publish_key').addClass('error');
+
+      if (!$('#live_client_id').parent().hasClass('ng-hide')) {
+        $('.client-key-error').remove();
+        $('#live_client_id').append('<div class="client-key-error ui red pointing prompt label transition visible">' + translation.tab_portalsetting_payment_Setting_client_key_format + '</div>');
+        $('#live_client_id').addClass('error');
+      }
+    } else {
+      $('.secret-key-error').remove();
+      $('#test_secret_key').append('<div class="secret-key-error ui red pointing prompt label transition visible">' + translation.tab_portalsetting_payment_Setting_secret_key_format + '</div>');
+      $('#test_secret_key').addClass('error');
+
+      $('.publish-key-error').remove();
+      $('#test_publish_key').append('<div class="publish-key-error ui red pointing prompt label transition visible">' + translation.tab_portalsetting_payment_Setting_public_key_format + '</div>');
+      $('#test_publish_key').addClass('error');
+
+      if (!$('#test_client_id').parent().hasClass('ng-hide')) {
+        $('.client-key-error').remove();
+        $('#test_client_id').append('<div class="client-key-error ui red pointing prompt label transition visible">' + translation.tab_portalsetting_payment_Setting_client_key_format + '</div>');
+        $('#test_client_id').addClass('error');
+      }
+    }
+  }
+
+  $scope.createStripeApplication = function() {
     Restangular.one('account/stripe/application').customPOST($scope.stripe_setting).then(
-      function (success) {
+      function(success) {
 
         $scope.saveStripePortalSettings();
 
@@ -2718,13 +2854,13 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
         var public_setting_call = Restangular.one('portal/setting/public').customPUT(data);
 
         // wait for all requests
-        $q.all([public_setting_call]).then(function (success) {
+        $q.all([public_setting_call]).then(function(success) {
           msg = {
             'header': "success_message_save_changes_button",
           }
           $rootScope.floatingMessage = msg;
           $scope.hideFloatingMessage();
-        }, function (failure) {
+        }, function(failure) {
           msg = {
             'header': failure.data.message,
           }
@@ -2732,7 +2868,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
           $scope.hideFloatingMessage();
         });
       },
-      function (failure) {
+      function(failure) {
         msg = {
           'header': failure.data.message,
         }
@@ -2742,7 +2878,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
   }
 
   $scope.currency_setting = {};
-  $scope.updateStripe = function () {
+  $scope.updateStripe = function() {
     //$scope.clearMessage();
     msg = {
       'loading': true,
@@ -2766,26 +2902,55 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     };
 
     if ($('#livebtn').hasClass('positive')) {
-      $scope.stripe_setting.client_id = privateSettings.site_stripe.live.clientId;
+      if (!$scope.public_settings.site_campaign_fee_direct_transaction) {
+        $scope.stripe_setting.client_id = privateSettings.site_stripe.live.clientId;
+      } else {
+        $scope.stripe_setting.client_id = 'client_id_dummy';
+      }
       $scope.stripe_setting.publishable_key = privateSettings.site_stripe.live.publishkey;
       $scope.stripe_setting.secret_key = privateSettings.site_stripe.live.secretkey;
     }
     if ($('#testbtn').hasClass('positive')) {
-      $scope.stripe_setting.client_id = privateSettings.site_stripe.test.clientId;
+      if (!$scope.public_settings.site_campaign_fee_direct_transaction) {
+        $scope.stripe_setting.client_id = privateSettings.site_stripe.test.clientId;
+      } else {
+        $scope.stripe_setting.client_id = 'client_id_dummy';
+      }
       $scope.stripe_setting.publishable_key = privateSettings.site_stripe.test.publishkey;
       $scope.stripe_setting.secret_key = privateSettings.site_stripe.test.secretkey;
     }
 
-    if (($scope.stripe_setting.client_id !== $scope.stripe_setting_origin.client_id || $scope.stripe_setting.secret_key !== $scope.stripe_setting_origin.secret_key || $scope.stripe_setting.publishable_key !== $scope.stripe_setting_origin.publishable_key) && $scope.public_settings.payment_setting_enabled) {
-      $rootScope.floatingMessage = [];
-      $('.ui.modal.dangous-action-alert').modal({
-        onApprove: function () {
-          msg = {
-            'loading': true,
-            'loading_message': 'saving_settings'
-          }
-          $rootScope.floatingMessage = msg;
+    if ($scope.testmode && isEmpty(privateSettings.site_stripe.test)) {
+      $scope.stripe_no_keys = true;
+    }
 
+    if ($scope.livemode && isEmpty(privateSettings.site_stripe.live)) {
+      $scope.stripe_no_keys = true;
+    }
+
+    if (((!$scope.public_settings.site_campaign_fee_direct_transaction && ($scope.stripe_setting.client_id !== $scope.stripe_setting_origin.client_id)) || $scope.stripe_setting.secret_key !== $scope.stripe_setting_origin.secret_key || $scope.stripe_setting.publishable_key !== $scope.stripe_setting_origin.publishable_key) && $scope.public_settings.payment_setting_enabled) {
+      $rootScope.floatingMessage = [];
+
+      Restangular.one('account/stripe/application').customGET().then(function(success) {
+        msg = {
+          'loading': true,
+          'loading_message': 'saving_settings'
+        }
+        $rootScope.floatingMessage = msg;
+        $scope.hideFloatingMessage();
+
+        var stripe_setting = success.plain();
+        var hide_modal = false;
+
+        if (!stripe_setting.publishable_key || stripe_setting.publishable_key == "public_id_dummy") {
+          hide_modal = true;
+        }
+
+        if (!stripe_setting.secret_key || stripe_setting.secret_key == "secret_key_dummy") {
+          hide_modal = true;
+        }
+
+        if (hide_modal) {
           if ($scope.stripe_setting.not_in_database == true) {
             $scope.stripe_setting.skip_user_id = true;
             delete $scope.stripe_setting.not_in_database;
@@ -2793,13 +2958,42 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
           } else {
             $scope.updateStripeApplication();
           }
-
-
-        },
-        onDeny: function () {
-          angular.copy($scope.stripe_setting_origin, $scope.stripe_setting);
+        } else {
+          $('.ui.modal.dangerous-action-alert').modal({
+            onApprove: function() {
+              $scope.updateStripeApplication();
+            },
+            onDeny: function() {
+              angular.copy($scope.stripe_setting_origin, $scope.stripe_setting);
+            }
+          }).modal('show');
         }
-      }).modal('show');
+
+      });
+
+      // $('.ui.modal.dangerous-action-alert').modal({
+      //   onApprove: function() {
+      //     msg = {
+      //       'loading': true,
+      //       'loading_message': 'saving_settings'
+      //     }
+      //     $rootScope.floatingMessage = msg;
+
+      //     if ($scope.stripe_setting.not_in_database == true) {
+      //       $scope.stripe_setting.skip_user_id = true;
+      //       delete $scope.stripe_setting.not_in_database;
+      //       $scope.createStripeApplication();
+      //     } else {
+      //       $scope.updateStripeApplication();
+      //     }
+
+
+      //   },
+      //   onDeny: function() {
+      //     angular.copy($scope.stripe_setting_origin, $scope.stripe_setting);
+      //   }
+      // }).modal('show');
+
     } else {
       $scope.saveStripePortalSettings();
 
@@ -2831,32 +3025,37 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       var public_setting_call = Restangular.one('portal/setting/public').customPUT(data);
       paymentSettingReq.push(public_setting_call);
 
+
       if ($scope.public_settings.payment_setting_enabled) {
         $scope.stripe_setting.skip_user_id = false;
         var site_campaign_contribution_request = Restangular.one('portal/setting/public').customPUT({
           site_campaign_contributions: true
         });
-        $(".site-campaign-contribution").checkbox("check");
+        //$(".site-campaign-contribution").checkbox("check");
       } else {
         $scope.stripe_setting.skip_user_id = true;
         var site_campaign_contribution_request = Restangular.one('portal/setting/public').customPUT({
           site_campaign_contributions: false,
           site_campaign_contributions_instruction: $scope.public_settings.site_campaign_contributions_instruction ? $scope.public_settings.site_campaign_contributions_instruction : "<p>Your campaign contribution instructions.</p>"
         });
-        $(".site-campaign-contribution").checkbox("uncheck");
+        //$(".site-campaign-contribution").checkbox("uncheck");
       }
       paymentSettingReq.push(site_campaign_contribution_request);
+
       if (!$scope.stripe_setting.secret_key) {
         $scope.stripe_setting.secret_key = "secret_key_dummy";
       }
       if (!$scope.stripe_setting.client_id) {
         $scope.stripe_setting.client_id = "client_id_dummy";
       }
+      if (!$scope.stripe_setting.publishable_key) {
+        $scope.stripe_setting.publishable_key = "public_id_dummy";
+      }
       var save_stripe_application = Restangular.one('account/stripe/application').customPUT($scope.stripe_setting);
       paymentSettingReq.push(save_stripe_application);
 
       // wait for all requests
-      $q.all(paymentSettingReq).then(function (success) {
+      $q.all(paymentSettingReq).then(function(success) {
         // $('.save-stripe-setting-success-modal').modal('show');
         updateSiteMenu();
         msg = {
@@ -2864,7 +3063,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
         }
         $rootScope.floatingMessage = msg;
         $scope.hideFloatingMessage();
-      }, function (failure) {
+      }, function(failure) {
         msg = {
           'header': failure.data.message,
         }
@@ -2875,7 +3074,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
   }
 
-  $scope.raiseModeChange = function (mode) {
+  $scope.raiseModeChange = function(mode) {
     if (mode.allowed == false) {
       mode.default = false;
       var count = 0;
@@ -2944,14 +3143,14 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     $elem.addClass('active');
   }
 
-  $scope.selectThemeColor = function (color, section) {
+  $scope.selectThemeColor = function(color, section) {
     $scope.public_settings.site_theme_color[section].index = color.index;
     // set active
     setColorActive(color.index);
     initialThemeColor();
   }
 
-  $scope.restoreThemeSettings = function () {
+  $scope.restoreThemeSettings = function() {
 
     $scope.public_settings.site_theme_color["banner_color"].index = 4;
     $scope.public_settings.site_theme_color["button_color"].index = 4;
@@ -2968,26 +3167,26 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
 
   }
 
-  $scope.selectLoadClass = function (semantic_icon) {
+  $scope.selectLoadClass = function(semantic_icon) {
     $scope.site_load_class = semantic_icon.name;
   }
 
-  $scope.selectColorSection = function (section) {
+  $scope.selectColorSection = function(section) {
     // pass section variable
     $scope.selected_color_section = section;
     // set active index
     setColorActive($scope.public_settings.site_theme_color[section.var_name].index);
   }
 
-  $scope.selectSocialMedia = function (obj) {
+  $scope.selectSocialMedia = function(obj) {
     $scope.media_selected = obj;
   }
 
-  $scope.selectSearchFilter = function (index) {
+  $scope.selectSearchFilter = function(index) {
     $scope.public_settings.site_search_explore = $scope.searchFilters[index];
   }
 
-  $scope.saveDisqusShortname = function (value) {
+  $scope.saveDisqusShortname = function(value) {
     msg = {
       'loading': true,
       'loading_message': 'saving_settings'
@@ -3006,14 +3205,13 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       custom_comment_font_color: $scope.public_settings.custom_comment_font_color
     }
 
-    Restangular.one('portal/setting/public').customPUT(publicSettings).then(function (success) {
-      // $('.ui.modal.save-disqus-setting-success-modal').modal('show');
+    Restangular.one('portal/setting/public').customPUT(publicSettings).then(function(success) {
       msg = {
         'header': "success_message_save_changes_button",
       }
       $rootScope.floatingMessage = msg;
       $scope.hideFloatingMessage();
-    }, function (failure) {
+    }, function(failure) {
       msg = {
         'header': failure.data.message,
       }
@@ -3024,13 +3222,13 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     //if using Disqus, save disqus shortname
     if ($scope.comment == "disqus") {
       window.disqus_shortname = value;
-      DisqusShortnameService.setDisqusShortname(value).then(function (success) {
+      DisqusShortnameService.setDisqusShortname(value).then(function(success) {
         msg = {
           'header': "success_message_save_changes_button",
         }
         $rootScope.floatingMessage = msg;
         $scope.hideFloatingMessage();
-      }, function (failure) {
+      }, function(failure) {
         msg = {
           'header': failure.data.message,
         }
@@ -3051,11 +3249,11 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     idx: 3
   }];
 
-  $scope.displayWidgetSection = function (obj) {
+  $scope.displayWidgetSection = function(obj) {
     $scope.widget_display = obj.idx;
   }
 
-  $scope.saveComponentSettings = function () {
+  $scope.saveComponentSettings = function() {
     //$scope.clearMessage();
     msg = {
       'loading': true,
@@ -3077,13 +3275,13 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
 
     if ($scope.isCodeValid) {
       requestQueue.push(Restangular.one('portal/setting/public').customPUT(publicSettings));
-      $q.all(requestQueue).then(function () {
+      $q.all(requestQueue).then(function() {
         msg = {
           'header': "success_message_save_changes_button",
         }
         $rootScope.floatingMessage = msg;
         $scope.hideFloatingMessage();
-      }, function (failed) {
+      }, function(failed) {
         msg = {
           'header': failed.data.message,
         }
@@ -3093,7 +3291,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
   }
 
-  $scope.stripeConnect = function () {
+  $scope.stripeConnect = function() {
     if ($scope.stripe_setting.client_id && $scope.stripe_setting.publishable_key && $scope.stripe_setting.secret_key) {
       if ($scope.public_settings.site_campaign_fee_direct_transaction) {
         $scope.stripe_fee.campaign_fee = 100;
@@ -3108,8 +3306,8 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       var state = StripeService.generateStateParam('/admin/dashboard#portal-settings');
       $window.location.href = "https://connect.stripe.com/oauth/authorize?response_type=code&client_id=" + client_id + "&scope=read_write&redirect_uri=" + redirect + "&state=" + state;
     } else {
-      setTimeout(function () {
-        $translate(['stripe_not_setup']).then(function (value) {
+      setTimeout(function() {
+        $translate(['stripe_not_setup']).then(function(value) {
           $scope.notsetup = value.stripe_not_setup;
           msg = {
             'header': $scope.notsetup,
@@ -3121,25 +3319,25 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
   }
 
-  $scope.showBannerEditor = function (place) {
+  $scope.showBannerEditor = function(place) {
     $scope.bannerEditor = place == "main" ? "main" : "bot";
   }
 
-  $scope.$watch("public_settings.site_campaign_custom_button.toggle", function (newValue, oldValue) {
+  $scope.$watch("public_settings.site_campaign_custom_button.toggle", function(newValue, oldValue) {
     if (!newValue) {
-      $timeout(function () {
+      $timeout(function() {
         $('.ui.form#custom-formatting-form').form('reset');
       });
     }
   });
-  $scope.$watch("public_settings.site_theme_campaign_show_reward_enable_variation", function (newValue, oldValue) {
+  $scope.$watch("public_settings.site_theme_campaign_show_reward_enable_variation", function(newValue, oldValue) {
     if (newValue) {
       $scope.rewardAttributesEnabled = true;
     } else {
       $scope.rewardAttributesEnabled = false;
     }
   });
-  $scope.$watch("public_settings.site_theme_alt_shipping_layout", function (newValue, oldValue) {
+  $scope.$watch("public_settings.site_theme_alt_shipping_layout", function(newValue, oldValue) {
     var $defCountry = $(".defaultCountry");
     if (newValue) {
       $defCountry.removeClass("disabled");
@@ -3157,7 +3355,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     }
   });
 
-  $scope.$watch('currency_setting.currency_ids', function (newValue, oldValue) {
+  $scope.$watch('currency_setting.currency_ids', function(newValue, oldValue) {
     if (newValue) {
       if ($('#campaign-currency-field .select2-choices li').hasClass('select2-search-choice')) {
         $('.select-error').remove();
@@ -3165,7 +3363,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
       }
     }
   });
-  $scope.setCountry = function (country) {
+  $scope.setCountry = function(country) {
     for (var i in countries_orig) {
       if (countries_orig[i].id == country.id) {
         $scope.public_settings.site_theme_default_shipping_country = countries_orig[i];
@@ -3174,7 +3372,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
   }
 
   function getCountries() {
-    Geolocator.getCountries().then(function (countries) {
+    Geolocator.getCountries().then(function(countries) {
       countries_orig = countries;
       if ($scope.public_settings.site_theme_shipping_native_lookup) {
         for (var i in countries) {
@@ -3199,16 +3397,16 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     });
   }
 
-  $scope.setAuthScheme = function (auth) {
+  $scope.setAuthScheme = function(auth) {
     $scope.public_settings.site_auth_scheme = auth;
   }
 
-  $scope.setInlineContrib = function (inline) {
+  $scope.setInlineContrib = function(inline) {
     $scope.public_settings.site_contribute_behaviour.default = inline;
   }
 
   // Loads the preview for video link.
-  $scope.loadPreviewVideo = function () {
+  $scope.loadPreviewVideo = function() {
     if ($scope.public_settings.site_theme_banner_is_image == false &&
       $scope.public_settings.site_theme_banner_video_link !== undefined) {
       var videoSettings = {
@@ -3226,13 +3424,13 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
   }
 
   // Hides the preview video.
-  $scope.deletePreviewVideo = function () {
+  $scope.deletePreviewVideo = function() {
     $scope.public_settings.site_theme_banner_video_link = "";
     $scope.site_theme_banner_video_link_preview = "";
     $scope.site_theme_banner_video_link_type = "none";
   }
 
-  $scope.setAccord = function () {
+  $scope.setAccord = function() {
     $("#homeAccordion").accordion("open", 0);
   }
 
@@ -3734,20 +3932,20 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
   }];
 
   // Upload Partner Logo Image
-  $scope.uploadPartnerLogo = function (files, index) {
+  $scope.uploadPartnerLogo = function(files, index) {
     if (files.length) {
       var params = {
         resource_content_type: 'image',
       };
       var $picNode = $('.partner-logo');
-      FileUploadService.upload('portal/resource/file', files, params, $picNode).then(function (success) {
+      FileUploadService.upload('portal/resource/file', files, params, $picNode).then(function(success) {
         $scope.public_settings.logo_links[index].image_link = success[0].data.path_external;
       });
     }
   }
 
   // Add Another Partner Logo
-  $scope.addPartnerLogo = function (arr) {
+  $scope.addPartnerLogo = function(arr) {
     if (arr.length < 6) {
       var link = {
         name: '',
@@ -3760,12 +3958,12 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
   }
 
   // Remove Partner Logo
-  $scope.removePartnerLogo = function (link, index) {
+  $scope.removePartnerLogo = function(link, index) {
     $scope.public_settings.logo_links.splice(index, 1);
   }
 
   // Add Another Tier
-  $scope.addTier = function () {
+  $scope.addTier = function() {
     if (!$scope.public_settings.site_tipping.tiers || $scope.public_settings.site_tipping.tiers.length == 0) {
       $scope.public_settings.site_tipping.tiers = [];
       $scope.public_settings.site_tipping.tiers.length = 0;
@@ -3778,44 +3976,45 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     $scope.public_settings.site_tipping.tiers.push(angular.copy(tier));
   }
 
-  $scope.updateTierType = function (index, type) {
+  $scope.updateTierType = function(index, type) {
     $scope.public_settings.site_tipping.tiers[index].type = type;
   }
 
-  $scope.removeTier = function (index) {
+  $scope.removeTier = function(index) {
     $scope.public_settings.site_tipping.tiers.splice(index, 1);
   }
 
-  $scope.setTipDefault = function (type) {
+  $scope.setTipDefault = function(type) {
     $scope.public_settings.site_tipping.selectedTipDefault = type;
   }
 
-  $scope.$watchGroup(["testmode", "stripe_test_clientId", "stripe_test_secretkey", "stripe_test_publishkey", "livemode", "stripe_live_clientId", "stripe_live_secretkey", "stripe_live_publishkey"], function (newValue, oldValue) {
+  $scope.$watchGroup(["testmode", "stripe_test_secretkey", "stripe_test_publishkey", "livemode", "stripe_live_secretkey", "stripe_live_publishkey"], function(newValue, oldValue) {
     if (newValue != oldValue) {
       var isTestMode = true,
         isLiveMode = true;
 
-      for (var i = 0; i <= 3; i++) {
+      for (var i = 0; i <= 2; i++) {
         isTestMode = isTestMode && !!newValue[i];
       }
-      for (var i = 4; i <= 7; i++) {
+      for (var i = 4; i <= 5; i++) {
         isLiveMode = isLiveMode && !!newValue[i];
       }
+      resetStripeKeyErrors();
 
-      $scope.showDirectTransaction = isTestMode || isLiveMode;
+      // $scope.showDirectTransaction = isTestMode || isLiveMode;
     }
   });
 
   function getCurrency() {
-    CurrencyService.getCurrency(function (success) {
+    CurrencyService.getCurrency(function(success) {
       if (success) {
         if ($scope.native_lookup) {
-          success.forEach(function (value) {
+          success.forEach(function(value) {
             value.name = value.native_name ? value.native_name : value.name;
           });
         }
         $scope.currency_options = success;
-        angular.forEach($scope.currency_options, function (value) {
+        angular.forEach($scope.currency_options, function(value) {
           if (value.currency_id == $scope.public_settings.site_campaign_currency_id) {
             $scope.ccode = value.code_iso4217_alpha;
           }
@@ -3824,7 +4023,7 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
           $scope.public_settings.site_campaign_currency_id = success[0].currency_id;
         }
         if (!$scope.public_settings.site_tip_currency) {
-          angular.forEach(success, function (value) {
+          angular.forEach(success, function(value) {
             if (value.currency_id == $scope.public_settings.site_campaign_currency_id) {
               $scope.public_settings.site_tip_currency = value;
             }
@@ -3837,4 +4036,312 @@ app.controller('AdminPortalSettingsCtrl', function ($scope, $rootScope, $locatio
     });
   }
 
+  $scope.directTransactionValidation = function() {
+    var translation = $translate.instant(['tab_portalsetting_payment_Setting_public_key_incorrect', 'tab_portalsetting_payment_Setting_secret_key_incorrect', 'tab_portalsetting_payment_Setting_client_key_incorrect', 'tab_portalsetting_payment_Setting_stripe_country_incorrect', 'tab_portalsetting_payment_Setting_transaction_key_incorrect', 'tab_portalsetting_payment_Setting_transaction_key_empty', 'tab_portalsetting_currency_prompt_empty', 'tab_portalsetting_bank_form_country_empty']);
+
+    $.fn.form.settings.rules.transactionFeeRange = function(param) {
+      if (param >= 0 && param <= 100) {
+        return true
+      } else {
+        return false;
+      }
+    }
+
+    if ($scope.public_settings.site_campaign_fee_direct_transaction) {
+      //else its test mode
+      if ($scope.livemode) {
+        $('.ui.form')
+          .form({
+            live_secret_key: {
+              identifier: 'live_secret_key',
+              rules: [{
+                type: 'empty',
+                prompt: translation.tab_portalsetting_payment_Setting_secret_key_incorrect
+              }]
+            },
+            live_publish_key: {
+              identifier: 'live_publish_key',
+              rules: [{
+                type: 'empty',
+                prompt: translation.tab_portalsetting_payment_Setting_public_key_incorrect
+              }]
+            }
+          }, {
+            inline: true,
+            onSuccess: function() {
+              $scope.valcheck = $scope.valcheck && true;
+            },
+            onFailure: function() {
+              $scope.valcheck = $scope.valcheck && false;
+            }
+          }).form('validate form');
+
+        if ($scope.public_settings.site_campaign_country_funding_step) {
+          if (!$('#bankform-country-field .select2-choices li').hasClass('select2-search-choice')) {
+            $('.bankform-select-error').remove();
+            $('#bankform-country-field').append('<div class="bankform-select-error ui red pointing prompt label transition visible">' + translation.tab_portalsetting_bank_form_country_empty + '</div>');
+            $('#bankform-country-field').addClass('error');
+            $scope.valcheck = $scope.valcheck && false;
+          } else {
+            $('.bankform-select-error').remove();
+            $('#bankform-country-field').removeClass('error');
+            $scope.valcheck = $scope.valcheck && true;
+          }
+        }
+      } else {
+        $('.ui.form')
+          .form({
+            test_secret_key: {
+              identifier: 'test_secret_key',
+              rules: [{
+                type: 'empty',
+                prompt: translation.tab_portalsetting_payment_Setting_secret_key_incorrect
+              }]
+            },
+            test_publish_key: {
+              identifier: 'test_publish_key',
+              rules: [{
+                type: 'empty',
+                prompt: translation.tab_portalsetting_payment_Setting_public_key_incorrect
+              }]
+            }
+          }, {
+            inline: true,
+            onSuccess: function() {
+              $scope.valcheck = $scope.valcheck && true;
+            },
+            onFailure: function() {
+              $scope.valcheck = $scope.valcheck && false;
+            }
+          }).form('validate form');
+
+        if ($scope.public_settings.site_campaign_country_funding_step) {
+          if (!$('#bankform-country-field .select2-choices li').hasClass('select2-search-choice')) {
+            $('.bankform-select-error').remove();
+            $('#bankform-country-field').append('<div class="bankform-select-error ui red pointing prompt label transition visible">' + translation.tab_portalsetting_bank_form_country_empty + '</div>');
+            $('#bankform-country-field').addClass('error');
+            $scope.valcheck = $scope.valcheck && false;
+          } else {
+            $('.bankform-select-error').remove();
+            $('#bankform-country-field').removeClass('error');
+            $scope.valcheck = $scope.valcheck && true;
+          }
+        }
+      }
+    } else {
+      //else its test mode
+      if ($scope.livemode) {
+        $('.ui.form')
+          .form({
+            live_secret_key: {
+              identifier: 'live_secret_key',
+              rules: [{
+                type: 'empty',
+                prompt: translation.tab_portalsetting_payment_Setting_secret_key_incorrect
+              }]
+            },
+            live_publish_key: {
+              identifier: 'live_publish_key',
+              rules: [{
+                type: 'empty',
+                prompt: translation.tab_portalsetting_payment_Setting_public_key_incorrect
+              }]
+            },
+            live_client_id: {
+              identifier: 'live_client_id',
+              rules: [{
+                type: 'empty',
+                prompt: translation.tab_portalsetting_payment_Setting_client_key_incorrect
+              }]
+            },
+            campaign_fee: {
+              identifier: 'campaign_fee',
+              rules: [{
+                  type: 'empty',
+                  prompt: translation.tab_portalsetting_payment_Setting_transaction_key_empty
+                },
+                {
+                  type: 'integer',
+                  prompt: translation.tab_portalsetting_payment_Setting_transaction_key_empty
+                },
+                {
+                  type: 'transactionFeeRange[param]',
+                  prompt: translation.tab_portalsetting_payment_Setting_transaction_key_incorrect
+                }
+              ]
+            }
+          }, {
+            inline: true,
+            onSuccess: function() {
+              $scope.valcheck = $scope.valcheck && true;
+            },
+            onFailure: function() {
+              $scope.valcheck = $scope.valcheck && false;
+            }
+          }).form('validate form');
+
+        if ($scope.public_settings.site_campaign_country_funding_step) {
+          if (!$('#bankform-country-field .select2-choices li').hasClass('select2-search-choice')) {
+            $('.bankform-select-error').remove();
+            $('#bankform-country-field').append('<div class="bankform-select-error ui red pointing prompt label transition visible">' + translation.tab_portalsetting_bank_form_country_empty + '</div>');
+            $('#bankform-country-field').addClass('error');
+            $scope.valcheck = $scope.valcheck && false;
+          } else {
+            $('.bankform-select-error').remove();
+            $('#bankform-country-field').removeClass('error');
+            $scope.valcheck = $scope.valcheck && true;
+          }
+        }
+      } else {
+        $('.ui.form')
+          .form({
+            test_secret_key: {
+              identifier: 'test_secret_key',
+              rules: [{
+                type: 'empty',
+                prompt: translation.tab_portalsetting_payment_Setting_secret_key_incorrect
+              }]
+            },
+            test_publish_key: {
+              identifier: 'test_publish_key',
+              rules: [{
+                type: 'empty',
+                prompt: translation.tab_portalsetting_payment_Setting_public_key_incorrect
+              }]
+            },
+            test_client_id: {
+              identifier: 'test_client_id',
+              rules: [{
+                type: 'empty',
+                prompt: translation.tab_portalsetting_payment_Setting_client_key_incorrect
+              }]
+            },
+            campaign_fee: {
+              identifier: 'campaign_fee',
+              rules: [{
+                  type: 'empty',
+                  prompt: translation.tab_portalsetting_payment_Setting_transaction_key_empty
+                },
+                {
+                  type: 'integer',
+                  prompt: translation.tab_portalsetting_payment_Setting_transaction_key_empty
+                },
+                {
+                  type: 'transactionFeeRange[param]',
+                  prompt: translation.tab_portalsetting_payment_Setting_transaction_key_incorrect
+                }
+              ]
+            }
+          }, {
+            inline: true,
+            onSuccess: function() {
+              $scope.valcheck = $scope.valcheck && true;
+            },
+            onFailure: function() {
+              $scope.valcheck = $scope.valcheck && false;
+            }
+          }).form('validate form');
+
+        if ($scope.public_settings.site_campaign_country_funding_step) {
+          if (!$('#bankform-country-field .select2-choices li').hasClass('select2-search-choice')) {
+            $('.bankform-select-error').remove();
+            $('#bankform-country-field').append('<div class="bankform-select-error ui red pointing prompt label transition visible">' + translation.tab_portalsetting_bank_form_country_empty + '</div>');
+            $('#bankform-country-field').addClass('error');
+            $scope.valcheck = $scope.valcheck && false;
+          } else {
+            $('.bankform-select-error').remove();
+            $('#bankform-country-field').removeClass('error');
+            $scope.valcheck = $scope.valcheck && true;
+          }
+        }
+      }
+    }
+  }
+
+  $scope.countryCurrencyValidate = function() {
+    var translation = $translate.instant(['tab_portalsetting_payment_Setting_stripe_country_incorrect', 'tab_portalsetting_currency_prompt_empty']);
+
+    $('.ui.form')
+      .form({
+        stripe_country: {
+          identifier: 'stripe_country',
+          rules: [{
+            type: 'empty',
+            prompt: translation.tab_portalsetting_payment_Setting_stripe_country_incorrect
+          }]
+        }
+      }, {
+        inline: true,
+        onSuccess: function() {
+          $scope.valcheck = $scope.valcheck && true;
+        },
+        onFailure: function() {
+          $scope.valcheck = $scope.valcheck && false;
+        }
+      }).form('validate form');
+
+    if (!$('#campaign-currency-field .select2-choices li').hasClass('select2-search-choice')) {
+      $('.select-error').remove();
+      $('#campaign-currency-field').append('<div class="select-error ui red pointing prompt label transition visible">' + translation.tab_portalsetting_currency_prompt_empty + '</div>');
+      $('#campaign-currency-field').addClass('error');
+      $scope.valcheck = $scope.valcheck && false;
+    } else {
+      $('.select-error').remove();
+      $('#campaign-currency-field').removeClass('error');
+      $scope.valcheck = $scope.valcheck && true;
+    }
+  }
+
+  /*
+  $scope.$watch(["public_settings.payment_setting_enabled"], function(newValue, oldValue) {
+    if (newValue) {
+      $scope.public_settings.site_campaign_contributions = true;
+      $(".site-campaign-contribution").checkbox("check");
+    } 
+
+    if(newValue === false) {
+      $scope.public_settings.site_campaign_contributions = false;
+      $(".site-campaign-contribution").checkbox("uncheck");
+    }
+  });
+  */
+
+  $scope.$watch("currency_setting.currency_ids", function(newValue, oldValue) {
+    if (newValue) {
+      if ($('#campaign-currency-field .select2-choices li').hasClass('select2-search-choice')) {
+        if (newValue !== undefined && newValue.length) {
+          $timeout(function() {
+            $('.select-error').remove();
+            $('#campaign-currency-field').removeClass('error');
+            $scope.valcheck = $scope.valcheck && true;
+          });
+        }
+      }
+    }
+  });
+
+
+  $scope.clickCC = function(a, b) {
+    if (a && b) {
+      $(".site-campaign-contribution").removeClass("disabled");
+      angular.element(document.querySelector('.site-campaign-contribution')).click();
+    }
+    if (!a && !b) {
+      $(".site-campaign-contribution").removeClass("disabled");
+      angular.element(document.querySelector('.site-campaign-contribution')).click();
+    }
+    if (!a && b) {
+      $(".site-campaign-contribution").removeClass("disabled");
+      angular.element(document.querySelector('.site-campaign-contribution')).click();
+    }
+  };
+
+  function isEmpty(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        return false;
+      }
+    }
+    return true;
+  }
 });

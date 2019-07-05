@@ -8,7 +8,7 @@
       <div id="video-wrapper" ng-show="site_theme_banner_is_image==false" ng-class="{'video-video-tag':site_theme_banner_video_link_type=='custom', 'video-iframe-tag' :site_theme_banner_video_link_type=='vimeo' || site_theme_banner_video_link_type=='youtube'}">
         <div class="video-banner">
           <youtube-video ng-if="site_theme_banner_video_link_type=='youtube'" video-id="{{site_theme_banner_video_link}}" id="ytplayer" autoplay="true" mute="{{site_theme_banner_video_mute}}" modest-branding="true"></youtube-video>
-          <iframe id="vimeoplayer" ng-if="site_theme_banner_video_link_type=='vimeo'" ng-src="{{site_theme_banner_video_link}}" frameborder="0"></iframe>
+          <iframe id="vimeoplayer" allow="autoplay;" ng-if="site_theme_banner_video_link_type=='vimeo'" ng-src="{{site_theme_banner_video_link}}" frameborder="0"></iframe>
           <video ng-if="site_theme_banner_video_link_type=='custom'" ng-attr-muted="{{site_theme_banner_video_mute ? '' : undefined}}" id="custom-video-player" loop autoplay>
             <source ng-src="{{site_theme_banner_video_link}}" type="video/mp4"></source>
           </video>
@@ -183,7 +183,7 @@
                   <div ng-if="campaign.settings.state_current">
                     <div class="center aligned">
                       <!-- regular title without tool tip -->
-                      <h4 ng-if="!(campaign.settings.state_current.tooltip && campaign.settings.state_current.tooltip != '')" class="status-title" ng-bind-html="campaign.settings.state_current.title"></h4>                      
+                      <h4 ng-if="!(campaign.settings.state_current.tooltip && campaign.settings.state_current.tooltip != '')" class="status-title" ng-bind-html="campaign.settings.state_current.title"></h4>
                       <!-- THIS COMMENT IS FOR TOOLTIP -->
                       <h4 ng-if="campaign.settings.state_current.tooltip && campaign.settings.state_current.tooltip != ''" class="status-title" sui-popup data-content="{{campaign.settings.state_current.tooltip}}" data-position="bottom center" ng-bind-html="campaign.settings.state_current.title"></h4>
                       <img class="ui image" ng-if="!public_settings.site_campaign_state_card_image_omit" ng-src="{{server + '/image/campaign_progress_status/' + campaign.settings.state_current.path}}" alt="state_image">
@@ -319,7 +319,7 @@
                   <div ng-if="campaign.settings.state_current">
                     <div class="center aligned">
                       <!-- regular title without tool tip -->
-                      <h4 ng-if="!(campaign.settings.state_current.tooltip && campaign.settings.state_current.tooltip != '')" class="status-title" ng-bind-html="campaign.settings.state_current.title"></h4>                      
+                      <h4 ng-if="!(campaign.settings.state_current.tooltip && campaign.settings.state_current.tooltip != '')" class="status-title" ng-bind-html="campaign.settings.state_current.title"></h4>
                       <!-- THIS COMMENT IS FOR TOOLTIP -->
                       <h4 ng-if="campaign.settings.state_current.tooltip && campaign.settings.state_current.tooltip != ''" class="status-title" sui-popup data-content="{{campaign.settings.state_current.tooltip}}" data-position="bottom center" ng-bind-html="campaign.settings.state_current.title"></h4>
 
@@ -423,8 +423,8 @@
       <div class="center aligned column">
         <h3 class="ui header" ng-style="bottom_banner_bottom_header_color" ng-bind="home_page_text.bottom_banner.header_bottom"></h3>
         <div ng-if="learn_more_display_button" class="btn-wrap">
-          <a href="{{home_page_text.bottom_banner.learn_more_button_text_link}}">
-            <div class="ui large right labeled icon button"><span ng-bind="home_page_text.bottom_banner.learn_more_button_text"></span> <i class="question icon"></i></div>
+          <a href="{{home_page_text.bottom_banner.learn_more_button_text_link}}" class="redirect-button ui large right labeled icon button">
+            <span ng-bind="home_page_text.bottom_banner.learn_more_button_text"></span> <i class="question icon"></i>
           </a>
         </div>
       </div>

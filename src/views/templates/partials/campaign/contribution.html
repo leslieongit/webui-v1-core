@@ -79,24 +79,26 @@
                             <h4 class="title" translate>pledge_campaign_yourcontribution</h4>
                             <form class="ui form contribution-form">
                                 <div class="field">
-                                    <div ng-show="allowDecimalNotation == 2 || allowDecimalNotation == 3" class="ui big left labeled right labeled input contribution-input fluid">
-                                        <div class="ui label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"
-                                            style="padding-top:1.3em;"></div>
+                                    <div ng-show="allowDecimalNotation == 2 || allowDecimalNotation == 3" class="contribution-input">
+                                        <div class="ui currency-symbol label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
+                                        <div class="input-wrap">
                                         <input name="contribution_amount" ng-class="{'has-error': pledgeAmount < selectedReward.amount || !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}"
                                             type="text" min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}"
                                             ng-model="campaignFundingGoal.value" number-with-decimals>
-                                        <div ng-if="allowDecimalNotation == 2" class="ui label" style="padding-top:1.5em;">
+                                        </div>
+                                        <div ng-if="allowDecimalNotation == 2" class="ui label decimal-value">
                                             <span>.00</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="field">
-                                    <div ng-show="allowDecimalNotation == 1" class="ui big left labeled labeled input contribution-input fluid">
-                                        <div class="ui label" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"
-                                            style="padding-top:1.3em;"></div>
+                                    <div ng-show="allowDecimalNotation == 1" class="contribution-input">
+                                        <div class="ui label currency-symbol" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
+                                        <div class="input-wrap">
                                         <input name="contribution_amount_decimal" ng-class="{'has-error': pledgeAmount < selectedReward.amount || !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}"
                                             type="text" min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}"
                                             ng-model="campaignFundingGoal.value" number-with-decimals ng-attr-allow-decimal="true">
+                                        </div>
                                     </div>
                                 </div>
                             </form>

@@ -38,7 +38,6 @@
               <div class="left-col five wide column">
                 <h3 class="ui header">
                   <span translate="campaign_reward_campaign_reward_settings_paging"></span>
-                  <span class="required-text" translate="campaign_creation_required_text"></span>
                 </h3>
                 <p translate="campaign_reward_campaign_reward_settings_paging_hint"></p>
               </div>
@@ -93,8 +92,7 @@
                     </label>
                     <label class="note" translate>campaign_reward_reward_contribution_description_note</label>
                     <div ng-if="reward_html_editor">
-                      <textarea froala="froalaOptions" data-server="{{server}}" data-loc="{{server_loc}}" id="description{{$index + 1}}" class="page-content"
-                        ng-model="reward.description" name="data.htmlcontent{{$index}}"></textarea>
+                      <textarea froala="froalaOptions" data-server="{{server}}" data-loc="{{server_loc}}" id="description{{$index + 1}}" class="page-content" ng-model="reward.description" name="data.htmlcontent{{$index}}"></textarea>
                     </div>
 
                     <textarea ng-if="!reward_html_editor" class="page-content" ng-model="reward.description" id="description{{$index + 1}}" name="data.htmlcontent{{$index}}"></textarea>
@@ -102,73 +100,66 @@
                     <div ta-bind="text" ng-show="togglepreview" ng-model="reward.description" ta-readonly='disabled'></div>
 
                     <div class="ui red pointing above ui label" ng-show="rewards{{$index}}.description.$invalid">
-                      <div ng-show="rewards{{$index}}.description.$error.required">{{'campaign_reward_reward_contribution_descriptionmessage' | translate}}#{{$index + 1}} {{'campaign_reward_reward_contribution_descriptionmessage2'
-                        | translate}}
+                      <div ng-show="rewards{{$index}}.description.$error.required">{{'campaign_reward_reward_contribution_descriptionmessage' | translate}}#{{$index + 1}} {{'campaign_reward_reward_contribution_descriptionmessage2' | translate}}
                       </div>
                     </div>
                   </div>
 
-                  <div class="field">
+                  <div class="field shipping-field">
                     <label class="field-header">
                       <span translate>campaign_reward_reward_item_limit</span>
                       <span class="optional-text" translate="campaign_creation_optional_text"></span>
                     </label>
                     <label class="note" translate>campaign_reward_reward_item_limit_note</label>
-                    <input type="text" name="limit" ng-model="reward.item_limit" placeholder="{{'campaign_reward_reward_item_limit_placeholder' | translate}}">
+                    <input type="text" numbers-only name="limit" ng-model="reward.item_limit" placeholder="{{'campaign_reward_reward_item_limit_placeholder' | translate}}">
                   </div>
 
-                  <div class="ui blue large message" translate>
+                  <div class="ui blue large message shipping-field" translate>
                     campaign_reward_reward_shipmessage
                   </div>
 
-                  <div class="field">
+                  <div class="field shipping-field">
                     <label class="field-header">
                       <span translate="campaign_reward_reward_delivery_date"></span> (
                       <span ng-bind="campaign.timezoneText"></span>)
                       <span class="optional-text" translate="campaign_creation_optional_text"></span>
                     </label>
                     <label class="note" translate>campaign_reward_reward_delivery_date_note</label>
-                    <quick-datepicker placeholder="{{get_started_funding_startdate_placeholder}}" ng-model="reward.estimated_delivery_time_convert"
-                      disable-clear-button="true" date-format='EEEE, MMMM d, yyyy' disable-timepicker="true" date-filter="noPastDates"
+                    <quick-datepicker placeholder="{{get_started_funding_startdate_placeholder | translate}}" ng-model="reward.estimated_delivery_time_convert" disable-clear-button="true" date-format='EEEE, MMMM d, yyyy' disable-timepicker="true" date-filter="noPastDates"
                       ng-if="!public_settings.site_theme_campaign_display_iso_date"></quick-datepicker>
-                    <quick-datepicker placeholder="{{get_started_funding_startdate_placeholder}}" ng-model="reward.estimated_delivery_time_convert"
-                      disable-clear-button="true" date-format='EEEE, yyyy/MM/d' disable-timepicker="true" date-filter="noPastDates"
-                      ng-if="public_settings.site_theme_campaign_display_iso_date"></quick-datepicker>
+                    <quick-datepicker placeholder="{{get_started_funding_startdate_placeholder | translate}}" ng-model="reward.estimated_delivery_time_convert" disable-clear-button="true" date-format='EEEE, yyyy/MM/d' disable-timepicker="true" date-filter="noPastDates" ng-if="public_settings.site_theme_campaign_display_iso_date"></quick-datepicker>
                   </div>
 
-                  <div class="field">
+                  <div class="field shipping-field">
                     <div class="shipping-option-wrap" ng-repeat="shipping in reward.shipping">
                       <a class="remove-btn red ui label" ng-click="removeShippingOption(shipping, reward); updateDuplicatedCountryList()">
                         <i class="remove icon"></i>
                       </a>
                       <div class="three stackable fields stacking-shipping-options">
-                        <div class="seven wide field">
+                        <div class="six wide field">
                           <label translate> campaign_reward_reward_shiping_option</label>
                           <div class="ui fluid selection dropdown rewards-shipping-options" ng-click="checkShippingOption(reward.shipping)">
                             <div class="text" translate ng-if="!shipping.shipping_option_type_id">campaign_reward_reward_shiping_option_select </div>
-                            <div class="text" ng-if="shipping.shipping_option_type_id">{{dropdown.shipping[shipping.shipping_option_type_id -1].value}}</div>
+                            <div class="text" ng-if="shipping.shipping_option_type_id">{{dropdown.shipping[shipping.shipping_option_type_id -1].value | translate}}</div>
                             <i class="dropdown icon"></i>
                             <input type="hidden" name="shipping" ng-value="shipping.shipping_option_type_id">
                             <div class="menu">
-                              <div data-value="{{option.id}}" class="item" ng-repeat="option in dropdown.shipping" ng-click="selectShippingOption($parent.$parent.$index, $parent.$index, option.id); updateDuplicatedCountryList()"
-                                ng-hide="shipping.worldwideOption && option.id == 1">{{option.value | translate}}</div>
+                              <div data-value="{{option.id}}" class="item" ng-repeat="option in dropdown.shipping" ng-click="selectShippingOption($parent.$parent.$index, $parent.$index, option.id); updateDuplicatedCountryList()" ng-hide="shipping.worldwideOption && option.id == 1">{{option.value | translate}}</div>
                             </div>
                           </div>
                         </div>
 
-                        <div class="six wide field" ng-if="shipping.shipping_option_type_id == 2 || shipping.shipping_option_type_id == 3">
+                        <div class="seven wide field" ng-if="shipping.shipping_option_type_id == 2 || shipping.shipping_option_type_id == 3">
                           <label translate> campaign_reward_reward_shiping_country</label>
-                          <select ng-change="updateDuplicatedCountryList()" ng-model="rewards_data[$parent.$parent.$index].shipping[$parent.$index].country_id"
-                            ui-select2="currencypicker" ng-click="showSubCountry(rewards_data[$parent.$parent.$index].shipping[$parent.$index].country_id,$parent.$parent.$index,shipping.shipping_option_type_id ,$parent.$index)">
+                          <select ng-change="updateDuplicatedCountryList()" ng-model="rewards_data[$parent.$parent.$index].shipping[$parent.$index].country_id" ui-select2="currencypicker" ng-click="showSubCountry(rewards_data[$parent.$parent.$index].shipping[$parent.$index].country_id,$parent.$parent.$index,shipping.shipping_option_type_id ,$parent.$index)">
                             <option value="{{country.country_id}}" class="item" ng-repeat="country in countries | excludeDupCountry:$parent.$parent.$index:rewards_data[$parent.$parent.$index].shipping[$parent.$index].country_id:shipping.shipping_option_type_id">{{country.name}}</option>
                           </select>
                         </div>
 
                         <div class="three wide field" ng-if="shipping.shipping_option_type_id == 1 || (shipping.shipping_option_type_id == 2 && shipping.country_id)">
                           <label translate> campaign_reward_reward_shiping_cost </label>
-                          <div class="ui left labeled  input rewards-shipping-cost">
-                            <div class="ui label" ng-bind-html="' '| formatCurrency:ccode:public_setting.site_campaign_decimal_option" style="padding-top:1.3em;"
-                              id="lbaelid"></div>
+                          <div class="ui input rewards-shipping-cost">
+                            <div class="currency-symbol" ng-bind-html="' '| formatCurrency:ccode:public_setting.site_campaign_decimal_option" id="lbaelid"></div>
                             <input type="text" min="0" ng-model="shipping.cost" numbers-only onkeydown="if (event.keyCode == 13) return false;">
                           </div>
                         </div>
@@ -184,8 +175,8 @@
                               <div class="column" ng-repeat="city in shipping.sub_countries">
                                 <div class="subcountry-fields field">
                                   <label class="city-name">{{city.name}}</label>
-                                  <div class="ui left left labeled  input">
-                                    <div class="ui label" ng-bind-html=" ' ' | formatCurrency:ccode:public_setting.site_campaign_decimal_option"></div>
+                                  <div class="ui input rewards-shipping-cost">
+                                    <div class="currency-symbol" ng-bind-html=" ' ' | formatCurrency:ccode:public_setting.site_campaign_decimal_option"></div>
                                     <input type="text" value="{{city.cost}} || 0" ng-model="city.cost" numbers-only onkeydown="if (event.keyCode == 13) return false;">
                                   </div>
                                 </div>
@@ -201,7 +192,7 @@
                     </div>
                   </div>
                   <!-- Variation -->
-                  <div class="field" ng-if="enableRewardVariation">
+                  <div class="field shipping-field" ng-if="enableRewardVariation">
                     <label class="field-header">
                       <span translate>campaign_reward_variation_title</span>
                       <span class="optional-text" translate="campaign_creation_optional_text"></span>
@@ -262,8 +253,7 @@
                       <span class="optional-text" translate="campaign_creation_optional_text"></span>
                     </label>
                     <label class="note" translate>campaign_reward_time_limit_notes</label>
-                    <quick-datepicker placeholder="{{campaign_reward_time_limit_date_placeholder}}" ng-model="reward.expires" disable-clear-button="true"
-                      date-format='EEEE, MMMM d, yyyy' disable-timepicker="true" date-filter="noPastDates"></quick-datepicker>
+                    <quick-datepicker placeholder="{{campaign_reward_time_limit_date_placeholder}}" ng-model="reward.expires" disable-clear-button="true" date-format='EEEE, MMMM d, yyyy' disable-timepicker="true" date-filter="noPastDates"></quick-datepicker>
                   </div>
                 </form>
               </div>
@@ -296,13 +286,9 @@
 
               <div class="right-col eleven wide column">
                 <div class="field" id="campaign-details-field" ng-class="{'description-added' : campaign.description}">
-                  <span class="campaign-revision-note ui blue label" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 1 && isCampaignRevised"
-                    translate="campaign_creation_revised_note"></span>
-                  <textarea froala="froalaOptionsCampaigns" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && in_revision"
-                    data-server="{{server}}" data-loc="{{server_loc}}" class="page-content" ng-model="revision.description"
-                    name="data.htmlcontent" ng-class="{'has-error': !revision.description}"></textarea>
-                  <textarea froala="froalaOptionsCampaigns" ng-if="!in_revision" data-server="{{server}}" data-loc="{{server_loc}}" class="page-content"
-                    ng-model="campaign.description" name="data.htmlcontent" ng-class="{'has-error': !campaign.description}"></textarea>
+                  <span class="campaign-revision-note ui blue label" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 1 && isCampaignRevised" translate="campaign_creation_revised_note"></span>
+                  <textarea froala="froalaOptionsCampaigns" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && in_revision" data-server="{{server}}" data-loc="{{server_loc}}" class="page-content" ng-model="revision.description" name="data.htmlcontent" ng-class="{'has-error': !revision.description}"></textarea>
+                  <textarea froala="froalaOptionsCampaigns" ng-if="!in_revision" data-server="{{server}}" data-loc="{{server_loc}}" class="page-content" ng-model="campaign.description" name="data.htmlcontent" ng-class="{'has-error': !campaign.description}"></textarea>
                   <div class="ui selection dropdown description-suggestions-dropdown" ng-if="descriptionSuggestions && descriptionSuggestions.length">
                     <input type="hidden" name="description-suggestions">
                     <div class="default text" translate="campaign_setup_description_suggestions"></div>
@@ -328,13 +314,9 @@
                 </h3>
                 <p translate="campaign_setup_description_text"></p>
                 <div class="field" id="campaign-details-field" ng-class="{'description-added' : campaign.description}">
-                  <span class="campaign-revision-note ui blue label" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 1 && isCampaignRevised"
-                    translate="campaign_creation_revised_note"></span>
-                  <textarea froala="froalaOptionsCampaigns" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && in_revision"
-                    data-server="{{server}}" data-loc="{{server_loc}}" class="page-content" ng-model="revision.description"
-                    name="data.htmlcontent" ng-class="{'has-error': !revision.description}"></textarea>
-                  <textarea froala="froalaOptionsCampaigns" ng-if="!in_revision" data-server="{{server}}" data-loc="{{server_loc}}" class="page-content"
-                    ng-model="campaign.description" name="data.htmlcontent" ng-class="{'has-error': !campaign.description}"></textarea>
+                  <span class="campaign-revision-note ui blue label" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 1 && isCampaignRevised" translate="campaign_creation_revised_note"></span>
+                  <textarea froala="froalaOptionsCampaigns" ng-if="enableCampaignRevisions && campaign.entry_status_id == 2 && in_revision" data-server="{{server}}" data-loc="{{server_loc}}" class="page-content" ng-model="revision.description" name="data.htmlcontent" ng-class="{'has-error': !revision.description}"></textarea>
+                  <textarea froala="froalaOptionsCampaigns" ng-if="!in_revision" data-server="{{server}}" data-loc="{{server_loc}}" class="page-content" ng-model="campaign.description" name="data.htmlcontent" ng-class="{'has-error': !campaign.description}"></textarea>
                   <div class="ui selection dropdown description-suggestions-dropdown" ng-if="descriptionSuggestions && descriptionSuggestions.length">
                     <input type="hidden" name="description-suggestions">
                     <div class="default text" translate="campaign_setup_description_suggestions"></div>

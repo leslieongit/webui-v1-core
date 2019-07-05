@@ -51,13 +51,25 @@ app.controller('StartCtrl', function ($location, CampaignSettingsService, $scope
     $scope.payment_processing = success.public_setting.payment_setting_enabled;
     // Set in scope variable
     $scope.public_settings = success.public_setting;
-    
+
     //site_campaign_country_funding_step
     $scope.$emit("loading_finished");
   });
   $scope.getStripeCountry = function () {
     return Restangular.one('account/stripe/country').customGET().then(function (success) {
       $scope.stripeCountries = success;
+      var country_array = [];
+      if(typeof $scope.public_settings.site_campaign_country_funding_step !== 'undefined' || $scope.public_settings.site_campaign_country_funding_step) {
+        angular.forEach($scope.stripeCountries, function(v, k, arr) {
+          
+          if($scope.public_settings.site_campaign_country_ids.indexOf(v.country_id.toString()) != -1) {
+            country_array.push(v);
+          }
+        });
+
+        $scope.stripeCountries = country_array;
+      }
+
     });
   }
   $scope.getStripeCountry();

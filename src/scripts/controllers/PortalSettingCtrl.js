@@ -443,7 +443,8 @@ app.controller('AdminReportsCtrl', function($scope, $timeout, $translatePartialL
 //         EMAIL MANAGEMENT / EMAIL CONTROLLER
 //------------------------------------------------------
 app.controller('AdminEmailNotificationsCtrl', function($scope, $timeout, $translatePartialLoader, $translate, Restangular, $rootScope, PortalSettingsService) {
-  var publicSettings, privateSettings;
+  var publicSettings = {},
+    privateSettings = {};
   $scope.settingLoaded = false;
   getEmailNotification();
 
@@ -453,11 +454,22 @@ app.controller('AdminEmailNotificationsCtrl', function($scope, $timeout, $transl
     $scope.email_preview = !$scope.email_preview;
   }
 
-  PortalSettingsService.getSettingsObj().then(function(success) {
-    publicSettings = success.public_setting;
-    privateSettings = success.private_setting;
+  Restangular.one('portal/setting').getList().then(function(success) {
+    // loop and categorize the response data. put them into object
+    angular.forEach(success, function(value) {
+      if (value.setting_type_id == 3) {
+        publicSettings[value.name] = value.value;
+      } else if (value.setting_type_id == 1) {
+        privateSettings[value.name] = value.value;
+      }
+    });
     $scope.settingLoaded = true;
   });
+  // PortalSettingsService.getSettingsObj().then(function(success) {
+  //   publicSettings = success.public_setting;
+  //   privateSettings = success.private_setting;
+  //   $scope.settingLoaded = true;
+  // });
 
   $scope.checkAccordion = function(accordionIndex, $event) {
     $scope.accordionNum = accordionIndex;
@@ -563,7 +575,7 @@ app.controller('AdminEmailNotificationsCtrl', function($scope, $timeout, $transl
 
   // Check if document.write exists in the code, if so throw an error msg
   function isDocumentWrite(htmlBlock) {
-    if (htmlBlock && htmlBlock.match(/document.write/g)){
+    if (htmlBlock && htmlBlock.match(/document.write/g)) {
       msg = {
         'header': 'document_write_prompt_msg',
       }
@@ -595,10 +607,10 @@ app.controller('AdminEmailNotificationsCtrl', function($scope, $timeout, $transl
       'available_tokens': email.value.available_tokens,
       'html': email.value.html,
     }
-    
+
     $scope.isCodeValid = !isDocumentWrite($form[email.name].html);
 
-    if ($scope.isCodeValid){
+    if ($scope.isCodeValid) {
       Restangular.one('portal', 'setting').customPUT($form).then(
         function(success) {
           msg = {
@@ -695,9 +707,10 @@ app.controller('AdminEmailNotificationsCtrl', function($scope, $timeout, $transl
     var emailName = email.name;
     var emailEnabled = !$elem.hasClass("checked");
     var param = {
-      site_email_notification_enable: {}
-    }
-    param.site_email_notification_enable = privateSettings.site_email_notification_enable;
+      site_email_notification_enable: privateSettings.site_email_notification_enable
+    };
+
+    // param.site_email_notification_enable = privateSettings.site_email_notification_enable;
     param.site_email_notification_enable[emailName] = emailEnabled;
     Restangular.one("portal", "setting").customPUT(param);
   }

@@ -251,15 +251,31 @@
                 </div>
               </th>
               <th translate>tab_campaign_campaign_feature </th>
-              <th ng-click="changeOrderId()" id="hoverbtn"> {{'tab_campaign_campaign_id'|translate}} <span ng-show="idshow"><span ng-hide="!orderbtnid"><i class="caret up  icon"></i></span><span ng-hide="orderbtnid"><i class="caret down  icon" ></i> </span></span>
+              <th ng-click="changeOrderId()" id="hoverbtn">
+                <div class="th-action th-action-filter">
+                  {{'tab_campaign_campaign_id'|translate}} <span ng-show="idshow"><span ng-hide="!orderbtnid"><i class="caret up  icon"></i></span><span ng-hide="orderbtnid"><i class="caret down  icon" ></i> </span></span>
+                </div>
               </th>
-              <th ng-click="changeOrderName()" id="hoverbtn"> {{'tab_campaign_campaign_name'|translate}} <span ng-show="nameshow"><span ng-hide="!namebtn"><i class="caret up  icon"></i></span><span ng-hide="namebtn"><i class="caret down  icon" ></i> </span></span>
+              <th ng-click="changeOrderName()" id="hoverbtn">
+                <div class="th-action th-action-filter">
+                {{'tab_campaign_campaign_name'|translate}} 
+                <span ng-show="nameshow">
+                  <span ng-hide="!namebtn"><i class="caret up icon"></i></span>
+                  <span ng-hide="namebtn"><i class="caret down icon" ></i></span>
+                </span>
+                </div>
               </th>
               <th translate>tab_campaign_campaign_creator </th>
               <th ng-if="portal_settings.site_campaign_country_funding_step"> {{'tab_campaign_campaign_country'|translate}} </th>
-              <th ng-click="changeOrderStart()" id="hoverbtn">{{'tab_campaign_campaign_start_date'| translate}} <span ng-show="startshow"><span ng-hide="!orderbtn"><i class="caret up icon"></i></span><span ng-hide="orderbtn"><i class="caret down  icon" ></i> </span></span>
+              <th ng-click="changeOrderStart()" id="hoverbtn">
+                <div class="th-action th-action-filter">
+                {{'tab_campaign_campaign_start_date'| translate}} <span ng-show="startshow"><span ng-hide="!orderbtn"><i class="caret up icon"></i></span><span ng-hide="orderbtn"><i class="caret down  icon" ></i> </span></span>
+              </div>
               </th>
-              <th ng-click="changeOrderEnd()" id="hoverbtn"> {{'tab_campaign_campaign_end'|translate}} <span ng-show="endshow"><span ng-hide="!orderbtnend"><i class="caret up icon"></i></span><span ng-hide="orderbtnend"><i class="caret down  icon" ></i> </span> </span>
+              <th ng-click="changeOrderEnd()" id="hoverbtn">
+                <div class="th-action th-action-filter">
+                {{'tab_campaign_campaign_end'|translate}} <span ng-show="endshow"><span ng-hide="!orderbtnend"><i class="caret up icon"></i></span><span ng-hide="orderbtnend"><i class="caret down  icon" ></i> </span> </span>
+                </div>
               </th>
               <th class="action-column" translate> tab_campaign_campaign_action </th>
               <th class="status-column"> {{'tab_campaign_campaign_status'|translate}}</th>
@@ -428,29 +444,33 @@
                 <span ng-hide="trans.backer[0].pledge_level.length" translate> tab_campaign_transaction_details_na</span>
               </td>
 
-              <td>
-                <div class="ui icon button" ng-if="!trans.editing" ng-click="editTransaction(trans)">
-                  <i class="ui icon edit"></i>
+              <td class="contribute-amount-td">
+                <div class="value-editable">
+                  <span ng-bind-html="trans.backer[0].amount | formatCurrency:currency[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option" ng-if="!trans.editing"></span>
+                  <div class="edit-button" ng-if="!trans.editing" ng-click="editTransaction(trans)">
+                    {{'tab_campaign_edit_button' | translate}}
+                  </div>
                 </div>
-                <span ng-bind-html="trans.backer[0].amount | formatCurrency:currency[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option" ng-if="!trans.editing"></span>
-                <div class="ui icon button" ng-if="trans.editing" ng-click="editTransaction(trans)">
-                  <i class="ui icon checkmark"></i>
-                </div>
-                <div class="ui input" ng-if="trans.editing">
+                <div class="ui action input" ng-if="trans.editing">
                   <input type="text" ng-model="trans.backer[0].amount" />
+                  <div class="ui icon tiny button" ng-if="trans.editing" ng-click="editTransaction(trans)">
+                    <i class="ui icon checkmark"></i>
+                  </div>
                 </div>
               </td>
-              <td ng-if="tippingOptions.toggle">
-                <div class="ui icon button" ng-if="!trans.tipEditing" ng-click="editTipTransaction(trans)">
-                  <i class="ui icon edit"></i>
+              <td ng-if="tippingOptions.toggle" class="tipping-amount-td">
+                <div class="value-editable">
+                  <span ng-if="trans.backer[0].amount_tip && !trans.tipEditing" ng-bind-html="trans.backer[0].amount_tip | formatCurrency:currency[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
+                  <span ng-if="!trans.backer[0].amount_tip && !trans.tipEditing" ng-bind-html="0 | formatCurrency:currency[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
+                  <div class="edit-button" ng-if="!trans.tipEditing" ng-click="editTipTransaction(trans)">
+                    {{'tab_campaign_edit_button' | translate}}
+                  </div>
                 </div>
-                <span ng-if="trans.backer[0].amount_tip && !trans.tipEditing" ng-bind-html="trans.backer[0].amount_tip | formatCurrency:currency[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
-                <span ng-if="!trans.backer[0].amount_tip && !trans.tipEditing" ng-bind-html="0 | formatCurrency:currency[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
-                <div class="ui icon button" ng-if="trans.tipEditing" ng-click="editTipTransaction(trans)">
-                  <i class="ui icon checkmark"></i>
-                </div>
-                <div class="ui input" ng-if="trans.tipEditing">
+                <div class="ui action input" ng-if="trans.tipEditing">
                   <input type="text" ng-model="trans.backer[0].amount_tip" />
+                  <div class="ui green tiny icon button" ng-if="trans.tipEditing" ng-click="editTipTransaction(trans)">
+                    <i class="ui icon checkmark"></i>
+                  </div>
                 </div>
               </td>
 
@@ -618,20 +638,34 @@
                 </div>
               </th>
               <th translate>tab_campaign_campaign_feature </th>
-              <th ng-click="changeOrderId()" id="hoverbtn"> {{'tab_campaign_campaign_id'|translate}} <span ng-show="idshow"><span ng-hide="!orderbtnid"><i class="caret up  icon"></i></span><span ng-hide="orderbtnid"><i class="caret down  icon" ></i> </span></span>
+              <th ng-click="changeOrderId()" id="hoverbtn">
+                <div class="th-action th-action-filter">
+                {{'tab_campaign_campaign_id'|translate}} <span ng-show="idshow"><span ng-hide="!orderbtnid"><i class="caret up  icon"></i></span><span ng-hide="orderbtnid"><i class="caret down  icon" ></i> </span></span>
+                </div>
               </th>
-              <th ng-click="changeOrderName()" id="hoverbtn"> {{'tab_campaign_campaign_name'|translate}} <span ng-show="nameshow"><span ng-hide="!namebtn"><i class="caret up  icon"></i></span><span ng-hide="namebtn"><i class="caret down  icon" ></i> </span></span>
+              <th ng-click="changeOrderName()" id="hoverbtn">
+                  <div class="th-action th-action-filter">
+                {{'tab_campaign_campaign_name'|translate}} <span ng-show="nameshow"><span ng-hide="!namebtn"><i class="caret up  icon"></i></span><span ng-hide="namebtn"><i class="caret down  icon" ></i> </span></span>
+                </div>
               </th>
               <th translate>tab_campaign_campaign_creator </th>
               <th ng-if="portal_settings.site_campaign_country_funding_step"> {{'tab_campaign_campaign_country'|translate}} </th>
-              <th ng-click="changeOrderStart()" id="hoverbtn">{{'tab_campaign_campaign_start_date'| translate}} <span ng-show="startshow"><span ng-hide="!orderbtn"><i class="caret up icon"></i></span><span ng-hide="orderbtn"><i class="caret down  icon" ></i> </span></span>
+              <th ng-click="changeOrderStart()" id="hoverbtn">
+                  <div class="th-action th-action-filter">
+                {{'tab_campaign_campaign_start_date'| translate}} <span ng-show="startshow"><span ng-hide="!orderbtn"><i class="caret up icon"></i></span><span ng-hide="orderbtn"><i class="caret down  icon" ></i> </span></span>
+                </div>
               </th>
-              <th ng-click="changeOrderEnd()" id="hoverbtn"> {{'tab_campaign_campaign_end'|translate}} <span ng-show="endshow"><span ng-hide="!orderbtnend"><i class="caret up icon"></i></span><span ng-hide="orderbtnend"><i class="caret down  icon" ></i> </span> </span>
+              <th ng-click="changeOrderEnd()" id="hoverbtn">
+                <div class="th-action th-action-filter">
+                {{'tab_campaign_campaign_end'|translate}} <span ng-show="endshow"><span ng-hide="!orderbtnend"><i class="caret up icon"></i></span><span ng-hide="orderbtnend"><i class="caret down  icon" ></i> </span> </span>
+                </div>
               </th>
               <th class="action-column" translate> tab_campaign_campaign_action </th>
               <th class="status-column"> {{'tab_campaign_campaign_status'|translate}}</th>
               <th>
+                <div class="th-action th-action-filter">
                 <div class="ui checkbox order-by-priority" ng-click="sortByPriority()"><input type="checkbox"><label>{{'Order_by_Display_Priority' | translate }}</label></div>
+                </div>
               </th>
               <th> {{'tab_campaign_campaign_manual_transaction'|translate}}</th>
             </tr>
@@ -795,30 +829,34 @@
                 <span ng-hide="trans.backer[0].pledge_level.length" translate> tab_campaign_transaction_details_na</span>
               </td>
 
-              <td>
-                <div class="ui icon button" ng-if="!trans.editing" ng-click="editTransaction(trans)">
-                  <i class="ui icon edit"></i>
+              <td class="contribute-amount-td">
+                <div class="value-editable">
+                  <span ng-bind-html="trans.backer[0].amount | formatCurrency:currency[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option" ng-if="!trans.editing"></span>
+                  <div class="edit-button" ng-if="!trans.editing" ng-click="editTransaction(trans)">
+                    {{'tab_campaign_edit_button' | translate}}
+                  </div>
                 </div>
-                <span ng-bind-html="trans.backer[0].amount | formatCurrency:currency[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option" ng-if="!trans.editing"></span>
-                <div class="ui icon button" ng-if="trans.editing" ng-click="editTransaction(trans)">
-                  <i class="ui icon checkmark"></i>
-                </div>
-                <div class="ui input" ng-if="trans.editing">
+                <div class="ui action input" ng-if="trans.editing">
                   <input type="text" ng-model="trans.backer[0].amount" />
+                  <div class="ui green tiny icon button" ng-if="trans.editing" ng-click="editTransaction(trans)">
+                    <i class="ui icon checkmark"></i>
+                  </div>
                 </div>
               </td>
 
-              <td ng-if="tippingOptions.toggle">
-                <div class="ui icon button" ng-if="!trans.tipEditing" ng-click="editTipTransaction(trans)">
-                  <i class="ui icon edit"></i>
+              <td ng-if="tippingOptions.toggle" class="tipping-amount-td">
+                <div class="value-editable">
+                  <span ng-if="trans.backer[0].amount_tip && !trans.tipEditing" ng-bind-html="trans.backer[0].amount_tip | formatCurrency:currency[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
+                  <span ng-if="!trans.backer[0].amount_tip && !trans.tipEditing" ng-bind-html="0 | formatCurrency:currency[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
+                  <div class="edit-button" ng-if="!trans.tipEditing" ng-click="editTipTransaction(trans)">
+                    {{'tab_campaign_edit_button' | translate}}
+                  </div>
                 </div>
-                <span ng-if="trans.backer[0].amount_tip && !trans.tipEditing" ng-bind-html="trans.backer[0].amount_tip | formatCurrency:currency[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
-                <span ng-if="!trans.backer[0].amount_tip && !trans.tipEditing" ng-bind-html="0 | formatCurrency:currency[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
-                <div class="ui icon button" ng-if="trans.tipEditing" ng-click="editTipTransaction(trans)">
-                  <i class="ui icon checkmark"></i>
-                </div>
-                <div class="ui input" ng-if="trans.tipEditing">
+                <div class="ui action input" ng-if="trans.tipEditing">
                   <input type="text" ng-model="trans.backer[0].amount_tip" />
+                  <div class="ui green tiny icon button" ng-if="trans.tipEditing" ng-click="editTipTransaction(trans)">
+                    <i class="ui icon checkmark"></i>
+                  </div>
                 </div>
               </td>
 

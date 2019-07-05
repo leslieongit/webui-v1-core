@@ -3,8 +3,7 @@
     {{'campaign_review_notes'|translate}}
     <i class="delete icon" ng-click="removeNote('note.video')" ng-if="note.video"></i>
   </div>
-  <div class="notes" ng-class="{'has-note ui basic segment' : video, 'field-empty': !campaign.files.length}" title="{{'campaign_review_featured_video_note_title' | translate}}"
-    ng-click="addNotes($event, 'video')">
+  <div class="notes" ng-class="{'has-note ui basic segment' : note.video, 'field-empty': !campaign.files.length}" ng-click="addNotes('campaign_review_featured_video_note_title', 'video')">
     <embed-video ng-if="campaign.video && campaign.video_type != 'custom'" class="campaign-video" ng-href="{{campaign.video}}"></embed-video>
     <video ng-if="campaign.video && campaign.video_type == 'custom'" style="width:100%;height:100%;background:#000000;" id="custom-video-player"
       controls>
@@ -12,12 +11,11 @@
       </source>
     </video>
   </div>
-  <div ng-if="note.files" class="ui label notes-label">
+  <div ng-if="note.image" class="ui label notes-label">
     {{'campaign_review_notes' | translate}}
-    <i class="delete icon" ng-click="removeNote('files')" ng-if="note.files"></i>
+    <i class="delete icon" ng-click="removeNote('image')" ng-if="note.image"></i>
   </div>
-  <div class="notes" ng-class="{'has-note ui basic segment' : note.files, 'field-empty': !campaign.files.length}" title="{{'campaign_review_featured_image_note_title' | translate}}"
-    ng-click="addNotes($event,'files')">
+  <div class="notes" ng-class="{'has-note ui basic segment' : note.image, 'field-empty': !campaign.files.length}" ng-click="addNotes('campaign_review_featured_image_note_title', 'image')">
     <img ng-hide="campaign.video" ng-if="campaign.files.length" ng-repeat="file in campaign.files | filter:{region_id: RESOURCE_REGIONS.campaign.thumbnail} | orderBy:'-file_id' | limitTo: 1"
       ng-src="{{server + '/image/campaign_detail_large/' + file.path_external}}" class="ui image" />
     <img ng-hide="campaign.video" ng-if="noMainImage" src="/images/placeholder-images/placeholder_campaign.png" class="ui image"
@@ -48,10 +46,10 @@
   </div>
 </div>
 <div ng-if="campaign.campaign_links.length && !isRemoveCampaignLinks" class="desktop-only campaign-links-wrap">
-  <div ng-if="note.links" class="ui label notes-label" translate>campaign_review_notes
+  <div ng-if="note.links" class="ui label notes-label" >{{'campaign_review_notes'|translate}}
     <i class="delete icon" ng-click="removeNote('links')" ng-if="note.links"></i>
   </div>
-  <div class="notes" ng-class="{'has-note ui basic segment' : note.links}" title="Campaign Links" ng-click="addNotes('links')">
+  <div class="notes" ng-class="{'has-note ui basic segment' : note.links}" ng-click="addNotes('campaign_review_links_note_title', 'links')">
     <div class="ui center aligned  bulleted horizontal list campaign-links">
       <a class="item" ng-repeat="link in campaign.campaign_links | limitTo: 5" ng-href="{{link.uri}}" target="_blank">
         <span ng-if="link.uri_text">{{link.uri_text}}</span>

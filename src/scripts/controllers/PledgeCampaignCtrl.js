@@ -1,9 +1,9 @@
-app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope, $filter, UserService, StripeService, $translate, $translatePartialLoader, $routeParams, Restangular, Geolocator, RESOURCE_REGIONS, $window, DisqusShortnameService, RestFullResponse, API_URL, PortalSettingsService, $http, $sce, $timeout, PHONE_TYPE, LANG, SOCIAL_SHARING_OPTIONS) {
+app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope, $filter, UserService, StripeService, $translate, $translatePartialLoader, $routeParams, Restangular, Geolocator, RESOURCE_REGIONS, $window, DisqusShortnameService, RestFullResponse, API_URL, PortalSettingsService, $http, $sce, $timeout, PHONE_TYPE, LANG, SOCIAL_SHARING_OPTIONS) {
 
   var msg;
 
   getPhoneNumber(paramID);
-  
+
   $scope.pledgeReplace = false;
   $scope.rewardsQueue = [];
   var attr_array = [];
@@ -104,12 +104,12 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
   var phonetype = PHONE_TYPE;
   // Translate phone type, even on refresh
   var trans_array = [];
-  angular.forEach(PHONE_TYPE, function (value) {
+  angular.forEach(PHONE_TYPE, function(value) {
     trans_array.push(value.name);
   });
 
-  $translate(trans_array).then(function (translation) {
-    angular.forEach(translation, function (value, key) {
+  $translate(trans_array).then(function(translation) {
+    angular.forEach(translation, function(value, key) {
       for (var i = 0; i < phonetype.length; i++) {
         if (phonetype[i].name == key) {
           phonetype[i].name = value;
@@ -127,7 +127,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
   $scope.tipInfo;
   $scope.requiresShipping = false;
   $scope.pledgeReplaceShippingFound = false;
-  $scope.pledgeReplacement = function () {
+  $scope.pledgeReplacement = function() {
     if ($routeParams.r != null) {
       var plid_index, reward_id;
       $scope.campaign_id = $routeParams.eid;
@@ -137,7 +137,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
       $scope.pledgeAmount = parseInt($routeParams.m);
       $scope.totalReplacedCost = 0;
       $scope.totalReplacedCost = ($scope.pledgeAmount) ? $scope.pledgeAmount : 0;
-      angular.forEach($routeParams, function (value, key, obj) {
+      angular.forEach($routeParams, function(value, key, obj) {
         if ((plid_index = key.indexOf('plid')) != -1) {
           reward_id = value;
           $scope.rewards.push({
@@ -172,9 +172,9 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
           }
         }
       });
-      angular.forEach($scope.rewards, function (value) {
+      angular.forEach($scope.rewards, function(value) {
         //NEED TO GET PLEDGES
-        Restangular.one('campaign', $scope.campaign_id).one('pledge-level', value.plid).get().then(function (success) {
+        Restangular.one('campaign', $scope.campaign_id).one('pledge-level', value.plid).get().then(function(success) {
           var selectedReward = success;
           selectedReward.quantity = value.quantity;
           selectedReward.attr = value.attr;
@@ -190,42 +190,18 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
 
   $scope.pledgeReplacement();
 
-  Restangular.one('account/stripe/charge-amount').customGET().then(function (success) {
-    if (success[0]) {
-      $scope.lowestAmount = parseFloat(success[0].minimum_charge_amount);
-      if ($scope.selectedTipCurrency) {
-        $scope.tipInfo = $scope.selectedTipCurrency;
-      } else {
-        $scope.tipInfo = success[0];
-      }
-      if ($scope.tippingOptions.toggle) {
-        setUpTipping();
-      }
-    } else {
-      $scope.lowestAmount = 0.5;
-      if ($scope.campaign) {
-        if ($scope.selectedTipCurrency) {
-          $scope.tipInfo = $scope.selectedTipCurrency;
-        } else {
-          $scope.tipInfo = $scope.campaign.currencies[0];
-        }
-      }
-    }
-  });
-
   $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar', name: '' };
   $scope.tipTypeError = false;
 
 
   var portal_settings;
   // load portal settings
-  PortalSettingsService.getSettingsObj().then(function (success) {
+  PortalSettingsService.getSettingsObj().then(function(success) {
     portal_settings = success.public_setting;
     $scope.allowDecimalNotation = portal_settings.site_campaign_decimal_option;
     $scope.reward_html_editor = success.public_setting.site_theme_campaign_reward_html_editor;
     $scope.contributionTypeRadio = portal_settings.site_theme_campaign_contribution_type_radio;
     $scope.enableRewardVariation = portal_settings.site_theme_campaign_show_reward_enable_variation;
-    $scope.tippingOptions = portal_settings.site_tipping;
     $scope.charity_percentage_fee = portal_settings.site_campaign_charity_helper_percentage;
     $scope.anonymousContributionTypeOnly = portal_settings.site_campaign_anonymous_contribution_type_only;
     $scope.isEnableContributionMessage = portal_settings.site_campaign_allow_contribution_message;
@@ -234,6 +210,16 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     $scope.site_campaign_alt_city_input_toggle = portal_settings.site_campaign_alt_city_input_toggle;
     $scope.selectedTipCurrency = portal_settings.site_tip_currency;
     $scope.acceptExtraPledgeData = portal_settings.site_campaign_profile_data_on_pledge;
+    $scope.tippingOptions = portal_settings.site_tipping;
+    $scope.displayCampaignDisclaimer = success.public_setting.site_campaign_campaign_toggle_disclaimer_text;
+    if (typeof $scope.tippingOptions === 'undefined' || $scope.tippingOptions == null) {
+      $scope.tippingOptions = { toggle: false };
+    }
+
+    //Defined and Turned on
+    if ($scope.tippingOptions.hasOwnProperty('toggle') && $scope.tippingOptions.toggle) {
+      setUpTipping();
+    }
 
     if ($scope.anonymousContributionTypeOnly) {
       $scope.selecteContribution = false;
@@ -241,13 +227,6 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
       $scope.selecteContribution = "contribution_type_regular";
     }
 
-    if (typeof $scope.tippingOptions === 'undefined' || $scope.tippingOptions == null) {
-      $scope.tippingOptions = { toggle: false };
-    } else {
-      if ($scope.tippingOptions.toggle) {
-        setUpTipping();
-      }
-    }
 
     setShippingVar();
     if (portal_settings.site_campaign_always_anonymous_contribution) {
@@ -256,11 +235,11 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
       $scope.partial_anonymous_contribution = 0;
     }
 
-    if(typeof $scope.acceptExtraPledgeData == 'undefined' || !$scope.acceptExtraPledgeData) {
+    if (typeof $scope.acceptExtraPledgeData == 'undefined' || !$scope.acceptExtraPledgeData) {
       $scope.acceptExtraPledgeData = false;
     }
-    
-    if(typeof success.public_setting.site_campaign_pledge_redirect == 'undefined' || !success.public_setting.site_campaign_pledge_redirect) {
+
+    if (typeof success.public_setting.site_campaign_pledge_redirect == 'undefined' || !success.public_setting.site_campaign_pledge_redirect) {
       $scope.site_campaign_pledge_redirect = {
         toggle: false,
         url: ''
@@ -268,54 +247,119 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     } else {
       $scope.site_campaign_pledge_redirect = success.public_setting.site_campaign_pledge_redirect;
     }
-
   });
-  
+
   function setUpTipping() {
-    if (!$scope.tippingOptions.selectedTipDefault) {
-      $scope.tippingOptions.selectedTipDefault = 'tiers';
-    }
-    if ($scope.tippingOptions.toggle_dynamic && !$scope.tippingOptions.toggle_tiers || $scope.tippingOptions.selectedTipDefault == 'dynamic') {
-      $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar', name: '' };
-      if ($scope.tippingOptions.toggle_dynamic_min_max && $scope.tippingOptions.dynamic_min) {
-        $scope.tip.value = $scope.tippingOptions.dynamic_min;
-        $scope.tip.dollar_amount = $scope.tippingOptions.dynamic_min;
-      }
-      $scope.selectedTipType = 'dynamic';
-      $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar' };
-      if ($scope.tippingOptions.toggle_dynamic_min_max && $scope.tippingOptions.dynamic_min) {
-        $scope.tip.value = $scope.tippingOptions.dynamic_min;
-        $scope.tip.dollar_amount = $scope.tippingOptions.dynamic_min;
-      }
-    } else if ($scope.tippingOptions.toggle_tiers || $scope.tippingOptions.selectedTipDefault == 'tiers' || $scope.tippingOptions.selectedTipDefault == 'tiers') {
-      $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar', name: '' };
-      if ($scope.tippingOptions.tiers[0]) {
-        $scope.updateTierValues();
-        var dollarAmount = $scope.tippingOptions.tiers[0].value;
-        if ($scope.tippingOptions.tiers[0].type == "Percent") {
-          dollarAmount = ($scope.tippingOptions.tiers[0].value / 100) * $scope.pledgeAmount;
-          if (dollarAmount < $scope.lowestAmount) {
-            dollarAmount = $scope.lowestAmount;
+
+    Restangular.one('account/stripe/charge-amount').customGET().then(function(success) {
+      if (success[0]) {
+        $scope.lowestAmount = parseFloat(success[0].minimum_charge_amount);
+        if ($scope.selectedTipCurrency) {
+          $scope.tipInfo = $scope.selectedTipCurrency;
+        } else {
+          $scope.tipInfo = success[0];
+        }
+      } else {
+        $scope.lowestAmount = 0.5;
+        if ($scope.campaign) {
+          if ($scope.selectedTipCurrency) {
+            $scope.tipInfo = $scope.selectedTipCurrency;
+          } else {
+            $scope.tipInfo = $scope.campaign.currencies[0];
           }
         }
-        $scope.tip = { value: $scope.tippingOptions.tiers[0].value, dollar_amount: dollarAmount, type: $scope.tippingOptions.tiers[0].type, name: $scope.tippingOptions.tiers[0].name };
       }
-      $scope.selectedTipType = 'tiers';
-    } else if (!$scope.tippingOptions.toggle_dynamic && !$scope.tippingOptions.toggle_tiers && $scope.tippingOptions.toggle_no_tip) {
-      $scope.selectedTipType = 'no_tip';
-      $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar' };
-    }
 
-    if ($scope.tippingOptions.toggle_no_tip && $scope.tippingOptions.selectedTipDefault == 'no_tip') {
-      $scope.selectedTipType = 'no_tip';
-      $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar' };
-    }
+      if (!$scope.tippingOptions.selectedTipDefault) {
+        $scope.tippingOptions.selectedTipDefault = 'tiers';
+      }
+      if ($scope.tippingOptions.toggle_dynamic && !$scope.tippingOptions.toggle_tiers || $scope.tippingOptions.selectedTipDefault == 'dynamic') {
+        $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar', name: '' };
+        if ($scope.tippingOptions.toggle_dynamic_min_max && $scope.tippingOptions.dynamic_min) {
+          $scope.tip.value = $scope.tippingOptions.dynamic_min;
+          $scope.tip.dollar_amount = $scope.tippingOptions.dynamic_min;
+        }
+        $scope.selectedTipType = 'dynamic';
+        $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar' };
+        if ($scope.tippingOptions.toggle_dynamic_min_max && $scope.tippingOptions.dynamic_min) {
+          $scope.tip.value = $scope.tippingOptions.dynamic_min;
+          $scope.tip.dollar_amount = $scope.tippingOptions.dynamic_min;
+        }
+      } else if ($scope.tippingOptions.toggle_tiers || $scope.tippingOptions.selectedTipDefault == 'tiers') {
+        $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar', name: '' };
+        if ($scope.tippingOptions.tiers[0]) {
+          $scope.updateTierValues();
+          var dollarAmount = $scope.tippingOptions.tiers[0].dollar_amount;
+          $scope.tip = { value: $scope.tippingOptions.tiers[0].value, dollar_amount: dollarAmount, type: $scope.tippingOptions.tiers[0].type, name: $scope.tippingOptions.tiers[0].name };
+        }
+        $scope.selectedTipType = 'tiers';
+      } else if (!$scope.tippingOptions.toggle_dynamic && !$scope.tippingOptions.toggle_tiers && $scope.tippingOptions.toggle_no_tip) {
+        $scope.selectedTipType = 'no_tip';
+        $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar' };
+      }
+
+      if ($scope.tippingOptions.toggle_no_tip && $scope.tippingOptions.selectedTipDefault == 'no_tip') {
+        $scope.selectedTipType = 'no_tip';
+        $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar' };
+      }
+
+      //tip params
+      if ($routeParams.tiptype) {
+        $scope.selectedTipType = $routeParams.tiptype;
+        if ($scope.selectedTipType == 'no_tip') {
+          $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar' };
+        } else if ($scope.selectedTipType == 'tiers') {
+          $scope.tiersIndex = 0;
+          if ($routeParams.tipindex) {
+            $scope.tiersIndex = $routeParams.tipindex;
+          }
+          if ($scope.tippingOptions.tiers[$scope.tiersIndex]) {
+            $scope.updateTierValues();
+            var dollarAmount = $scope.tippingOptions.tiers[$scope.tiersIndex].dollar_amount;
+            $scope.tip = { value: $scope.tippingOptions.tiers[$scope.tiersIndex].value, dollar_amount: dollarAmount, type: $scope.tippingOptions.tiers[$scope.tiersIndex].type, name: $scope.tippingOptions.tiers[$scope.tiersIndex].name };
+          }
+        } else if ($scope.selectedTipType == 'dynamic') {
+          $scope.initialDynamicTip = 0;
+          if ($scope.tippingOptions.toggle_dynamic_min_max && $scope.tippingOptions.dynamic_min) {
+            $scope.initialDynamicTip = $scope.tippingOptions.dynamic_min;
+          }
+          $scope.tip = { value: $scope.initialDynamicTip, dollar_amount: $scope.initialDynamicTip, type: 'Dollar', name: '' };
+          if ($routeParams.tipvalue) {
+            $scope.tip = { value: $routeParams.tipvalue, dollar_amount: $routeParams.tipvalue, type: 'Dollar', name: '' };
+            $scope.tipValueInt = parseInt($routeParams.tipvalue);
+            if ($scope.tippingOptions.toggle_dynamic_min_max) {
+              if ($scope.tippingOptions.dynamic_min && ($scope.tipValueInt < $scope.tippingOptions.dynamic_min)) {
+                $scope.tip.value = $scope.tippingOptions.dynamic_min;
+                $scope.tip.dollar_amount = $scope.tippingOptions.dynamic_min;
+              } else if ($scope.tippingOptions.dynamic_max && ($scope.tipValueInt > $scope.tippingOptions.dynamic_max)) {
+                $scope.tip.value = $scope.tippingOptions.dynamic_max;
+                $scope.tip.dollar_amount = $scope.tippingOptions.dynamic_max;
+              }
+            }
+          }
+        }
+      }
+
+      if (typeof $scope.tippingOptions !== 'undefined') {
+        if ($scope.tippingOptions.hasOwnProperty('tiers') && $scope.tippingOptions.tiers.length) {
+          $scope.tipTiersDefaultName = $scope.tippingOptions.tiers[0].name;
+          $scope.tipTiersDefaultAmount = $scope.tippingOptions.tiers[0].dollar_amount;
+          if ($routeParams.tipindex) {
+            $scope.tipTiersDefaultName = $scope.tippingOptions.tiers[$routeParams.tipindex].name;
+            $scope.tipTiersDefaultAmount = $scope.tippingOptions.tiers[$routeParams.tipindex].dollar_amount;
+          }
+        }
+      }
+
+    });
+
+
   }
 
   function getStripeExtraDetails() {
-    Restangular.one('account').one('address').get().then(function (address) {
+    Restangular.one('account').one('address').get().then(function(address) {
       var city, country, street;
-      angular.forEach(address.personal, function (value, key, obj) {
+      angular.forEach(address.personal, function(value, key, obj) {
         //Exit if you find a primary address
         if (value.primary_address) {
           city = value.city;
@@ -356,11 +400,11 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     // Check alternative shipping setting
     if ($scope.alt_shipping) {
       if ($scope.selectedReward && $scope.selectedReward.shipping) {
-        getCountries().then(function (countries) {
+        getCountries().then(function(countries) {
           var newCountries = [];
           var worldShippingExist = false;
           var countryShippingList = [];
-          angular.forEach($scope.selectedReward.shipping, function (value, key) {
+          angular.forEach($scope.selectedReward.shipping, function(value, key) {
             if (value.shipping_option_type_id == 1 || value.shipping_option_type_id == 3) {
               worldShippingExist = true;
             }
@@ -370,8 +414,8 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
           });
           // If world shipping does not exist,then get new shipping list
           if (!worldShippingExist) {
-            angular.forEach(countryShippingList, function (item, key) {
-              angular.forEach(countries, function (country, key) {
+            angular.forEach(countryShippingList, function(item, key) {
+              angular.forEach(countries, function(country, key) {
                 if (item.country_id == country.id) {
                   newCountries.push(country);
                 }
@@ -389,10 +433,10 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
   function getSettings() {
     $('i').popup();
     Restangular.one('portal/setting').getList().then(
-      function (success) {
+      function(success) {
         $scope.public_settings = {};
         $scope.private_settings = {};
-        angular.forEach(success, function (value) {
+        angular.forEach(success, function(value) {
           if (value.setting_type_id == 3) {
             $scope.public_settings[value.name] = value.value;
             $scope.payment_gateway = $scope.public_settings.site_payment_gateway;
@@ -470,7 +514,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
           getCountries();
         }
       },
-      function (failure) {
+      function(failure) {
         msg = {
           'header': failure.data.message,
         }
@@ -480,7 +524,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
   }
 
   // Check card type when card number changes
-  $scope.checkCardType = function () {
+  $scope.checkCardType = function() {
     var cardNumber = $scope.creditCard.number;
     var isCardValid = $.payment.validateCardNumber(cardNumber);
     var cardType = $.payment.cardType(cardNumber);
@@ -511,7 +555,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     }
   }
 
-  $scope.initStripePayment = function () {
+  $scope.initStripePayment = function() {
     $("input.creditCardNumber").payment("formatCardNumber");
     $("input.cardCVC").payment("formatCardCVC");
   }
@@ -521,20 +565,20 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
   Restangular.one('campaign').customGET($scope.campaign_id, {
     use_path_lookup: $routeParams.privatepath ? 1 : 0,
     path: $routeParams.privatepath
-  }).then(function (success) {
+  }).then(function(success) {
     $scope.campaign = success;
     $rootScope.campaign_path = $scope.campaign.uri_paths[0].path;
-    $rootScope.page_title = $scope.campaign.name ? $scope.campaign.name + ' - Contribution' : 'Inline Contribution';
+    $rootScope.page_title = $scope.campaign.name ? $scope.campaign.name + ' - Contribution' : 'Contribution';
     $scope.campaign_loc = $scope.campaign.uri_paths[0].path;
     window.b = $scope.campaign_loc;
-    angular.forEach($scope.campaign.pledges, function (value, key) {
+    angular.forEach($scope.campaign.pledges, function(value, key) {
       if ($scope.pledgeLevel == value.pledge_level_id) {
         $scope.pledgeindex = count;
       }
       count++;
     });
     // Grab Campaign Settings to use
-    angular.forEach($scope.campaign.settings, function (value, index) {
+    angular.forEach($scope.campaign.settings, function(value, index) {
       var setting_name = value.name;
       var setting_value = value.value;
       if (setting_name == "name") {
@@ -547,7 +591,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     getStripeMode();
     // Get user attributes
     if (portal_settings.site_campaign_enable_organization_name) {
-      Restangular.one('portal/person/attribute?filters={"person_id":"' + $scope.campaign.managers[0].id + '"}').customGET().then(function (success) {
+      Restangular.one('portal/person/attribute?filters={"person_id":"' + $scope.campaign.managers[0].id + '"}').customGET().then(function(success) {
         $scope.organization_name.value = success[0].attributes['organization_name'];
         $scope.organization_name.ein = success[0].attributes['ein'];
       });
@@ -557,7 +601,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
 
   //get specific pledge level
   if ($scope.pledgeLevel) {
-    Restangular.one('campaign', $scope.campaign_id).one('pledge-level', $scope.pledgeLevel).get().then(function (success) {
+    Restangular.one('campaign', $scope.campaign_id).one('pledge-level', $scope.pledgeLevel).get().then(function(success) {
       $scope.selectedReward = success;
       $scope.rname = $scope.selectedReward.name;
     });
@@ -565,7 +609,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
 
   // Check if stripe is in test mode or live mode.
   function getStripeMode() {
-    StripeService.clientID().then(function (success) {
+    StripeService.clientID().then(function(success) {
       if ("publishable_key" in success) {
         var indexOf = success.publishable_key.indexOf('test');
         if (indexOf > -1) {
@@ -578,7 +622,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
   }
 
   // retrieve the pledger account
-  StripeService.getPledgerAccount().then(function (success) {
+  StripeService.getPledgerAccount().then(function(success) {
     // assuming pledgers only have one account
     success = success[0];
     if (success == null) {
@@ -606,7 +650,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
   });
   // regular pledgers selections
   $scope.contributionSelectionHelp = "Contribution Selection 1 is selected";
-  $scope.contributionSelected = function (type) {
+  $scope.contributionSelected = function(type) {
     $scope.selecteContribution = type.type;
 
     // Defining the help text according to the selected item
@@ -626,7 +670,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
   }
 
   // Charity if Checked
-  $scope.isAGift = function () {
+  $scope.isAGift = function() {
     $scope.charity.is_a_gift = $("input[name='is_a_gift_aid']").is(":checked");
     // if(!$scope.is_a_gift){
     //   $scope.is_a_tax_payer = false;
@@ -640,17 +684,17 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     on: 'click'
   });
   // after pledging go to the rewards page
-  $scope.gotoRewards = function () {
+  $scope.gotoRewards = function() {
     $location.path($scope.currentLoc);
   }
   $scope.cardID = 1;
-  $scope.cardTypeSelected = function (type) {
+  $scope.cardTypeSelected = function(type) {
     $scope.cardselected = type.name;
     $scope.cardID = type.id;
   }
 
   // set toggle variable
-  $scope.setFlag = function (key, value) {
+  $scope.setFlag = function(key, value) {
     $scope.toggle[key] = value;
     if (key == "newAddress" && value) {
       clearAddress();
@@ -658,7 +702,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
 
   };
   // reset select box dropdown to default
-  $scope.dropdownReset = function (selector) {
+  $scope.dropdownReset = function(selector) {
 
     if (selector == '.address-select') {
       $scope.selectedAddress = null;
@@ -691,7 +735,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
   */
 
   //get address
-  Restangular.one('account/address').customGET().then(function (success) {
+  Restangular.one('account/address').customGET().then(function(success) {
     $scope.profileAddress = success.plain();
     $scope.profileAddress.personal = checkNative($scope.profileAddress.personal);
     $scope.profileAddress.business = checkNative($scope.profileAddress.business);
@@ -705,7 +749,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
   });
 
   function checkNative(addressData) {
-    angular.forEach(addressData, function (value, key) {
+    angular.forEach(addressData, function(value, key) {
       // Format: City name, Subcountry Country
       if ($scope.native_lookup) {
         var name = "";
@@ -738,7 +782,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
   // get pledge level shipping
   if ($scope.pledgeLevel) {
     // get shipping options
-    Restangular.one('campaign', $scope.campaign_id).one('pledge-level', $scope.pledgeLevel).one('shipping-option').customGET().then(function (data) {
+    Restangular.one('campaign', $scope.campaign_id).one('pledge-level', $scope.pledgeLevel).one('shipping-option').customGET().then(function(data) {
       $scope.shippingOption = data;
     });
   }
@@ -769,7 +813,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     employer: ''
   };
 
-  $scope.checkContribution = function () {
+  $scope.checkContribution = function() {
     if ($scope.selecteContribution == 2) {
       $scope.anonymous_contribution = 1;
 
@@ -794,7 +838,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
   };
 
   // toggle button
-  $scope.clickToggle = function (key) {
+  $scope.clickToggle = function(key) {
     if (key == 'newCard') {
       $scope.toggle.selectedCard = false;
       $('.choose-card-form.ui.form').form('clear');
@@ -819,7 +863,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     }
   };
 
-  $scope.initStripeElement = function () {
+  $scope.initStripeElement = function() {
 
     var translation = $translate.instant(['pledge_campaign_stripe_elements_cardExpirey', 'pledge_campaign_stripe_elements_cardNumber', 'pledge_campaign_creditcard_cvc_placeholder']);
 
@@ -877,7 +921,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     });
     $scope.cardCvcElement.mount('#card-cvc-element');
 
-    $scope.cardNumberElement.addEventListener('change', function (event) {
+    $scope.cardNumberElement.addEventListener('change', function(event) {
       var displayError = angular.element('#card-errors');
       if (event.error) {
         displayError.textContent = event.error.message;
@@ -933,7 +977,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     var translation = $translate.instant(['pledge_campaign_attribute_required_error']);
 
     // Choose card
-    $('#reward-variation').find('input[name="variation_value"]').each(function () {
+    $('#reward-variation').find('input[name="variation_value"]').each(function() {
       if (!$(this).val()) {
         $scope.valcheck = $scope.valcheck && false;
         $(this).parent().parent('.field').addClass('error');
@@ -944,7 +988,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
         $(this).parent().parent('.field').find('.error-text').remove();
       }
     });
-    $('#reward-variation').find('input[name="variation_value"]').change(function () {
+    $('#reward-variation').find('input[name="variation_value"]').change(function() {
       $scope.valcheck = $scope.valcheck && true;
       $(this).parent().parent('.field').removeClass('error');
       $(this).parent().parent('.field').find('.error-text').remove();
@@ -963,14 +1007,14 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
         }]
       }
     }, {
-        inline: true,
-        onSuccess: function () {
-          $scope.valcheck = $scope.valcheck && true;
-        },
-        onFailure: function () {
-          $scope.valcheck = $scope.valcheck && false;
-        }
-      }).form('validate form');
+      inline: true,
+      onSuccess: function() {
+        $scope.valcheck = $scope.valcheck && true;
+      },
+      onFailure: function() {
+        $scope.valcheck = $scope.valcheck && false;
+      }
+    }).form('validate form');
   }
 
   function newPhoneNumberValidation() {
@@ -992,17 +1036,17 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
         }]
       }
     }, {
-        inline: true,
-        onSuccess: function () {
-          $scope.valcheck = $scope.valcheck && true;
-        },
-        onFailure: function () {
-          $scope.valcheck = $scope.valcheck && false;
-        }
-      }).form('validate form');
+      inline: true,
+      onSuccess: function() {
+        $scope.valcheck = $scope.valcheck && true;
+      },
+      onFailure: function() {
+        $scope.valcheck = $scope.valcheck && false;
+      }
+    }).form('validate form');
   }
 
-  $scope.chooseCardFormValidation = function () {
+  $scope.chooseCardFormValidation = function() {
     var translation = $translate.instant(['pledge_campaign_choose_card_error']);
 
     // Choose card
@@ -1015,16 +1059,16 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
         }]
       }
     }, {
-        inline: true,
-        onSuccess: function () {
-          $scope.valcheck = $scope.valcheck && true;
-        },
-        onFailure: function () {
-          $scope.valcheck = $scope.valcheck && false;
-        }
-      }).form('validate form');
+      inline: true,
+      onSuccess: function() {
+        $scope.valcheck = $scope.valcheck && true;
+      },
+      onFailure: function() {
+        $scope.valcheck = $scope.valcheck && false;
+      }
+    }).form('validate form');
   }
-  $scope.chooseAddressFormValidation = function () {
+  $scope.chooseAddressFormValidation = function() {
     var translation = $translate.instant(['pledge_campaign_choose_address_error']);
     // Choose shipping address
     $('.choose-address-form.ui.form').form({
@@ -1036,16 +1080,16 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
         }]
       }
     }, {
-        inline: true,
-        onSuccess: function () {
-          $scope.valcheck = $scope.valcheck && true;
-        },
-        onFailure: function () {
-          $scope.valcheck = $scope.valcheck && false;
-        }
-      }).form('validate form');
+      inline: true,
+      onSuccess: function() {
+        $scope.valcheck = $scope.valcheck && true;
+      },
+      onFailure: function() {
+        $scope.valcheck = $scope.valcheck && false;
+      }
+    }).form('validate form');
   }
-  $scope.chooseBusinessFormValidation = function () {
+  $scope.chooseBusinessFormValidation = function() {
     var translation = $translate.instant(['pledge_campaign_choose_company_error']);
     // Choose shipping address
     $('.user-company-form.ui.form').form({
@@ -1057,16 +1101,16 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
         }]
       }
     }, {
-        inline: true,
-        onSuccess: function () {
-          $scope.valcheck = $scope.valcheck && true;
-        },
-        onFailure: function () {
-          $scope.valcheck = $scope.valcheck && false;
-        }
-      }).form('validate form');
+      inline: true,
+      onSuccess: function() {
+        $scope.valcheck = $scope.valcheck && true;
+      },
+      onFailure: function() {
+        $scope.valcheck = $scope.valcheck && false;
+      }
+    }).form('validate form');
   }
-  $scope.newBusinessFormValidation = function () {
+  $scope.newBusinessFormValidation = function() {
     var translation = $translate.instant(['pledge_campaign_business_company_error', 'pledge_campaign_business_primary_lastName_error', 'pledge_campaign_business_primary_firstName_error', 'pledge_campaign_business_primary_email_error']);
 
     var validation = {
@@ -1089,16 +1133,16 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     $('.user-new-company-form.ui.form').form(
       validation, {
         inline: true,
-        onSuccess: function () {
+        onSuccess: function() {
           $scope.valcheck = $scope.valcheck && true;
         },
-        onFailure: function () {
+        onFailure: function() {
           $scope.valcheck = $scope.valcheck && false;
         }
       }).form('validate form');
   }
-  
-  $scope.newCardFormValidation = function () {
+
+  $scope.newCardFormValidation = function() {
     var translation = $translate.instant(['pledge_campaign_card_number_error', 'pledge_campaign_card_exp_month_error', 'pledge_campaign_card_exp_year_error', 'pledge_campaign_card_cvc_error']);
     $('.credit-card-form.ui.form').form({
       card_number: {
@@ -1130,18 +1174,18 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
         }]
       }
     }, {
-        inline: true,
-        onSuccess: function () {
-          $scope.valcheck = $scope.valcheck && true;
-        },
-        onFailure: function () {
-          $scope.valcheck = $scope.valcheck && false;
-        }
-      }).form('validate form');
+      inline: true,
+      onSuccess: function() {
+        $scope.valcheck = $scope.valcheck && true;
+      },
+      onFailure: function() {
+        $scope.valcheck = $scope.valcheck && false;
+      }
+    }).form('validate form');
   }
 
-  $scope.contributeAmountValidation = function () {
-    $.fn.form.settings.rules.under_minimum = function (value) {
+  $scope.contributeAmountValidation = function() {
+    $.fn.form.settings.rules.under_minimum = function(value) {
       if ($scope.pledgeAmount < $scope.public_settings.site_theme_campaign_min_contribute_amount) {
         return false;
       } else {
@@ -1149,7 +1193,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
       }
     }
 
-    $.fn.form.settings.rules.over_maximum = function (value) {
+    $.fn.form.settings.rules.over_maximum = function(value) {
       if ($scope.pledgeAmount > $scope.max_amoumt && $scope.allow_max) {
         return false;
       } else {
@@ -1173,14 +1217,14 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
           }]
         }
       }, {
-          inline: true,
-          onSuccess: function () {
-            $scope.valcheck = $scope.valcheck && true;
-          },
-          onFailure: function () {
-            $scope.valcheck = $scope.valcheck && false;
-          }
-        }).form('validate form');
+        inline: true,
+        onSuccess: function() {
+          $scope.valcheck = $scope.valcheck && true;
+        },
+        onFailure: function() {
+          $scope.valcheck = $scope.valcheck && false;
+        }
+      }).form('validate form');
     } else {
       $('.contribution-form.ui.form').form({
         contribution_amount: {
@@ -1197,24 +1241,24 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
           }]
         }
       }, {
-          inline: true,
-          onSuccess: function () {
-            $scope.valcheck = $scope.valcheck && true;
-          },
-          onFailure: function () {
-            $scope.valcheck = $scope.valcheck && false;
-          }
-        }).form('validate form');
+        inline: true,
+        onSuccess: function() {
+          $scope.valcheck = $scope.valcheck && true;
+        },
+        onFailure: function() {
+          $scope.valcheck = $scope.valcheck && false;
+        }
+      }).form('validate form');
     }
   }
 
-  $scope.tipValidation = function () {
+  $scope.tipValidation = function() {
     if (!$scope.selectedTipType) {
       $scope.tipTypeError = true;
       $scope.valcheck = $scope.valcheck && false;
       return;
     }
-    $.fn.form.settings.rules.tip_zero = function (value) {
+    $.fn.form.settings.rules.tip_zero = function(value) {
       if ($scope.tip.dollar_amount == 0) {
         return false;
       } else {
@@ -1222,7 +1266,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
       }
     }
 
-    $.fn.form.settings.rules.tip_number = function (value) {
+    $.fn.form.settings.rules.tip_number = function(value) {
       if ($scope.tip.dollar_amount) {
         if ($scope.tip.dollar_amount.match(/^[0-9]\d*(((,\d{3}){1})?(\.\d{0,2})?)$/)) {
           return true;
@@ -1232,23 +1276,23 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
       }
     }
 
-    $.fn.form.settings.rules.tip_under_minimum = function (value) {
-      
+    $.fn.form.settings.rules.tip_under_minimum = function(value) {
+
       if (!$scope.tippingOptions.dynamic_min) {
         return true;
       }
-      if (parseInt($scope.tip.dollar_amount) < parseInt($scope.tippingOptions.dynamic_min)) {
+      if (Number($scope.tip.dollar_amount) < Number($scope.tippingOptions.dynamic_min)) {
         return false;
       } else {
         return true;
       }
     }
 
-    $.fn.form.settings.rules.tip_over_maximum = function (value) {
+    $.fn.form.settings.rules.tip_over_maximum = function(value) {
       if (!$scope.tippingOptions.dynamic_max) {
         return true;
       }
-      if ($scope.tip.dollar_amount > $scope.tippingOptions.dynamic_max) {
+      if (Number($scope.tip.dollar_amount) > Number($scope.tippingOptions.dynamic_max)) {
         return false;
       } else {
         return true;
@@ -1279,14 +1323,14 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
             }]
           }
         }, {
-            inline: true,
-            onSuccess: function () {
-              $scope.valcheck = $scope.valcheck && true;
-            },
-            onFailure: function () {
-              $scope.valcheck = $scope.valcheck && false;
-            }
-          }).form('validate form');
+          inline: true,
+          onSuccess: function() {
+            $scope.valcheck = $scope.valcheck && true;
+          },
+          onFailure: function() {
+            $scope.valcheck = $scope.valcheck && false;
+          }
+        }).form('validate form');
       } else {
         $('.dynamic-tipping-form.ui.form').form({
           dynamic_tip: {
@@ -1303,19 +1347,19 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
             }]
           }
         }, {
-            inline: true,
-            onSuccess: function () {
-              $scope.valcheck = $scope.valcheck && true;
-            },
-            onFailure: function () {
-              $scope.valcheck = $scope.valcheck && false;
-            }
-          }).form('validate form');
+          inline: true,
+          onSuccess: function() {
+            $scope.valcheck = $scope.valcheck && true;
+          },
+          onFailure: function() {
+            $scope.valcheck = $scope.valcheck && false;
+          }
+        }).form('validate form');
       }
     }
   }
 
-  $scope.newAddressFormValidation = function () {
+  $scope.newAddressFormValidation = function() {
     var translation = $translate.instant(['pledge_campaign_shipping_country_error', 'pledge_campaign_shipping_subcountry_error', 'pledge_campaign_shipping_city_error', 'pledge_campaign_shipping_mailcode_error', 'pledge_campaign_shipping_streetaddress_error']);
 
     var validation = {
@@ -1355,21 +1399,21 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     $('.new-shipping-address-form.ui.form').form(
       validation, {
         inline: true,
-        onSuccess: function () {
+        onSuccess: function() {
           $scope.valcheck = $scope.valcheck && true;
         },
-        onFailure: function () {
+        onFailure: function() {
           $scope.valcheck = $scope.valcheck && false;
         }
       }).form('validate form');
   }
 
-  $scope.submitWidgetPledge = function () {
+  $scope.submitWidgetPledge = function() {
     $scope.loadingIcon = true;
     $scope.responseMsg = 'pledge_campaign_loading_text';
 
     if ($scope.contrib) {
-      if ($('#pledgecheck').checkbox('is checked')) { } else {
+      if ($('#pledgecheck').checkbox('is checked')) {} else {
         return;
       }
     }
@@ -1422,7 +1466,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
         }
       }
 
-      Restangular.one('account/widgetmakr').customPOST(pledgeInfo).then(function (success) {
+      Restangular.one('account/widgetmakr').customPOST(pledgeInfo).then(function(success) {
         $scope.wcardID = success.cards[0].widgetmakr_account_card_id;
         $scope.ctype = success.cards[0].widgetmakr_account_card_type;
         var infoPledge = {
@@ -1431,7 +1475,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
           anonymous_contribution: $scope.anonymous_contribution,
           anonymous_contribution_partial: $scope.partial_anonymous_contribution
         };
-        Restangular.one('campaign', $scope.campaign_id).one('pledge').customPOST(infoPledge).then(function (success) {
+        Restangular.one('campaign', $scope.campaign_id).one('pledge').customPOST(infoPledge).then(function(success) {
           $scope.responseMsg = false;
           $scope.loadingIcon = false;
           // $scope.responseMsg = "Pledge Successful";
@@ -1444,7 +1488,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
                 close: '.actions .button',
                 deny: '.actions .negative, .actions .deny, .actions .cancel, .close'
               },
-              onDeny: function () { },
+              onDeny: function() {},
               // onHide: function() {
               //   window.location.href = $rootScope.campaign_path;
               // },
@@ -1454,7 +1498,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
             campaign_backer: 1,
           };
           UserService.updateUserData(data);
-        }, function (failed) {
+        }, function(failed) {
           $scope.responseMsg = false;
           $scope.loadingIcon = false;
 
@@ -1462,7 +1506,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
           $('#finalpledge').removeClass('disabled');
         });
 
-      }, function (failed) {
+      }, function(failed) {
         $scope.responseMsg = false;
         $scope.loadingIcon = false;
 
@@ -1517,10 +1561,10 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
       if (/No such token/.test(msg.header)) {
         msg.extra_message = $translate.instant("pledge_campaign_no_such_token");
       }
-      if(failed.data.code == 'entity_not_found') {
+      if (failed.data.code == 'entity_not_found') {
         msg.header = $translate.instant("pledge_campaign_entity_not_found_error");
       }
-      if(failed.data.code == 'account_profile_stripe_pledge_direct_off_missing_connected') {
+      if (failed.data.code == 'account_profile_stripe_pledge_direct_off_missing_connected') {
         msg.header = $translate.instant("pledge_campaign_missing_connect");
       }
       $rootScope.floatingMessage = msg;
@@ -1529,7 +1573,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
 
 
   //submit form
-  $scope.submit = function () {
+  $scope.submit = function() {
     // if toggle is set so anon is a checkbox
     if ($scope.anonymousContributionTypeOnly) {
       if ($scope.selectedContributionAnon.toggle == true) {
@@ -1538,7 +1582,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
         $scope.selecteContribution = 1;
       }
     }
-    
+
     // variable to store all attribute values
     var pledgeAttributes = {};
 
@@ -1552,7 +1596,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
       if ($scope.selectedReward.attributes) {
         if (typeof $scope.selectedReward.attributes.variation != 'undefined') {
           var variation_choice = angular.copy($scope.selectedReward.attributes.variation);
-          $('input[name="variation_value"]').each(function (key) {
+          $('input[name="variation_value"]').each(function(key) {
             if ($(this).val() != "") {
               variation_choice[key].choice = variation_choice[key].choice[$(this).val()].value;
             } else {
@@ -1566,11 +1610,11 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
 
     //Get all pledge reward replace attributes
     if ($scope.pledgeReplace) {
-      angular.forEach($scope.rewardsQueue, function (selectedReward) {
+      angular.forEach($scope.rewardsQueue, function(selectedReward) {
         if (selectedReward.attributes) {
           if (typeof selectedReward.attributes.variation != 'undefined') {
             var variation_choice = angular.copy(selectedReward.attributes.variation);
-            $('input[name="variation_value"]').each(function (key) {
+            $('input[name="variation_value"]').each(function(key) {
               if (this.id == selectedReward.pledge_level_id) {
                 if ($(this).val() != "") {
                   if (variation_choice[key]) {
@@ -1627,7 +1671,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     if ($scope.tippingOptions.toggle) {
       $scope.tipValidation();
     }
-    
+
     if ($scope.public_settings.site_campaign_reward_attributes_required) {
       attributesValidation();
     }
@@ -1664,14 +1708,14 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
       $scope.newAddressFormValidation();
     }
 
-    if($scope.acceptExtraPledgeData && ($scope.selectedAccountType == 'Organization')) {
+    if ($scope.acceptExtraPledgeData && ($scope.selectedAccountType == 'Organization')) {
       if ($scope.toggle.newCompany) {
         $scope.chooseBusinessFormValidation();
       } else {
         $scope.newBusinessFormValidation();
       }
     }
-    
+
     if (!$scope.isContributionLayout1) {
       if ($scope.public_settings.site_tos_contribution_ui) {
 
@@ -1698,7 +1742,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
       var promises = [];
 
       $scope.businessSelectedAttribute = {
-        business_contribution : 0, 
+        business_contribution: 0,
         business_organization_id: null
       };
 
@@ -1719,7 +1763,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
         //submit new address if address field being toggled on
         var postShipping = false;
         if (!$scope.toggle.newAddress && $scope.rewardsQueue.length) {
-          angular.forEach($scope.rewardsQueue, function (selectedReward) {
+          angular.forEach($scope.rewardsQueue, function(selectedReward) {
             if (selectedReward.shipping) {
               postShipping = true;
             }
@@ -1733,11 +1777,11 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
       var businessRequest = null;
       var businessPromises = [];
       var businessData = null;
-      if($scope.acceptExtraPledgeData && ($scope.selectedAccountType == 'Organization')) {
+      if ($scope.acceptExtraPledgeData && ($scope.selectedAccountType == 'Organization')) {
         //if no company selected, create one
-        if(!$scope.selectedCompany) {
-          businessRequest = Restangular.one('account/business').customPOST($scope.businessSelected).then(function(success){
-            
+        if (!$scope.selectedCompany) {
+          businessRequest = Restangular.one('account/business').customPOST($scope.businessSelected).then(function(success) {
+
             businessData = {
               business_id: '',
               phone_id: '',
@@ -1752,106 +1796,107 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
               $scope.phoneInfo.person_id = UserService.id;
               $scope.phoneInfo.business_organization_id = success.business_organization_id;
               var phoneRequest = Restangular.one('account/phone-number').customPOST($scope.phoneInfo);
-              phoneRequest.then(function (success) {
+              phoneRequest.then(function(success) {
                 getPhoneNumber(paramID);
                 $scope.chosenPhoneNumberId = success.id;
               });
               businessPromises.push(phoneRequest);
             }
-            if(!$scope.toggle.newAddress) {
+            if (!$scope.toggle.newAddress) {
               $scope.address.business_organization_id = success.business_organization_id;
               businessPromises.push(Restangular.one('account/address').customPOST($scope.address));
             }
 
-            $q.all(businessPromises).then(function (resolved) {
+            $q.all(businessPromises).then(function(resolved) {
               // loop through the results and find value
-              angular.forEach(resolved, function (value) {
+              angular.forEach(resolved, function(value) {
                 if (value.address_id) {
                   businessData.address_id = value.address_id;
                   $scope.selectedAddressID = value.address_id;
                 }
-                if(value.phone_number_id) {
+                if (value.phone_number_id) {
                   businessData.phone_id = value.phone_number_id;
                   $scope.chosenPhoneNumberId = value.phone_number_id;
                 }
               });
               //Check for Stripe Tokenization Toggle - Don't create token if Card Selected
-                //Attach credit card token to $scope.creditCard if Stripe Tokenization
-                if ($scope.site_stripe_tokenization_settings.toggle && !$scope.toggle.selectedCard) {
+              //Attach credit card token to $scope.creditCard if Stripe Tokenization
+              if ($scope.site_stripe_tokenization_settings.toggle && !$scope.toggle.selectedCard) {
 
-                  //Create Token
-                  $scope.stripe.createToken($scope.cardNumberElement, $scope.stripeExtraDetails).then(function (result) {
-                    if (result.error) {
+                //Create Token
+                $scope.stripe.createToken($scope.cardNumberElement, $scope.stripeExtraDetails).then(function(result) {
+                  if (result.error) {
 
-                      $timeout(function () {
-                        $rootScope.removeFloatingMessage();
-                        // Inform the user if there was an error
-                        var errorElement = angular.element(document.querySelector('#card-errors')).html(result.error.message);
-                        msg = {
-                          'header': 'pledge_campaign_stripe_elements_error'
-                        }
-                        $rootScope.floatingMessage = msg;
-                        $('#finalpledge').removeClass('disabled');
-                      }, 500);
-
-                      $scope.valcheck = false;
-                    } else {
-                      // Assign token to credit card 
-                      if ($scope.pledgerAccountConnected == false) {
-                        //Use Token to Extract CC Info
-                        $scope.creditCard.card_token = result.token.id;
-                        promises.push(StripeService.newPledgerAccount($scope.creditCard));
-                      } else if (!$scope.toggle.newCard && !$scope.selectedCardID) {
-                        $scope.creditCard.card_token = result.token.id;
-                        //Pledger Acc found, extract CC info with Token
-                        promises.push(StripeService.createCard($scope.pledgerAccountID, $scope.creditCard));
+                    $timeout(function() {
+                      $rootScope.removeFloatingMessage();
+                      // Inform the user if there was an error
+                      var errorElement = angular.element(document.querySelector('#card-errors')).html(result.error.message);
+                      msg = {
+                        'header': 'pledge_campaign_stripe_elements_error'
                       }
-                      $scope.resolvePromiseChain(promises, pledgeAttributes, businessData);
+                      $rootScope.floatingMessage = msg;
+                      $('#finalpledge').removeClass('disabled');
+                    }, 500);
+
+                    $scope.valcheck = false;
+                  } else {
+                    // Assign token to credit card 
+                    if ($scope.pledgerAccountConnected == false) {
+                      //Use Token to Extract CC Info
+                      $scope.creditCard.card_token = result.token.id;
+                      promises.push(StripeService.newPledgerAccount($scope.creditCard));
+                    } else if (!$scope.toggle.newCard && !$scope.selectedCardID) {
+                      $scope.creditCard.card_token = result.token.id;
+                      //Pledger Acc found, extract CC info with Token
+                      promises.push(StripeService.createCard($scope.pledgerAccountID, $scope.creditCard));
                     }
-                  });
-                } else {
-                  //Don't attach credit card_token to $scope.creditCard  
-                  if ($scope.pledgerAccountConnected == false) {
-                    promises.push(StripeService.newPledgerAccount($scope.creditCard));
-                  } else if (!$scope.toggle.newCard && !$scope.selectedCardID) {
-                    promises.push(StripeService.createCard($scope.pledgerAccountID, $scope.creditCard));
+                    $scope.resolvePromiseChain(promises, pledgeAttributes, businessData);
                   }
-                  $scope.resolvePromiseChain(promises, pledgeAttributes, businessData);
+                });
+              } else {
+                //Don't attach credit card_token to $scope.creditCard  
+                if ($scope.pledgerAccountConnected == false) {
+                  promises.push(StripeService.newPledgerAccount($scope.creditCard));
+                } else if (!$scope.toggle.newCard && !$scope.selectedCardID) {
+                  promises.push(StripeService.createCard($scope.pledgerAccountID, $scope.creditCard));
                 }
+                $scope.resolvePromiseChain(promises, pledgeAttributes, businessData);
+              }
             });
           });
           return;
-        } 
-      } 
-      
+        }
+      }
+
       //if organization - and toggle on, we need to create phone number and address if form is used
-      if($scope.acceptExtraPledgeData && ($scope.selectedAccountType == 'Organization')) {
-        if(businessRequest == null) {
+      if ($scope.acceptExtraPledgeData && ($scope.selectedAccountType == 'Organization')) {
+        if (businessRequest == null) {
           if ($scope.newNumberCreated.number.length > 0 && $scope.newNumberCreated.phonetype) {
             $scope.phoneInfo.number = $scope.newNumberCreated.number;
             $scope.phoneInfo.phone_number_type_id = $scope.newNumberCreated.phonetype.id;
             $scope.phoneInfo.person_id = UserService.id;
             $scope.phoneInfo.business_organization_id = $scope.selectedCompany.business_organization_id;
             var phoneRequest = Restangular.one('account/phone-number').customPOST($scope.phoneInfo);
-            phoneRequest.then(function (success) {
+            phoneRequest.then(function(success) {
               getPhoneNumber(paramID);
               $scope.chosenPhoneNumberId = success.id;
             });
             promises.push(phoneRequest);
           }
-          if(!$scope.toggle.newAddress) {
+          if (!$scope.toggle.newAddress) {
             $scope.address.business_organization_id = $scope.selectedCompany.business_organization_id;
             promises.push(Restangular.one('account/address').customPOST($scope.address));
           }
         }
       } else {
-        if(!$scope.toggle.newAddress && $scope.selectedReward) {if($scope.acceptExtraPledgeData && ($scope.selectedAccountType == 'Organization')) {
-          if(businessData) {
-            pledgeInfo['business_organization_id'] = parseInt(businessData.business_id);
-            pledgeInfo['shipping_address_id'] = parseInt(businessData.address_id);
-            pledgeInfo['phone_number_id'] = parseInt(businessData.phone_id);
+        if (!$scope.toggle.newAddress && $scope.selectedReward) {
+          if ($scope.acceptExtraPledgeData && ($scope.selectedAccountType == 'Organization')) {
+            if (businessData) {
+              pledgeInfo['business_organization_id'] = parseInt(businessData.business_id);
+              pledgeInfo['shipping_address_id'] = parseInt(businessData.address_id);
+              pledgeInfo['phone_number_id'] = parseInt(businessData.phone_id);
+            }
           }
-        }
           //submit new address if address field being toggled on
           if ($scope.selectedReward.shipping) {
             promises.push(Restangular.one('account/address').customPOST($scope.address));
@@ -1863,7 +1908,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
           $scope.phoneInfo.phone_number_type_id = $scope.newNumberCreated.phonetype.id;
           $scope.phoneInfo.person_id = UserService.id;
           var phoneRequest = Restangular.one('account/phone-number').customPOST($scope.phoneInfo);
-          phoneRequest.then(function (success) {
+          phoneRequest.then(function(success) {
             getPhoneNumber(paramID);
             $scope.chosenPhoneNumberId = success.id;
           });
@@ -1876,10 +1921,10 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
       if ($scope.site_stripe_tokenization_settings.toggle && !$scope.toggle.selectedCard) {
 
         //Create Token
-        $scope.stripe.createToken($scope.cardNumberElement, $scope.stripeExtraDetails).then(function (result) {
+        $scope.stripe.createToken($scope.cardNumberElement, $scope.stripeExtraDetails).then(function(result) {
           if (result.error) {
 
-            $timeout(function () {
+            $timeout(function() {
               $rootScope.removeFloatingMessage();
               // Inform the user if there was an error
               var errorElement = angular.element(document.querySelector('#card-errors')).html(result.error.message);
@@ -1920,11 +1965,11 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
   }
 
   //Resolves all promise chains and then calls Pledge with final constructed Pledge Obj
-  $scope.resolvePromiseChain = function (promises, pledgeAttributes, businessData) {
+  $scope.resolvePromiseChain = function(promises, pledgeAttributes, businessData) {
     // wait until all the above requests return promises and got resolved
-    $q.all(promises).then(function (resolved) {
+    $q.all(promises).then(function(resolved) {
       // loop through the results and find value
-      angular.forEach(resolved, function (value) {
+      angular.forEach(resolved, function(value) {
         if (value.cards) {
           $scope.selectedCardID = value.cards[0].stripe_account_card_id;
           $scope.pledgerAccountConnected == true;
@@ -1934,11 +1979,11 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
         if (value.address_id) {
           $scope.selectedAddressID = value.address_id;
         }
-        if(value.business_organization_id) {
+        if (value.business_organization_id) {
           $scope.business_organization_id = value.business_organization_id;
         }
       });
-      
+
       // setup the object for POST request
       var pledgeInfo = {
         stripe_account_card_id: $scope.selectedCardID,
@@ -1951,8 +1996,8 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
         attributes: JSON.stringify(pledgeAttributes)
       };
 
-      if($scope.acceptExtraPledgeData && ($scope.selectedAccountType == 'Organization')) {
-        if(businessData) {
+      if ($scope.acceptExtraPledgeData && ($scope.selectedAccountType == 'Organization')) {
+        if (businessData) {
           pledgeInfo['business_organization_id'] = parseInt(businessData.business_id);
           pledgeInfo['shipping_address_id'] = parseInt(businessData.address_id);
           pledgeInfo['phone_number_id'] = parseInt(businessData.phone_id);
@@ -1982,7 +2027,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
 
       if ($scope.pledgeReplace) {
         var country, validShipping = false;
-        angular.forEach($scope.rewardsQueue, function (value) {
+        angular.forEach($scope.rewardsQueue, function(value) {
           if (!country && value.shipOptions) {
             country = value.shipOptions[0].country;
           }
@@ -1997,7 +2042,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
           $rootScope.floatingMessage = msg;
           return;
         }
-        Restangular.one('campaign', $scope.campaign_id).one('pledge', $scope.replaceId).customDELETE().then(function (success) {
+        Restangular.one('campaign', $scope.campaign_id).one('pledge', $scope.replaceId).customDELETE().then(function(success) {
           var promises = [];
           //Direct Contribution
           if ($scope.directContribution) {
@@ -2011,7 +2056,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
             promises.push(Restangular.one('campaign', $scope.campaign_id).one('pledge').customPOST(pledgeInfo));
           }
           if ($scope.rewardsQueue.length) {
-            angular.forEach($scope.rewardsQueue, function (value, key, obj) {
+            angular.forEach($scope.rewardsQueue, function(value, key, obj) {
               var total = (value.shipOptions) ? $scope.total(value.shipOptions[0].cost) : value.amount;
 
               var pledgeInfo = {
@@ -2032,7 +2077,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
             });
           }
           $scope.resolvePledgeReplaceQueue(promises);
-        }, function (failed) {
+        }, function(failed) {
           var error_msg = failed.data.errors.entry_backer_id[0].message;
           msg = {
             'header': error_msg
@@ -2042,7 +2087,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
       }
       //Regular Pledge Start
       if (!$scope.pledgeReplace) {
-        Restangular.one('campaign', $scope.campaign_id).one('pledge').customPOST(pledgeInfo).then(function (success) {
+        Restangular.one('campaign', $scope.campaign_id).one('pledge').customPOST(pledgeInfo).then(function(success) {
           msg = {
             'header': 'pledge_campaign_pledge_success'
           }
@@ -2063,16 +2108,16 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
               },
               closable: false
             }).modal('show');
-            
-            if(typeof $scope.campaign.settings != 'undefined' && $scope.campaign.contribution_redirect) {
-              $timeout(function() {
-                window.location.href = $scope.campaign.contribution_redirect;
-              }, 5000);
-            } else if(typeof $scope.site_campaign_pledge_redirect != 'undefined' && $scope.site_campaign_pledge_redirect.toggle) {
-              $timeout(function() {
-                window.location.href = $scope.site_campaign_pledge_redirect.url;
-              }, 5000);
-            }
+
+          if (typeof $scope.campaign.settings != 'undefined' && $scope.campaign.contribution_redirect) {
+            $timeout(function() {
+              window.location.href = $scope.campaign.contribution_redirect;
+            }, 5000);
+          } else if (typeof $scope.site_campaign_pledge_redirect != 'undefined' && $scope.site_campaign_pledge_redirect.toggle) {
+            $timeout(function() {
+              window.location.href = $scope.site_campaign_pledge_redirect.url;
+            }, 5000);
+          }
           // put campaign_backer in User
           var data = {
             campaign_backer: 1,
@@ -2081,20 +2126,20 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
           if ($scope.public_settings.site_campaign_ecommerce_analytics && $scope.public_settings.site_campaign_ecommerce_analytics.toggle) {
             sendGATransaction(success, $scope.public_settings.site_campaign_ecommerce_analytics.code);
           }
-        }, function (failed) { // Maximum funds allowed
+        }, function(failed) { // Maximum funds allowed
           errorHandling(failed);
 
           $('#finalpledge').removeClass('disabled');
           $scope.failed_code = failed.data.code;
 
           if ($scope.failed_code === 'account_campaign_transaction_max_allowed_funds_raised') {
-            $translate('account_campaign_transaction_max_allowed_funds_raised').then(function (value) {
+            $translate('account_campaign_transaction_max_allowed_funds_raised').then(function(value) {
               $scope.responseMsg = value;
             });
           } else {
-            $translate('Card_is_invalid').then(function (value) {
+            $translate('Card_is_invalid').then(function(value) {
               $scope.responseMsg = value;
-              StripeService.getPledgerAccount().then(function (success) {
+              StripeService.getPledgerAccount().then(function(success) {
                 // assuming pledgers only have one account
                 success = success[0];
                 if (success == null) {
@@ -2121,15 +2166,15 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
       }
       //Regular Pledge End
 
-    }, function (failed) { // Check for credit card expiration date
+    }, function(failed) { // Check for credit card expiration date
       $('#finalpledge').removeClass('disabled');
       errorHandling(failed);
 
     });
   };
 
-  $scope.resolvePledgeReplaceQueue = function (promises) {
-    $q.all(promises).then(function (resolved) {
+  $scope.resolvePledgeReplaceQueue = function(promises) {
+    $q.all(promises).then(function(resolved) {
       msg = {
         'header': 'pledge_campaign_pledge_success'
       }
@@ -2154,20 +2199,20 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
         campaign_backer: 1,
       };
       UserService.updateUserData(data);
-    }, function (failed) { // Maximum funds allowed
+    }, function(failed) { // Maximum funds allowed
       errorHandling(failed);
 
       $('#finalpledge').removeClass('disabled');
       $scope.failed_code = failed.data.code;
 
       if ($scope.failed_code === 'account_campaign_transaction_max_allowed_funds_raised') {
-        $translate('account_campaign_transaction_max_allowed_funds_raised').then(function (value) {
+        $translate('account_campaign_transaction_max_allowed_funds_raised').then(function(value) {
           $scope.responseMsg = value;
         });
       } else {
-        $translate('Card_is_invalid').then(function (value) {
+        $translate('Card_is_invalid').then(function(value) {
           $scope.responseMsg = value;
-          StripeService.getPledgerAccount().then(function (success) {
+          StripeService.getPledgerAccount().then(function(success) {
             // assuming pledgers only have one account
             success = success[0];
             if (success == null) {
@@ -2194,13 +2239,13 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
   };
 
   $scope.stateTypes = [];
-  $scope.Cities = function (term) {
+  $scope.Cities = function(term) {
     var cityID = null; // variable to hold city ID
     var countryID = null;
     var count = 0;
     if (term) {
-      Geolocator.searchCities(term).then(function (cities) {
-        angular.forEach(cities, function (value) {
+      Geolocator.searchCities(term).then(function(cities) {
+        angular.forEach(cities, function(value) {
           if (value.country_id == '211') {
             $scope.stateTypes[count] = value;
             count++;
@@ -2211,7 +2256,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
   };
 
   /* get information from form */
-  $scope.cardSelected = function (card, index) {
+  $scope.cardSelected = function(card, index) {
     $scope.selectedCardID = card.stripe_account_card_id;
     $scope.stripe_account_id = card.stripe_account_id;
     $scope.toggle.selectedCard = true;
@@ -2222,14 +2267,14 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     $('#deletemodal').css("visibility", "visible");
   };
 
-  $scope.openModalById = function (id) {
+  $scope.openModalById = function(id) {
     $('.ui.modal#' + id).modal('show');
   };
 
   //card deleted
-  $scope.deleteCard = function () {
+  $scope.deleteCard = function() {
 
-    StripeService.deleteCard($scope.stripe_account_id, $scope.selectedCardID).then(function () {
+    StripeService.deleteCard($scope.stripe_account_id, $scope.selectedCardID).then(function() {
       $scope.pledgerCards.splice($scope.cardindex, 1);
       $("#carddropdown option[value='$scope.vlaueofindex']").remove();
 
@@ -2239,13 +2284,18 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     });
   };
 
-  $scope.tipTypeSelection = function (type) {
+  $scope.tipTypeSelection = function(type) {
     $scope.tipTypeError = false;
     $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar' };
     if (type == 'tiers') {
       if ($scope.tippingOptions.tiers[0]) {
         $scope.updateTierValues();
-        $scope.tip = { value: $scope.tippingOptions.tiers[0].value, dollar_amount: $scope.tippingOptions.tiers[0].dollar_amount, type: $scope.tippingOptions.tiers[0].type, name: $scope.tippingOptions.tiers[0].name };
+        $scope.tip = { value: $scope.tippingOptions.tiers[0].value, dollar_amount: $scope.tippingOptions.tiers[0].dollar_amount, type: $scope.tippingOptions.tiers[0].type, name: $scope.tippingOptions.tiers[0].name, index: 0 };
+
+        $scope.tipTiersDefaultName = ($scope.tippingOptions.toggle_tier_names) ? $scope.tippingOptions.tiers[0].name : '';
+        $scope.tipTiersDefaultAmount = $scope.tippingOptions.tiers[0].dollar_amount;
+        var percentString = $scope.tipTiersDefaultName + ' - ' + $filter('formatCurrency')($scope.tipTiersDefaultAmount, $scope.tipInfo.code_iso4217_alpha, $scope.public_setting.site_campaign_decimal_option);
+        $('.tip-tiers').dropdown('set text', percentString);
       }
     } else if (type == 'dynamic') {
       if ($scope.tippingOptions.toggle_dynamic_min_max && $scope.tippingOptions.dynamic_min) {
@@ -2257,29 +2307,22 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     $scope.selectedTipType = type;
   };
 
-  $scope.tipTierSelection = function (value, type, dollarAmount, name) {
-    $scope.tip = { value: parseFloat(value), dollar_amount: parseFloat(dollarAmount), type: type, name: name };
+  $scope.tipTierSelection = function(value, type, dollarAmount, name, index) {
+    $scope.tip = { value: parseFloat(value), dollar_amount: parseFloat(dollarAmount), type: type, name: name, index: index };
   };
 
-  $scope.updateTierValues = function () {
-    angular.forEach($scope.tippingOptions.tiers, function (value) {
+  $scope.updateTierValues = function() {
+    angular.forEach($scope.tippingOptions.tiers, function(value) {
       if (value.type == "Percent") {
         value.dollar_amount = ((value.value / 100) * $scope.pledgeAmount);
       } else {
         value.dollar_amount = value.value;
       }
+
+      if (value.dollar_amount < $scope.lowestAmount) {
+        value.dollar_amount += $scope.lowestAmount;
+      }
     });
-    $scope.tippingOptions.tiers.sort(function (a, b) {
-      return parseFloat(a.dollar_amount) - parseFloat(b.dollar_amount);
-    });
-    if ($scope.tippingOptions.tiers[0].type == "Percent" && $scope.tippingOptions.tiers[0].dollar_amount < $scope.lowestAmount) {
-      $scope.tippingOptions.tiers[0].dollar_amount = $scope.lowestAmount;
-      angular.forEach($scope.tippingOptions.tiers, function (value, index) {
-        if (index != 0 && value.type == "Percent") {
-          value.dollar_amount += $scope.lowestAmount;
-        }
-      });
-    }
   }
 
   function sendGATransaction(success, gaId) {
@@ -2336,7 +2379,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
         var len = $scope.selectedReward.shipping.length;
         var count = 0;
         var found = false;
-        angular.forEach($scope.selectedReward.shipping, function (val) {
+        angular.forEach($scope.selectedReward.shipping, function(val) {
           if (!found) {
 
             if (val.country_id == address.country_id && val.subcountry_id == address.subcountry_id && val.shipping_option_type_id == 3) {
@@ -2358,7 +2401,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
 
             if (count == len) {
               var dummy = 0;
-              angular.forEach($scope.selectedReward.shipping, function (v) {
+              angular.forEach($scope.selectedReward.shipping, function(v) {
                 if (v.country_id == address.country_id && v.shipping_option_type_id == 2) {
                   if ($scope.native_lookup) {
                     v = setNativeName(v);
@@ -2376,7 +2419,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
                   dummy++;
                 }
                 if (dummy == len) {
-                  angular.forEach($scope.selectedReward.shipping, function (value) {
+                  angular.forEach($scope.selectedReward.shipping, function(value) {
                     if (value.shipping_option_type_id == 1) {
                       $scope.shipOptions = [{
                         shipping_option_type: value.shipping_option_type,
@@ -2398,13 +2441,13 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
         });
       } else if ($scope.rewardsQueue.length && $scope.pledgeReplace) {
         $scope.totalPledgeReplacementShippingCost = 0;
-        angular.forEach($scope.rewardsQueue, function (selectedReward) {
+        angular.forEach($scope.rewardsQueue, function(selectedReward) {
           if (selectedReward.shipping) {
             $scope.pledgeReplaceShippingFound = true;
             var len = selectedReward.shipping.length;
             var count = 0;
             var found = false;
-            angular.forEach(selectedReward.shipping, function (val) {
+            angular.forEach(selectedReward.shipping, function(val) {
               if (!found) {
                 if (val.country_id == address.country_id && val.subcountry_id == address.subcountry_id && val.shipping_option_type_id == 3) {
                   msg = {
@@ -2420,7 +2463,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
 
                 if (count == len) {
                   var dummy = 0;
-                  angular.forEach(selectedReward.shipping, function (v) {
+                  angular.forEach(selectedReward.shipping, function(v) {
                     if (v.country_id == address.country_id && v.shipping_option_type_id == 2) {
                       if ($scope.native_lookup) {
                         v = setNativeName(v);
@@ -2438,7 +2481,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
                       dummy++;
                     }
                     if (dummy == len) {
-                      angular.forEach(selectedReward.shipping, function (value) {
+                      angular.forEach(selectedReward.shipping, function(value) {
                         if (value.shipping_option_type_id == 1) {
                           selectedReward.shipOptions = [{
                             shipping_option_type: value.shipping_option_type,
@@ -2468,33 +2511,33 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     }
   }
 
-  $scope.shippingOptionString = function (shipOpID) {
+  $scope.shippingOptionString = function(shipOpID) {
     // Check using ID instead of String
     // == 1 is Worldwide Shipping
     if (shipOpID == 1) {
-      $translate('Worldwide Shipping').then(function (value) {
+      $translate('Worldwide Shipping').then(function(value) {
         $scope.shipping_option = value;
       });
     }
     // == 2 is Country Specific Shipping
     else if (shipOpID == 2) {
-      $translate('Country Specific Shipping').then(function (value) {
+      $translate('Country Specific Shipping').then(function(value) {
         $scope.shipping_option = value;
       });
     }
     // == 3 is Subcountry Specific Shipping
     else {
-      $translate('SubCountry Specific Shipping').then(function (value) {
+      $translate('SubCountry Specific Shipping').then(function(value) {
         $scope.shipping_option = value;
       });
     }
   }
 
   // select city to ship to
-  $scope.citySelect = function (city) {
+  $scope.citySelect = function(city) {
     chooseShipping(city);
   }
-  $scope.addressSelected = function (address) {
+  $scope.addressSelected = function(address) {
     chooseShipping(address);
     $scope.toggle.selectedAddress = true;
     $scope.selectedAddress = address;
@@ -2506,7 +2549,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
   $scope.cities = [];
 
   // search city input
-  $scope.searchCities = function (term) {
+  $scope.searchCities = function(term) {
     var cityID = null; // variable to hold city ID
     var countryID = null;
     var native_lookup = $scope.native_lookup == true ? 1 : 0;
@@ -2515,16 +2558,16 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
       // Check setting here to choose which one to use, check the layout
       // This one is to search cities directly
       if (!$scope.alt_shipping) {
-        Geolocator.searchCities(term, native_lookup).then(function (cities) {
+        Geolocator.searchCities(term, native_lookup).then(function(cities) {
           $scope.cities = cities;
         });
       }
       // This one is to search with subcountry id to limit the area
       else {
-        Geolocator.searchCitiesBySubcountry(term, $scope.selectedSubcountry.selected.id, native_lookup).then(function (cities) {
+        Geolocator.searchCitiesBySubcountry(term, $scope.selectedSubcountry.selected.id, native_lookup).then(function(cities) {
           $scope.cities = cities;
           if (!cities || cities instanceof Array && cities.length === 0) {
-            Geolocator.searchCitiesBySubcountry(term, $scope.selectedSubcountry.selected.id, 0).then(function (cities) {
+            Geolocator.searchCitiesBySubcountry(term, $scope.selectedSubcountry.selected.id, 0).then(function(cities) {
               $scope.cities = cities;
             });
           } else if (native_lookup) {
@@ -2547,7 +2590,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
   }
 
   function getCountries() {
-    return Geolocator.getCountries().then(function (countries) {
+    return Geolocator.getCountries().then(function(countries) {
       if ($scope.native_lookup) {
         for (var i in countries) {
           if (countries[i].native_name != null) {
@@ -2573,22 +2616,22 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     });
   }
 
-  $scope.contactPhoneSelected = function (selectedNumber) {
+  $scope.contactPhoneSelected = function(selectedNumber) {
     $scope.toggle.selectedNumber = true;
     $scope.chosenPhoneNumberId = selectedNumber.phone_number_id;
   }
 
-  $scope.phoneTypeSelected = function (type) {
+  $scope.phoneTypeSelected = function(type) {
     $scope.newNumberCreated.phonetype = type;
   }
-  
+
   /*
     Get phone number for individual and business
     paramID is to specify this function to grab info from the campaign manager
     @params paramID - An object that contains person_id and business_organization_id
     */
   function getPhoneNumber(paramID) {
-    Restangular.one('account/').customGET('phone-number', paramID).then(function (success) {
+    Restangular.one('account/').customGET('phone-number', paramID).then(function(success) {
       if (success.personal) {
         $scope.hasNumber = true;
         $scope.toggle.newNumber = true;
@@ -2601,13 +2644,14 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     });
   }
 
-  $scope.userCompanySelected = function (selectedCompany) {
-   $scope.selectedCompany = selectedCompany; 
+  $scope.userCompanySelected = function(selectedCompany) {
+    $scope.selectedCompany = selectedCompany;
   }
+
   function getUserCompany(paramID) {
-    Restangular.one('account/').customGET('business', paramID).then(function (success) {
+    Restangular.one('account/').customGET('business', paramID).then(function(success) {
       $scope.userCompanies = success.plain();
-      if(!$scope.userCompanies.length) {
+      if (!$scope.userCompanies.length) {
         $scope.toggle.newCompany = false;
       } else {
         $scope.toggle.newCompany = true;
@@ -2621,7 +2665,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
 
   function checktype(id) {
     var type;
-    angular.forEach($scope.phonetype, function (value) {
+    angular.forEach($scope.phonetype, function(value) {
       if (value.id == id) {
         type = value.name;
       }
@@ -2630,12 +2674,12 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     return type;
   }
 
-  $scope.setCountry = function (country) {
+  $scope.setCountry = function(country) {
     $scope.selectedCountry.selected = country;
   }
 
   function getSubcountries(countryID) {
-    Geolocator.getSubcountriesByCountry(countryID).then(function (subcountries) {
+    Geolocator.getSubcountriesByCountry(countryID).then(function(subcountries) {
       // Check which language to show
       if ($scope.native_lookup) {
         for (var i in subcountries) {
@@ -2649,7 +2693,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
   }
 
   // watching variable changes
-  $scope.$watch('selectedCity.selected', function (value, oldValue) {
+  $scope.$watch('selectedCity.selected', function(value, oldValue) {
     if (value != oldValue && value) {
       cityID = Geolocator.lookupCityID(value.name);
 
@@ -2666,7 +2710,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     }
   });
 
-  $scope.$watch("selectedCountry.selected", function (value, oldValue) {
+  $scope.$watch("selectedCountry.selected", function(value, oldValue) {
     if (value != oldValue && value) {
       if ($scope.selectedReward) {
         chooseShipping(value);
@@ -2677,7 +2721,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     }
   });
 
-  $scope.$watch("selectedSubcountry.selected", function (value, oldValue) {
+  $scope.$watch("selectedSubcountry.selected", function(value, oldValue) {
     if (value != oldValue && value) {
       chooseShipping(value);
       $('#select-subcountry .select-error').remove();
@@ -2685,12 +2729,12 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     }
   });
 
-  $scope.$watch('address.country_id', function (countryID) {
+  $scope.$watch('address.country_id', function(countryID) {
     var worldWide = null;
     var country = null;
     if (countryID) {
       // find out the index
-      angular.forEach($scope.shippingOption, function (item, key) {
+      angular.forEach($scope.shippingOption, function(item, key) {
         if (item.country_id == countryID) {
           country = key;
           // return; // break loop when match country found
@@ -2710,14 +2754,14 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     }
   });
 
-  $scope.goBackToCampaign = function () {
+  $scope.goBackToCampaign = function() {
     try {
       window.location.href = $scope.campaign.uri_paths[0].path;
-    } catch (e) { }
+    } catch (e) {}
   }
 
   // total cost of shipping
-  $scope.total = function (shipping) {
+  $scope.total = function(shipping) {
     if (shipping) {
       $scope.totalAmount = parseFloat($scope.pledgeAmount) + parseFloat(shipping);
     } else {
@@ -2730,7 +2774,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
     return total;
   }
 
-  $scope.replacedTotal = function (amount, shipping) {
+  $scope.replacedTotal = function(amount, shipping) {
     var total = 0;
     if (shipping) {
       amount = parseFloat(amount) + parseFloat(shipping);
@@ -2742,12 +2786,12 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
   }
 
   $scope.accountTypeSelected = function(type) {
-    $scope.selectedAccountType = type;
-    if(type == 'Organization') {
-      getUserCompany(paramID);
+      $scope.selectedAccountType = type;
+      if (type == 'Organization') {
+        getUserCompany(paramID);
+      }
     }
-  }
-  // duration to reach the destination
+    // duration to reach the destination
   $scope.current_host = $location.host();
   var m_names = new Array("January", "February", "March",
     "April", "May", "June", "July", "August", "September",
@@ -2757,12 +2801,12 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
 
 
 
-  $scope.$watch('campaignFundingGoal.value', function (newValue, oldValue) {
+  $scope.$watch('campaignFundingGoal.value', function(newValue, oldValue) {
     if (newValue != oldValue && newValue) {
       if ($scope.campaign && typeof newValue === "string") {
         if ($scope.pledgeReplace) {
           var t = 0;
-          angular.forEach($scope.rewardsQueue, function (selectedReward) {
+          angular.forEach($scope.rewardsQueue, function(selectedReward) {
             t += (parseFloat(selectedReward.amount) * parseInt(selectedReward.quantity));
           });
           total_replaced = parseInt(t) + parseInt(newValue);
@@ -2775,17 +2819,17 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
           $scope.updateTierValues();
         }
         if ($scope.tip.value && $scope.tip.value != 0 && $scope.tip.type == 'Percent') {
-          var tipAmount;
-          if ((($scope.tippingOptions.tiers[0].value / 100) * $scope.pledgeAmount) < $scope.lowestAmount) {
-            if ($scope.tip.value == $scope.tippingOptions.tiers[0].value) {
-              tipAmount = $scope.lowestAmount;
-            } else {
-              tipAmount = ((parseFloat($scope.tip.value) / 100) * $scope.pledgeAmount) + $scope.lowestAmount;
+          var index = ($routeParams.tipindex) ? $routeParams.tipindex : 0;
+          var tipAmount = $scope.tippingOptions.tiers[index].dollar_amount;
+
+          angular.forEach($scope.tippingOptions.tiers, function(value, key, obj) {
+            if ($scope.tip.index == key) {
+              tipAmount = value.dollar_amount;
             }
-          } else {
-            tipAmount = ((parseFloat($scope.tip.value) / 100) * $scope.pledgeAmount)
-          }
+          });
+
           $scope.tip.dollar_amount = tipAmount;
+
           if ($scope.tippingOptions.toggle_tier_names) {
             var percentString = $scope.tip.name + ' - ';
           } else {
@@ -2799,7 +2843,7 @@ app.controller('PledgeCampaignCtrl', function ($q, $location, $rootScope, $scope
   });
 
   // Animated scroll to rewards section
-  $scope.scrollToRewardParam = function () {
+  $scope.scrollToRewardParam = function() {
     $location.search({});
     $location.path($scope.campaign_loc).search('scroll_to_reward', 1);
   }

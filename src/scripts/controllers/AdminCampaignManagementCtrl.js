@@ -1185,7 +1185,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
         $scope.allTransactionArray = $scope.allTransactionArray.concat(resArr.data);
       });
       var nativeLookup = $scope.public_settings.site_theme_shipping_native_lookup;
-      var value = $translate.instant(['transaction_details_withdrawn', 'transaction_details_card_number', 'transaction_details_Manual_Transaction', 'transaction_details_na', 'transaction_details_transaction_id', 'transaction_details_contributors_first', 'transaction_details_contributors_last', 'transaction_details_reward', 'transaction_details_amount', 'transaction_details_status', 'transaction_details_date', 'transaction_details_contributors_email', 'transaction_details_shipping_address', 'transaction_details_phone_number', 'transaction_details_reward_attribute', "transaction_details_charity_UK_taxpayer", "transaction_details_charity_giftaid", "transaction_details_charity_fullname", "transaction_details_charity_fulladdress", "transaction_details_charity_postcode", "transaction_details_charity_amount", "transaction_details_organization_name", "transaction_details_organization_email", "transaction_details_organization_phone", "transaction_details_organization_address"]);
+      var value = $translate.instant(['transaction_details_withdrawn', 'transaction_details_card_number', 'transaction_details_Manual_Transaction', 'transaction_details_na', 'transaction_details_transaction_id', 'transaction_details_contributors_first', 'transaction_details_contributors_last', 'transaction_details_reward', 'transaction_details_amount', 'transaction_details_status', 'transaction_details_date', 'transaction_details_contributors_email', 'transaction_details_shipping_address', 'transaction_details_phone_number', 'transaction_details_reward_attribute', "transaction_details_charity_UK_taxpayer", "transaction_details_charity_giftaid", "transaction_details_charity_fullname", "transaction_details_charity_fulladdress", "transaction_details_charity_postcode", "transaction_details_charity_amount", "transaction_details_organization_name", "transaction_details_organization_email", "transaction_details_organization_phone", "transaction_details_organization_address", "tab_campaign_transaction_details_tip_amount"]);
       $scope.cardnum = value.transaction_details_card_number;
       $scope.noreward = value.transaction_details_na;
       $scope.tid = value.transaction_details_transaction_id;
@@ -1223,8 +1223,9 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
         'Organization Phone': $scope.tbusiness_organization_phone,
         'Organization Address': $scope.tbusiness_organization_address,
       };
+      
       if ($scope.tippingOptions.toggle) {
-        $scope.csvHeaders.Tip = value.transaction_details_tip;
+        $scope.csvHeaders.Tip = value.tab_campaign_transaction_details_tip_amount;
       }
       // if charity is enabled site_campaign_charity_helper_enable
       if ($scope.public_settings.site_campaign_charity_helper_enable) {
@@ -1235,6 +1236,11 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
         $scope.csvHeaders["Postcode"] = value.transaction_details_charity_postcode;
         $scope.csvHeaders["Gift Amount"] = value.transaction_details_charity_amount;
       }
+
+      if ($scope.public_settings.site_campaign_allow_contribution_message) {
+        $scope.csvHeaders['Note'] = 'Note';
+      }
+    
       $scope.allTransactioncsv.push($scope.csvHeaders);
       angular.forEach($scope.allTransactionArray, function(value) {
         // ($scope.twithdraw);
@@ -1347,6 +1353,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
                 data1.Tip = 0;
               }
             }
+            
             // if charity is enabled site_campaign_charity_helper_enable
             if ($scope.public_settings.site_campaign_charity_helper_enable) {
               if (value.backer[0].attributes) {
@@ -1360,6 +1367,13 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
                 }
               }
             }
+
+            if ($scope.public_settings.site_campaign_allow_contribution_message) {
+              if(value.backer[0].hasOwnProperty('note') && typeof value.backer[0].note != 'undefined') {
+                data1["Note"] = value.backer[0].note;
+              }
+            }
+            
             $scope.allTransactioncsv.push(data1);
           }
         }

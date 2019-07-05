@@ -80,7 +80,7 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
   };
 
   $scope.businessSelectedAttribute = {
-    business_contribution : 0, 
+    business_contribution: 0,
     business_organization_id: null
   };
 
@@ -109,7 +109,7 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
         }
       });
 
-      if(typeof $scope.public_setting.site_campaign_pledge_redirect == 'undefined' || !$scope.public_setting.site_campaign_pledge_redirect) {
+      if (typeof $scope.public_setting.site_campaign_pledge_redirect == 'undefined' || !$scope.public_setting.site_campaign_pledge_redirect) {
         $scope.site_campaign_pledge_redirect = {
           toggle: false,
           url: ''
@@ -183,28 +183,6 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
 
   $scope.lowestAmount;
   $scope.tipInfo;
-  Restangular.one('account/stripe/charge-amount').customGET().then(function(success) {
-    if (success[0]) {
-      $scope.lowestAmount = parseFloat(success[0].minimum_charge_amount);
-      if ($scope.selectedTipCurrency) {
-        $scope.tipInfo = $scope.selectedTipCurrency;
-      } else {
-        $scope.tipInfo = success[0];
-      }
-      if ($scope.tippingOptions.toggle) {
-        setUpTipping();
-      }
-    } else {
-      $scope.lowestAmount = 0.5;
-      if ($scope.campaign) {
-        if ($scope.selectedTipCurrency) {
-          $scope.tipInfo = $scope.selectedTipCurrency;
-        } else {
-          $scope.tipInfo = $scope.campaign.currencies[0];
-        }
-      }
-    }
-  });
 
   $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar', name: '' };
   $scope.tipTypeError = false;
@@ -216,7 +194,6 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
     $scope.contributionTypeRadio = portal_settings.site_theme_campaign_contribution_type_radio;
     $scope.anonymousContributionTypeOnly = portal_settings.site_campaign_anonymous_contribution_type_only;
     $scope.enableRewardVariation = portal_settings.site_theme_campaign_show_reward_enable_variation;
-    $scope.tippingOptions = portal_settings.site_tipping;
     $scope.charity_percentage_fee = portal_settings.site_campaign_charity_helper_percentage;
     $scope.isEnableContributionMessage = portal_settings.site_campaign_allow_contribution_message;
     $scope.isContributionLayout1 = portal_settings.site_campaign_contribution_layout_toggle_1;
@@ -224,6 +201,15 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
     $scope.site_stripe_tokenization_settings = portal_settings.site_stripe_tokenization;
     $scope.selectedTipCurrency = portal_settings.site_tip_currency;
     $scope.acceptExtraPledgeData = portal_settings.site_campaign_profile_data_on_pledge;
+    $scope.tippingOptions = portal_settings.site_tipping;
+    $scope.displayCampaignDisclaimer = success.public_setting.site_campaign_campaign_toggle_disclaimer_text;
+    if (typeof $scope.tippingOptions === 'undefined' || $scope.tippingOptions == null) {
+      $scope.tippingOptions = { toggle: false };
+    }
+    //Defined and Turned on
+    if ($scope.tippingOptions.hasOwnProperty('toggle') && $scope.tippingOptions.toggle) {
+      setUpTipping();
+    }
 
     if (typeof $scope.site_stripe_tokenization_settings === 'undefined' || $scope.site_stripe_tokenization_settings == null) {
       $scope.site_stripe_tokenization_settings = {
@@ -236,14 +222,6 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
       $scope.selecteContribution = false;
     } else {
       $scope.selecteContribution = "contribution_type_regular";
-    }
-
-    if (typeof $scope.tippingOptions === 'undefined' || $scope.tippingOptions == null) {
-      $scope.tippingOptions = { toggle: false };
-    } else {
-      if ($scope.tippingOptions.toggle) {
-        setUpTipping();
-      }
     }
     $scope.onlyOneOptionHide = false;
 
@@ -259,6 +237,12 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
       $scope.guestOption = 4;
     }
 
+    //If there is reward selected and it is only guest and express selected
+    if ($scope.pledgeLevel && $scope.guest_contrib_option == 7) {
+      $scope.guestOption = 4;
+      $scope.onlyOneOptionHide = true; //Only need to show one option cause defaults to express, hides guest
+    }
+
     //Check for only option
     if ($scope.guest_contrib_option == 5 || $scope.guest_contrib_option == 2) {
       $scope.onlyOneOptionHide = true;
@@ -270,56 +254,130 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
       $scope.partial_anonymous_contribution = 0;
     }
 
-    if(typeof $scope.accountInformationCapture == 'undefined' || !$scope.accountInformationCapture) {
-      $scope.accountInformationCapture = [
-        {name: 'Individual',
-        translation: 'guest_contribution_account_type_individual'},
-        {name: 'Organization',
-        translation: 'guest_contribution_account_type_organization'},
+    if (typeof $scope.accountInformationCapture == 'undefined' || !$scope.accountInformationCapture) {
+      $scope.accountInformationCapture = [{
+          name: 'Individual',
+          translation: 'guest_contribution_account_type_individual'
+        },
+        {
+          name: 'Organization',
+          translation: 'guest_contribution_account_type_organization'
+        },
       ]
     }
 
   });
 
   function setUpTipping() {
-    if (!$scope.tippingOptions.selectedTipDefault) {
-      $scope.tippingOptions.selectedTipDefault = 'tiers';
-    }
-    if ($scope.tippingOptions.toggle_dynamic && !$scope.tippingOptions.toggle_tiers || $scope.tippingOptions.selectedTipDefault == 'dynamic') {
-      $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar', name: '' };
-      if ($scope.tippingOptions.toggle_dynamic_min_max && $scope.tippingOptions.dynamic_min) {
-        $scope.tip.value = $scope.tippingOptions.dynamic_min;
-        $scope.tip.dollar_amount = $scope.tippingOptions.dynamic_min;
-      }
-      $scope.selectedTipType = 'dynamic';
-      $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar' };
-      if ($scope.tippingOptions.toggle_dynamic_min_max && $scope.tippingOptions.dynamic_min) {
-        $scope.tip.value = $scope.tippingOptions.dynamic_min;
-        $scope.tip.dollar_amount = $scope.tippingOptions.dynamic_min;
-      }
-    } else if ($scope.tippingOptions.toggle_tiers || $scope.tippingOptions.selectedTipDefault == 'tiers' || $scope.tippingOptions.selectedTipDefault == 'tiers') {
-      $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar', name: '' };
-      if ($scope.tippingOptions.tiers[0]) {
-        $scope.updateTierValues();
-        var dollarAmount = $scope.tippingOptions.tiers[0].value;
-        if ($scope.tippingOptions.tiers[0].type == "Percent") {
-          dollarAmount = ($scope.tippingOptions.tiers[0].value / 100) * $scope.pledgeAmount;
-          if (dollarAmount < $scope.lowestAmount) {
-            dollarAmount = $scope.lowestAmount;
+
+    Restangular.one('account/stripe/charge-amount').customGET().then(function(success) {
+      if (success[0]) {
+        $scope.lowestAmount = parseFloat(success[0].minimum_charge_amount);
+        if ($scope.selectedTipCurrency) {
+          $scope.tipInfo = $scope.selectedTipCurrency;
+        } else {
+          $scope.tipInfo = success[0];
+        }
+      } else {
+        $scope.lowestAmount = 0.5;
+        if ($scope.campaign) {
+          if ($scope.selectedTipCurrency) {
+            $scope.tipInfo = $scope.selectedTipCurrency;
+          } else {
+            $scope.tipInfo = $scope.campaign.currencies[0];
           }
         }
-        $scope.tip = { value: $scope.tippingOptions.tiers[0].value, dollar_amount: dollarAmount, type: $scope.tippingOptions.tiers[0].type, name: $scope.tippingOptions.tiers[0].name };
       }
-      $scope.selectedTipType = 'tiers';
-    } else if (!$scope.tippingOptions.toggle_dynamic && !$scope.tippingOptions.toggle_tiers && $scope.tippingOptions.toggle_no_tip) {
-      $scope.selectedTipType = 'no_tip';
-      $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar' };
-    }
 
-    if ($scope.tippingOptions.toggle_no_tip && $scope.tippingOptions.selectedTipDefault == 'no_tip') {
-      $scope.selectedTipType = 'no_tip';
-      $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar' };
-    }
+      if (!$scope.tippingOptions.selectedTipDefault) {
+        $scope.tippingOptions.selectedTipDefault = 'tiers';
+      }
+      if ($scope.tippingOptions.toggle_dynamic && !$scope.tippingOptions.toggle_tiers || $scope.tippingOptions.selectedTipDefault == 'dynamic') {
+        $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar', name: '' };
+        if ($scope.tippingOptions.toggle_dynamic_min_max && $scope.tippingOptions.dynamic_min) {
+          $scope.tip.value = $scope.tippingOptions.dynamic_min;
+          $scope.tip.dollar_amount = $scope.tippingOptions.dynamic_min;
+        }
+        $scope.selectedTipType = 'dynamic';
+        $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar' };
+        if ($scope.tippingOptions.toggle_dynamic_min_max && $scope.tippingOptions.dynamic_min) {
+          $scope.tip.value = $scope.tippingOptions.dynamic_min;
+          $scope.tip.dollar_amount = $scope.tippingOptions.dynamic_min;
+        }
+      } else if ($scope.tippingOptions.toggle_tiers || $scope.tippingOptions.selectedTipDefault == 'tiers') {
+        $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar', name: '' };
+        if ($scope.tippingOptions.tiers[0]) {
+          $scope.updateTierValues();
+          var dollarAmount = $scope.tippingOptions.tiers[0].dollar_amount;
+          $scope.tip = { value: $scope.tippingOptions.tiers[0].value, dollar_amount: dollarAmount, type: $scope.tippingOptions.tiers[0].type, name: $scope.tippingOptions.tiers[0].name };
+        }
+        $scope.selectedTipType = 'tiers';
+      } else if (!$scope.tippingOptions.toggle_dynamic && !$scope.tippingOptions.toggle_tiers && $scope.tippingOptions.toggle_no_tip) {
+        $scope.selectedTipType = 'no_tip';
+        $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar' };
+      }
+
+      if ($scope.tippingOptions.toggle_no_tip && $scope.tippingOptions.selectedTipDefault == 'no_tip') {
+        $scope.selectedTipType = 'no_tip';
+        $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar' };
+      }
+
+      //tip params
+      if ($routeParams.tiptype) {
+        $scope.selectedTipType = $routeParams.tiptype;
+        if ($scope.selectedTipType == 'no_tip') {
+          $scope.tip = { value: null, dollar_amount: 0, type: 'Dollar' };
+        } else if ($scope.selectedTipType == 'tiers') {
+          $scope.tiersIndex = 0;
+          if ($routeParams.tipindex) {
+            $scope.tiersIndex = $routeParams.tipindex;
+          }
+          if ($scope.tippingOptions.tiers[$scope.tiersIndex]) {
+            $scope.updateTierValues();
+            var dollarAmount = $scope.tippingOptions.tiers[$scope.tiersIndex].value;
+            if ($scope.tippingOptions.tiers[$scope.tiersIndex].type == "Percent") {
+              dollarAmount = ($scope.tippingOptions.tiers[$scope.tiersIndex].value / 100) * $scope.pledgeAmount;
+              if (dollarAmount < $scope.lowestAmount) {
+                dollarAmount = $scope.lowestAmount;
+              }
+            }
+            $scope.tip = { value: $scope.tippingOptions.tiers[$scope.tiersIndex].value, dollar_amount: dollarAmount, type: $scope.tippingOptions.tiers[$scope.tiersIndex].type, name: $scope.tippingOptions.tiers[$scope.tiersIndex].name };
+          }
+        } else if ($scope.selectedTipType == 'dynamic') {
+          $scope.initialDynamicTip = 0;
+          if ($scope.tippingOptions.toggle_dynamic_min_max && $scope.tippingOptions.dynamic_min) {
+            $scope.initialDynamicTip = $scope.tippingOptions.dynamic_min;
+          }
+          $scope.tip = { value: $scope.initialDynamicTip, dollar_amount: $scope.initialDynamicTip, type: 'Dollar', name: '' };
+          if ($routeParams.tipvalue) {
+            $scope.tip = { value: $routeParams.tipvalue, dollar_amount: $routeParams.tipvalue, type: 'Dollar', name: '' };
+            $scope.tipValueInt = parseInt($routeParams.tipvalue);
+            if ($scope.tippingOptions.toggle_dynamic_min_max) {
+              if ($scope.tippingOptions.dynamic_min && ($scope.tipValueInt < $scope.tippingOptions.dynamic_min)) {
+                $scope.tip.value = $scope.tippingOptions.dynamic_min;
+                $scope.tip.dollar_amount = $scope.tippingOptions.dynamic_min;
+              } else if ($scope.tippingOptions.dynamic_max && ($scope.tipValueInt > $scope.tippingOptions.dynamic_max)) {
+                $scope.tip.value = $scope.tippingOptions.dynamic_max;
+                $scope.tip.dollar_amount = $scope.tippingOptions.dynamic_max;
+              }
+            }
+          }
+        }
+      }
+
+      if (typeof $scope.tippingOptions !== 'undefined') {
+        if ($scope.tippingOptions.tiers && $scope.tippingOptions.tiers.length) {
+          $scope.tipTiersDefaultName = $scope.tippingOptions.tiers[0].name;
+          $scope.tipTiersDefaultAmount = $scope.tippingOptions.tiers[0].dollar_amount;
+          if ($routeParams.tipindex) {
+            $scope.tipTiersDefaultName = $scope.tippingOptions.tiers[$routeParams.tipindex].name;
+            $scope.tipTiersDefaultAmount = $scope.tippingOptions.tiers[$routeParams.tipindex].value;
+          }
+        }
+      }
+
+    });
+
   }
 
   //get the campaign
@@ -418,7 +476,7 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
 
   $scope.accountTypeSelected = function(type) {
 
-    if(type.name == 'Individual') {
+    if (type.name == 'Individual') {
       $scope.selectAccountCaptureType = 1;
     } else {
       $scope.selectAccountCaptureType = 2;
@@ -759,14 +817,17 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
   }
 
   $scope.guestCheckoutValidation = function() {
-    var translation = $translate.instant(['guest_contribution_email_error', 'guest_contribution_password_error']);
+    var translation = $translate.instant(['guest_contribution_new_email_error', 'guest_contribution_new_email_error2', 'guest_contribution_password_error']);
 
     $('.guest-info-form.ui.form').form({
       email: {
         identifier: 'email',
         rules: [{
           type: 'empty',
-          prompt: translation.guest_contribution_email_error
+          prompt: translation.guest_contribution_new_email_error
+        }, {
+          type: 'email',
+          prompt: translation.guest_contribution_new_email_error2
         }]
       }
     }, {
@@ -824,10 +885,9 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
   }
 
   $scope.newAddressFormValidation = function() {
+    var translation = $translate.instant(['guest_contribution_shipping_country_error', 'guest_contribution_shipping_subcountry_error', 'guest_contribution_shipping_city_error', 'guest_contribution_shipping_mailcode_error', 'guest_contribution_shipping_streetaddress_error', 'guest_contribution_selectcity_error']);
 
-    var translation = $translate.instant(['guest_contribution_shipping_country_error', 'guest_contribution_shipping_subcountry_error', 'guest_contribution_shipping_city_error', 'guest_contribution_shipping_mailcode_error', 'guest_contribution_shipping_streetaddress_error']);
-
-    $('.new-shipping-address-form.ui.form').form({
+    var validation = {
       country: {
         identifier: 'country',
         rules: [{
@@ -849,7 +909,27 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
           prompt: translation.guest_contribution_shipping_streetaddress_error
         }]
       }
-    }, {
+    };
+
+    if ($scope.site_campaign_alt_city_input_toggle) {
+      validation['city'] = {
+        identifier: 'city',
+        rules: [{
+          type: 'empty',
+          prompt: translation.guest_contribution_selectcity_error
+        }]
+      }
+    } else {
+      if (!$('#select-city .select2-container').hasClass('select2-container-disabled')) {
+        if (!$scope.selectedCity.selected && !$scope.site_campaign_alt_city_input_toggle) {
+          $('#select-city .select-error').remove();
+          $('#select-city').append('<div class="select-error ui red pointing prompt label transition visible">' + translation.guest_contribution_selectcity_error + '</div>');
+          $('#select-city').addClass('error');
+        }
+      }
+    }
+
+    $('.new-shipping-address-form.ui.form').form(validation, {
       inline: true,
       onSuccess: function() {
         $scope.valcheck = $scope.valcheck && true;
@@ -858,6 +938,8 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
         $scope.valcheck = $scope.valcheck && false;
       }
     }).form('validate form');
+
+
   }
 
   $scope.newBusinessFormValidation = function() {
@@ -986,7 +1068,7 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
       if (!$scope.tippingOptions.dynamic_min) {
         return true;
       }
-      if ($scope.tip.dollar_amount < $scope.tippingOptions.dynamic_min) {
+      if (Number($scope.tip.dollar_amount) < Number($scope.tippingOptions.dynamic_min)) {
         return false;
       } else {
         return true;
@@ -997,7 +1079,7 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
       if (!$scope.tippingOptions.dynamic_max) {
         return true;
       }
-      if ($scope.tip.dollar_amount > $scope.tippingOptions.dynamic_max) {
+      if (Number($scope.tip.dollar_amount) > Number($scope.tippingOptions.dynamic_max)) {
         return false;
       } else {
         return true;
@@ -1226,7 +1308,7 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
                     },
                     closable: false
                   }).modal('show');
-                  
+
                 //put campaign_backer in User
                 var data = {
                   campaign_backer: 1,
@@ -1541,6 +1623,14 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
           msg.header = $translate.instant("guest_account_registered_payment_failed");
         }
       }
+      $scope.failed_code = failed.data.code;
+      console.error(failed.data.code);
+      if ($scope.failed_code === 'account_campaign_transaction_max_allowed_funds_raised') {
+        $translate('account_campaign_transaction_max_allowed_funds_raised').then(function(value) {
+          msg.header = value;
+        });
+      }
+
       $rootScope.floatingMessage = msg;
     }
   }
@@ -1594,15 +1684,6 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
       pledgeAttributes['charity'] = $scope.charity;
     }
 
-    var translation = $translate.instant(['guest_contribution_selectcity_error']);
-    if (!$('#select-city .select2-container').hasClass('select2-container-disabled')) {
-      if (!$scope.selectedCity.selected) {
-        $('#select .select-error').remove();
-        $('#select-city').append('<div class="select-error ui red pointing prompt label transition visible">' + translation.guest_contribution_selectcity_error + '</div>');
-        $('#select-city').addClass('error');
-      }
-    }
-
     $scope.valcheck = true;
     $scope.guestOption = parseInt($scope.guestOption);
     switch ($scope.guestOption) {
@@ -1611,7 +1692,7 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
         $scope.createNewCardValidation();
         $scope.newAddressFormValidation();
         //Business Org Validation
-        if($scope.acceptExtraPledgeData && $scope.selectAccountCaptureType == 2) {
+        if ($scope.acceptExtraPledgeData && $scope.selectAccountCaptureType == 2) {
           $scope.newBusinessFormValidation();
         }
         break;
@@ -1625,7 +1706,7 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
         $scope.createNewCardValidation();
         $scope.newAddressFormValidation();
         //Business Org Validation
-        if($scope.acceptExtraPledgeData && $scope.selectAccountCaptureType == 2) {
+        if ($scope.acceptExtraPledgeData && $scope.selectAccountCaptureType == 2) {
           $scope.newBusinessFormValidation();
         }
         break;
@@ -1688,7 +1769,7 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
 
           var businessData = null;
           //Check if accepting extra details, create business org if its type 2 
-          if($scope.acceptExtraPledgeData && $scope.selectAccountCaptureType == 2) {
+          if ($scope.acceptExtraPledgeData && $scope.selectAccountCaptureType == 2) {
             var bus_org_data = {
               name: $scope.accountInfo.organization_name,
               email: $scope.accountInfo.organization_email,
@@ -1703,7 +1784,7 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
             var businessPromises = [];
             Restangular.one('account/business').customPOST(bus_org_data).then(function(success) {
               businessData.business_id = success.business_organization_id;
-              
+
               //create address
               $scope.address['inline_token'] = $scope.registering_user.inline_token;
               $scope.address['business_organization_id'] = success.business_organization_id;
@@ -1723,14 +1804,14 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
                 businessPromises.push(phoneRequest);
               }
 
-              $q.all(businessPromises).then(function (resolved) {
+              $q.all(businessPromises).then(function(resolved) {
                 // loop through the results and find value
-                angular.forEach(resolved, function (value) {
+                angular.forEach(resolved, function(value) {
                   if (value.address_id) {
                     businessData.address_id = value.address_id;
                     $scope.selectedAddressID = value.address_id;
                   }
-                  if(value.phone_number_id) {
+                  if (value.phone_number_id) {
                     businessData.phone_id = value.phone_number_id;
                     $scope.chosenPhoneNumberId = value.phone_number_id;
                   }
@@ -1804,7 +1885,7 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
 
             $scope.stripe.createToken($scope.cardNumberElement, $scope.stripeExtraDetails).then(function(result) {
               if (result.error) {
-                Restangular.one('account/person-inline-disable').customPUT({ person_id: $scope.registering_user.id, inline_token: $scope.registering_user.inline_token});
+                Restangular.one('account/person-inline-disable').customPUT({ person_id: $scope.registering_user.id, inline_token: $scope.registering_user.inline_token });
 
                 $timeout(function() {
                   $rootScope.removeFloatingMessage();
@@ -1835,169 +1916,169 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
         });
       } else if ($scope.guestOption == 4) { //Express Checkout
         var rdm_pw = $scope.randomPasswordGenerator();
-          //Generate a random password 
-          // create new account
-          var data = {
-            first_name: $scope.express.fname,
-            last_name: $scope.express.lname,
-            email: $scope.express.email,
-            password: rdm_pw,
-            password_confirm: rdm_pw,
-            inline_registration: true, // do not send cofirmation email
-            express_checkout: true
-          };
-          Restangular.one('register').customPOST(data).then(function(success) {
-            $scope.registering_user = success;
-            $scope.creditCard['inline_token'] = $scope.registering_user.inline_token;
-            
-            var businessData = null;
-            //Check if accepting extra details, create business org if its type 2 
-            if($scope.acceptExtraPledgeData && $scope.selectAccountCaptureType == 2) {
-              var bus_org_data = {
-                name: $scope.accountInfo.organization_name,
-                email: $scope.accountInfo.organization_email,
-                person_id: $scope.registering_user.person_id,
-                inline_token: $scope.registering_user.inline_token
-              };
-              businessData = {
-                business_id: '',
-                phone_id: '',
-                address_id: ''
-              };
-              var businessPromises = [];
-              Restangular.one('account/business').customPOST(bus_org_data).then(function(success) {
-                businessData.business_id = success.business_organization_id;
-                //create address
-                $scope.address['inline_token'] = $scope.registering_user.inline_token;
-                $scope.address['business_organization_id'] = success.business_organization_id;
-                businessPromises.push(Restangular.one('account/address').customPOST($scope.address));
-                //create phone
-                if ($scope.newNumberCreated.number.length > 0 && $scope.newNumberCreated.phonetype) {
-                  $scope.phoneInfo.number = $scope.newNumberCreated.number;
-                  $scope.phoneInfo.phone_number_type_id = $scope.newNumberCreated.phonetype.id;
-                  $scope.phoneInfo.person_id = $scope.registering_user.id;
-                  $scope.phoneInfo['inline_token'] = $scope.registering_user.inline_token;
-                  $scope.phoneInfo['business_organization_id'] = success.business_organization_id;
-                  var phoneRequest = Restangular.one('account/phone-number').customPOST($scope.phoneInfo);
-                  phoneRequest.then(function(success) {
-                    $scope.chosenPhoneNumberId = success.id;
-                  });
-                  businessPromises.push(phoneRequest);
-                }
-              
-                $q.all(businessPromises).then(function (resolved) {
-                  // loop through the results and find value
-                  angular.forEach(resolved, function (value) {
-                    if (value.address_id) {
-                      businessData.address_id = value.address_id;
-                      $scope.selectedAddressID = value.address_id;
-                    }
-                    if(value.phone_number_id) {
-                      businessData.phone_id = value.phone_number_id;
-                      $scope.chosenPhoneNumberId = value.phone_number_id;
-                    }
-                  });
+        //Generate a random password 
+        // create new account
+        var data = {
+          first_name: $scope.express.fname,
+          last_name: $scope.express.lname,
+          email: $scope.express.email,
+          password: rdm_pw,
+          password_confirm: rdm_pw,
+          inline_registration: true, // do not send cofirmation email
+          express_checkout: true
+        };
+        Restangular.one('register').customPOST(data).then(function(success) {
+          $scope.registering_user = success;
+          $scope.creditCard['inline_token'] = $scope.registering_user.inline_token;
 
-                  //If toggle on, create a credit card token
-                  if ($scope.site_stripe_tokenization_settings.toggle) {
-
-                    $scope.stripeExtraDetails.name = data.first_name + ' ' + data.last_name;
-                    if ($scope.pledgeLevel && $scope.campaign.pledges[$scope.pledgeindex].shipping) {
-                      $scope.stripeExtraDetails.address_line1 = $scope.address.street1;
-                    }
-
-                    $scope.stripe.createToken($scope.cardNumberElement, $scope.stripeExtraDetails).then(function(result) {
-                      if (result.error) {
-                        Restangular.one('account/person-inline-disable').customPUT({ person_id: $scope.registering_user.id, inline_token: $scope.registering_user.inline_token});
-
-                        $timeout(function() {
-                          $rootScope.removeFloatingMessage();
-                          // Inform the user if there was an error
-                          var errorElement = angular.element(document.querySelector('#card-errors')).html(result.error.message);
-                          msg = {
-                            'header': 'pledge_campaign_stripe_elements_error'
-                          }
-                          $rootScope.floatingMessage = msg;
-                          $('#pledgebutton').removeClass('disabled');
-                        }, 500);
-                      } else {
-                        // Append token to $scope.creditCard and make request
-                        $scope.creditCard.card_token = result.token.id;
-                        promises.push(StripeService.newPledgerAccount($scope.creditCard));
-                        $scope.resolvePromiseChain(promises, pledgeAttributes, businessData);
-                      }
-                    });
-                  } else {
-                    //Create credit card without credit card token
-                    //Create new pledger account for the new user
-                    promises.push(StripeService.newPledgerAccount($scope.creditCard));
-                    $scope.resolvePromiseChain(promises, pledgeAttributes, businessData);
-                  }
-
-                });
-
-              });
-              return;
-            }
-            
-            if ($scope.pledgeLevel) {
-              // check if this is a pledge level
-              if (typeof $scope.campaign.pledges[$scope.pledgeindex] != 'undefined' && $scope.campaign.pledges[$scope.pledgeindex].shipping) {
-                // check if it has shipping
-                $scope.address['inline_token'] = $scope.registering_user.inline_token;
-                promises.push(Restangular.one('account/address').customPOST($scope.address));
-              }
+          var businessData = null;
+          //Check if accepting extra details, create business org if its type 2 
+          if ($scope.acceptExtraPledgeData && $scope.selectAccountCaptureType == 2) {
+            var bus_org_data = {
+              name: $scope.accountInfo.organization_name,
+              email: $scope.accountInfo.organization_email,
+              person_id: $scope.registering_user.person_id,
+              inline_token: $scope.registering_user.inline_token
+            };
+            businessData = {
+              business_id: '',
+              phone_id: '',
+              address_id: ''
+            };
+            var businessPromises = [];
+            Restangular.one('account/business').customPOST(bus_org_data).then(function(success) {
+              businessData.business_id = success.business_organization_id;
+              //create address
+              $scope.address['inline_token'] = $scope.registering_user.inline_token;
+              $scope.address['business_organization_id'] = success.business_organization_id;
+              businessPromises.push(Restangular.one('account/address').customPOST($scope.address));
+              //create phone
               if ($scope.newNumberCreated.number.length > 0 && $scope.newNumberCreated.phonetype) {
                 $scope.phoneInfo.number = $scope.newNumberCreated.number;
                 $scope.phoneInfo.phone_number_type_id = $scope.newNumberCreated.phonetype.id;
                 $scope.phoneInfo.person_id = $scope.registering_user.id;
                 $scope.phoneInfo['inline_token'] = $scope.registering_user.inline_token;
+                $scope.phoneInfo['business_organization_id'] = success.business_organization_id;
                 var phoneRequest = Restangular.one('account/phone-number').customPOST($scope.phoneInfo);
                 phoneRequest.then(function(success) {
                   $scope.chosenPhoneNumberId = success.id;
                 });
-                promises.push(phoneRequest);
-              }
-            }
-            //If toggle on, create a credit card token
-            if ($scope.site_stripe_tokenization_settings.toggle) {
-
-              $scope.stripeExtraDetails.name = data.first_name + ' ' + data.last_name;
-              if ($scope.pledgeLevel && $scope.campaign.pledges[$scope.pledgeindex].shipping) {
-                $scope.stripeExtraDetails.address_line1 = $scope.address.street1;
+                businessPromises.push(phoneRequest);
               }
 
-              $scope.stripe.createToken($scope.cardNumberElement, $scope.stripeExtraDetails).then(function(result) {
-                if (result.error) {
-                  Restangular.one('account/person-inline-disable').customPUT({ person_id: $scope.registering_user.id, inline_token: $scope.registering_user.inline_token});
+              $q.all(businessPromises).then(function(resolved) {
+                // loop through the results and find value
+                angular.forEach(resolved, function(value) {
+                  if (value.address_id) {
+                    businessData.address_id = value.address_id;
+                    $scope.selectedAddressID = value.address_id;
+                  }
+                  if (value.phone_number_id) {
+                    businessData.phone_id = value.phone_number_id;
+                    $scope.chosenPhoneNumberId = value.phone_number_id;
+                  }
+                });
 
-                  $timeout(function() {
-                    $rootScope.removeFloatingMessage();
-                    // Inform the user if there was an error
-                    var errorElement = angular.element(document.querySelector('#card-errors')).html(result.error.message);
-                    msg = {
-                      'header': 'pledge_campaign_stripe_elements_error'
+                //If toggle on, create a credit card token
+                if ($scope.site_stripe_tokenization_settings.toggle) {
+
+                  $scope.stripeExtraDetails.name = data.first_name + ' ' + data.last_name;
+                  if ($scope.pledgeLevel && $scope.campaign.pledges[$scope.pledgeindex].shipping) {
+                    $scope.stripeExtraDetails.address_line1 = $scope.address.street1;
+                  }
+
+                  $scope.stripe.createToken($scope.cardNumberElement, $scope.stripeExtraDetails).then(function(result) {
+                    if (result.error) {
+                      Restangular.one('account/person-inline-disable').customPUT({ person_id: $scope.registering_user.id, inline_token: $scope.registering_user.inline_token });
+
+                      $timeout(function() {
+                        $rootScope.removeFloatingMessage();
+                        // Inform the user if there was an error
+                        var errorElement = angular.element(document.querySelector('#card-errors')).html(result.error.message);
+                        msg = {
+                          'header': 'pledge_campaign_stripe_elements_error'
+                        }
+                        $rootScope.floatingMessage = msg;
+                        $('#pledgebutton').removeClass('disabled');
+                      }, 500);
+                    } else {
+                      // Append token to $scope.creditCard and make request
+                      $scope.creditCard.card_token = result.token.id;
+                      promises.push(StripeService.newPledgerAccount($scope.creditCard));
+                      $scope.resolvePromiseChain(promises, pledgeAttributes, businessData);
                     }
-                    $rootScope.floatingMessage = msg;
-                    $('#pledgebutton').removeClass('disabled');
-                  }, 500);
+                  });
                 } else {
-                  // Append token to $scope.creditCard and make request
-                  $scope.creditCard.card_token = result.token.id;
+                  //Create credit card without credit card token
+                  //Create new pledger account for the new user
                   promises.push(StripeService.newPledgerAccount($scope.creditCard));
-                  $scope.resolvePromiseChain(promises, pledgeAttributes);
+                  $scope.resolvePromiseChain(promises, pledgeAttributes, businessData);
                 }
+
               });
-            } else {
-              //Create credit card without credit card token
-              //Create new pledger account for the new user
-              promises.push(StripeService.newPledgerAccount($scope.creditCard));
-              $scope.resolvePromiseChain(promises, pledgeAttributes);
+
+            });
+            return;
+          }
+
+          if ($scope.pledgeLevel) {
+            // check if this is a pledge level
+            if (typeof $scope.campaign.pledges[$scope.pledgeindex] != 'undefined' && $scope.campaign.pledges[$scope.pledgeindex].shipping) {
+              // check if it has shipping
+              $scope.address['inline_token'] = $scope.registering_user.inline_token;
+              promises.push(Restangular.one('account/address').customPOST($scope.address));
             }
-          }, function(failed) {
-            $('#pledgebutton').removeClass('disabled');
-            errorHandling(failed);
-          });
+            if ($scope.newNumberCreated.number.length > 0 && $scope.newNumberCreated.phonetype) {
+              $scope.phoneInfo.number = $scope.newNumberCreated.number;
+              $scope.phoneInfo.phone_number_type_id = $scope.newNumberCreated.phonetype.id;
+              $scope.phoneInfo.person_id = $scope.registering_user.id;
+              $scope.phoneInfo['inline_token'] = $scope.registering_user.inline_token;
+              var phoneRequest = Restangular.one('account/phone-number').customPOST($scope.phoneInfo);
+              phoneRequest.then(function(success) {
+                $scope.chosenPhoneNumberId = success.id;
+              });
+              promises.push(phoneRequest);
+            }
+          }
+          //If toggle on, create a credit card token
+          if ($scope.site_stripe_tokenization_settings.toggle) {
+
+            $scope.stripeExtraDetails.name = data.first_name + ' ' + data.last_name;
+            if ($scope.pledgeLevel && $scope.campaign.pledges[$scope.pledgeindex].shipping) {
+              $scope.stripeExtraDetails.address_line1 = $scope.address.street1;
+            }
+
+            $scope.stripe.createToken($scope.cardNumberElement, $scope.stripeExtraDetails).then(function(result) {
+              if (result.error) {
+                Restangular.one('account/person-inline-disable').customPUT({ person_id: $scope.registering_user.id, inline_token: $scope.registering_user.inline_token });
+
+                $timeout(function() {
+                  $rootScope.removeFloatingMessage();
+                  // Inform the user if there was an error
+                  var errorElement = angular.element(document.querySelector('#card-errors')).html(result.error.message);
+                  msg = {
+                    'header': 'pledge_campaign_stripe_elements_error'
+                  }
+                  $rootScope.floatingMessage = msg;
+                  $('#pledgebutton').removeClass('disabled');
+                }, 500);
+              } else {
+                // Append token to $scope.creditCard and make request
+                $scope.creditCard.card_token = result.token.id;
+                promises.push(StripeService.newPledgerAccount($scope.creditCard));
+                $scope.resolvePromiseChain(promises, pledgeAttributes);
+              }
+            });
+          } else {
+            //Create credit card without credit card token
+            //Create new pledger account for the new user
+            promises.push(StripeService.newPledgerAccount($scope.creditCard));
+            $scope.resolvePromiseChain(promises, pledgeAttributes);
+          }
+        }, function(failed) {
+          $('#pledgebutton').removeClass('disabled');
+          errorHandling(failed);
+        });
       } else {
         //GUEST CHECKOUT 
 
@@ -2134,12 +2215,12 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
         if (value.address_id) {
           $scope.selectedAddressID = value.address_id;
         }
-        if(value.business_organization_id) {
+        if (value.business_organization_id) {
           $scope.selectedCompanyID = value.business_organization_id;
         }
       });
 
-      if($scope.acceptExtraPledgeData && $scope.selectAccountCaptureType == 2) {
+      if ($scope.acceptExtraPledgeData && $scope.selectAccountCaptureType == 2) {
         $scope.businessSelectedAttribute.business_contribution = 1;
         $scope.businessSelectedAttribute.business_organization_id = $scope.selectedCompanyID;
         pledgeAttributes['business'] = $scope.businessSelectedAttribute;
@@ -2190,23 +2271,24 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
           }).modal('show');
 
 
-          if(typeof $scope.campaign.settings != 'undefined' && $scope.campaign.contribution_redirect) {
-            $timeout(function() {
-              window.location.href = $scope.campaign.contribution_redirect;
-            }, 5000);
-          } else if(typeof $scope.site_campaign_pledge_redirect != 'undefined' && $scope.site_campaign_pledge_redirect.toggle) {
-            $timeout(function() {
-              window.location.href = $scope.site_campaign_pledge_redirect.url;
-            }, 5000);
-          }
+        if (typeof $scope.campaign.settings != 'undefined' && $scope.campaign.contribution_redirect) {
+          $timeout(function() {
+            window.location.href = $scope.campaign.contribution_redirect;
+          }, 5000);
+        } else if (typeof $scope.site_campaign_pledge_redirect != 'undefined' && $scope.site_campaign_pledge_redirect.toggle) {
+          $timeout(function() {
+            window.location.href = $scope.site_campaign_pledge_redirect.url;
+          }, 5000);
+        }
       }, function(failed) {
         $('#pledgebutton').removeClass('disabled');
-
-        msg = {
+        /*msg = {
           'header': 'Card_is_invalid'
         }
         $rootScope.floatingMessage = msg;
-
+        */
+        errorHandling(failed);
+        $rootScope.scrollToError();
       });
 
     }, function(failed) {
@@ -2233,7 +2315,7 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
           $scope.selectedAddressID = value.address_id;
         }
 
-        if(value.business_organization_id) {
+        if (value.business_organization_id) {
           $scope.selectedCompanyID = value.business_organization_id;
         }
       });
@@ -2250,8 +2332,8 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
         anonymous_contribution_partial: $scope.partial_anonymous_contribution,
         attributes: JSON.stringify(pledgeAttributes)
       };
-      if($scope.acceptExtraPledgeData && ($scope.selectAccountCaptureType == 2)) {
-        if(businessData) {
+      if ($scope.acceptExtraPledgeData && ($scope.selectAccountCaptureType == 2)) {
+        if (businessData) {
           data['business_organization_id'] = parseInt(businessData.business_id);
           data['shipping_address_id'] = parseInt(businessData.address_id);
           data['phone_number_id'] = parseInt(businessData.phone_id);
@@ -2288,25 +2370,25 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
             },
             closable: false
           }).modal('show');
-          
+
         // log user in
         if ($scope.public_settings.site_campaign_ecommerce_analytics && $scope.public_settings.site_campaign_ecommerce_analytics.toggle) {
           sendGATransaction(success, $scope.public_settings.site_campaign_ecommerce_analytics.code);
         }
 
-        if(typeof $scope.campaign.settings != 'undefined' && $scope.campaign.contribution_redirect) {
+        if (typeof $scope.campaign.settings != 'undefined' && $scope.campaign.contribution_redirect) {
           $timeout(function() {
             window.location.href = $scope.campaign.contribution_redirect;
           }, 5000);
-        } else if(typeof $scope.site_campaign_pledge_redirect != 'undefined' && $scope.site_campaign_pledge_redirect.toggle) {
+        } else if (typeof $scope.site_campaign_pledge_redirect != 'undefined' && $scope.site_campaign_pledge_redirect.toggle) {
           $timeout(function() {
             window.location.href = $scope.site_campaign_pledge_redirect.url;
           }, 5000);
         }
       }, function(failed) {
-        
-        if($scope.guestOption == 2 || $scope.guestOption == 4) {
-          Restangular.one('account/person-inline-disable').customPUT({ person_id: $scope.registering_user.id, inline_token: $scope.registering_user.inline_token});
+
+        if ($scope.guestOption == 2 || $scope.guestOption == 4) {
+          Restangular.one('account/person-inline-disable').customPUT({ person_id: $scope.registering_user.id, inline_token: $scope.registering_user.inline_token });
         }
         // when failed to create campaign pledge record
         $('#pledgebutton').removeClass('disabled');
@@ -2320,9 +2402,9 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
         });
       });
     }, function(failed) {
-      
-      if($scope.guestOption == 2 || $scope.guestOption == 4) {
-        Restangular.one('account/person-inline-disable').customPUT({ person_id: $scope.registering_user.id, inline_token: $scope.registering_user.inline_token});
+
+      if ($scope.guestOption == 2 || $scope.guestOption == 4) {
+        Restangular.one('account/person-inline-disable').customPUT({ person_id: $scope.registering_user.id, inline_token: $scope.registering_user.inline_token });
       }
 
       // when stripe failed to create new pledger account
@@ -2358,14 +2440,17 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
     }).form('validate form');
   }
   $scope.generalLoginValidation = function() {
-    var translation = $translate.instant(['guest_contribution_email_error', 'guest_contribution_password_error']);
+    var translation = $translate.instant(['guest_contribution_email_error', 'guest_contribution_password_error', 'guest_contribution_new_email_error', 'guest_contribution_new_email_error2']);
 
     $('.general-login-info-form.ui.form').form({
       email: {
         identifier: 'email',
         rules: [{
           type: 'empty',
-          prompt: translation.guest_contribution_email_error
+          prompt: translation.guest_contribution_new_email_error
+        }, {
+          type: 'email',
+          prompt: translation.guest_contribution_new_email_error2
         }]
       },
       password: {
@@ -2411,7 +2496,18 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
             $rootScope.charity = $scope.charity;
           }
           // redirect
-          $location.path('/pledge-campaign').search('m', $scope.pledgeAmount);
+          $location.path('/pledge-campaign').search({ 'eid': $scope.campaign_id, 'm': $scope.pledgeAmount, 'tiptype': $scope.selectedTipType });
+          if ($scope.selectedTipType == 'dynamic') {
+            $location.path('/pledge-campaign').search({ 'eid': $scope.campaign_id, 'm': $scope.pledgeAmount, 'tiptype': $scope.selectedTipType, 'tipvalue': $scope.tip.dollar_amount });
+          } else if ($scope.selectedTipType == 'tiers') {
+            var tierLoop = 0;
+            for (tierLoop = 0; tierLoop < $scope.tippingOptions.tiers.length + 1; tierLoop++) {
+              if ($scope.tippingOptions.tiers[tierLoop].name == $scope.tip.name) {
+                break;
+              }
+            }
+            $location.path('/pledge-campaign').search({ 'eid': $scope.campaign_id, 'm': $scope.pledgeAmount, 'tiptype': $scope.selectedTipType, 'tipindex': tierLoop });
+          }
 
         }, function(failed) {
           msg = {
@@ -2741,16 +2837,17 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
           $scope.updateTierValues();
         }
         if ($scope.tip.value && $scope.tip.value != 0 && $scope.tip.type == 'Percent') {
-          var tipAmount;
-          if ((($scope.tippingOptions.tiers[0].value / 100) * $scope.pledgeAmount) < $scope.lowestAmount) {
-            if ($scope.tip.value == $scope.tippingOptions.tiers[0].value) {
-              tipAmount = $scope.lowestAmount;
-            } else {
-              tipAmount = ((parseFloat($scope.tip.value) / 100) * $scope.pledgeAmount) + $scope.lowestAmount;
+
+          var index = ($routeParams.tipindex) ? $routeParams.tipindex : 0;
+
+          var tipAmount = $scope.tippingOptions.tiers[index].dollar_amount;
+
+          angular.forEach($scope.tippingOptions.tiers, function(value, key, obj) {
+            if ($scope.tip.index == key) {
+              tipAmount = value.dollar_amount;
             }
-          } else {
-            tipAmount = ((parseFloat($scope.tip.value) / 100) * $scope.pledgeAmount)
-          }
+          });
+
           $scope.tip.dollar_amount = tipAmount;
           if ($scope.tippingOptions.toggle_tier_names) {
             var percentString = $scope.tip.name + ' - ';
@@ -2807,7 +2904,12 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
     if (type == 'tiers') {
       if ($scope.tippingOptions.tiers[0]) {
         $scope.updateTierValues();
-        $scope.tip = { value: $scope.tippingOptions.tiers[0].value, dollar_amount: $scope.tippingOptions.tiers[0].dollar_amount, type: $scope.tippingOptions.tiers[0].type, name: $scope.tippingOptions.tiers[0].name };
+        $scope.tip = { value: $scope.tippingOptions.tiers[0].value, dollar_amount: $scope.tippingOptions.tiers[0].dollar_amount, type: $scope.tippingOptions.tiers[0].type, name: $scope.tippingOptions.tiers[0].name, index: 0 };
+
+        $scope.tipTiersDefaultName = ($scope.tippingOptions.toggle_tier_names) ? $scope.tippingOptions.tiers[0].name : '';
+        $scope.tipTiersDefaultAmount = $scope.tippingOptions.tiers[0].dollar_amount;
+        var percentString = $scope.tipTiersDefaultName + ' - ' + $filter('formatCurrency')($scope.tipTiersDefaultAmount, $scope.tipInfo.code_iso4217_alpha, $scope.public_setting.site_campaign_decimal_option);
+        $('.tip-tiers').dropdown('set text', percentString);
       }
     } else if (type == 'dynamic') {
       if ($scope.tippingOptions.toggle_dynamic_min_max && $scope.tippingOptions.dynamic_min) {
@@ -2819,8 +2921,8 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
     $scope.selectedTipType = type;
   };
 
-  $scope.tipTierSelection = function(value, type, dollarAmount, name) {
-    $scope.tip = { value: parseFloat(value), dollar_amount: parseFloat(dollarAmount), type: type, name: name };
+  $scope.tipTierSelection = function(value, type, dollarAmount, name, index) {
+    $scope.tip = { value: parseFloat(value), dollar_amount: parseFloat(dollarAmount), type: type, name: name, index: index };
   };
 
   $scope.updateTierValues = function() {
@@ -2830,18 +2932,10 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
       } else {
         value.dollar_amount = value.value;
       }
+      if (value.dollar_amount < $scope.lowestAmount) {
+        value.dollar_amount += $scope.lowestAmount;
+      }
     });
-    $scope.tippingOptions.tiers.sort(function(a, b) {
-      return parseFloat(a.dollar_amount) - parseFloat(b.dollar_amount);
-    });
-    if ($scope.tippingOptions.tiers[0].type == "Percent" && $scope.tippingOptions.tiers[0].dollar_amount < $scope.lowestAmount) {
-      $scope.tippingOptions.tiers[0].dollar_amount = $scope.lowestAmount;
-      angular.forEach($scope.tippingOptions.tiers, function(value, index) {
-        if (index != 0 && value.type == "Percent") {
-          value.dollar_amount += $scope.lowestAmount;
-        }
-      });
-    }
   }
 
   function sendGATransaction(success, gaId) {

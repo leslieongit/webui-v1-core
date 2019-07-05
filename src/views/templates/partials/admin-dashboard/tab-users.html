@@ -71,21 +71,28 @@
 									<label></label>
 								</div>
 							</th>
-							<th class="one wide center user-id" ng-click="sortUserPerson()" id="hoverbtn"> {{'tab_user_iD'|translate}}
+							<th class="one wide center user-id" ng-click="sortUserPerson()" id="hoverbtn">
+								<div class="th-action th-action-filter">
+								{{'tab_user_iD'|translate}}
 								<span ng-show="showperson"><span ng-hide="!personbtn"><i class="caret up icon"></i></span><span ng-hide="personbtn"><i
 										 class="caret down  icon"></i> </span></span>
+								</div>
 							</th>
 							<th class="two wide center mobile" ng-if="payment_gateway==1"></th>
 							<th class="one wide center mobile" ng-if="payment_gateway==2"></th>
 							<th class="three wide center" ng-click="sortUserName()" id="hoverbtn" ng-if="payment_gateway==1">
+									<div class="th-action th-action-filter">
 								{{'tab_user_name'|translate}}
 								<span ng-show="showname"><span ng-hide="!namebtn"><i class="caret up icon"></i></span><span ng-hide="namebtn"><i
 										 class="caret down  icon"></i> </span></span>
+										 </div>
 							</th>
 							<th class="two wide center" ng-click="sortUserName()" id="hoverbtn" ng-if="payment_gateway==2">
+								<div class="th-action th-action-filter">
 								{{'tab_user_name'|translate}}
 								<span ng-show="showname"><span ng-hide="!namebtn"><i class="caret up icon"></i></span><span ng-hide="namebtn"><i
 										 class="caret down  icon"></i> </span></span>
+								</div>
 							</th>
 							<th class="three wide center" translate ng-if="payment_gateway==1"> tab_user_email </th>
 							<th class="two wide center" translate ng-if="payment_gateway==2"> tab_user_email </th>
@@ -94,9 +101,17 @@
 							<th class="three wide center" translate ng-if="payment_gateway==1"> tab_user_usertype </th>
 							<th class="two wide center" translate ng-if="payment_gateway==2"> tab_user_usertype </th>
 							<th class="two wide center" ng-click="sortUserCreated()" id="hoverbtn">
-								{{'tab_user_created'|translate}}
-								<span ng-show="showcreated"><span ng-hide="!createdbtn"><i class="caret up icon"></i></span><span ng-hide="createdbtn"><i
-										 class="caret down  icon"></i> </span></span>
+								<div class="th-action th-action-filter">
+									{{'tab_user_created'|translate}}
+								<span ng-show="showcreated">
+									<span ng-hide="!createdbtn">
+										<i class="caret up icon"></i>
+									</span>
+									<span ng-hide="createdbtn">
+										<i class="caret down  icon"></i>
+									</span>
+								</span>
+							</div>
 							</th>
 							<th class="one wide center mobile"></th>
 							<th class="two wide center" translate> tab_user_status </th>

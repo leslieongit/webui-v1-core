@@ -3,7 +3,7 @@
 		<div ng-if="note.funding_goal" class="ui label notes-label" translate> PledgeSection_note
 			<i class="delete icon" ng-click="removeNote('funding_goal')" ng-if="note.funding_goal"></i>
 		</div>
-		<div class="notes" ng-class="{'has-note ui basic segment' : note.funding_goal}" title="Campaign Funding" ng-click="addNotes('funding_goal')">
+		<div class="notes" ng-class="{'has-note ui basic segment' : note.funding_goal}" ng-click="addNotes('campaign_review_funding_goal_note_title', 'funding_goal')">
 			<div class="item r-mode" ng-if="!hideRaiseMode">
 				<strong class="c-raise-mode">
 					<div class="ui label black" translate> PledgeSection_raiseMode </div>
@@ -44,7 +44,7 @@
 		<div ng-if="note.runtime_days" class="ui label notes-label">Notes
 			<i class="delete icon" ng-click="removeNote('runtime_days')" ng-if="note.runtime_days"></i>
 		</div>
-		<div class="notes" ng-class="{'has-note ui basic segment' : note.runtime_days, 'field-empty': !campaign.ends}" title="Campaign Duration" ng-click="addNotes('runtime_days')">
+		<div class="notes" ng-class="{'has-note ui basic segment' : note.runtime_days, 'field-empty': !campaign.ends}" ng-click="addNotes('campaign_review_runtime_note_title', 'runtime_days')">
 			<div ng-show="campaign.runtime_days" class="f-runtime"><!-- If it's not an ongoing campaign -->
 				<div class="item" ng-show="campaign.campaign_started=='t' && campaign.ever_published">
 					<span class="c-value" ng-if="dateInPast(campaign.ends,campaign.seconds_remaining)" translate="campaign_pledge_closed"></span>
@@ -60,7 +60,6 @@
 	<div ng-if="note.pledges" class="ui label notes-label"> {{'PledgeSection_note' | translate}}
 		<i class="delete icon" ng-click="removeNote('pledges')" ng-if="note.pledges"></i>
 	</div>
-	<div class="notes" ng-class="{'has-note ui basic segment' : note.pledges}" title="Campaign Rewards" ng-click="addNotes('pledges')">
 		<!-- start funding button disable button is campaign is ended or campaign is not in approved status-->
 
 		<a class="fluid ui massive button contribute-button" ng-if="!dateInPast(campaign.ends)"> {{'PledgeSection_Contribute' | translate}}
@@ -94,7 +93,7 @@
 							</div>
 							<h4 class="ui header"> {{pledge.name}}</h4>
 							<p class="reward-desc fr-view" ng-hide="reward_html_editor" html-render html="pledge.description"></p>
-							<div ng-show="reward_html_editor" html-render html="pledge.description" class = "fr-view"></div>
+							<div ng-show="reward_html_editor" html-render html="pledge.description" class="reward-desc fr-view"></div>
 							<div class="bottom">
 								<div class="reward-backers" ng-if="pledge.total_backers>0">
 									<i class="community basic icon"></i>
@@ -113,6 +112,5 @@
 				</li>
 			</a>
 		</ul>
-	</div>
 </div>
 <!-- end of awards-->

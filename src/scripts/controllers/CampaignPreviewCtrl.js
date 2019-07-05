@@ -1,4 +1,4 @@
-app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, $scope, $filter, $browser, $translatePartialLoader, $translate, $routeParams, CreateCampaignService, Restangular, RESOURCE_REGIONS, API_URL, PortalSettingsService, $rootScope, CampaignSettingsService, UserService, RestFullResponse, DisqusShortnameService, VideoLinkService, SOCIAL_SHARING_OPTIONS) {
+app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, $scope, $filter, $browser, $translatePartialLoader, $translate, $routeParams, CreateCampaignService, Restangular, RESOURCE_REGIONS, API_URL, PortalSettingsService, $rootScope, CampaignSettingsService, UserService, RestFullResponse, DisqusShortnameService, VideoLinkService, SOCIAL_SHARING_OPTIONS, $anchorScroll) {
   $scope.campaignSettings = {};
   $scope.urlHost = $location.protocol() + "://" + $location.host() + $browser.baseHref();
 
@@ -160,7 +160,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
     $scope.displayPrevButtonHeader = success.public_setting.site_campaign_creation_display_previous_button_on_header;
     $scope.isRemoveCampaignLinks = $scope.public_settings.site_campaign_remove_campaign_links;
     $scope.hideRaiseMode = $scope.public_settings.site_campaign_remove_raise_mode;
-    
+
     if (typeof success.public_setting.site_tos_campaign_submit == 'undefined') {
       $scope.create = false;
     } else {
@@ -225,7 +225,11 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
 
       $scope.reward = $scope.customText.reward;
       var shortCode = "[min]";
-      var test = $filter('formatCurrency')($scope.public_settings.site_theme_campaign_min_contribute_amount, $scope.campaign.currencies[0].code_iso4217_alpha, $scope.public_setting.site_campaign_decimal_option);
+      var currency_iso = " ";
+      if($scope.campaign.currencies != null){
+        currency_iso = $scope.campaign.currencies[0].code_iso4217_alpha;
+      }
+      var test = $filter('formatCurrency')($scope.public_settings.site_theme_campaign_min_contribute_amount, currency_iso, $scope.public_setting.site_campaign_decimal_option);
       if ($scope.customText.toggle == true) {
         var rewardShortCode = $scope.reward.indexOf(shortCode) > -1;
         if (rewardShortCode) {
@@ -441,16 +445,16 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
         $scope.comment_system = $scope.public_settings.comment_system;
       } else {
         // default = disqus
-        // $scope.comment_system = "disqus";
+        $scope.comment_system = "disqus";
       }
 
       // If comment system == disqus, get disqus shortname
       if ($scope.comment_system == "disqus") {
         DisqusShortnameService.getDisqusShortname().then(function (shortname) {
-          var disqus_shortname;
+          $scope.disqus_shortname;
           angular.forEach(shortname, function (value) {
             if (value.setting_type_id == 3) {
-              disqus_shortname = value.value; // required: replace example with your forum shortname
+              $scope.disqus_shortname = value.value; // required: replace example with your forum shortname
             }
           });
           var disqus_identifier = $scope.campaign_id;
@@ -468,15 +472,14 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
               }
             });
           } else {
-            if (disqus_shortname) {
+            if ($scope.disqus_shortname) {
               $('<div id="disqus_thread"></div>').insertAfter('#insert_disqus');
-              $scope.disqus_shortname = shortname.value;
               window.disqus_identifier = disqus_identifier;
               window.disqus_url = disqus_url;
               var dsq = document.createElement('script');
               dsq.type = 'text/javascript';
               dsq.async = true;
-              dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+              dsq.src = '//' + $scope.disqus_shortname + '.disqus.com/embed.js';
               $('head').append(dsq);
             }
           }
@@ -638,39 +641,60 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
 
       // check for hash and making the tab active
       $scope.checklink = function () {
+        var translate = $translate.instant(['campaign_page_campaigntitle', 'campaign_page_faq', 'campaign_page_rewardstitle', 'campaign_page_backers', 'campaign_page_streams', 'campaign_page_comments', 'campaign_page_files']);
+
         if ($location.hash()) {
           $('#campaign').removeClass('active');
           $('#campaign-seg').removeClass('active');
 
           var hash = $location.hash();
-          if (hash == 'FAQ') {
-            $('#faq').addClass('active');
-            $('#faq-seg').addClass('active');
-            $('#default-text').text(hash);
-          } else if (hash == 'Backers') {
-            $('#backer').addClass('active');
-            $('#backer-seg').addClass('active');
-            $('#default-text').html(hash + '<span class="count-label ui label" >' + $scope.backer_length + '</span>');
-          } else if (hash == 'Streams') {
-            $('#stream').addClass('active');
-            $('#stream-seg').addClass('active');
-            $('#default-text').html(hash + '<span class="count-label ui label" >' + $scope.campaign.streams.length + '</span>');
-          } else if (hash == 'Comments') {
-            $('#comment').addClass('active');
-            $('#comment-seg').addClass('active');
-            $('#default-text').html(hash + '<span class="count-label ui label" >' + $scope.sortOrFiltersComments.pagination.totalentries + '</span>');
-          } else if (hash == 'Campaign') {
-            $('#campaign').addClass('active');
-            $('#campaign-seg').addClass('active');
-            $('#default-text').text(hash);
-          } else if (hash == 'Rewards') {
-            $('#rewards').addClass('active');
-            $('#rewards-seg').addClass('active');
-            $('#default-text').text(hash);
-          } else if (hash == "Files") {
-            $('#file').addClass('active');
-            $('#file-seg').addClass('active');
-            $('#default-text').text(hash);
+          switch (hash) {
+            case translate.campaign_page_faq:
+              var faqLength = 0;
+              if ($scope.campaign.faqs && typeof $scope.campaign.faqs[0] != 'undefined') {
+                faqLength = $scope.campaign.faqs[0].faq_pairs.length;
+              }
+              $('.menu-tabs .item').removeClass('active');
+              $('#faq').addClass('active');
+              $('#mobile-faq').addClass('active');
+              $('#faq-seg').addClass('active');
+              break;
+            case translate.campaign_page_backers:
+              $('.menu-tabs .item').removeClass('active');
+              $('#backer').addClass('active');
+              $('#mobile-backer').addClass('active');
+              $('#backer-seg').addClass('active');
+              break;
+            case translate.campaign_page_streams:
+              $('.menu-tabs .item').removeClass('active');
+              $('#stream').addClass('active');
+              $('#mobile-stream').addClass('active');
+              $('#stream-seg').addClass('active');
+              break;
+            case translate.campaign_page_comments:
+              $('.menu-tabs .item').removeClass('active');
+              $('#comment').addClass('active');
+              $('#mobile-comment').addClass('active');
+              $('#comment-seg').addClass('active');
+              break;
+            case translate.campaign_page_campaigntitle:
+              $('.menu-tabs .item').removeClass('active');
+              $('#campaign').addClass('active');
+              $('#mobile-campaign').addClass('active');
+              $('#campaign-seg').addClass('active');
+              break;
+            case translate.campaign_page_rewardstitle:
+              $('.menu-tabs .item').removeClass('active');
+              $('#rewards').addClass('active');
+              $('#mobile-rewards').addClass('active');
+              $('#rewards-seg').addClass('active');
+              break;
+            case translate.campaign_page_files:
+              $('.menu-tabs .item').removeClass('active');
+              $('#file').addClass('active');
+              $('#mobile-file').addClass('active');
+              $('#file-seg').addClass('active');
+              break;
           }
         }
       }
@@ -679,63 +703,19 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
         $scope.checklink();
       }, 500);
 
-      $scope.tabactive = function (id) {
+      // setting hash for the link
+      $scope.makeLink = function (id) {
+        var linkpath = $location.path();
+        $location.path(linkpath).hash(id).replace();
+        $scope.hashcheck = $location.hash();
+      }
 
-        if (id == 'Campaign') {
-          $('#default-text').text(id);
-          $('#campaign-seg').addClass('active');
-          $('#rewards-seg').removeClass('active');
-          $('#backer-seg').removeClass('active');
-          $('#faq-seg').removeClass('active');
-          $('#comment-seg').removeClass('active');
-          $('#stream-seg').removeClass('active');
-        }
-        if (id == 'Rewards') {
-          $('#default-text').text(id);
-          $('#rewards-seg').addClass('active');
-          $('#campaign-seg').removeClass('active');
-          $('#backer-seg').removeClass('active');
-          $('#faq-seg').removeClass('active');
-          $('#comment-seg').removeClass('active');
-          $('#stream-seg').removeClass('active');
-        }
-        if (id == 'FAQ') {
-          $('#default-text').text(id);
-          $('#rewards-seg').removeClass('active');
-          $('#faq-seg').addClass('active');
-          $('#campaign-seg').removeClass('active');
-          $('#backer-seg').removeClass('active');
-          $('#comment-seg').removeClass('active');
-          $('#stream-seg').removeClass('active');
-        }
-        if (id == 'Backers') {
-          $('#default-text').html(id + '<span class="count-label ui label" >' + $scope.backer_length + '</span>');
-          $('#rewards-seg').removeClass('active');
-          $('#backer-seg').addClass('active');
-          $('#faq-seg').removeClass('active');
-          $('#stream-seg').removeClass('active');
-          $('#campaign-seg').removeClass('active');
-          $('#comment-seg').removeClass('active');
-        }
-        if (id == 'Streams') {
-          $('#default-text').html(id + '<span class="count-label ui label" >' + $scope.campaign.streams.length + '</span>');
-          $('#rewards-seg').removeClass('active');
-          $('#stream-seg').addClass('active');
-          $('#backer-seg').removeClass('active');
-          $('#faq-seg').removeClass('active');
-          $('#campaign-seg').removeClass('active');
-          $('#comment-seg').removeClass('active');
-        }
-        if (id == 'Comments') {
-          $('#default-text').html(id + '<span class="count-label ui label" >' + $scope.sortOrFiltersComments.pagination.totalentries + '</span>');
-          $('#rewards-seg').removeClass('active');
-          $('#comment-seg').addClass('active');
-          $('#backer-seg').removeClass('active');
-          $('#faq-seg').removeClass('active');
-          $('#stream-seg').removeClass('active');
-          $('#campaign-seg').removeClass('active');
-        }
-
+      // Toggle campaign dropdown items using url hash
+      $scope.toggleHash = function (selectedItemKey) {
+        var translatedKey = $translate.instant(selectedItemKey);
+        $location.search('').replace();
+        $scope.makeLink(translatedKey);
+        $scope.checklink();
       }
 
       Restangular.one('portal/setting').getList().then(
@@ -759,8 +739,11 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
           $scope.contribution = $scope.customText.contribution;
 
           var shortCode = "[min]";
-
-          var currency = $filter('formatCurrency')($scope.public_settings.site_theme_campaign_min_contribute_amount, $scope.campaign.currencies[0].code_iso4217_alpha, $scope.public_setting.site_campaign_decimal_option);
+          var currency_iso = " ";
+          if($scope.campaign.currencies != null){
+            currency_iso = $scope.campaign.currencies[0].code_iso4217_alpha;
+          }
+          var currency = $filter('formatCurrency')($scope.public_settings.site_theme_campaign_min_contribute_amount, currency_iso, $scope.public_setting.site_campaign_decimal_option);
           if ($scope.customText.toggle == true) {
             var contributionShortCode = $scope.contribution.indexOf(shortCode) > -1;
             if (contributionShortCode) {
@@ -883,12 +866,16 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
       }, 500);
     }, 800);
   }
-
+  
+  // Scroll to rewards section and set dropdown item to active
   $scope.scrollToMobileRewardsTab = function () {
+    var rewardsString = $translate.instant('campaign_page_rewardstitle');
     $timeout(function () {
-      $location.search('').replace();
-      $scope.makeLink('Rewards');
-      $scope.tabactive('Rewards');
+      if ($location.hash() !== rewardsString) {
+        $location.search('').replace();
+        $scope.makeLink(rewardsString);
+        $scope.checklink();
+      }
 
       $('html, body').animate({
         scrollTop: $('#rewards-seg #rewards-list').offset().top - 15

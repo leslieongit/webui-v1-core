@@ -3,8 +3,7 @@
   {{'campaign_review_notes'|translate}}
   <i class="delete icon" ng-click="removeNote('description')" ng-if="note.description"></i>
 </div>
-<div class="notes" ng-class="{'has-note ui basic segment' : note.description, 'field-empty': !campaign.description}" title="Campaign Description"
-  ng-click="addNotes('description')">
+<div class="notes" ng-class="{'has-note ui basic segment' : note.description, 'field-empty': !campaign.description}" ng-click="addNotes('campaign_review_description_note_title', 'description')">
   <div ng-show="campaign.description" class="campaign-story">
     <div html-render html="campaign.description" class="fr-view"></div>
   </div>
@@ -58,8 +57,8 @@
       {{'campaign_review_notes'|translate}}
       <i class="delete icon" ng-click="removeNote('managers')" ng-if="note.managers"></i>
     </div>
-    <div class="notes" ng-class="{'has-note ui basic segment' : note.managers}" title="{{'campaign_review_profile_note_title' | translate}}"
-      ng-click="addNotes($event, 'managers')">
+    <div class="notes" ng-class="{'has-note ui basic segment' : note.managers}"
+      ng-click="addNotes('campaign_review_profile_note_title', 'managers')">
       <div class="cp-menu-tabs ui top attached tabular menu" ng-show="!site_campaign_hide_creator_info">
         <a class="item" data-tab="personal-profile" ng-class="{active: campaign.profile_type_id == 1 && !campaign.toggle_profile_type_view_advance || !campaign.business_organizations || (campaign.toggle_profile_type_view_advance && campaign.profile_type_view_id == 2)|| (campaign.toggle_profile_type_view_advance && campaign.profile_type_view_id == 0 && campaign.profile_type_id == 1)}"
           ng-show="!(campaign.toggle_profile_type_view_advance && campaign.profile_type_view_id == 1)" translate>campaign_page_creator</a>
@@ -199,6 +198,9 @@
     <div class="insert-fb-comments" ng-if="comment_system == 'facebook'">
       <div id="fb-comment-box" dyn-fb-comment-box page-href="{{currentAbsUrl}}" numposts="5" colorscheme="light">
       </div>
+    </div>
+    <div ng-if="comment_system =='disqus' && !disqus_shortname">
+        {{'campaign_comment_disqus_shortname_missing_msg'|translate}}
     </div>
     <div id="insert_disqus" ng-if="comment_system =='disqus'"></div>
     <!-- DISQUS End -->
