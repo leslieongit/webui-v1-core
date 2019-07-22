@@ -8,6 +8,13 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
   $scope.rewardsQueue = [];
   var attr_array = [];
 
+  var businessData = {
+    business_id: null,
+    phone_id: null,
+    address_id: null
+  };
+
+
   $scope.organization_name = {};
 
   $scope.selectedContributionAnon = {};
@@ -47,6 +54,8 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
     number: '',
     phonetype: ''
   }
+
+  $scope.selectedReward = {};
 
   $scope.contributionMessage = '';
   if ($rootScope.contributionMessage) {
@@ -571,6 +580,7 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
     $rootScope.page_title = $scope.campaign.name ? $scope.campaign.name + ' - Contribution' : 'Contribution';
     $scope.campaign_loc = $scope.campaign.uri_paths[0].path;
     window.b = $scope.campaign_loc;
+
     angular.forEach($scope.campaign.pledges, function(value, key) {
       if ($scope.pledgeLevel == value.pledge_level_id) {
         $scope.pledgeindex = count;
@@ -784,6 +794,19 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
     // get shipping options
     Restangular.one('campaign', $scope.campaign_id).one('pledge-level', $scope.pledgeLevel).one('shipping-option').customGET().then(function(data) {
       $scope.shippingOption = data;
+
+
+      setTimeout(function() {
+        //Default to landline
+        if (!$scope.newNumberCreated.number && !$scope.newNumberCreated.phonetype) {
+          $('#phone_type_Landline').click();
+        }
+
+        //If already chosen, use chosen one instead
+        if ($scope.newNumberCreated.phonetype) {
+          $('#phone_type_' + $scope.newNumberCreated.phonetype.name).click();
+        }
+      }, 100);
     });
   }
   // set up objects to send through POST
@@ -853,9 +876,32 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
     } else if (key == "newNumber") {
       $scope.toggle.selectedNumber = false;
       $('#phone-number-form').form('clear');
+
+      setTimeout(function() {
+        //Default to landline
+        if (!$scope.newNumberCreated.number && !$scope.newNumberCreated.phonetype) {
+          $('#phone_type_Landline').click();
+        }
+
+        //If already chosen, use chosen one instead
+        if ($scope.newNumberCreated.phonetype) {
+          $('#phone_type_' + $scope.newNumberCreated.phonetype.name).click();
+        }
+      }, 100);
+
     } else if (key == "newCompany") {
       $scope.toggle.newCompany = false;
       $('#new-user-company-form').form('clear');
+
+      //Default to landline
+      if (!$scope.newNumberCreated.number && !$scope.newNumberCreated.phonetype) {
+        $('#phone_type_Landline').click();
+      }
+
+      //If already chosen, use chosen one instead
+      if ($scope.newNumberCreated.phonetype) {
+        $('#phone_type_' + $scope.newNumberCreated.phonetype.name).click();
+      }
     }
     $scope.toggle[key] = !$scope.toggle[key];
     if ($scope.toggle[key] == false && key == "newAddress") {
@@ -1571,6 +1617,97 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
     }
   }
 
+  function generateTokenOrPledge(promises, pledgeAttributes, businessData) {
+    //Check for Stripe Tokenization Toggle - Don't create token if Card Selected
+    //Attach credit card token to $scope.creditCard if Stripe Tokenization
+    if ($scope.site_stripe_tokenization_settings.toggle && !$scope.toggle.selectedCard) {
+
+      //Create Token
+      $scope.stripe.createToken($scope.cardNumberElement, $scope.stripeExtraDetails).then(function(result) {
+        if (result.error) {
+
+          $timeout(function() {
+            $rootScope.removeFloatingMessage();
+            // Inform the user if there was an error
+            var errorElement = angular.element(document.querySelector('#card-errors')).html(result.error.message);
+            msg = {
+              'header': 'pledge_campaign_stripe_elements_error'
+            }
+            $rootScope.floatingMessage = msg;
+            $('#finalpledge').removeClass('disabled');
+          }, 500);
+
+          $scope.valcheck = false;
+        } else {
+          // Assign token to credit card 
+          if ($scope.pledgerAccountConnected == false) {
+            //Use Token to Extract CC Info
+            $scope.creditCard.card_token = result.token.id;
+            promises.push(StripeService.newPledgerAccount($scope.creditCard));
+          } else if (!$scope.toggle.newCard && !$scope.selectedCardID) {
+            $scope.creditCard.card_token = result.token.id;
+            //Pledger Acc found, extract CC info with Token
+            promises.push(StripeService.createCard($scope.pledgerAccountID, $scope.creditCard));
+          }
+          $scope.resolvePromiseChain(promises, pledgeAttributes, businessData);
+        }
+      });
+    } else {
+      //Don't attach credit card_token to $scope.creditCard  
+      if ($scope.pledgerAccountConnected == false) {
+        promises.push(StripeService.newPledgerAccount($scope.creditCard));
+      } else if (!$scope.toggle.newCard && !$scope.selectedCardID) {
+        promises.push(StripeService.createCard($scope.pledgerAccountID, $scope.creditCard));
+      }
+      $scope.resolvePromiseChain(promises, pledgeAttributes, businessData);
+    }
+  }
+
+  function addAddressPhoneNumber(business_organization_id, businessPromises, addressInfo, phoneInfo, bypass_extra) {
+    if (business_organization_id) {
+      addressInfo['business_organization_id'] = business_organization_id;
+      phoneInfo['business_organization_id'] = business_organization_id;
+    }
+    if (!$scope.toggle.newAddress && bypass_extra) {
+      businessPromises.push(Restangular.one('account/address').customPOST(addressInfo));
+    }
+    if (!$scope.toggle.newAddress && !bypass_extra) {
+      //Check selectedAddress
+      if (!$scope.selectedAddress && $scope.selectedReward && $scope.selectedReward.shipping) {
+        businessPromises.push(Restangular.one('account/address').customPOST(addressInfo));
+      }
+    }
+    if ($scope.newNumberCreated.number.length > 0 && $scope.newNumberCreated.phonetype) {
+      phoneInfo.number = $scope.newNumberCreated.number;
+      phoneInfo.phone_number_type_id = $scope.newNumberCreated.phonetype.id;
+      phoneInfo.person_id = UserService.id;
+      businessPromises.push(Restangular.one('account/phone-number').customPOST(phoneInfo));
+    }
+  }
+
+  function attachBusinessToAddressPhone(business_id, businessPromises, address, phoneInfo, businessData, promises, pledgeAttributes) {
+
+    addAddressPhoneNumber(business_id, businessPromises, address, phoneInfo, true);
+    //Resolve Address/Phone
+    if (businessPromises && businessPromises.length) {
+      $q.all(businessPromises).then(function(resolved) {
+        // loop through the results and find value
+        angular.forEach(resolved, function(value) {
+          if (value.address_id) {
+            businessData.address_id = value.address_id;
+            $scope.selectedAddressID = value.address_id;
+          }
+          if (value.phone_number_id) {
+            businessData.phone_id = value.phone_number_id;
+            $scope.chosenPhoneNumberId = value.phone_number_id;
+          }
+        });
+        generateTokenOrPledge(promises, pledgeAttributes, businessData);
+        return;
+      });
+    }
+    generateTokenOrPledge(promises, pledgeAttributes, businessData);
+  }
 
   //submit form
   $scope.submit = function() {
@@ -1708,11 +1845,20 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
       $scope.newAddressFormValidation();
     }
 
-    if ($scope.acceptExtraPledgeData && ($scope.selectedAccountType == 'Organization')) {
-      if ($scope.toggle.newCompany) {
-        $scope.chooseBusinessFormValidation();
+    if ($scope.acceptExtraPledgeData) {
+
+      if ($scope.selectedAccountType == 'Organization') {
+        if ($scope.toggle.newCompany) {
+          $scope.chooseBusinessFormValidation();
+        } else {
+          $scope.newBusinessFormValidation();
+        }
+      }
+
+      if ($scope.toggle.newNumber) {
+        phoneNumberValidation();
       } else {
-        $scope.newBusinessFormValidation();
+        newPhoneNumberValidation();
       }
     }
 
@@ -1776,189 +1922,52 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
 
       var businessRequest = null;
       var businessPromises = [];
-      var businessData = null;
-      if ($scope.acceptExtraPledgeData && ($scope.selectedAccountType == 'Organization')) {
-        //if no company selected, create one
-        if (!$scope.selectedCompany) {
-          businessRequest = Restangular.one('account/business').customPOST($scope.businessSelected).then(function(success) {
 
-            businessData = {
-              business_id: '',
-              phone_id: '',
-              address_id: ''
-            };
+      if ($scope.acceptExtraPledgeData) {
 
-            businessData.business_id = success.business_organization_id;
-            // Checks if the new number form is visible
-            if ($scope.newNumberCreated.number.length > 0 && $scope.newNumberCreated.phonetype) {
-              $scope.phoneInfo.number = $scope.newNumberCreated.number;
-              $scope.phoneInfo.phone_number_type_id = $scope.newNumberCreated.phonetype.id;
-              $scope.phoneInfo.person_id = UserService.id;
-              $scope.phoneInfo.business_organization_id = success.business_organization_id;
-              var phoneRequest = Restangular.one('account/phone-number').customPOST($scope.phoneInfo);
-              phoneRequest.then(function(success) {
-                getPhoneNumber(paramID);
-                $scope.chosenPhoneNumberId = success.id;
-              });
-              businessPromises.push(phoneRequest);
-            }
-            if (!$scope.toggle.newAddress) {
-              $scope.address.business_organization_id = success.business_organization_id;
-              businessPromises.push(Restangular.one('account/address').customPOST($scope.address));
-            }
-
-            $q.all(businessPromises).then(function(resolved) {
-              // loop through the results and find value
-              angular.forEach(resolved, function(value) {
-                if (value.address_id) {
-                  businessData.address_id = value.address_id;
-                  $scope.selectedAddressID = value.address_id;
-                }
-                if (value.phone_number_id) {
-                  businessData.phone_id = value.phone_number_id;
-                  $scope.chosenPhoneNumberId = value.phone_number_id;
-                }
-              });
-              //Check for Stripe Tokenization Toggle - Don't create token if Card Selected
-              //Attach credit card token to $scope.creditCard if Stripe Tokenization
-              if ($scope.site_stripe_tokenization_settings.toggle && !$scope.toggle.selectedCard) {
-
-                //Create Token
-                $scope.stripe.createToken($scope.cardNumberElement, $scope.stripeExtraDetails).then(function(result) {
-                  if (result.error) {
-
-                    $timeout(function() {
-                      $rootScope.removeFloatingMessage();
-                      // Inform the user if there was an error
-                      var errorElement = angular.element(document.querySelector('#card-errors')).html(result.error.message);
-                      msg = {
-                        'header': 'pledge_campaign_stripe_elements_error'
-                      }
-                      $rootScope.floatingMessage = msg;
-                      $('#finalpledge').removeClass('disabled');
-                    }, 500);
-
-                    $scope.valcheck = false;
-                  } else {
-                    // Assign token to credit card 
-                    if ($scope.pledgerAccountConnected == false) {
-                      //Use Token to Extract CC Info
-                      $scope.creditCard.card_token = result.token.id;
-                      promises.push(StripeService.newPledgerAccount($scope.creditCard));
-                    } else if (!$scope.toggle.newCard && !$scope.selectedCardID) {
-                      $scope.creditCard.card_token = result.token.id;
-                      //Pledger Acc found, extract CC info with Token
-                      promises.push(StripeService.createCard($scope.pledgerAccountID, $scope.creditCard));
-                    }
-                    $scope.resolvePromiseChain(promises, pledgeAttributes, businessData);
-                  }
-                });
-              } else {
-                //Don't attach credit card_token to $scope.creditCard  
-                if ($scope.pledgerAccountConnected == false) {
-                  promises.push(StripeService.newPledgerAccount($scope.creditCard));
-                } else if (!$scope.toggle.newCard && !$scope.selectedCardID) {
-                  promises.push(StripeService.createCard($scope.pledgerAccountID, $scope.creditCard));
-                }
-                $scope.resolvePromiseChain(promises, pledgeAttributes, businessData);
-              }
+        //Check Selected Account Type - Organization
+        if ($scope.selectedAccountType == 'Organization') {
+          //Check if need to make a new one
+          if (!$scope.selectedCompany) {
+            businessRequest = Restangular.one('account/business').customPOST($scope.businessSelected).then(function(success) {
+              businessData.business_id = success.business_organization_id;
+              attachBusinessToAddressPhone(businessData.business_id, businessPromises, $scope.address, $scope.phoneInfo, businessData);
             });
-          });
-          return;
+          }
+
+          //No need to make a new one
+          if ($scope.selectedCompany) {
+            attachBusinessToAddressPhone($scope.selectedCompany.business_organization_id, businessPromises, $scope.address, $scope.phoneInfo, businessData, promises, pledgeAttributes);
+          }
         }
+
+        if ($scope.selectedAccountType == 'Individual') {
+          attachBusinessToAddressPhone(null, businessPromises, $scope.address, $scope.phoneInfo, businessData, promises, pledgeAttributes);
+        }
+
+        return;
       }
 
-      //if organization - and toggle on, we need to create phone number and address if form is used
-      if ($scope.acceptExtraPledgeData && ($scope.selectedAccountType == 'Organization')) {
-        if (businessRequest == null) {
-          if ($scope.newNumberCreated.number.length > 0 && $scope.newNumberCreated.phonetype) {
-            $scope.phoneInfo.number = $scope.newNumberCreated.number;
-            $scope.phoneInfo.phone_number_type_id = $scope.newNumberCreated.phonetype.id;
-            $scope.phoneInfo.person_id = UserService.id;
-            $scope.phoneInfo.business_organization_id = $scope.selectedCompany.business_organization_id;
-            var phoneRequest = Restangular.one('account/phone-number').customPOST($scope.phoneInfo);
-            phoneRequest.then(function(success) {
-              getPhoneNumber(paramID);
-              $scope.chosenPhoneNumberId = success.id;
-            });
-            promises.push(phoneRequest);
+      //Just Pledge
+      addAddressPhoneNumber(null, businessPromises, $scope.address, $scope.phoneInfo, false);
+      //Resolve Address/Phone
+      $q.all(businessPromises).then(function(resolved) {
+        // loop through the results and find value
+        angular.forEach(resolved, function(value) {
+          if (value.address_id) {
+            businessData.address_id = value.address_id;
+            $scope.selectedAddressID = value.address_id;
           }
-          if (!$scope.toggle.newAddress) {
-            $scope.address.business_organization_id = $scope.selectedCompany.business_organization_id;
-            promises.push(Restangular.one('account/address').customPOST($scope.address));
-          }
-        }
-      } else {
-        if (!$scope.toggle.newAddress && $scope.selectedReward) {
-          if ($scope.acceptExtraPledgeData && ($scope.selectedAccountType == 'Organization')) {
-            if (businessData) {
-              pledgeInfo['business_organization_id'] = parseInt(businessData.business_id);
-              pledgeInfo['shipping_address_id'] = parseInt(businessData.address_id);
-              pledgeInfo['phone_number_id'] = parseInt(businessData.phone_id);
-            }
-          }
-          //submit new address if address field being toggled on
-          if ($scope.selectedReward.shipping) {
-            promises.push(Restangular.one('account/address').customPOST($scope.address));
-          }
-        }
-        // Checks if the new number form is visible
-        if ($scope.newNumberCreated.number.length > 0 && $scope.newNumberCreated.phonetype) {
-          $scope.phoneInfo.number = $scope.newNumberCreated.number;
-          $scope.phoneInfo.phone_number_type_id = $scope.newNumberCreated.phonetype.id;
-          $scope.phoneInfo.person_id = UserService.id;
-          var phoneRequest = Restangular.one('account/phone-number').customPOST($scope.phoneInfo);
-          phoneRequest.then(function(success) {
-            getPhoneNumber(paramID);
-            $scope.chosenPhoneNumberId = success.id;
-          });
-          promises.push(phoneRequest);
-        }
-      }
-
-      //Check for Stripe Tokenization Toggle - Don't create token if Card Selected
-      //Attach credit card token to $scope.creditCard if Stripe Tokenization
-      if ($scope.site_stripe_tokenization_settings.toggle && !$scope.toggle.selectedCard) {
-
-        //Create Token
-        $scope.stripe.createToken($scope.cardNumberElement, $scope.stripeExtraDetails).then(function(result) {
-          if (result.error) {
-
-            $timeout(function() {
-              $rootScope.removeFloatingMessage();
-              // Inform the user if there was an error
-              var errorElement = angular.element(document.querySelector('#card-errors')).html(result.error.message);
-              msg = {
-                'header': 'pledge_campaign_stripe_elements_error'
-              }
-              $rootScope.floatingMessage = msg;
-              $('#finalpledge').removeClass('disabled');
-            }, 500);
-
-            $scope.valcheck = false;
-          } else {
-            // Assign token to credit card 
-            if ($scope.pledgerAccountConnected == false) {
-              //Use Token to Extract CC Info
-              $scope.creditCard.card_token = result.token.id;
-              promises.push(StripeService.newPledgerAccount($scope.creditCard));
-            } else if (!$scope.toggle.newCard && !$scope.selectedCardID) {
-              $scope.creditCard.card_token = result.token.id;
-              //Pledger Acc found, extract CC info with Token
-              promises.push(StripeService.createCard($scope.pledgerAccountID, $scope.creditCard));
-            }
-            $scope.resolvePromiseChain(promises, pledgeAttributes);
+          if (value.phone_number_id) {
+            businessData.phone_id = value.phone_number_id;
+            $scope.chosenPhoneNumberId = value.phone_number_id;
           }
         });
-      } else {
-        //Don't attach credit card_token to $scope.creditCard  
-        if ($scope.pledgerAccountConnected == false) {
-          promises.push(StripeService.newPledgerAccount($scope.creditCard));
-        } else if (!$scope.toggle.newCard && !$scope.selectedCardID) {
-          promises.push(StripeService.createCard($scope.pledgerAccountID, $scope.creditCard));
-        }
-        $scope.resolvePromiseChain(promises, pledgeAttributes);
-      }
+
+        //Pledge
+        generateTokenOrPledge(promises, pledgeAttributes, businessData);
+      });
+
     } else {
       $rootScope.scrollToError();
     }
@@ -1998,9 +2007,17 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
 
       if ($scope.acceptExtraPledgeData && ($scope.selectedAccountType == 'Organization')) {
         if (businessData) {
-          pledgeInfo['business_organization_id'] = parseInt(businessData.business_id);
-          pledgeInfo['shipping_address_id'] = parseInt(businessData.address_id);
-          pledgeInfo['phone_number_id'] = parseInt(businessData.phone_id);
+          if ($scope.selectedCompany && $scope.selectedCompany.hasOwnProperty('business_organization_id')) {
+            pledgeInfo['business_organization_id'] = parseInt($scope.selectedCompany.business_organization_id);
+          } else {
+            pledgeInfo['business_organization_id'] = parseInt(businessData.business_organization_id);
+          }
+          if ($scope.selectedAddressID) {
+            pledgeInfo['shipping_address_id'] = parseInt($scope.selectedAddressID);
+          }
+          if ($scope.chosenPhoneNumberId) {
+            pledgeInfo['phone_number_id'] = parseInt($scope.chosenPhoneNumberId);
+          }
         }
       }
 
@@ -2015,7 +2032,7 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
       }
 
       // if backer approve as charity
-      if (pledgeAttributes['charity']) {
+      if (pledgeAttributes.hasOwnProperty('charity') && pledgeAttributes['charity']) {
         if (pledgeAttributes['charity'].charity_final_confirmation) {
           pledgeInfo.charity_helper = 1;
         }
@@ -2757,7 +2774,9 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
   $scope.goBackToCampaign = function() {
     try {
       window.location.href = $scope.campaign.uri_paths[0].path;
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   // total cost of shipping

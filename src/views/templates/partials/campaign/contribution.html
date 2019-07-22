@@ -395,9 +395,7 @@
                                     <div class="fourteen wide field">
                                         <div class="ui selection fluid dropdown card-select" id="carddropdown" ng-click="setFlag('newCard', true)" default-value="{{default_card.last4}}">
                                             <input name="choose_card" type="hidden">
-                                            <div class="default text">
-                                                Choose a credit card
-                                            </div>
+                                            <div class="default text" translate="pledge_campaign_creditcard_choose"></div>
                                             <i class="dropdown icon"></i>
                                             <div class="menu">
                                                 <div ng-repeat="card in pledgerCards" ng-click="cardSelected(card,$index)" id="cardinfo" class="item c{{card.stripe_account_card_type}}"
@@ -569,9 +567,7 @@
                             <div class="field">
                                 <div class="ui selection fluid dropdown address-select">
                                     <input name="choose_address" type="hidden">
-                                    <div class="default text">
-                                        Choose a shipping address
-                                    </div>
+                                    <div class="default text" translate="pledge_campaign_shipping_choose_address"></div>
                                     <i class="dropdown icon"></i>
                                     <div class="menu">
                                         <div ng-repeat="address in profileAddress.personal" ng-click="setFlag('newAddress', true); addressSelected(address)" class="item">

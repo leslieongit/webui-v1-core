@@ -44,22 +44,26 @@
       <div class="column">
         <div ng-include src="'views/templates/partials/response-message.html'"></div>
 
+        <div class="ui warning message" ng-show="createdCampaigns == 0 && backedCampaignFilter.pagination.totalentries == 0" translate>
+          profile_no_data
+        </div>
+
         <div id="user-profile-tabs">
           <div class="menu-tabs ui top attached secondary pointing menu">
 
-            <a class="item active" data-tab="campaigns-created" ng-show="createdCampaigns.length">
+            <a class="item" ng-class="{'active' : (createdCampaigns.length && !backedCampaignFilter.pagination.totalentries) || (createdCampaigns.length && backedCampaignFilter.pagination.totalentries) }" data-tab="campaigns-created" ng-show="createdCampaigns.length">
               <h3 class="ui header">{{'profile_campaign_created'|translate}}
                 <span class="created-number ui green label">{{createdCampaignFilter.pagination.totalentries}}</span>
               </h3>
             </a>
-            <a class="item" data-tab="campaigns-backed">
+            <a class="item" ng-class="{'active' : (!createdCampaigns.length && backedCampaignFilter.pagination.totalentries) }" data-tab="campaigns-backed" ng-show="backedCampaignFilter.pagination.totalentries">
               <h3 class="ui header"> {{'profile_campaign_backed'|translate}}
                 <span class="backed-number ui green label">{{backedCampaignFilter.pagination.totalentries}}</span>
               </h3>
             </a>
           </div>
           <!-- menu-tabs end -->
-          <div class="campaigns-created-tab ui middle attached tab active" data-tab="campaigns-created">
+          <div class="campaigns-created-tab ui middle attached tab" ng-class="{'active' : (createdCampaigns.length && !backedCampaignFilter.pagination.totalentries) || (createdCampaigns.length && backedCampaignFilter.pagination.totalentries) }" data-tab="campaigns-created">
             <div class="ui warning message" ng-show="createdCampaigns==0" translate> profile_no_campaign </div>
             <div class="campaign-list-items ui four column stackable grid" ng-show="createdCampaigns.length>0">
               <div class="campaign-thumb four wide column" ng-repeat="campaign in createdCampaigns">
@@ -95,7 +99,7 @@
             </div>
           </div>
           <!-- tab end -->
-          <div class="campaigns-backed-tab ui middle attached tab" data-tab="campaigns-backed">
+          <div class="campaigns-backed-tab ui middle attached tab" ng-class="{'active' : (!createdCampaigns.length && backedCampaignFilter.pagination.totalentries)}" data-tab="campaigns-backed">
             <div class="ui warning message" ng-show="noCampaignBacked" translate>{{'profile_no_backer'| translate}} </div>
             <div class="campaign-list-items ui four column stackable grid" ng-show="backedCampaigns.length>0">
               <div class="campaign-thumb four wide column" ng-repeat="campaign in backedCampaigns">

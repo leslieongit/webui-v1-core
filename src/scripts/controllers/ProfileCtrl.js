@@ -61,7 +61,7 @@ app.controller('ProfileCtrl', function($scope, $routeParams, $rootScope, Restang
       }
     }
 
-    if($scope.public_settings.site_campaign_enable_organization_name){
+    if ($scope.public_settings.site_campaign_enable_organization_name) {
       Restangular.one('portal/person/attribute?filters={"person_id":"' + person_id + '"}').customGET().then(function(success) {
         $scope.organization_name.value = success[0].attributes['organization_name'];
         $scope.organization_name.ein = success[0].attributes['ein'];

@@ -66,6 +66,8 @@
   "campaign_pledge_campaign_reward_estimated_shiping": "Estimated Shipping: ",
   "campaign_pledge_campaign_start_date": "Started on",
   "campaign_pledge_campaign_start_date1": "Starts on",
+  "campaign_pledge_campaign_started_on": "This campaign started on ",
+  "campaign_pledge_campaign_close_on": "and will close on",
   "campaign_pledge_campaign_end_message": "This campaign has closed, funding is no longer available.",
   "campaign_pledge_campaign_contribute_option": "How would you like to contribute?",
   "campaign_pledge_campaign_contribute_option_1": "Login/Register",
@@ -92,6 +94,7 @@
   "campaign_pledge_campaign_backer": "Backers",
   "campaign_pledge_campaign_backer_singular": "Backer",
   "campaign_pledge_campaign_reward_soldout": "Sorry, we are sold out.",
+  "campaign_pledge_campaign_reward_past_threshold": "This reward is not available.",
   "campaign_pledge_campaign_reward_limited": "Limited Reward:",
   "campaign_pledge_campaign_reward_limited_leftoff": "left of",
   "campaign_pledge_campaign_reward": "Contribute For Rewards",
@@ -140,5 +143,6 @@
   "cookie_consent_link": "/cookies",
   "document_write_prompt_msg": "Code snippets which use \"document.write\" are not supported with existing framework. Please let your vendor know to switch or upgrade their code.",
   "admin_only_popup_msg": "This field can only be viewed by website administrator",
-  "admin_only_popup_label": "Admin Only"
+  "admin_only_popup_label": "Admin Only",
+  "plural_letter": "s"
 }

@@ -511,7 +511,7 @@
                                   <i class="users icon"></i>
                                   <span class="backer-number"> {{pledge.total_backers}} </span>
                                   <span>{{'campaign_pledge_campaign_reward_backer' | translate}}
-                                    <span ng-if="pledge.total_backers>1">s</span>
+                                    <span ng-if="pledge.total_backers>1">{{'plural_letter' | translate}}</span>
                                   </span>
                                 </div>
 
@@ -566,7 +566,7 @@
                                   <i class="users icon"></i>
                                   <span class="backer-number"> {{pledge.total_backers}} </span>
                                   <span>{{'campaign_pledge_campaign_reward_backer' | translate}}
-                                    <span ng-if="pledge.total_backers>1">s</span>
+                                    <span ng-if="pledge.total_backers>1">{{'plural_letter' | translate}}</span>
                                   </span>
                                 </div>
 
@@ -1098,7 +1098,7 @@
                               <i class="users icon"></i>
                               <span class="backer-number"> {{pledge.total_backers}} </span>
                               <span>{{'campaign_pledge_campaign_reward_backer' | translate}}
-                                <span ng-if="pledge.total_backers>1">s</span>
+                                <span ng-if="pledge.total_backers>1">{{'plural_letter' | translate}}</span>
                               </span>
                             </div>
                             <div class="reward-backers" ng-if="pledge.total_backers == 0">

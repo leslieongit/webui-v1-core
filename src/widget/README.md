@@ -62,4 +62,4 @@ Folow the deployment procedure in the core webui repo for normal deployment proc
 
 ## Reach Deployment
 
-Build everything as normal, then copy folder called "production" into "src/widget/production" folder in the thrinacia-webui-reach git repo. Do the gulp build and then adjust the vhost with new checksum and restart nginx. If translation is adjusted then copy "translation" folder for widget to "src/widget/translation" folder in the thrinacia-webui-reach git repo. Make sure to do the gulp build.
+Build everything as normal, then copy folder called "production" into "src/widget/production" folder in the thrinacia-webui-reach git repo and also copy folder called "translation" into "src/widget/translation" folder in the thrinacia-webui-reach git repo if any translations were added. Do the gulp build and then adjust the vhost with new checksum and restart nginx. If translation is adjusted then copy "translation" folder for widget to "src/widget/translation" folder in the thrinacia-webui-reach git repo. Make sure to do the gulp build.

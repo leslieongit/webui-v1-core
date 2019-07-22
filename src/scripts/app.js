@@ -179,6 +179,11 @@ app.run(function($sce, $http, $window, $rootScope, $route, $location, $templateC
     $rootScope.site_company = success.public_setting.site_company;
     $rootScope.ogMeta.site_name = $rootScope.site_company;
 
+    //Check facebook app id
+    if (success.public_setting.hasOwnProperty('site_facebook_app_id')) {
+      $rootScope.facebook_app_id = success.public_setting.site_facebook_app_id;
+    }
+
     // Site Name Meta translation
     $translate("site_name_meta").then(function(translation) {
       if (translation != "site_name_meta" && translation != "") {

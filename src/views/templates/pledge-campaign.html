@@ -225,7 +225,7 @@
                 <div ng-click="scrollToRewardParam()" ng-if="campaign.pledges" class="ui green label change-reward" translate> pledge_campaign_choose_reward
                 </div>
                 <div class="ui segment reward-wrap" ng-if="campaign.pledges">
-                  <div ng-if="selectedReward">
+                  <div ng-if="selectedReward && pledgeLevel">
                     <div class="ui two column stackable grid reward-header">
                       <div class="ten wide column reward-title">
                         <h3 class="title">{{selectedReward.name}}</h3>
@@ -246,7 +246,7 @@
                     <div class="reward-etd" ng-if="selectedReward.estimated_delivery_time">{{'pledge_campaign_estimate_dlivery' | translate}} {{selectedReward.estimated_delivery_time | formatDate:"MMMM DD, YYYY" }}</div>
                   </div>
 
-                  <div ng-if="!selectedReward">
+                  <div ng-if="selectedReward && !pledgeLevel">
                     <div translate> pledge_campaign_reward_message</div>
                   </div>
                 </div>
@@ -288,7 +288,7 @@
                       </div>
                     </form>
                   </div>
-                  <div class="eight wide column extra-pledge" ng-if="selectedReward">
+                  <div class="eight wide column extra-pledge" ng-if="selectedReward && pledgeLevel">
                     <h4 class="title" translate> pledge_campaign_extracontribution </h4>
                     <div class="amount" ng-if="pledgeAmount-selectedReward.amount > 0" ng-bind-html="pledgeAmount-selectedReward.amount | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
                     <div class="amount" ng-if="pledgeAmount-selectedReward.amount <= 0" ng-bind-html="0 | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
@@ -687,9 +687,7 @@
                         <div class="fourteen wide field">
                           <div class="ui selection fluid dropdown card-select" id="carddropdown" ng-click="setFlag('newCard', true)" default-value="{{default_card.last4}}">
                             <input name="choose_card" type="hidden">
-                            <div class="default text">
-                              Choose a credit card
-                            </div>
+                            <div class="default text" translate="pledge_campaign_creditcard_choose"></div>
                             <i class="dropdown icon"></i>
                             <div class="menu">
                               <div ng-repeat="card in pledgerCards" ng-click="cardSelected(card,$index)" id="cardinfo" class="item c{{card.stripe_account_card_type}}" value="{{card.last4}}">
@@ -863,9 +861,7 @@
                         <div class="fourteen wide field">
                           <div class="ui selection fluid dropdown card-select" id="carddropdown" ng-click="setFlag('newCard', true)" default-value="{{default_card.last4}}">
                             <input name="choose_card" type="hidden">
-                            <div class="default text">
-                              Choose a credit card
-                            </div>
+                            <div class="default text" translate="pledge_campaign_creditcard_choose"></div>
                             <i class="dropdown icon"></i>
                             <div class="menu">
                               <div ng-repeat="card in pledgerCards" ng-click="cardSelected(card,$index)" id="cardinfo" class="item c{{card.stripe_account_card_type}}" value="{{card.last4}}">
@@ -1024,9 +1020,7 @@
                     <div class="field">
                       <div class="ui selection fluid dropdown address-select" ng-if="!acceptExtraPledgeData">
                         <input name="choose_address" type="hidden">
-                        <div class="default text">
-                          Choose a shipping address
-                        </div>
+                        <div class="default text" translate="pledge_campaign_shipping_choose_address"></div>
                         <i class="dropdown icon"></i>
                         <div class="menu">
                           <div ng-repeat="address in profileAddress.personal" ng-click="setFlag('newAddress', true); addressSelected(address)" class="item">
@@ -1044,9 +1038,7 @@
                       </div>
                       <div class="ui selection fluid dropdown address-select" ng-if="acceptExtraPledgeData && selectedAccountType == 'Individual'">
                         <input name="choose_address" type="hidden">
-                        <div class="default text">
-                          Choose a shipping address
-                        </div>
+                        <div class="default text" translate="pledge_campaign_shipping_choose_address"></div>
                         <i class="dropdown icon"></i>
                         <div class="menu">
                           <div ng-repeat="address in profileAddress.personal" ng-click="setFlag('newAddress', true); addressSelected(address)" class="item">
@@ -1064,9 +1056,7 @@
                       </div>
                       <div class="ui selection fluid dropdown address-select" ng-if="acceptExtraPledgeData && selectedAccountType == 'Organization'">
                         <input name="choose_address" type="hidden">
-                        <div class="default text">
-                          Choose a shipping address
-                        </div>
+                        <div class="default text" translate="pledge_campaign_shipping_choose_address"></div>
                         <i class="dropdown icon"></i>
                         <div class="menu">
                           <div ng-repeat="address in profileAddress.business" ng-click="setFlag('newAddress', true); addressSelected(address)" class="item">
@@ -1357,7 +1347,7 @@
                           <input type="hidden" name="new_phone_type">
                           <i class="dropdown icon"></i>
                           <div class="menu">
-                            <div class="item" ng-repeat="type in phonetype" ng-click="phoneTypeSelected(type)">{{type.name | translate}}</div>
+                            <div class="item" ng-repeat="type in phonetype" id="phone_type_{{type.name}}" ng-click="phoneTypeSelected(type)">{{type.name | translate}}</div>
                           </div>
                         </div>
                       </div>
@@ -1982,9 +1972,7 @@
                     <div class="field">
                       <div class="ui selection fluid dropdown address-select">
                         <input name="choose_address" type="hidden">
-                        <div class="default text">
-                          Choose a shipping address
-                        </div>
+                        <div class="default text" translate="pledge_campaign_shipping_choose_address"></div>
                         <i class="dropdown icon"></i>
                         <div class="menu">
                           <div ng-repeat="address in profileAddress.personal" ng-click="setFlag('newAddress', true); addressSelected(address)" class="item">
@@ -2210,9 +2198,7 @@
                           <div class="fourteen wide field">
                             <div class="ui selection fluid dropdown card-select" id="carddropdown" ng-click="setFlag('newCard', true)" default-value="{{default_card.last4}}">
                               <input name="choose_card" type="hidden">
-                              <div class="default text">
-                                Choose a credit card
-                              </div>
+                              <div class="default text" translate="pledge_campaign_creditcard_choose"></div>
                               <i class="dropdown icon"></i>
                               <div class="menu">
                                 <div ng-repeat="card in pledgerCards" ng-click="cardSelected(card,$index)" id="cardinfo" class="item c{{card.stripe_account_card_type}}" value="{{card.last4}}">

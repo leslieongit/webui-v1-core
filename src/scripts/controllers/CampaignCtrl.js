@@ -1,4 +1,4 @@
-app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScroll, $routeParams, $rootScope, $scope, $filter, $translatePartialLoader, $translate, $window, PortalSettingsService, RESOURCE_REGIONS, Restangular, $route, $location, UserService, DisqusShortnameService, RestFullResponse, API_URL, redirectService, RequestCacheService, CampaignSettingsService, $sce, ANONYMOUS_COMMENT, SOCIAL_SHARING_OPTIONS, VideoLinkService) {
+app.controller('CampaignCtrl', function($timeout, $http, $element, $anchorScroll, $routeParams, $rootScope, $scope, $filter, $translatePartialLoader, $translate, $window, PortalSettingsService, RESOURCE_REGIONS, Restangular, $route, $location, UserService, DisqusShortnameService, RestFullResponse, API_URL, redirectService, RequestCacheService, CampaignSettingsService, $sce, ANONYMOUS_COMMENT, SOCIAL_SHARING_OPTIONS, VideoLinkService) {
   $scope.RESOURCE_REGIONS = RESOURCE_REGIONS;
   $scope.campaign_id = $rootScope.campaignId;
   $scope.user = UserService;
@@ -26,9 +26,11 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
   $scope.duration = "";
   $scope.dtype = "";
 
-  $(document).ready(function () {
+  $(document).ready(function() {
     window.scrollTo(0, 0);
   });
+
+  $scope.facebook_url = null;
 
   $scope.showCampaign = 0;
   $scope.showFaq = 0;
@@ -39,7 +41,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
 
   var guestContribDisabled = false;
 
-  PortalSettingsService.getSettingsObj().then(function (success) {
+  PortalSettingsService.getSettingsObj().then(function(success) {
     $scope.public_settings = success.public_setting;
     $scope.reward_html_editor = success.public_setting.site_theme_campaign_reward_html_editor;
     native_lookup = success.public_setting.site_theme_shipping_native_lookup;
@@ -72,6 +74,12 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
     $scope.isRemoveCampaignLinks = $scope.public_settings.site_campaign_remove_campaign_links;
     $scope.hideRaiseMode = $scope.public_settings.site_campaign_remove_raise_mode;
     $scope.displayCampaignDisclaimer = success.public_setting.site_campaign_campaign_toggle_disclaimer_text;
+
+
+    //Check facebook app id
+    if ($scope.public_settings.hasOwnProperty('site_facebook_app_id')) {
+      $rootScope.facebook_app_id = $scope.public_settings.site_facebook_app_id;
+    }
 
     //Inititialize min contribution amount if valid else == 1 
     $scope.pledge_amount = 1;
@@ -123,9 +131,9 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
     }
     // If comment system == disqus, get disqus shortname
     if ($scope.comment_system == "disqus") {
-      DisqusShortnameService.getDisqusShortname().then(function (shortname) {
+      DisqusShortnameService.getDisqusShortname().then(function(shortname) {
         $scope.disqus_shortname;
-        angular.forEach(shortname, function (value) {
+        angular.forEach(shortname, function(value) {
           if (value.setting_type_id == 3) {
             $scope.disqus_shortname = value.value; // required: replace example with your forum shortname
           }
@@ -139,7 +147,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
           $('<div id="disqus_thread"></div>').insertAfter('#insert_disqus');
           DISQUS.reset({
             reload: true,
-            config: function () {
+            config: function() {
               this.page.identifier = disqus_identifier;
               this.page.url = disqus_url;
             }
@@ -174,7 +182,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
 
       if (success.public_setting.custom_comment_auto_refresh) {
         //retrieve comments every minute
-        setInterval(function () {
+        setInterval(function() {
           $scope.getComments();
         }, 60000);
       }
@@ -224,7 +232,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
 
   // Comment Form Validation
   var comment_error_msg = $translate.instant('custom_commment_form_error_msg');
-  setTimeout(function () {
+  setTimeout(function() {
     $('#comment-form')
       .form({
         comment_message: {
@@ -235,11 +243,11 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
           }]
         }
       }, {
-          inline: true,
-          onSuccess: function (event) {
-            event.preventDefault();
-          }
-        });
+        inline: true,
+        onSuccess: function(event) {
+          event.preventDefault();
+        }
+      });
   });
 
   switch ($scope.public_settings.custom_comment_anonymous_commenting) {
@@ -251,7 +259,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
       var backerFilters = {
         "person_id": $scope.user.id
       };
-      Restangular.one("campaign", $scope.campaign_id).customGET("backer?filters=" + JSON.stringify(backerFilters)).then(function (success) {
+      Restangular.one("campaign", $scope.campaign_id).customGET("backer?filters=" + JSON.stringify(backerFilters)).then(function(success) {
         var successArr = success.plain();
         if (successArr != null && successArr.length > 0) {
           $scope.is_anonymous_available = true;
@@ -266,7 +274,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
   }
 
   // Add comment
-  $scope.addComment = function (comment_form) {
+  $scope.addComment = function(comment_form) {
     if (!comment_form.message) {
       return;
     }
@@ -279,7 +287,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
     $scope.sendComment['message'] = comment_form.message;
     $scope.sendComment['anonymous'] = comment_form.anonymous;
 
-    Restangular.one('campaign/' + $scope.campaign_id + '/comment').customPOST($scope.sendComment).then(function (success) {
+    Restangular.one('campaign/' + $scope.campaign_id + '/comment').customPOST($scope.sendComment).then(function(success) {
       $scope.getComments();
       $scope.comment_form = {
         "anonymous": $scope.public_settings.custom_comment_anonymous_force
@@ -288,14 +296,14 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
   }
 
   // Delete comment
-  $scope.deleteComment = function (comment_id) {
-    Restangular.one('campaign/' + $scope.campaign_id + '/comment/' + comment_id).customDELETE().then(function () {
+  $scope.deleteComment = function(comment_id) {
+    Restangular.one('campaign/' + $scope.campaign_id + '/comment/' + comment_id).customDELETE().then(function() {
       $scope.getComments();
     });
   }
 
   // Update comment
-  $scope.updateComment = function (comment_form) {
+  $scope.updateComment = function(comment_form) {
     $scope.changeComment = {};
     if (comment_form.title) {
       $scope.changeComment['title'] = comment_form.title;
@@ -303,18 +311,18 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
     $scope.changeComment['entry_id'] = $scope.campaign_id;
     $scope.changeComment['message'] = comment_form.message;
     $scope.changeComment['comment_id'] = comment_form.comment_id;
-    Restangular.one('campaign/' + $scope.campaign_id + '/comment/' + comment_form.comment_id).customPUT($scope.changeComment).then(function (success) {
+    Restangular.one('campaign/' + $scope.campaign_id + '/comment/' + comment_form.comment_id).customPUT($scope.changeComment).then(function(success) {
       $scope.getComments();
     });
   }
 
   function setVote() {
-    Restangular.one('campaign/' + $scope.campaign_id + '/comment/' + $scope.comment_action['comment_id'] + "/comment-action").customPOST($scope.comment_action).then(function (success) {
+    Restangular.one('campaign/' + $scope.campaign_id + '/comment/' + $scope.comment_action['comment_id'] + "/comment-action").customPOST($scope.comment_action).then(function(success) {
       $scope.getComments();
     });
   }
 
-  $scope.setUpVote = function (isAnonymous) {
+  $scope.setUpVote = function(isAnonymous) {
     if (isAnonymous) {
       $scope.comment_action['anonymous'] = true;
       setVote();
@@ -324,7 +332,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
   }
 
   // Other comment actions, including reply, upvote, downvote
-  $scope.commentAction = function (comment_action, comment_id) {
+  $scope.commentAction = function(comment_action, comment_id) {
     // if not logged in
     if (!$scope.user.person_id) {
       return;
@@ -336,7 +344,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
       $scope.comment_action['comment_action_type_id'] = 1;
       $scope.comment_action['comment_id'] = comment_id;
       if ($scope.is_anonymous_available) {
-        $timeout(function () {
+        $timeout(function() {
           $("#vote-anonymous").modal("show");
         });
       } else {
@@ -350,7 +358,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
       $scope.comment_action['comment_action_type_id'] = 2;
       $scope.comment_action['comment_id'] = comment_id;
       if ($scope.is_anonymous_available) {
-        $timeout(function () {
+        $timeout(function() {
           $("#vote-anonymous").modal("show");
         });
       } else {
@@ -378,18 +386,18 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
   };
 
   // Retrieve all comments, or a comment if comment_id is passed.
-  $scope.getComments = function (comment_id, sort_order) {
+  $scope.getComments = function(comment_id, sort_order) {
     // Only change order after user changes it using dropdown
     if (sort_order) {
       $scope.sortOrFiltersComments.sort = sort_order;
     }
     if (!comment_id) {
       //("retrieving all campaign comments");
-      RestFullResponse.one('campaign/' + $scope.campaign_id).customGET("comment", $scope.sortOrFiltersComments).then(function (success) {
+      RestFullResponse.one('campaign/' + $scope.campaign_id).customGET("comment", $scope.sortOrFiltersComments).then(function(success) {
         $scope.comments = success.data;
 
         // calculate comment creation time ago
-        $scope.comments.forEach(function (comment, index) {
+        $scope.comments.forEach(function(comment, index) {
           var secondsElapsed = (Date.now() - Date.parse(comment.created)) / 1000;
           var timePeriod = "";
           var timeNumber = 0;
@@ -462,10 +470,10 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
   }
 
   // Modal function, for update and delete boxes
-  $scope.openModalById = function (id, comment_id) {
+  $scope.openModalById = function(id, comment_id) {
     if (id == 'update-comment') {
       var old_comment = $scope.getComments(comment_id);
-      old_comment.then(function (success) {
+      old_comment.then(function(success) {
         $scope.old_comment = success.plain();
         $('.ui.modal#' + id).modal('show');
       });
@@ -477,10 +485,10 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
 
   // -- Comment Functions END-- //
 
-  $scope.moment = function (value, suffix) {
+  $scope.moment = function(value, suffix) {
     return moment(value).fromNow(suffix);
   }
-  $scope.daysEndDateInPast = function (daysEnd, ends, seconds_remaining) {
+  $scope.daysEndDateInPast = function(daysEnd, ends, seconds_remaining) {
     if (daysEnd == true) {
       return false;
     }
@@ -488,7 +496,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
 
     return !$scope.dateInPast(ends, seconds_remaining);
   }
-  $scope.dateInPast = function (value, sec) {
+  $scope.dateInPast = function(value, sec) {
     //return moment(value) < moment(new Date());
     if (sec == 0 || sec == "00" || sec < 0) {
       return true;
@@ -497,7 +505,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
     }
   }
 
-  $scope.rewardExpired = function (value) {
+  $scope.rewardExpired = function(value) {
     // if expire date is set for reward
     if (value) {
       // Format date and replace dashes from the first part of the string to backslashes
@@ -517,13 +525,13 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
     }
   }
 
-  $scope.filterRewards = function () {
+  $scope.filterRewards = function() {
     var startindex = ($scope.rewardPagination.page - 1) * $scope.rewardPagination.page_entries;
     var endindex = startindex + $scope.rewardPagination.page_entries;
     $scope.campaign.pledges_to_show = angular.copy($scope.campaign.pledges);
     $scope.campaign.pledges_to_show = $scope.campaign.pledges_to_show.slice(startindex, endindex);
     if ($scope.customText.toggle) {
-      angular.forEach($scope.campaign.pledges_to_show, function (value, key, obj) {
+      angular.forEach($scope.campaign.pledges_to_show, function(value, key, obj) {
         obj[key].rewardCustom = $scope.customText.reward;
         var currency_iso = " ";
         if ($scope.campaign.currencies != null) {
@@ -545,9 +553,9 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
     Restangular.one('campaign').customGET($scope.campaign_id, {
       use_path_lookup: /campaign\/private/.test($rootScope.currentLoc) ? 1 : 0,
       path: $rootScope.currentLoc.substring(1)
-    }).then(function (success) {
+    }).then(function(success) {
 
-      $timeout(function () {
+      $timeout(function() {
         // initiate semantic tabs
         $('#campaign-tabs .menu-tabs .item').tab({
           context: $('#campaign-tabs')
@@ -556,7 +564,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
       }, 100);
       // anchorScroll if there is a hash
       if ($location.hash()) {
-        $timeout(function () {
+        $timeout(function() {
           $anchorScroll();
         });
       }
@@ -615,13 +623,13 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
         }
       }
 
-      Restangular.one('account/person', $scope.campaign.managers[0].id).customGET().then(function (success) {
+      Restangular.one('account/person', $scope.campaign.managers[0].id).customGET().then(function(success) {
         $scope.managerInfo = success;
       });
 
       // Get user attributes
       if ($scope.public_settings.site_campaign_enable_organization_name) {
-        Restangular.one('portal/person/attribute?filters={"person_id":"' + $scope.campaign.managers[0].id + '"}').customGET().then(function (success) {
+        Restangular.one('portal/person/attribute?filters={"person_id":"' + $scope.campaign.managers[0].id + '"}').customGET().then(function(success) {
           $scope.organization_name.value = success[0].attributes['organization_name'];
           $scope.organization_name.ein = success[0].attributes['ein'];
         });
@@ -659,7 +667,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
       }
 
       // Grab Campaign Settings to use
-      angular.forEach($scope.campaign.settings, function (value, index) {
+      angular.forEach($scope.campaign.settings, function(value, index) {
         var setting_name = value.name;
         var setting_value = value.value;
         if (setting_name == "name") {
@@ -677,7 +685,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
 
 
       if (native_lookup && $scope.campaign.cities) {
-        $scope.campaign.cities.forEach(function (value) {
+        $scope.campaign.cities.forEach(function(value) {
           getNativeName(value);
         });
       }
@@ -703,7 +711,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
       $scope.remaining_time = $scope.campaign.time_remaining;
       $scope.days_rem = $scope.campaign.days_remaining_inclusive;
       $scope.campaign.timezoneText = moment().tz($scope.campaign.timezone).zoneAbbr();
-      $translate(['seconds_to_go', 'second_to_go', 'seconds_ago', 'second_ago', 'minutes_to_go', 'minute_to_go', 'minutes_ago', 'minute_ago', 'hours_to_go', 'hour_to_go', 'hours_ago', 'hour_ago']).then(function (values) {
+      $translate(['seconds_to_go', 'second_to_go', 'seconds_ago', 'second_ago', 'minutes_to_go', 'minute_to_go', 'minutes_ago', 'minute_ago', 'hours_to_go', 'hour_to_go', 'hours_ago', 'hour_ago']).then(function(values) {
         if ($scope.days_rem == 0) {
           $scope.days_rem = $scope.campaign.hours_remaining_inclusive;
           if ($scope.days_rem == 0) {
@@ -858,7 +866,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
       $scope.campaign.campaign_links = [];
       // filter all types of links we get
       if (success.links) {
-        angular.forEach(success.links, function (value) {
+        angular.forEach(success.links, function(value) {
           // filter links
           if (value.region_id == 1 && value.resource_content_type_id == 1 && value.resource_type == "link") {
             // video links
@@ -889,7 +897,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
       // pop placeholder image if campaign has no region 3 image files
       if (success.files) {
         var hasMainImage = false;
-        angular.forEach(success.files, function (value) {
+        angular.forEach(success.files, function(value) {
           if (value.region_id == 3) {
             hasMainImage = true;
             return;
@@ -912,9 +920,9 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
       };
       $scope.campaign['backers'] = [];
 
-      $scope.getBackers = function () {
+      $scope.getBackers = function() {
         RestFullResponse.all('campaign/' + success.entry_id + '/backer').getList($scope.backers_pagination).then(
-          function (success) {
+          function(success) {
             $scope.campaign.backers = success.data;
             var headers = success.headers();
             if (!headers['x-pager-total-entries']) {
@@ -940,7 +948,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
 
       $scope.campaign['streams'] = [];
       RestFullResponse.all('campaign/' + success.entry_id + '/stream').getList($scope.stream_filter).then(
-        function (success) {
+        function(success) {
           $scope.campaign.streams = success.data;
           var headers = success.headers();
           $scope.stream_pagination.currentpage = headers['x-pager-current-page'];
@@ -952,7 +960,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
 
           if ($scope.public_settings.site_campaign_updates_display && $location.search().stream) {
             var stream_id = $location.search().stream;
-            setTimeout(function () {
+            setTimeout(function() {
               angular.element('#campaign').click();
               angular.element('#streams').click();
               var element = $element.find('#stream-' + stream_id);
@@ -965,7 +973,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
 
 
       // check for hash and making the tab active
-      $scope.checklink = function () {
+      $scope.checklink = function() {
         var translate = $translate.instant(['campaign_page_campaigntitle', 'campaign_page_faq', 'campaign_page_rewardstitle', 'campaign_page_backers', 'campaign_page_streams', 'campaign_page_comments', 'campaign_page_files']);
 
         if ($location.hash()) {
@@ -1024,19 +1032,19 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
         }
       }
 
-      setTimeout(function () {
+      setTimeout(function() {
         $scope.checklink();
       }, 500);
 
       // setting hash for the link
-      $scope.makeLink = function (id) {
+      $scope.makeLink = function(id) {
         var linkpath = $location.path();
         $location.path(linkpath).hash(id).replace();
         $scope.hashcheck = $location.hash();
       }
 
       // Toggle campaign dropdown items using url hash
-      $scope.toggleHash = function (selectedItemKey) {
+      $scope.toggleHash = function(selectedItemKey) {
         var translatedKey = $translate.instant(selectedItemKey);
         $location.search('').replace();
         $scope.makeLink(translatedKey);
@@ -1092,10 +1100,10 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
       }
 
       Restangular.one('portal/setting').getList().then(
-        function (success) {
+        function(success) {
           $scope.public_settings = {};
           $scope.public_settings.site_theme_campaign_display_iso_date = success.site_theme_campaign_display_iso_date;
-          angular.forEach(success, function (value) {
+          angular.forEach(success, function(value) {
             if (value.setting_type_id == 3) {
               $scope.public_settings[value.name] = value.value;
             }
@@ -1218,7 +1226,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
             $scope.validUser = 0;
           }
         },
-        function (failure) {
+        function(failure) {
           $msg = {
             'header': failure.data.message,
           }
@@ -1237,14 +1245,14 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
         }
       }
 
-    }, function (failure) {
+    }, function(failure) {
       $location.path('404');
     });
   }
 
   // Animated scroll to rewards section
-  $scope.scrollToRewards = function () {
-    $timeout(function () {
+  $scope.scrollToRewards = function() {
+    $timeout(function() {
 
       $('html, body').animate({
         scrollTop: $('#campaign-seg #rewards-list').offset().top - 15
@@ -1253,9 +1261,9 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
   }
 
   // Scroll to rewards section and set dropdown item to active
-  $scope.scrollToMobileRewardsTab = function () {
+  $scope.scrollToMobileRewardsTab = function() {
     var rewardsString = $translate.instant('campaign_page_rewardstitle');
-    $timeout(function () {
+    $timeout(function() {
       if ($location.hash() !== rewardsString) {
         $location.search('').replace();
         $scope.makeLink(rewardsString);
@@ -1273,7 +1281,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
 
   /*************************************************************************/
   //popup modal
-  $scope.pledgeModal = function (pledge) {
+  $scope.pledgeModal = function(pledge) {
     $('#pledge-modal').modal('show');
     $scope.oAmount = pledge.amount; // variable to hold original pledge amount
     $scope.pledgeAmount = pledge.amount; // binding with the html input
@@ -1284,18 +1292,18 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
   $scope.amountNextLevel = false;
 
   // showing the backer profile
-  $scope.visitProfile = function (index) {
+  $scope.visitProfile = function(index) {
     if (!$scope.isHideBackerProfileLink) {
       $scope.campaign.backers
       $window.open('profile/' + $scope.campaign.backers[index].person_id);
     }
   }
 
-  $scope.showManager = function () {
+  $scope.showManager = function() {
     $window.open('profile/' + $scope.campaign.managers[0].person_id);
   }
 
-  $scope.getTotalStream = function () {
+  $scope.getTotalStream = function() {
     var tmp = parseInt($scope.stream_pagination.entriesperpage) * parseInt($scope.stream_filter.page_limit);
     if (tmp > $scope.stream_pagination.totalentries) {
       return $scope.stream_pagination.totalentries;
@@ -1304,7 +1312,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
     }
   }
 
-  $scope.toDate = function (str) {
+  $scope.toDate = function(str) {
     if (str && str.length) {
       var d = str.substring(0, 10);
       var lst = str.substring(0, 10).split('-');
@@ -1314,7 +1322,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
     }
   }
 
-  $scope.showStreamDeail = function (stream, index) {
+  $scope.showStreamDeail = function(stream, index) {
     $scope.stream = stream;
     //$('#streamfull').empty();
     $scope.stream.sindex = index;
@@ -1327,22 +1335,22 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
     if (params.stream) {
       $('#campaign-tabs .ui.menu .item').tab('change tab', 'streams');
       $scope.show_section.streamDetail = true;
-      Restangular.one('campaign', $scope.campaign_id).one('stream', params.stream).customGET().then(function (success) {
+      Restangular.one('campaign', $scope.campaign_id).one('stream', params.stream).customGET().then(function(success) {
         $scope.stream = success;
       });
     }
   }
 
-  $scope.selectRewardAttribute = function ($event, choiceItem, index) {
+  $scope.selectRewardAttribute = function($event, choiceItem, index) {
     var el = angular.element($event.currentTarget).parent().parent().find('input[name="variation_value"]').first();
     $(el).attr('data-attribute', choiceItem.value);
   }
 
   // submit pledge
-  $scope.submitPledge = function ($event, pledge, index) {
+  $scope.submitPledge = function($event, pledge, index) {
     $location.search({});
     var rewardAttr = [];
-    angular.element($event.currentTarget).parent().find('#reward-variation-' + index).first().find('input[name="variation_value"]').each(function () {
+    angular.element($event.currentTarget).parent().find('#reward-variation-' + index).first().find('input[name="variation_value"]').each(function() {
       rewardAttr.push($(this).attr('data-attribute'));
     });
 
@@ -1367,7 +1375,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
     }
   };
 
-  $scope.submitContribute = function () {
+  $scope.submitContribute = function() {
     if (!$scope.enabledContribution) {
       if (UserService.isLoggedIn()) {
         $(".ui.modal.contribution-instruction").modal("show");
@@ -1388,7 +1396,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
     }
   }
 
-  $scope.miniContributeReward = function () {
+  $scope.miniContributeReward = function() {
     if (!$scope.enabledContribution) {
       $(".ui.modal.contribution-instruction").modal("show");
     } else if ($scope.enabledContrubitionRewardsPopup) {
@@ -1453,11 +1461,11 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
   }
 
   // Force browser to reload
-  $scope.$on('$locationChangeSuccess', function (event) {
-    if (!$location.hash()) { }
+  $scope.$on('$locationChangeSuccess', function(event) {
+    if (!$location.hash()) {}
   });
 
-  $scope.$on("$routeChangeStart", function (event, next, current) {
+  $scope.$on("$routeChangeStart", function(event, next, current) {
     // remove ga obj
     if (window.hasOwnProperty("ga")) {
       ga.remove("id" + $scope.campaign_id + ".remove");
@@ -1484,7 +1492,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
   //     $scope.isAllowAnonContactMsg = success.public_setting.site_allow_anonymous_contact_message;
   // });
 
-  $scope.showContactModal = function (user) {
+  $scope.showContactModal = function(user) {
     if (user) {
       $scope.receiver = user;
     }
@@ -1515,7 +1523,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
   }
 
   // Validate message form
-  $scope.validateMessage = function (form_target) {
+  $scope.validateMessage = function(form_target) {
     var translation = $translate.instant(['contact_message_missing_subject', 'contact_message_missing_body', 'contact_message_missing_recipient', 'contact_message_missing_first_name', 'contact_message_missing_last_name', 'contact_message_missing_email', 'contact_email_validate_error']);
     var fields = {
       subject: {
@@ -1556,13 +1564,13 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
       email: {
         identifier: 'email',
         rules: [{
-          type: 'empty',
-          prompt: translation.contact_message_missing_email
-        },
-        {
-          type: 'email',
-          prompt: translation.contact_email_validate_error
-        }
+            type: 'empty',
+            prompt: translation.contact_message_missing_email
+          },
+          {
+            type: 'email',
+            prompt: translation.contact_email_validate_error
+          }
         ]
       },
     };
@@ -1570,10 +1578,10 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
     if (form_target == "contact-message") {
       $('.ui.form.contact-message').form(fields, {
         inline: true,
-        onSuccess: function () {
+        onSuccess: function() {
           $scope.validMessage = true;
         },
-        onFailure: function () {
+        onFailure: function() {
           $scope.validMessage = false;
         }
       }).form('validate form');
@@ -1581,10 +1589,10 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
     if (form_target == "contact-user") {
       $('.ui.form.contact-user').form(fields, {
         inline: true,
-        onSuccess: function () {
+        onSuccess: function() {
           $scope.validMessage = true;
         },
-        onFailure: function () {
+        onFailure: function() {
           $scope.validMessage = false;
         }
       }).form('validate form');
@@ -1592,7 +1600,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
   }
 
   // Sends contact message to a preset user.
-  $scope.sendContactMessage = function () {
+  $scope.sendContactMessage = function() {
     $scope.validateMessage("contact-message");
 
     if ($scope.validMessage) {
@@ -1606,8 +1614,8 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
       $rootScope.floatingMessage = msg;
 
       Restangular.one('account/message').customPOST($scope.message).then(
-        function (success) {
-          $translate('message_sentto').then(function (value) {
+        function(success) {
+          $translate('message_sentto').then(function(value) {
             msg = {
               'header': value + " " + $scope.receiver.first_name + " " + $scope.receiver.last_name,
             };
@@ -1616,7 +1624,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
           });
           $scope.cleartext();
         },
-        function (failure) {
+        function(failure) {
           msg = {
             'header': failure.data.message,
           }
@@ -1631,7 +1639,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
   }
 
   // Send message to a receiver specified by the user.
-  $scope.sendUserMessage = function () {
+  $scope.sendUserMessage = function() {
     $scope.validateMessage("contact-user");
     if ($scope.validMessage) {
       // Need to replace newline with actual html tags to render properly in email clients
@@ -1646,8 +1654,8 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
       };
       $rootScope.floatingMessage = msg;
       Restangular.one('account/message').customPOST(data).then(
-        function (success) {
-          $translate('message_sentto').then(function (value) {
+        function(success) {
+          $translate('message_sentto').then(function(value) {
             msg = {
               'header': value + " " + $scope.receiver.first_name + " " + $scope.receiver.last_name,
             };
@@ -1658,7 +1666,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
           // Update Message Center
           $scope.$emit("composed_new_message");
         },
-        function (failure) {
+        function(failure) {
           msg = {
             'header': failure.data.message,
           };
@@ -1673,7 +1681,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
   }
 
   // Sets the values of the user to send a message to.
-  $scope.setRecipient = function (event) {
+  $scope.setRecipient = function(event) {
 
     var first_name = event.target.attributes["first-name"].value;
     var last_name = event.target.attributes["last-name"].value;
@@ -1685,7 +1693,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
   }
 
   // Sets the values of the user to send a message to.
-  $scope.setRecipientOnEnter = function (event) {
+  $scope.setRecipientOnEnter = function(event) {
     // Only update on enter key
     if (event.keyCode == 13) {
       var updatedRecipient = angular.element("div.to-user a.profile-link");
@@ -1700,27 +1708,27 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
   }
 
   // Get new list of users.
-  $scope.updateUserList = function (name) {
+  $scope.updateUserList = function(name) {
     // Reset to first page.
     $scope.user_list_page = 1;
     $scope.getPeopleNames(name);
   }
 
   // Get list of usernames for composing messages
-  $scope.getPeopleNames = function (name, append) {
+  $scope.getPeopleNames = function(name, append) {
     $scope.append = false;
     if (append !== undefined) {
       $scope.append = append;
     }
     var filters = {
-      "filters": {
-        "name": name,
-      },
-      "page": $scope.user_list_page,
-      "page_entries": $scope.user_list_page_entries,
-    }
-    /*Restangular.one("portal/person-public").get(filters).then(function(success, limit){*/
-    RestFullResponse.all('portal/person-public').getList(filters).then(function (success) {
+        "filters": {
+          "name": name,
+        },
+        "page": $scope.user_list_page,
+        "page_entries": $scope.user_list_page_entries,
+      }
+      /*Restangular.one("portal/person-public").get(filters).then(function(success, limit){*/
+    RestFullResponse.all('portal/person-public').getList(filters).then(function(success) {
       $scope.pagination_info = success.headers();
 
       if (!$scope.append) {
@@ -1739,26 +1747,26 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
 
       // Need timeout or semantic function will not run correctly.
       // Show drop down if more results are found since semantic hides dropdown before api result is returned.
-      $timeout(function () {
+      $timeout(function() {
         if ($scope.list_users.length > 0) {
           $(".recipient.dropdown").dropdown("show");
         }
       }, 0);
 
-    }, function (failed) {
+    }, function(failed) {
       $scope.list_users = false;
     });
   }
 
   // Adjust page number variable.
-  var pageAdjust = function (adjust) {
+  var pageAdjust = function(adjust) {
     if ($scope.user_list_page + adjust > 0) {
       $scope.user_list_page += adjust;
     }
   }
 
   // Increments page and append to current list of users.
-  $scope.appendNextPage = function () {
+  $scope.appendNextPage = function() {
     // Don't try to add next page if already on the last page.
     if ($scope.user_list_page >= $scope.pagination_info["x-pager-last-page"]) {
       return;
@@ -1768,19 +1776,19 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
   }
 
   // Increment page number and retreive new list of users.
-  $scope.nextPage = function () {
+  $scope.nextPage = function() {
     pageAdjust(1);
     $scope.getPeopleNames($scope.message.receiver);
   }
 
   // Decrement page number and retreive new list of users.
-  $scope.previousPage = function () {
+  $scope.previousPage = function() {
     pageAdjust(-1);
     $scope.getPeopleNames($scope.message.receiver);
   }
 
   // Clears the form data.
-  $scope.cleartext = function () {
+  $scope.cleartext = function() {
     $('#subject').val('');
     $('#message').val('');
     $('#subject-user').val('');
@@ -1810,5 +1818,7 @@ app.controller('CampaignCtrl', function ($timeout, $http, $element, $anchorScrol
   // Contact User End
   //////////////////////////////////////////////////////////
 
-
+  $scope.reloadFacebook = function() {
+    console.log('hasda');
+  }
 });

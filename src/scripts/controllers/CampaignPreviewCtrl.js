@@ -1,4 +1,4 @@
-app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, $scope, $filter, $browser, $translatePartialLoader, $translate, $routeParams, CreateCampaignService, Restangular, RESOURCE_REGIONS, API_URL, PortalSettingsService, $rootScope, CampaignSettingsService, UserService, RestFullResponse, DisqusShortnameService, VideoLinkService, SOCIAL_SHARING_OPTIONS, $anchorScroll) {
+app.controller('CampaignPreviewCtrl', function($timeout, $interval, $location, $scope, $filter, $browser, $translatePartialLoader, $translate, $routeParams, CreateCampaignService, Restangular, RESOURCE_REGIONS, API_URL, PortalSettingsService, $rootScope, CampaignSettingsService, UserService, RestFullResponse, DisqusShortnameService, VideoLinkService, SOCIAL_SHARING_OPTIONS, $anchorScroll) {
   $scope.campaignSettings = {};
   $scope.urlHost = $location.protocol() + "://" + $location.host() + $browser.baseHref();
 
@@ -10,7 +10,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
     $scope.isLastStep = true;
   }
 
-  $scope.clearMessage = function () {
+  $scope.clearMessage = function() {
     $rootScope.floatingMessage = [];
   };
   var msg = [];
@@ -42,13 +42,13 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
   var intervalChecking;
   $scope.in_revision = false;
 
-  $timeout(function () {
-    $("#myloader").fadeOut(4000, function () {
+  $timeout(function() {
+    $("#myloader").fadeOut(4000, function() {
       $('body').removeClass("loading");
     });
   });
 
-  $scope.dateInPast = function (value, sec) {
+  $scope.dateInPast = function(value, sec) {
     //return moment(value) < moment(new Date());
     if (sec == 0 || sec == 00 || sec < 0) {
       return true;
@@ -118,7 +118,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
 
   // }
 
-  $scope.makeLink = function (id) {
+  $scope.makeLink = function(id) {
     var linkpath = $location.path();
     $location.path(linkpath).hash(id).replace();
     $scope.hashcheck = $location.hash();
@@ -126,7 +126,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
 
   $('.tabular.menu .item').tab();
   $scope.campaignlink = $location.protocol() + "://" + $location.host() + "/campaign/" + id;
-  PortalSettingsService.getSettingsObj().then(function (success) {
+  PortalSettingsService.getSettingsObj().then(function(success) {
     $scope.public_settings = success.public_setting;
     $scope.reward_html_editor = success.public_setting.site_theme_campaign_reward_html_editor;
     $scope.payment_gateway = success.public_setting.site_payment_gateway;
@@ -169,7 +169,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
     $scope.approve_campaign = $scope.public_settings.site_auto_approve_new_campaigns;
 
     Restangular.one("campaign", $scope.campaign_id).customGET("setting")
-      .then(function (success) {
+      .then(function(success) {
         if (success && success.length) {
           for (var index in success.plain()) {
             $scope.campaignSettings[success.plain()[index].name] = success.plain()[index].value;
@@ -177,18 +177,18 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
           setDefaultWidgetSettings();
         }
       })
-      .then(function (failed) {
+      .then(function(failed) {
         setDefaultWidgetSettings();
       });
 
-    CreateCampaignService.load(id).then(function (success) {
+    CreateCampaignService.load(id).then(function(success) {
 
       // Emit event for hiding loader.
       $scope.$emit("loading_finished");
 
       $scope.campaign = success;
 
-      Restangular.one('campaign', $scope.campaign_id).one('ever_published').customGET().then(function (success) {
+      Restangular.one('campaign', $scope.campaign_id).one('ever_published').customGET().then(function(success) {
 
         $scope.fundingExist = $scope.direct_transaction && $scope.user.person_type_id != 1 || !$scope.contributionEnabled || $scope.isStepFundingDelayed && !success.ever_published;
 
@@ -208,13 +208,13 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
         };
       }
 
-      Restangular.one('account/person', $scope.campaign.managers[0].id).customGET().then(function (success) {
+      Restangular.one('account/person', $scope.campaign.managers[0].id).customGET().then(function(success) {
         $scope.managerInfo = success;
       });
 
       // Get user attributes
       if ($scope.public_settings.site_campaign_enable_organization_name) {
-        Restangular.one('portal/person/attribute?filters={"person_id":"' + $scope.campaign.managers[0].id + '"}').customGET().then(function (success) {
+        Restangular.one('portal/person/attribute?filters={"person_id":"' + $scope.campaign.managers[0].id + '"}').customGET().then(function(success) {
           $scope.organization_name.value = success[0].attributes['organization_name'];
           $scope.organization_name.ein = success[0].attributes['ein'];
         });
@@ -226,7 +226,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
       $scope.reward = $scope.customText.reward;
       var shortCode = "[min]";
       var currency_iso = " ";
-      if($scope.campaign.currencies != null){
+      if ($scope.campaign.currencies != null) {
         currency_iso = $scope.campaign.currencies[0].code_iso4217_alpha;
       }
       var test = $filter('formatCurrency')($scope.public_settings.site_theme_campaign_min_contribute_amount, currency_iso, $scope.public_setting.site_campaign_decimal_option);
@@ -247,7 +247,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
       $scope.remaining_time = $scope.campaign.time_remaining;
       $scope.days_rem = $scope.campaign.days_remaining_inclusive;
       $scope.campaign.timezoneText = moment().tz($scope.campaign.timezone).zoneAbbr();
-      $translate(['seconds_to_go', 'second_to_go', 'seconds_ago', 'second_ago', 'minutes_to_go', 'minute_to_go', 'minutes_ago', 'minute_ago', 'hours_to_go', 'hour_to_go', 'hours_ago', 'hour_ago']).then(function (values) {
+      $translate(['seconds_to_go', 'second_to_go', 'seconds_ago', 'second_ago', 'minutes_to_go', 'minute_to_go', 'minutes_ago', 'minute_ago', 'hours_to_go', 'hour_to_go', 'hours_ago', 'hour_ago']).then(function(values) {
         if ($scope.days_rem == 0) {
           $scope.days_rem = $scope.campaign.hours_remaining_inclusive;
           if ($scope.days_rem == 0) {
@@ -362,7 +362,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
       }
 
       if ($scope.enableCampaignRevisions && $scope.campaign.entry_status_id == 2 && $routeParams.revision_id) {
-        Restangular.one('campaign', $scope.campaign.entry_id).one('revision').customGET().then(function (success) {
+        Restangular.one('campaign', $scope.campaign.entry_id).one('revision').customGET().then(function(success) {
           $scope.revision = success[0];
           if ($scope.revision) {
             $scope.in_revision = true;
@@ -370,7 +370,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
         });
       }
 
-      $scope.filterRewards = function () {
+      $scope.filterRewards = function() {
         var startindex = ($scope.rewardPagination.page - 1) * $scope.rewardPagination.page_entries;
         var endindex = startindex + $scope.rewardPagination.page_entries;
         $scope.campaign.pledges_to_show = angular.copy($scope.campaign.pledges);
@@ -413,14 +413,14 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
       };
 
       // Retrieve all comments, or a comment if comment_id is passed.
-      $scope.getComments = function (comment_id, sort_order) {
+      $scope.getComments = function(comment_id, sort_order) {
         // Only change order after user changes it using dropdown
         if (sort_order) {
           $scope.sortOrFiltersComments.sort = sort_order;
         }
         if (!comment_id) {
           //("retrieving all campaign comments");
-          RestFullResponse.one('campaign/' + $scope.campaign_id).customGET("comment", $scope.sortOrFiltersComments).then(function (success) {
+          RestFullResponse.one('campaign/' + $scope.campaign_id).customGET("comment", $scope.sortOrFiltersComments).then(function(success) {
             $scope.comments = success.data;
             var headers = success.headers();
             $scope.sortOrFiltersComments.pagination.currentpage = headers['x-pager-current-page'];
@@ -450,9 +450,9 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
 
       // If comment system == disqus, get disqus shortname
       if ($scope.comment_system == "disqus") {
-        DisqusShortnameService.getDisqusShortname().then(function (shortname) {
+        DisqusShortnameService.getDisqusShortname().then(function(shortname) {
           $scope.disqus_shortname;
-          angular.forEach(shortname, function (value) {
+          angular.forEach(shortname, function(value) {
             if (value.setting_type_id == 3) {
               $scope.disqus_shortname = value.value; // required: replace example with your forum shortname
             }
@@ -466,7 +466,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
             $('<div id="disqus_thread"></div>').insertAfter('#insert_disqus');
             DISQUS.reset({
               reload: true,
-              config: function () {
+              config: function() {
                 this.page.identifier = disqus_identifier;
                 this.page.url = disqus_url;
               }
@@ -501,7 +501,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
 
         if ($scope.public_settings.custom_comment_auto_refresh) {
           //retrieve comments every minute
-          setInterval(function () {
+          setInterval(function() {
             $scope.getComments();
           }, 60000);
         }
@@ -509,7 +509,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
 
       checkTime();
 
-      $scope.daysEndDateInPast = function (daysEnd, ends, seconds_remaining) {
+      $scope.daysEndDateInPast = function(daysEnd, ends, seconds_remaining) {
         if (daysEnd == true) {
           return false;
         }
@@ -517,16 +517,16 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
 
         return !$scope.dateInPast(ends, seconds_remaining);
       }
-      $scope.dateInPast = function (value, sec) {
-        //return moment(value) < moment(new Date());
-        if (sec == 0 || sec == "00" || sec < 0) {
-          return true;
-        } else {
-          return false;
+      $scope.dateInPast = function(value, sec) {
+          //return moment(value) < moment(new Date());
+          if (sec == 0 || sec == "00" || sec < 0) {
+            return true;
+          } else {
+            return false;
+          }
         }
-      }
-      // Grab Campaign Settings to use
-      angular.forEach($scope.campaign.settings, function (value, index) {
+        // Grab Campaign Settings to use
+      angular.forEach($scope.campaign.settings, function(value, index) {
         var setting_name = value.name;
         var setting_value = value.value;
         $scope.campaign[setting_name] = setting_value;
@@ -560,7 +560,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
       // if links are not null
       if ($scope.campaign.links) {
         //pre-load video link
-        angular.forEach($scope.campaign.links, function (value) {
+        angular.forEach($scope.campaign.links, function(value) {
           if (value.region_id == 1 && value.resource_content_type_id == 1 && value.resource_type == "link") {
             // video links
             $scope.campaign.video = value.uri.replace(/https?:\/\//gi, $location.protocol() + '://');
@@ -580,7 +580,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
 
       if (!$scope.direct_transaction) {
         // check if the campaign has stripe account
-        Restangular.one('campaign', id).one('stripe-account').customGET().then(function (success) {
+        Restangular.one('campaign', id).one('stripe-account').customGET().then(function(success) {
           if (success && success.length) {
             $scope.campaign.stripe_account_id = success[0].id;
           }
@@ -601,9 +601,9 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
       };
       $scope.campaign['backers'] = [];
 
-      $scope.getBackers = function () {
+      $scope.getBackers = function() {
         RestFullResponse.all('campaign/' + success.entry_id + '/backer').getList($scope.backers_pagination).then(
-          function (success) {
+          function(success) {
             $scope.campaign.backers = success.data;
             var headers = success.headers();
             if (!headers['x-pager-total-entries']) {
@@ -628,7 +628,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
 
       $scope.campaign['streams'] = [];
       RestFullResponse.all('campaign/' + success.entry_id + '/stream').getList($scope.stream_filter).then(
-        function (success) {
+        function(success) {
           $scope.campaign.streams = success.data;
           var headers = success.headers();
           $scope.stream_pagination.currentpage = headers['x-pager-current-page'];
@@ -640,7 +640,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
         });
 
       // check for hash and making the tab active
-      $scope.checklink = function () {
+      $scope.checklink = function() {
         var translate = $translate.instant(['campaign_page_campaigntitle', 'campaign_page_faq', 'campaign_page_rewardstitle', 'campaign_page_backers', 'campaign_page_streams', 'campaign_page_comments', 'campaign_page_files']);
 
         if ($location.hash()) {
@@ -699,19 +699,19 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
         }
       }
 
-      setTimeout(function () {
+      setTimeout(function() {
         $scope.checklink();
       }, 500);
 
       // setting hash for the link
-      $scope.makeLink = function (id) {
+      $scope.makeLink = function(id) {
         var linkpath = $location.path();
         $location.path(linkpath).hash(id).replace();
         $scope.hashcheck = $location.hash();
       }
 
       // Toggle campaign dropdown items using url hash
-      $scope.toggleHash = function (selectedItemKey) {
+      $scope.toggleHash = function(selectedItemKey) {
         var translatedKey = $translate.instant(selectedItemKey);
         $location.search('').replace();
         $scope.makeLink(translatedKey);
@@ -719,10 +719,10 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
       }
 
       Restangular.one('portal/setting').getList().then(
-        function (success) {
+        function(success) {
           $scope.public_settings = {};
           $scope.public_settings.site_theme_campaign_display_iso_date = success.site_theme_campaign_display_iso_date;
-          angular.forEach(success, function (value) {
+          angular.forEach(success, function(value) {
             if (value.setting_type_id == 3) {
               $scope.public_settings[value.name] = value.value;
             }
@@ -740,7 +740,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
 
           var shortCode = "[min]";
           var currency_iso = " ";
-          if($scope.campaign.currencies != null){
+          if ($scope.campaign.currencies != null) {
             currency_iso = $scope.campaign.currencies[0].code_iso4217_alpha;
           }
           var currency = $filter('formatCurrency')($scope.public_settings.site_theme_campaign_min_contribute_amount, currency_iso, $scope.public_setting.site_campaign_decimal_option);
@@ -848,7 +848,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
             $scope.validUser = 0;
           }
         },
-        function (failure) {
+        function(failure) {
           $msg = {
             'header': failure.data.message,
           }
@@ -858,19 +858,19 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
   });
 
   // Animated scroll to rewards section
-  $scope.scrollToRewards = function () {
-    $timeout(function () {
+  $scope.scrollToRewards = function() {
+    $timeout(function() {
 
       $('html, body').animate({
         scrollTop: $('#campaign-seg #rewards-list').offset().top - 15
       }, 500);
     }, 800);
   }
-  
+
   // Scroll to rewards section and set dropdown item to active
-  $scope.scrollToMobileRewardsTab = function () {
+  $scope.scrollToMobileRewardsTab = function() {
     var rewardsString = $translate.instant('campaign_page_rewardstitle');
-    $timeout(function () {
+    $timeout(function() {
       if ($location.hash() !== rewardsString) {
         $location.search('').replace();
         $scope.makeLink(rewardsString);
@@ -891,7 +891,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
 
   $scope.missingFields = {};
   // check for phone number
-  Restangular.one('account/phone-number').customGET().then(function (success) {
+  Restangular.one('account/phone-number').customGET().then(function(success) {
     if (success.business) {
       $scope.bnumber = success.business[0].number;
     } else if (success.personal) {
@@ -899,7 +899,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
     }
   });
 
-  $scope.completionCheck = function () {
+  $scope.completionCheck = function() {
 
     var reqFieldsCheck;
 
@@ -941,24 +941,20 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
     // Toggle check for campaign steps with hidden required fields
     if ($scope.hideCampaignBlurbField && $scope.hideCampaignCategoryField && $scope.hideCampaignImageField) {
       reqFieldsCheck = (campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
-    }
-    else if ($scope.hideCampaignImageField) {
+    } else if ($scope.hideCampaignImageField) {
       basicsReqField = (campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
-    }
-    else if ($scope.hideCampaignBlurbField) {
+    } else if ($scope.hideCampaignBlurbField) {
       basicsReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.categories && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
-    }
-    else if ($scope.hideCampaignCategoryField) {
+    } else if ($scope.hideCampaignCategoryField) {
       basicsReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
-    }
-    else {
+    } else {
       reqFieldsCheck = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
     }
 
     if (reqFieldsCheck) {
       $scope.loadingText = true;
 
-      CreateCampaignService.sendForReview().then(function (success) {
+      CreateCampaignService.sendForReview().then(function(success) {
         $scope.confirmNotice = true;
         $scope.loadingText = false;
         if ($scope.isLastStep) {
@@ -973,7 +969,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
         // $scope.hideFloatingMessage();
         // $scope.loadingText = false;
 
-      }, function (failed) {
+      }, function(failed) {
         $scope.errorNotice = failed.data.message;
         msg = {
           'header': failed.data.message
@@ -985,23 +981,19 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
     } else {
       var steps = [];
       var step1ReqField, step2ReqField, step3ReqField;
-      $timeout(function () {
-        $translate(['basics', 'details', 'rewards', 'funding', 'uprofile']).then(function (value) {
+      $timeout(function() {
+        $translate(['basics', 'details', 'rewards', 'funding', 'uprofile']).then(function(value) {
 
           // Toggle check for campaign step 1 with hidden required fields
           if ($scope.hideCampaignBlurbField && $scope.hideCampaignCategoryField && $scope.hideCampaignImageField) {
             step1ReqField = (campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.funding_goal && campaign.currency_id) ? true : false;
-          }
-          else if ($scope.hideCampaignImageField) {
+          } else if ($scope.hideCampaignImageField) {
             step1ReqField = (campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id) ? true : false;
-          }
-          else if ($scope.hideCampaignBlurbField) {
+          } else if ($scope.hideCampaignBlurbField) {
             step1ReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.categories && campaign.funding_goal && campaign.currency_id) ? true : false;
-          }
-          else if ($scope.hideCampaignCategoryField) {
+          } else if ($scope.hideCampaignCategoryField) {
             step1ReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.funding_goal && campaign.currency_id) ? true : false;
-          }
-          else {
+          } else {
             step1ReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id) ? true : false;
           }
           if (!step1ReqField) {
@@ -1011,8 +1003,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
           // Toggle check for campaign step 2 with hidden required fields
           if ($scope.showCampaignImageField) {
             step2ReqField = (hasImage()) ? true : false;
-          }
-          else {
+          } else {
             step2ReqField = (campaign.description) ? true : false;
           }
           if (!step2ReqField) {
@@ -1099,7 +1090,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
   }
 
   function missingText(array) {
-    $translate(['steps', 'stepsmessage', 'step', 'stepmessage']).then(function (value) {
+    $translate(['steps', 'stepsmessage', 'step', 'stepmessage']).then(function(value) {
       if (array.length > 1) {
         $scope.steps = value.steps;
         $scope.stepsmessage = value.stepsmessage;
@@ -1123,7 +1114,7 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
     "funding_goal", "currency_id", "description", "stripe_account_id"
   ];
 
-  $scope.showStreamDeail = function (stream, index) {
+  $scope.showStreamDeail = function(stream, index) {
     $scope.stream = stream;
     //$('#streamfull').empty();
     $scope.stream.sindex = index;
@@ -1136,21 +1127,21 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
     if (params.stream) {
       $('#campaign-tabs .ui.menu .item').tab('change tab', 'streams');
       $scope.show_section.streamDetail = true;
-      Restangular.one('campaign', $scope.campaign_id).one('stream', params.stream).customGET().then(function (success) {
+      Restangular.one('campaign', $scope.campaign_id).one('stream', params.stream).customGET().then(function(success) {
         $scope.stream = success;
       });
     }
   }
 
   // Force browser to reload
-  $scope.$on('$locationChangeSuccess', function (event) {
-    if (!$location.hash()) { }
+  $scope.$on('$locationChangeSuccess', function(event) {
+    if (!$location.hash()) {}
   });
 
   function hasImage() {
     var bool = false;
     if ($scope.campaign.files) {
-      angular.forEach($scope.campaign.files, function (file) {
+      angular.forEach($scope.campaign.files, function(file) {
         if (file.region_id == 3) {
           bool = true;
           return;
@@ -1312,16 +1303,16 @@ app.controller('CampaignPreviewCtrl', function ($timeout, $interval, $location, 
     }
   }
 
-  $scope.$on("$routeChangeStart", function () {
+  $scope.$on("$routeChangeStart", function() {
     if (intervalChecking != undefined) {
       $interval.cancel(intervalChecking);
     }
   });
 
-  $scope.setIframeWidgetHeight = function () {
+  $scope.setIframeWidgetHeight = function() {
     intervalChecking = $interval(setIframeWidgetHeight, 1000);
 
-    $timeout(function () {
+    $timeout(function() {
       $interval.cancel(intervalChecking);
     }, 10000);
   }

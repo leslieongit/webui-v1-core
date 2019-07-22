@@ -3856,7 +3856,7 @@
                   </div>
                 </div>
               </div>
-  
+
               <div class="four wide column" ng-if="public_settings.payment_setting_enabled">
                 <h3 class="ui header main-font-color" translate="tab_portalsetting_Stripesetting_currency"></h3>
                 <p translate="tab_portalsetting_Stripesetting_currency_note"></p>
@@ -4073,6 +4073,30 @@
                 <div class="ui button" id="disqus-comment" ng-click="setMode('disqus')" translate>tab_portalsetting_Disqus_choose_disqus</div>
                 <div class="ui button" id="custom-comment" ng-click="setMode('custom')" translate>tab_portalsetting_Disqus_choose_custom_comment</div>
                 <div class="ui button" id="facebook-comment" ng-click="setMode('facebook')" translate>tab_portalsetting_choose_facebook_comment</div>
+              </div>
+            </div>
+
+            <div class="ui grid" ng-show="comment == 'facebook'">
+              <div class="sixteen wide column">
+                <div class="ui info message">
+                  <div class="content">
+                    <div>{{'tab_portalsetting_facebook_message'|translate}}
+                      <a target="_blank" href="https://developers.facebook.com/">
+                        {{'tab_portalsetting_facebook_message2' | translate}} </a> {{'tab_portalsetting_facebook_message3' | translate}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="four wide column">
+                <h3 class="ui header main-font-color" translate> tab_portalsetting_facebook_app_id </h3>
+              </div>
+
+              <div class="four wide column">
+                <div class="ui form facebook-comments-form">
+                  <div class="field">
+                    <input type="text" name="facebook_app_id" ng-model="public_settings.site_facebook_app_id" ng-attr-placeholder=" {{'tab_portalsetting_facebook_app_id_placeholder' | translate}} ">
+                  </div>
+                </div>
               </div>
             </div>
 

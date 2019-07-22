@@ -2,7 +2,7 @@
   <profile [userInfo]="userInfo" [profileResourceId]="profileResourceId" [settingDecimalOption]="settingDecimalOption" (onBackToCampaignPage)="onBackToCampaignPage($event)" (onUpdateUserInfo)="onUpdateUserInfo($event)" (onUpdateProfileResourceId)="onUpdateProfileResourceId($event)"
     *ngIf="isProfileShown"></profile>
   <div *ngIf="!isProfileShown">
-    <div class="campaign-disclaimer-msg ui basic segment" *ngIf="disclaimerMsg">
+    <div class="campaign-disclaimer-msg ui basic segment" *ngIf="disclaimerMsg.toggle && disclaimerMsg.text">
       <div class="ui warning message" [innerHTML]="disclaimerMsg.text"></div>
     </div>
     <div id="campaign-detail" [hidden]="isContributionView">
@@ -1250,7 +1250,7 @@
                 <div id="contribution-campaign-rewards" ngSemantic class="ui accordion">
                   <h2 class="ui header" FontColor RewardsFontColor>{{translate("campaign_page_choose_your_reward_text")}}</h2>
                   <div class="campaign-reward" [ngClass]="{'selected': rewardIndex == 0}" [hidden]="!isCampaignShown">
-                    
+
                     <div class="campaign-reward-content">
                       <div class="reward-top title" (click)="selectReward(0)">
                         <h3 class="no-reward-text ui header " RewardsFontColor>{{translate("campaign_page_no_reward_selected_text")}}</h3>

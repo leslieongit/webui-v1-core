@@ -1,31 +1,28 @@
 @mixin theme($name, $main-color, $link-color, $main-color-hover, $main-color-table-alter) {
   .container.main-color.#{$name} {
-
     /* Reward block ------------------*/
     .rewards {
       .pledge-level {
         >li {
           &:hover {
-            @if $main-color != #ffffff {
+            @if $main-color !=#ffffff {
               background: $main-color !important;
               color: $main-color !important;
             }
           }
         }
-
         .choose-reward-btn {
           @if $main-color==#ffffff {
             background-color: #ffffff !important;
             color: rgba(0, 0, 0, .8);
           }
-
           @else {
             background: $main-color !important;
             color: #fff;
           }
         }
-
         &.ended,
+        &.past-threshold,
         &.sold-out {
           >li {
             &:hover {

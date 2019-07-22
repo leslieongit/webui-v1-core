@@ -1223,7 +1223,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
         'Organization Phone': $scope.tbusiness_organization_phone,
         'Organization Address': $scope.tbusiness_organization_address,
       };
-      
+
       if ($scope.tippingOptions.toggle) {
         $scope.csvHeaders.Tip = value.tab_campaign_transaction_details_tip_amount;
       }
@@ -1240,7 +1240,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       if ($scope.public_settings.site_campaign_allow_contribution_message) {
         $scope.csvHeaders['Note'] = 'Note';
       }
-    
+
       $scope.allTransactioncsv.push($scope.csvHeaders);
       angular.forEach($scope.allTransactionArray, function(value) {
         // ($scope.twithdraw);
@@ -1262,7 +1262,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
             $scope.tstatus = $scope.twithdraw;
           }
 
-          if(value.backer[0].business_organization && value.backer[0].business_organization[0]) {
+          if (value.backer[0].business_organization && value.backer[0].business_organization[0]) {
             organization_name = value.backer[0].business_organization[0].name;
             organization_email = value.backer[0].business_organization[0].email;
 
@@ -1273,7 +1273,10 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
             }
             $scope.businessDataPhoneNumber = businessPhoneNumberObj != null ? businessPhoneNumberObj[0].number + " " + businessPhoneType : "";
 
-            $scope.busShipadd = value.backer[0].business_organization[0].business_organization_shipping_address[0];
+            if (value.backer[0].hasOwnProperty('business_organization') && value.backer[0].business_organization[0].business_organization_shipping_address) {
+              $scope.busShipadd = value.backer[0].business_organization[0].business_organization_shipping_address[0];
+            }
+
             if (nativeLookup) {
               $scope.busShipadd.city = $scope.busShipadd.city_native_name != null ? $scope.busShipadd.city_native_name : $scope.busShipadd.city;
               $scope.busShipadd.subcountry = $scope.busShipadd.subcountry_native_name != null ? $scope.busShipadd.subcountry_native_name : $scope.busShipadd.subcountry;
@@ -1301,12 +1304,19 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
               $scope.shipadd = $scope.addbacker.person_shipping_address[0];
               if (nativeLookup) {
                 $scope.shipadd.city = $scope.shipadd.city_native_name != null ? $scope.shipadd.city_native_name : $scope.shipadd.city;
+                if ($scope.shipadd.hasOwnProperty('city_alt') && $scope.public_settings.hasOwnProperty('site_campaign_alt_city_input_toggle')) {
+                  $scope.shipadd.city = $scope.shipadd.city_alt;
+                }
                 $scope.shipadd.subcountry = $scope.shipadd.subcountry_native_name != null ? $scope.shipadd.subcountry_native_name : $scope.shipadd.subcountry;
                 $scope.shipadd.country = $scope.shipadd.country_native_name != null ? $scope.shipadd.country_native_name : $scope.shipadd.country;
                 $scope.completeaddress = $scope.shipadd.country + ", " + $scope.shipadd.mail_code + ", " + $scope.shipadd.subcountry + ", " + $scope.shipadd.city + ", " + $scope.shipadd.street1;
               } else {
-                $scope.completeaddress = $scope.shipadd.street1 + " , " + $scope.shipadd.city + " " + $scope.shipadd.subcountry + " " + $scope.shipadd.mail_code + " , " + $scope.shipadd.country;
+                if ($scope.shipadd.hasOwnProperty('city_alt') && $scope.public_settings.hasOwnProperty('site_campaign_alt_city_input_toggle')) {
+                  $scope.shipadd.city = $scope.shipadd.city_alt;
+                }
+                $scope.completeaddress = $scope.shipadd.street1 + ", " + $scope.shipadd.city + " " + $scope.shipadd.subcountry + " " + $scope.shipadd.mail_code + " , " + $scope.shipadd.country;
               }
+
               // data1 = {'$scope.personname': $scope.addbacker.first_name, '$scope.personemail':$scope.addbacker.email,'$scope.personaddress':$scope.completeaddress};
               data1 = {
                 'ID': value.stripe_transaction_id,
@@ -1353,7 +1363,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
                 data1.Tip = 0;
               }
             }
-            
+
             // if charity is enabled site_campaign_charity_helper_enable
             if ($scope.public_settings.site_campaign_charity_helper_enable) {
               if (value.backer[0].attributes) {
@@ -1369,11 +1379,11 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
             }
 
             if ($scope.public_settings.site_campaign_allow_contribution_message) {
-              if(value.backer[0].hasOwnProperty('note') && typeof value.backer[0].note != 'undefined') {
+              if (value.backer[0].hasOwnProperty('note') && typeof value.backer[0].note != 'undefined') {
                 data1["Note"] = value.backer[0].note;
               }
             }
-            
+
             $scope.allTransactioncsv.push(data1);
           }
         }
@@ -1533,37 +1543,36 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       $scope.hideFloatingMessage();
     } else {
       $('.change-status-modal').modal({
-        onApprove: function(){
-          angular.forEach($scope.progressQueue, function(campaign){
-            Restangular.one("campaign", campaign["id"]).one("setting").customPUT(campaign["data"]).then(function(success){
-            });
+        onApprove: function() {
+          angular.forEach($scope.progressQueue, function(campaign) {
+            Restangular.one("campaign", campaign["id"]).one("setting").customPUT(campaign["data"]).then(function(success) {});
           });
-      }
+        }
       }).modal('show');
     }
   }
 
-    // click event for State select
+  // click event for State select
   $scope.stateSelected = function(data) {
     var campaignQueue = getSelectedItems();
-      angular.forEach(campaignQueue, function(campaign){
-        var campaignId = campaign["entry_id"];
-        // var campaignId = 106;
-        $scope.progressQueue = [];
-        CampaignSettingsService.retreiveSettings(campaignId).then(function(success) {
-          $scope.data = {};
-          angular.forEach(success, function(value){
-            $scope.data[value.name] = value.value;
-          });
+    angular.forEach(campaignQueue, function(campaign) {
+      var campaignId = campaign["entry_id"];
+      // var campaignId = 106;
+      $scope.progressQueue = [];
+      CampaignSettingsService.retreiveSettings(campaignId).then(function(success) {
+        $scope.data = {};
+        angular.forEach(success, function(value) {
+          $scope.data[value.name] = value.value;
+        });
 
         $scope.data["state_current"] = $scope.portal_settings.site_campaign_state_settings[data];
-          
-          var setting = {};
-          setting["id"] = campaignId;
-          setting["data"] = $scope.data;
-          $scope.progressQueue.push(setting);
-        });
+
+        var setting = {};
+        setting["id"] = campaignId;
+        setting["data"] = $scope.data;
+        $scope.progressQueue.push(setting);
       });
+    });
 
 
   }

@@ -51,8 +51,8 @@
 					<span ng-show="campaign.ends!=null" ng-if="!campaign.settings.days_to_go_hide" class="c-value" ng-class="{'time-closed' : dateInPast(campaign.ends,campaign.seconds_remaining)}">{{days_rem }} {{day_text | translate}}</span>
 				</div>
 				<div class="item f-duration">
-					<div ng-if="!campaign.settings.days_to_go_hide || !dateInPast(campaign.ends)"> This campaign started on {{campaign.created | formatDate:"MMM DD YYYY"}} and will close on {{campaign.ends | formatDate:"MMMM DD YYYY"}}. </div>
-					<div class="closed-msg" ng-if="!campaign.settings.days_to_go_hide || dateInPast(campaign.ends)"> This campaign has closed, funding is no longer available. </div>
+					<div ng-if="!campaign.settings.days_to_go_hide || !dateInPast(campaign.ends)"> {{'campaign_pledge_campaign_started_on'|translate}} {{campaign.created | formatDate:"MMM DD YYYY"}} {{'campaign_pledge_campaign_close_on'|translate}} {{campaign.ends | formatDate:"MMMM DD YYYY"}}. </div>
+					<div class="closed-msg" ng-if="!campaign.settings.days_to_go_hide || dateInPast(campaign.ends)"> {{'campaign_pledge_campaign_end_message' | translate}} </div>
 				</div>
 			</div> <!-- FUNDING RUN TIME END -->
 		</div>
@@ -98,7 +98,7 @@
 								<div class="reward-backers" ng-if="pledge.total_backers>0">
 									<i class="community basic icon"></i>
 									<span class="backer-number"> {{pledge.total_backers}} </span>
-									<span > {{'PledgeSection_backers' | translate}}<span ng-if="pledge.total_backers>1">s</span></span> 
+									<span > {{'PledgeSection_backers' | translate}}<span ng-if="pledge.total_backers>1">{{'plural_letter' | translate}}</span></span> 
 								</div>
 
 								<div class="reward-backers" ng-if="pledge.total_backers == 0"><i class="community basic icon"></i>   {{'PledgeSection_Nobackers' | translate}} </div>

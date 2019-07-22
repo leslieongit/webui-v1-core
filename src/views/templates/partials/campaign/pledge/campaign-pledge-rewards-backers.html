@@ -1,7 +1,6 @@
 <!-- end contribute and share section, begin reward and backer section -->
 <div class="funding-wrap" ng-cloak>
-  <div class="ui horizontal divider campaign-divider desktop-only" ng-show="campaign.pledges && public_settings.site_theme_campaign_min_button_show && campaign.entry_status_id !== 3"
-    translate="campaign_pledge_campaign_contribute_option_or">
+  <div class="ui horizontal divider campaign-divider desktop-only" ng-show="campaign.pledges && public_settings.site_theme_campaign_min_button_show && campaign.entry_status_id !== 3" translate="campaign_pledge_campaign_contribute_option_or">
   </div>
 
   <div ng-if="note.pledges" class="ui label notes-label">
@@ -9,11 +8,10 @@
     <i class="delete icon" ng-click="removeNote('pledges')" ng-if="note.pledges"></i>
   </div>
   <div class="notes" ng-class="{'has-note ui basic segment' : note.pledges}" ng-click="addNotes('campaign_review_rewards_note_title', 'pledges')">
-    <ul id="rewards-list" ng-show="campaign.pledges" class="rewards" ng-class="{'display_reward_tab_mob' : displayRewardsMobileTab}"
-      ng-if="!public_settings.site_campaign_comments_display_replace_reward">
+    <ul id="rewards-list" ng-show="campaign.pledges" class="rewards" ng-class="{'display_reward_tab_mob' : displayRewardsMobileTab}" ng-if="!public_settings.site_campaign_comments_display_replace_reward">
       <h3 class="ui inverted top attached header center aligned" id="campaign-rewards" translate> campaign_pledge_campaign_reward</h3>
       <div ng-repeat="pledge in campaign.pledges_to_show track by $index | orderBy:'amount'" id="rewards-section">
-        <div class="pledge-level" ng-if="enableRewardVariation" ng-class="{'ended': dateInPast(campaign.ends,campaign.seconds_remaining) || campaign.entry_status_id != 2 || campaign.campaign_started=='f'|| (thresholdallowed && campaign.funded_amount + pledge.amount > campaign.maximum_allowed_funds_raised), 'sold-out': pledge.total_pledges == pledge.item_limit, 'reward-var-enabled' : enableRewardVariation, 'sold-out': rewardExpired(pledge.expires)}">
+        <div class="pledge-level" ng-if="enableRewardVariation" ng-class="{'ended': dateInPast(campaign.ends,campaign.seconds_remaining) || campaign.entry_status_id != 2 || campaign.campaign_started=='f'|| (thresholdallowed && campaign.funded_amount + pledge.amount > campaign.maximum_allowed_funds_raised), 'sold-out': pledge.total_pledges == pledge.item_limit, 'reward-var-enabled' : enableRewardVariation, 'sold-out': rewardExpired(pledge.expires), 'past-threshold': (thresholdallowed && campaign.funded_amount + pledge.amount > campaign.maximum_allowed_funds_raised)}">
 
           <li class="bonus-1">
             <div class="ui basic segment">
@@ -23,6 +21,15 @@
                     <div class="center">
                       <h2 class="ui icon header" translate>
                         <i class="emphasized frown icon"></i> campaign_pledge_campaign_reward_soldout
+                      </h2>
+                    </div>
+                  </div>
+                </div>
+                <div class="ui inverted simple dimmer" ng-if="thresholdallowed && campaign.funded_amount + pledge.amount > campaign.maximum_allowed_funds_raised">
+                  <div class="content">
+                    <div class="center">
+                      <h2 class="ui icon header" translate>
+                        <i class="emphasized frown icon"></i> campaign_pledge_campaign_reward_past_threshold
                       </h2>
                     </div>
                   </div>
@@ -53,16 +60,14 @@
                   <div class="reward-backers" ng-if="pledge.total_backers>0">
                     <i class="users icon"></i>
                     <span class="backer-number"> {{pledge.total_backers}} </span>
-                    <span>{{'campaign_pledge_campaign_reward_backer' | translate}}<span ng-if="pledge.total_backers>1">s</span></span>
+                    <span>{{'campaign_pledge_campaign_reward_backer' | translate}}<span ng-if="pledge.total_backers>1">{{'plural_letter' | translate}}</span></span>
                   </div>
 
                   <div class="reward-backers" ng-if="pledge.total_backers == 0">
                     <i class="users basic icon"></i>{{'campaign_pledge_campaign_nobacker' | translate}}</div>
-                  <div class="limit" ng-if="pledge.item_limit != null">{{'campaign_pledge_campaign_reward_limited' | translate}}
-                    {{pledge.item_limit - pledge.total_pledges}} {{'campaign_pledge_campaign_reward_limited_leftoff' | translate}}
-                    {{pledge.item_limit}}</div>
-                  <div class="reward-etd" ng-if="pledge.estimated_delivery_time"> {{'campaign_pledge_campaign_reward_estimated_shiping'
-                    | translate}}
+                  <div class="limit" ng-if="pledge.item_limit != null">{{'campaign_pledge_campaign_reward_limited' | translate}} {{pledge.item_limit - pledge.total_pledges}} {{'campaign_pledge_campaign_reward_limited_leftoff' | translate}} {{pledge.item_limit}}
+                  </div>
+                  <div class="reward-etd" ng-if="pledge.estimated_delivery_time"> {{'campaign_pledge_campaign_reward_estimated_shiping' | translate}}
                     <span class="f-delivery-date">{{pledge.estimated_delivery_time | formatDate:"MMMM YYYY"}} </span>
                   </div>
                 </div>
@@ -76,7 +81,7 @@
         </div>
 
         <div class="pledge-level" ng-if="!enableRewardVariation" ng-click="dateInPast(campaign.ends,campaign.seconds_remaining) || campaign.entry_status_id != 2 || pledge.total_pledges == pledge.item_limit || (thresholdallowed && campaign.funded_amount + pledge.amount > campaign.maximum_allowed_funds_raised) || campaign.campaign_started=='f' || submitPledge($event, pledge, $index)"
-          ng-class="{'ended': dateInPast(campaign.ends,campaign.seconds_remaining) || campaign.entry_status_id != 2 || campaign.campaign_started=='f'|| (thresholdallowed && campaign.funded_amount + pledge.amount > campaign.maximum_allowed_funds_raised), 'sold-out': pledge.total_pledges == pledge.item_limit, 'sold-out': rewardExpired(pledge.expires)}">
+          ng-class="{'ended': dateInPast(campaign.ends,campaign.seconds_remaining) || campaign.entry_status_id != 2 || campaign.campaign_started=='f', 'sold-out': pledge.total_pledges == pledge.item_limit, 'sold-out': rewardExpired(pledge.expires), 'past-threshold': (thresholdallowed && campaign.funded_amount + pledge.amount > campaign.maximum_allowed_funds_raised)}">
 
           <li class="bonus-1">
             <div class="ui basic segment">
@@ -86,6 +91,15 @@
                     <div class="center">
                       <h2 class="ui icon header" translate>
                         <i class="emphasized frown icon"></i> campaign_pledge_campaign_reward_soldout
+                      </h2>
+                    </div>
+                  </div>
+                </div>
+                <div class="ui inverted simple dimmer" ng-if="thresholdallowed && campaign.funded_amount + pledge.amount > campaign.maximum_allowed_funds_raised">
+                  <div class="content">
+                    <div class="center">
+                      <h2 class="ui icon header" translate>
+                        <i class="emphasized frown icon"></i> campaign_pledge_campaign_reward_past_threshold
                       </h2>
                     </div>
                   </div>
@@ -103,16 +117,14 @@
                   <div class="reward-backers" ng-if="pledge.total_backers>0">
                     <i class="users icon"></i>
                     <span class="backer-number"> {{pledge.total_backers}} </span>
-                    <span>{{'campaign_pledge_campaign_reward_backer' | translate}}<span ng-if="pledge.total_backers>1">s</span></span>
+                    <span>{{'campaign_pledge_campaign_reward_backer' | translate}}<span ng-if="pledge.total_backers>1">{{'plural_letter' | translate}}</span></span>
                   </div>
 
                   <div class="reward-backers" ng-if="pledge.total_backers == 0">
                     <i class="users basic icon"></i>{{'campaign_pledge_campaign_nobacker' | translate}}</div>
-                  <div class="limit" ng-if="pledge.item_limit != null">{{'campaign_pledge_campaign_reward_limited' | translate}}
-                    {{pledge.item_limit - pledge.total_pledges}} {{'campaign_pledge_campaign_reward_limited_leftoff' | translate}}
-                    {{pledge.item_limit}}</div>
-                  <div class="reward-etd" ng-if="pledge.estimated_delivery_time"> {{'campaign_pledge_campaign_reward_estimated_shiping'
-                    | translate}}
+                  <div class="limit" ng-if="pledge.item_limit != null">{{'campaign_pledge_campaign_reward_limited' | translate}} {{pledge.item_limit - pledge.total_pledges}} {{'campaign_pledge_campaign_reward_limited_leftoff' | translate}} {{pledge.item_limit}}
+                  </div>
+                  <div class="reward-etd" ng-if="pledge.estimated_delivery_time"> {{'campaign_pledge_campaign_reward_estimated_shiping' | translate}}
                     <span class="f-delivery-date">{{pledge.estimated_delivery_time | formatDate:"MMMM YYYY"}} </span>
                   </div>
                 </div>
@@ -122,8 +134,7 @@
         </div>
       </div>
       <div class="reward-pagination">
-        <div semantic-pagination ng-model="rewardPagination.page" items-per-page-nav="3" total-pages="rewardPagination.pagination.numpages"
-          update-function="filterRewards()" pagination-name="rewards"></div>
+        <div semantic-pagination ng-model="rewardPagination.page" items-per-page-nav="3" total-pages="rewardPagination.pagination.numpages" update-function="filterRewards()" pagination-name="rewards"></div>
       </div>
     </ul>
   </div>
@@ -249,7 +260,7 @@
         </div>
         <div class="actions">
           <div class="ui green button" ng-click="updateComment(old_comment[0])" translate>custom_comment_update_form_submit
-            </div>
+          </div>
         </div>
       </div>
       <div class="ui small modal" id="delete-comment">
@@ -271,7 +282,7 @@
     <div class="insert-fb-comments" ng-if="comment_system == 'facebook'">
       <div id="fb-root"></div>
       <script>
-        (function (d, s, id) {
+        (function(d, s, id) {
           var js, fjs = d.getElementsByTagName(s)[0];
           if (d.getElementById(id)) return;
           js = d.createElement(s);
@@ -284,8 +295,7 @@
       <div class="fb-comments" data-href="{{currentAbsUrl}}" data-numposts="5"></div>
     </div>
   </ul>
-  <div id="backer-list" ng-class="{'move-backers':moveBackersBelowCreatorAccordionMobile}" class="campaign-info addborder ui accordion"
-    ng-Accord ng-if="isBackersOnSidebar">
+  <div id="backer-list" ng-class="{'move-backers':moveBackersBelowCreatorAccordionMobile}" class="campaign-info addborder ui accordion" ng-Accord ng-if="isBackersOnSidebar">
     <h3 class="sidebar-heading ui inverted block header active title">
       <span class="pagebackers">{{' campaign_page_backers' | translate}}</span>
       <span class="count-label ui label">{{backer_length}}</span>
@@ -293,8 +303,7 @@
     </h3>
     <div class="backer-content active content">
       <div class="ui warning message" ng-show="backer_length==0" translate>campaign_page_nobackers </div>
-      <div ng-repeat="backer in campaign.backers" class="campaign-backerbox" ng-class="{'no-profile-link' : isHideBackerProfileLink }"
-        ng-click="visitProfile($index)">
+      <div ng-repeat="backer in campaign.backers" class="campaign-backerbox" ng-class="{'no-profile-link' : isHideBackerProfileLink }" ng-click="visitProfile($index)">
         <div class="campaign-backer ui segment">
           <div class="campaign-backer-top ui two column stackable grid">
             <div class="left-col" ng-class="{'ten wide column': !public_settings.site_campaign_page_simplify_backer, 'sixteen wide column': public_settings.site_campaign_page_simplify_backer}">
@@ -313,19 +322,16 @@
             </div>
           </div>
           <div class="backed-campaigns" ng-if="backer.total_backed<2 && !isHideBackedCampaignsAmount">
-            <i class="certificate icon"></i>{{'campaign_page_backed' | translate}} {{backer.total_backed}} {{'campaign_page_backed_campaign'
-            | translate}}</div>
+            <i class="certificate icon"></i>{{'campaign_page_backed' | translate}} {{backer.total_backed}} {{'campaign_page_backed_campaign' | translate}}</div>
           <div class="backed-campaigns" ng-if="backer.total_backed>1 && !isHideBackedCampaignsAmount">
-            <i class="certificate icon"></i>{{'campaign_page_backed' | translate}} {{backer.total_backed}} {{'campaign_page_backed_campaigns'
-            | translate}}</div>
+            <i class="certificate icon"></i>{{'campaign_page_backed' | translate}} {{backer.total_backed}} {{'campaign_page_backed_campaigns' | translate}}</div>
           <div class="ui message" ng-repeat="pledge in backer.notes" ng-if="pledge.note">
             <small>{{pledge.created | formatDate:"MMMM DD, YYYY"}}</small>
             <p>{{pledge.note}}</p>
           </div>
         </div>
       </div>
-      <div class="semantic-pagination" semantic-pagination ng-model="backers_pagination.page" total-pages="backers_pagination.numpages"
-        update-function="getBackers()"></div>
+      <div class="semantic-pagination" semantic-pagination ng-model="backers_pagination.page" total-pages="backers_pagination.numpages" update-function="getBackers()"></div>
     </div>
   </div>
 </div>

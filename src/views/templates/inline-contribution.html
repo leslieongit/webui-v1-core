@@ -439,6 +439,7 @@
                         <input name="password" type="password" placeholder="{{'guest_contribution_password' | translate}}" ng-model="accountInfo.password">
                       </div>
                     </div>
+                    <div class="ui black button" ng-click="goBackToCampaign()" translate> guest_contribution_go_back</div>
                     <div class="ui green button" ng-click="loginUser()" id="loginbtn" translate> guest_contribution_login</div>
                     <div class="ui grey button" ng-click="forgotPassword()" id="loginbtn" translate>guest_contribution_forgot_password</div>
                   </form>
@@ -710,16 +711,16 @@
               </div>
             </div>
           </div>
-          <h2 class="section-header ui inverted top attached header" translate ng-if="(campaign.pledges[pledgeindex].shipping.length && guestOption != 1) && !(acceptExtraPledgeData && guestOption != 1)">
+          <h2 class="section-header ui inverted top attached header" translate ng-if="(campaign.pledges[pledgeindex].shipping.length && guestOption != 1) && !(acceptExtraPledgeData && (guestOption == 2 || guestOption == 4))">
             guest_contribution_shipping_info
           </h2>
-          <h2 class="section-header ui inverted top attached header" translate ng-if="(campaign.pledges[pledgeindex].shipping.length && guestOption != 1) && (acceptExtraPledgeData && guestOption != 1)">
+          <h2 class="section-header ui inverted top attached header" translate ng-if="(campaign.pledges[pledgeindex].shipping.length && guestOption != 1) && (acceptExtraPledgeData && (guestOption == 2 || guestOption == 4))">
             guest_contribution_shipping_info
           </h2>
-          <h2 class="section-header ui inverted top attached header" translate ng-if="!(campaign.pledges[pledgeindex].shipping.length && guestOption != 1) && (acceptExtraPledgeData && guestOption != 1)">
+          <h2 class="section-header ui inverted top attached header" translate ng-if="!(campaign.pledges[pledgeindex].shipping.length && guestOption != 1) && (acceptExtraPledgeData && (guestOption == 2 || guestOption == 4))">
             guest_contribution_address_info
           </h2>
-          <div class="shipping-info campaign-bg ui middle attached basic segment" ng-if="(campaign.pledges[pledgeindex].shipping.length && guestOption != 1) || (acceptExtraPledgeData && guestOption != 1)">
+          <div class="shipping-info campaign-bg ui middle attached basic segment" ng-if="(campaign.pledges[pledgeindex].shipping.length && guestOption != 1) || (acceptExtraPledgeData && (guestOption == 2 || guestOption == 4))">
             <div class="formbg ui two column stackable grid">
               <div class="ui corner red label" data-content="Required Field" sui-popup="">
                 <i class="white asterisk icon"></i>
@@ -885,8 +886,9 @@
               </div>
             </div>
           </div>
-          <h2 class="ui inverted top attached header" translate="guest_campaign_Phone_Number_Info" ng-if="(campaign.pledges[pledgeindex].shipping.length && guestOption != 1) || (acceptExtraPledgeData && guestOption != 1)"></h2>
-          <div class="shipping-info campaign-bg ui middle attached basic segment" ng-if="(campaign.pledges[pledgeindex].shipping.length && guestOption != 1) || (acceptExtraPledgeData && guestOption != 1)">
+
+          <h2 class="ui inverted top attached header" translate="guest_campaign_Phone_Number_Info" ng-if="(campaign.pledges[pledgeindex].shipping.length && guestOption != 1) || (acceptExtraPledgeData && (guestOption == 2 || guestOption == 4))"></h2>
+          <div class="shipping-info campaign-bg ui middle attached basic segment" ng-if="(campaign.pledges[pledgeindex].shipping.length && guestOption != 1) || (acceptExtraPledgeData && (guestOption == 2 || guestOption == 4))">
             <div class="formbg ui two column stackable grid">
               <div class="five wide column left-col">
                 <h3 class="ui header" translate="guest_campaign_Phone_Number"></h3>
@@ -923,7 +925,7 @@
                           <input type="hidden" name="new_phone_type">
                           <i class="dropdown icon"></i>
                           <div class="menu">
-                            <div class="item" ng-repeat="type in phonetype" ng-click="phoneTypeSelected(type)">{{type.name | translate}}</div>
+                            <div class="item" ng-repeat="type in phonetype" id="phone_type_{{type.name}}" ng-click="phoneTypeSelected(type)">{{type.name | translate}}</div>
                           </div>
                         </div>
                       </div>
@@ -1345,6 +1347,7 @@
                       <label translate> guest_contribution_password </label>
                       <input name="password" type="password" placeholder="{{'guest_contribution_password' | translate}}" ng-model="accountInfo.password">
                     </div>
+                    <div class="ui black button" ng-click="goBackToCampaign()" translate> guest_contribution_go_back</div>
                     <div class="ui green button" ng-click="loginUser()" id="loginbtn" translate> guest_contribution_login</div>
                     <div class="ui grey button" ng-click="forgotPassword()" id="loginbtn" translate>guest_contribution_forgot_password</div>
                   </form>

@@ -274,7 +274,9 @@ export class AppComponent implements OnInit {
   tipInfo: any;
   contributeBehaviour: any;
   expressRegisterError: string;
-  disclaimerMsg: any;
+  disclaimerMsg: any = {
+    toggle: false
+  };
 
   constructor( @Inject(CampaignService) campaignService: CampaignService, @Inject(TranslationService) private translationService: TranslationService, @Inject(UserService) userService: UserService, @Inject(StripeService) stripeService: StripeService, @Inject(SettingsService) settingsService: SettingsService, private elementRef: ElementRef, private domSanitization: DomSanitizer, private http: Http, private cPipe: CurrencyPipe, private dPipe: DecimalPipe, private sPipe:CurrencySymbolNumberPipe) {
     if (process.env.ENV == "development") {

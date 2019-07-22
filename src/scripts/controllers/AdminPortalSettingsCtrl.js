@@ -3186,43 +3186,55 @@ app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location
     $scope.public_settings.site_search_explore = $scope.searchFilters[index];
   }
 
+  $scope.validateFacebookComment = function() {
+    var translation = $translate.instant(['tab_portalsetting_facebook_app_id_validation']);
+    $('.ui.form').form({
+      facebook_app_id: {
+        identifier: 'facebook_app_id',
+        rules: [{
+          type: 'empty',
+          prompt: translation.tab_portalsetting_facebook_app_id_validation
+        }]
+      },
+    }, {
+      inline: true,
+      onSuccess: function() {
+        $scope.valcheck = $scope.valcheck && true;
+      },
+      onFailure: function() {
+        $scope.valcheck = $scope.valcheck && false;
+      }
+    }).form('validate form');
+  }
+
   $scope.saveDisqusShortname = function(value) {
-    msg = {
-      'loading': true,
-      'loading_message': 'saving_settings'
-    }
-    $rootScope.floatingMessage = msg;
-    //$scope.clearMessage();
-    // set comment system
-    publicSettings = {
-      custom_comment_show_comment_picture: $scope.public_settings.custom_comment_show_comment_picture,
-      comment_system: $scope.comment,
-      custom_comment_comment_background_color: $scope.public_settings.custom_comment_comment_background_color,
-      custom_comment_auto_refresh: $scope.public_settings.custom_comment_auto_refresh,
-      custom_comment_anonymous_commenting: $scope.public_settings.custom_comment_anonymous_commenting,
-      custom_comment_anonymous_force: $scope.public_settings.custom_comment_anonymous_commenting_force,
-      custom_comment_font_family: $scope.public_settings.custom_comment_font_family,
-      custom_comment_font_color: $scope.public_settings.custom_comment_font_color
+    $scope.valcheck = true;
+
+    if ($scope.comment && $scope.comment == 'facebook') {
+      $scope.validateFacebookComment();
     }
 
-    Restangular.one('portal/setting/public').customPUT(publicSettings).then(function(success) {
+    if ($scope.valcheck) {
       msg = {
-        'header': "success_message_save_changes_button",
+        'loading': true,
+        'loading_message': 'saving_settings'
       }
       $rootScope.floatingMessage = msg;
-      $scope.hideFloatingMessage();
-    }, function(failure) {
-      msg = {
-        'header': failure.data.message,
+      //$scope.clearMessage();
+      // set comment system
+      publicSettings = {
+        custom_comment_show_comment_picture: $scope.public_settings.custom_comment_show_comment_picture,
+        comment_system: $scope.comment,
+        custom_comment_comment_background_color: $scope.public_settings.custom_comment_comment_background_color,
+        custom_comment_auto_refresh: $scope.public_settings.custom_comment_auto_refresh,
+        custom_comment_anonymous_commenting: $scope.public_settings.custom_comment_anonymous_commenting,
+        custom_comment_anonymous_force: $scope.public_settings.custom_comment_anonymous_commenting_force,
+        custom_comment_font_family: $scope.public_settings.custom_comment_font_family,
+        custom_comment_font_color: $scope.public_settings.custom_comment_font_color,
+        site_facebook_app_id: $scope.public_settings.site_facebook_app_id
       }
-      $rootScope.floatingMessage = msg;
-      $scope.hideFloatingMessage();
-    });
 
-    //if using Disqus, save disqus shortname
-    if ($scope.comment == "disqus") {
-      window.disqus_shortname = value;
-      DisqusShortnameService.setDisqusShortname(value).then(function(success) {
+      Restangular.one('portal/setting/public').customPUT(publicSettings).then(function(success) {
         msg = {
           'header': "success_message_save_changes_button",
         }
@@ -3235,8 +3247,25 @@ app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location
         $rootScope.floatingMessage = msg;
         $scope.hideFloatingMessage();
       });
-    }
 
+      //if using Disqus, save disqus shortname
+      if ($scope.comment == "disqus") {
+        window.disqus_shortname = value;
+        DisqusShortnameService.setDisqusShortname(value).then(function(success) {
+          msg = {
+            'header': "success_message_save_changes_button",
+          }
+          $rootScope.floatingMessage = msg;
+          $scope.hideFloatingMessage();
+        }, function(failure) {
+          msg = {
+            'header': failure.data.message,
+          }
+          $rootScope.floatingMessage = msg;
+          $scope.hideFloatingMessage();
+        });
+      }
+    }
   }
 
   // WIDGET SETTINGS
