@@ -951,7 +951,7 @@ app.controller('CampaignPreviewCtrl', function($timeout, $interval, $location, $
       reqFieldsCheck = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
     }
 
-    if (reqFieldsCheck) {
+    if ((reqFieldsCheck || basicsReqField)) {
       $scope.loadingText = true;
 
       CreateCampaignService.sendForReview().then(function(success) {

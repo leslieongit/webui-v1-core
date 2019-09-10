@@ -144,5 +144,6 @@
   "document_write_prompt_msg": "Code snippets which use \"document.write\" are not supported with existing framework. Please let your vendor know to switch or upgrade their code.",
   "admin_only_popup_msg": "This field can only be viewed by website administrator",
   "admin_only_popup_label": "Admin Only",
-  "plural_letter": "s"
+  "plural_letter": "s",
+  "wordpress_api_problems": "Your blog URL is not correct and may cause problems with website. Please correct it and save settings again."
 }

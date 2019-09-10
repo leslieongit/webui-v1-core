@@ -1659,6 +1659,7 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
       } else if (!$scope.toggle.newCard && !$scope.selectedCardID) {
         promises.push(StripeService.createCard($scope.pledgerAccountID, $scope.creditCard));
       }
+
       $scope.resolvePromiseChain(promises, pledgeAttributes, businessData);
     }
   }
@@ -1690,7 +1691,7 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
     addAddressPhoneNumber(business_id, businessPromises, address, phoneInfo, true);
     //Resolve Address/Phone
     if (businessPromises && businessPromises.length) {
-      $q.all(businessPromises).then(function(resolved) {
+      return $q.all(businessPromises).then(function(resolved) {
         // loop through the results and find value
         angular.forEach(resolved, function(value) {
           if (value.address_id) {
@@ -1702,8 +1703,8 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
             $scope.chosenPhoneNumberId = value.phone_number_id;
           }
         });
-        generateTokenOrPledge(promises, pledgeAttributes, businessData);
-        return;
+
+        return generateTokenOrPledge(promises, pledgeAttributes, businessData);
       });
     }
     generateTokenOrPledge(promises, pledgeAttributes, businessData);
@@ -1965,6 +1966,7 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
         });
 
         //Pledge
+        console.log('addAddressPhoneNumber');
         generateTokenOrPledge(promises, pledgeAttributes, businessData);
       });
 

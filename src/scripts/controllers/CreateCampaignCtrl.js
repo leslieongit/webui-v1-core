@@ -174,6 +174,7 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
         toggle: false
       };
     }
+
     $scope.isDisableFaq = $scope.public_settings.site_campaign_faq.toggle;
     $scope.isRemoveFundraise = (!$scope.public_settings.site_campaign_defaults.hide_fundraise || $scope.user.person_type_id == 1);
 
@@ -329,7 +330,6 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
         }
         count++;
       });
-
     }
     // Get countries
     $scope.getCountries();
@@ -670,12 +670,11 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
           }
         }
       });
-      if (!$scope.campaign.maximum_allowed_funds_raised) {
-
-      } else {
+      if ($scope.campaign.maximum_allowed_funds_raised) {
         $scope.thresholdvalue.value = $scope.campaign.maximum_allowed_funds_raised;
         $('#maxthreshold').checkbox('check');
       }
+
       if (success.uri_paths.length) {
         $scope.campaign.uri_path = success.uri_paths[0].path;
       }
@@ -684,8 +683,12 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
         $scope.campaign.funding_goal = "";
       }
       Restangular.one('campaign', campaign_id).one('stripe-account').customGET().then(function(stripe) {
-        if (stripe.length)
+        if (stripe.length) {
           $scope.campaign.stripe_account_id = stripe[0].id;
+        }
+        if ($scope.public_settings.hasOwnProperty('site_campaign_fee_direct_transaction') && $scope.public_settings.site_campaign_fee_direct_transaction) {
+          $scope.campaign.stripe_account_id = null;
+        }
       });
       // check campaign links
       // add empty array if link is null
@@ -2914,8 +2917,10 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
       sub_countries: [],
       worldwideOption: worldwideInList
     };
+
     if (arr)
       arr.push(angular.copy(shippingOption));
+
   }
 
 
@@ -3034,11 +3039,15 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
   // select shipping option click function
   $scope.selectShippingOption = function(rewardIndex, sIndex, optionID) {
 
+    var default_country_id = '';
+    if ($scope.public_settings.hasOwnProperty('site_theme_default_shipping_country')) {
+      default_country_id = $scope.public_settings.site_theme_default_shipping_country.country_id;
+    }
     // assign option ID
     // use index of to get the reward index then assign it t;o the scope object
     $scope.rewards_data[rewardIndex].shipping[sIndex].cost = '';
     $scope.rewards_data[rewardIndex].shipping[sIndex].shipping_option_type_id = optionID;
-    $scope.rewards_data[rewardIndex].shipping[sIndex].country_id = '';
+    $scope.rewards_data[rewardIndex].shipping[sIndex].country_id = default_country_id;
   };
 
   // shipping option -> country specific shipping selected country

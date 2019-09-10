@@ -9,8 +9,7 @@
 
         <div class="socialmedia-icons">
           <div class="social-icon ui horizontal list">
-            <a ng-href="{{value.url}}" class="social-link item" ng-repeat="(key,value) in social_links" ng-show="{{value.url.length>1}}"
-              target="_blank">
+            <a ng-href="{{value.url}}" class="social-link item" ng-repeat="(key,value) in social_links" ng-show="{{value.url.length>1}}" target="_blank">
               <i ng-if="key=='facebook'" class="large circular fb-blue facebook icon" title="Follow us on Facebook"></i>
               <i ng-if="key=='linkedin'" class="large circular linkedin-blue linkedin icon" title="Follow us on Linkedin"></i>
               <i ng-if="key=='google'" class="large circular google-plus-red google plus icon" title="Follow us on Google"></i>

@@ -127,7 +127,7 @@
 
   "tab_account_setting_header_message": "Edit Account Settings",
   "tab_account_setting_changeemail": "Change Email",
-  "tab_account_setting_changeemail_note": "If you want to change your email, simply just click the button and you will recieve an email regarding your email change",
+  "tab_account_setting_changeemail_note": "If you want to change your email, simply just click the button and you will receive an email regarding your email change",
   "tab_account_setting_send_link": "Send verification link to current email",
   "tab_account_setting_change_password": "Change Password",
   "tab_account_setting_change_password_note": "Make sure your password is unique and hard to guess.",

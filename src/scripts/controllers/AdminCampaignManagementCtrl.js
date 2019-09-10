@@ -523,6 +523,16 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
 
         }, function(failed) {
           $scope.eMessage = failed.data.message;
+
+          if (failed.data.code == 'account_profile_stripe_pledge_direct_off_missing_connected') {
+            msg = {
+              'header': 'portal_setting_pledge_campaign_missing_connect',
+            }
+            $rootScope.floatingMessage = msg;
+            $scope.hideFloatingMessage();
+            hideMsg();
+          }
+
         });
       });
     });

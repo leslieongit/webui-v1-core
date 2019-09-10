@@ -436,7 +436,7 @@ app.constant("SOCIAL_SHARING_OPTIONS", {
   "sharing_disabled": "disabled"
 });
 
-app.factory('authHttpInterceptor', function($q, $location, $injector, ipCookie) {
+app.factory('authHttpInterceptor', function($q, $location, $injector, ipCookie, $rootScope) {
   return {
     // Set auth token for all requests
     request: function(config) {
@@ -456,6 +456,12 @@ app.factory('authHttpInterceptor', function($q, $location, $injector, ipCookie) 
     responseError: function(response) {
       var lst = response.config.url.split('/');
       var User = $injector.get('UserService');
+
+      if (checkWordpressException(response)) {
+        $rootScope.wp_error = true;
+        return $q.reject(response);
+      }
+
       //////////// server not available
       if (response.status == 0) {
         // if(response.config.url.indexOf("post")){
@@ -475,6 +481,10 @@ app.factory('authHttpInterceptor', function($q, $location, $injector, ipCookie) 
     }
   };
 });
+
+function checkWordpressException(response) {
+  return response.config.functionLocation == "wp_service";
+}
 
 app.filter('unique', function() {
   return function(collection, keyname) {

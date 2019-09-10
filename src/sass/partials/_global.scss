@@ -275,14 +275,31 @@ html {
           }
         }
 
+        .campaign-list-items {
+          display: -webkit-box;
+          display: -ms-flexbox;
+          display: flex;
+          -webkit-box-align: stretch;
+          -ms-flex-align: stretch;
+          align-items: stretch;
+          -ms-flex-wrap: wrap;
+          flex-wrap: wrap;
+        }
+
         .campaign-thumb {
+          margin-bottom: 3rem;
           .campaign-card {
             position: relative;
-            margin-bottom: 3rem;
             color: #888;
-            overflow: hidden;
-            margin-bottom: 15px;
-
+            height: 100%;
+            
+            .campaign-created {
+              @media (max-width: 767px) {
+                position: static;
+                padding: 0;
+              }
+            }
+            
             .video-container {
               overflow: hidden;
               position: relative;
@@ -337,6 +354,9 @@ html {
             }
 
             .campaign-desc {
+              @media (max-width: 767px) {
+                margin-bottom: 0;
+              }
               .campaign-title {
                 margin-bottom: 10px;
                 min-height: 40px;
@@ -356,10 +376,10 @@ html {
             }
 
             .campaign-card-footer {
-              position: absolute;
-              bottom: 0;
-              left: 0;
-              right: 0;
+              // position: absolute;
+              // bottom: 0;
+              // left: 0;
+              // right: 0;
               padding: 15px;
               padding-top: 40px;
               background: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0)), color-stop(26%, #fff));

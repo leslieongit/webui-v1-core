@@ -2339,7 +2339,7 @@
               </p>
             </div>
             <div class="twelve wide column">
-              <div class="ui selection dropdown disabled defaultCountry">
+              <div class="ui selection dropdown defaultCountry">
                 <input type="hidden">
                 <div class="text" ng-bind="public_settings.site_theme_default_shipping_country.name"></div>
                 <i class="dropdown icon"></i>
@@ -4259,6 +4259,9 @@
             <div class="twelve wide column">
               <div class="ui fluid form field">
                 <input type="text" ng-model="public_settings.site_widget_wp_api.url" ng-attr-placeholder="  {{'tab_portalsetting_Wordpress_Url_placeholder' | translate}} ">
+              </div>
+              <div ng-if="wp_error" style="margin-top: 15px;" class="ui fluid form field">
+                <div class="ui red horizontal label"> {{ 'wordpress_api_problems' | translate }} </div>
               </div>
             </div>
             <div class="four wide column">

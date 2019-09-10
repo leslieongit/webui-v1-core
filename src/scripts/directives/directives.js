@@ -506,9 +506,9 @@ app.directive('htmlRender', function($compile) {
         if (value) {
           //value = value.replace(/'/g , "&#39;");
           value = "<div>" + value + "</div>";
-          
+
           //Search all string with iframe - search for src, see if its youtube, remove string
-          if(element.hasClass('reward-desc')) {
+          if (element.hasClass('reward-desc')) {
             value = value.replace(/<\/?iframe[^>]*>/g, "");
           }
 

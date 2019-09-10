@@ -246,8 +246,6 @@
           .campaign-list-items {
             .campaign-thumb {
               .campaign-card {
-                height: auto;
-
                 .campaign-card-footer {
                   position: static;
                 }
@@ -564,32 +562,6 @@
 }
 
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
-  html {
-    body {
-      &.container {
-        #main-bg {
-          .campaign-list-items {
-            .campaign-thumb {
-              .campaign-card {
-                height: 650px;
-              }
-            }
-          }
-
-          #explore-page {
-            .campaign-list-items {
-              .campaign-thumb {
-                .campaign-card {
-                  height: 570px;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
   .main-menu {
 
     .nav-main-left,
@@ -707,83 +679,9 @@
   }
 }
 
-@media only screen and (min-width:881px) {
-  html {
-    body {
-      &.container {
-        #main-bg {
-          .campaign-list-items {
-            .campaign-thumb {
-              .campaign-card {
-                height: 675px;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
 @media only screen and (max-width: 991px) {
   .ui.doubling.grid {
     width: auto !important;
-  }
-}
-
-@media only screen and (min-width: 992px) {
-  html {
-    body {
-      &.container {
-        #main-bg {
-          .campaign-list-items {
-            .campaign-thumb {
-              .campaign-card {
-                height: 500px;
-              }
-            }
-          }
-
-          #explore-page {
-            .campaign-list-items {
-              .campaign-thumb {
-                .campaign-card {
-                  height: 525px;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-@media only screen and (min-width: 1024px) {
-  html {
-    body {
-      &.container {
-        #main-bg {
-          .campaign-list-items {
-            .campaign-thumb {
-              .campaign-card {
-                height: 500px;
-              }
-            }
-          }
-
-          #explore-page {
-            .campaign-list-items {
-              .campaign-thumb {
-                .campaign-card {
-                  height: 530px;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
   }
 }
 
@@ -823,42 +721,6 @@
   }
 }
 
-@media only screen and (min-width: 1240px) {
-  html {
-    body {
-      &.container {
-        #main-bg {
-          .campaign-list-items {
-            .campaign-thumb {
-              .campaign-card {
-                height: 515px;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-@media only screen and (min-width: 1440px) {
-  html {
-    body {
-      &.container {
-        #main-bg {
-          .campaign-list-items {
-            .campaign-thumb {
-              .campaign-card {
-                height: 550px;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
 @media only screen and (min-width: 1920px) {
 
   /*Semantic Global Changes*/
@@ -874,28 +736,6 @@
 
   html {
     body {
-      &.container {
-        #main-bg {
-          .campaign-list-items {
-            .campaign-thumb {
-              .campaign-card {
-                height: 580px;
-              }
-            }
-          }
-
-          #explore-page {
-            .campaign-list-items {
-              .campaign-thumb {
-                .campaign-card {
-                  height: 600px;
-                }
-              }
-            }
-          }
-        }
-      }
-
       #feat-proj-wrap,
       #recent-proj-wrap {
         .campaign-list-items {

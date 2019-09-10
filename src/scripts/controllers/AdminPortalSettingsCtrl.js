@@ -1,7 +1,7 @@
 //------------------------------------------------------
 //      PORTAL SETTINGS TAB / SETTINGS CONTROLLER
 //------------------------------------------------------
-app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location, $timeout, $window, Restangular, $translatePartialLoader, $translate, $q, SiteLogoService, themeService, UserService, DisqusShortnameService, FileUploadService, PortalSettingsService, StripeService, CurrencyService, Geolocator, LANG, AUTH_SCHEME, VideoLinkService, API_URL, ANONYMOUS_COMMENT, SOCIAL_SHARING_OPTIONS) {
+app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location, $timeout, $window, Restangular, $translatePartialLoader, $translate, $q, SiteLogoService, themeService, UserService, DisqusShortnameService, FileUploadService, PortalSettingsService, StripeService, CurrencyService, Geolocator, LANG, AUTH_SCHEME, VideoLinkService, API_URL, ANONYMOUS_COMMENT, SOCIAL_SHARING_OPTIONS, $http) {
   $scope.froalaOptionsMain = {};
   $scope.froalaOptionsBot = {};
   $scope.froalaOptionsExplore = {};
@@ -3291,33 +3291,64 @@ app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location
     $rootScope.floatingMessage = msg;
     var requestQueue = [];
     var publicSettings = {
-      site_widget_wp_api: $scope.public_settings.site_widget_wp_api,
       site_widget_contact_form_receiver: $scope.public_settings.site_widget_contact_form_receiver,
       site_widget_twitter_widget: $scope.public_settings.site_widget_twitter_widget,
     };
 
 
-    $scope.isCodeValid = !isDocumentWrite($scope.public_settings.site_widget_twitter_widget.code);
+    if ($scope.public_settings.hasOwnProperty('site_widget_twitter_widget') && $scope.public_settings.site_widget_twitter_widget.hasOwnProperty('code')) {
+      $scope.isCodeValid = !isDocumentWrite($scope.public_settings.site_widget_twitter_widget.code);
+    }
+
+    if ($scope.public_settings.hasOwnProperty('site_widget_wp_api') && $scope.public_settings.site_widget_wp_api.hasOwnProperty('url')) {
+      $scope.isCodeValid = $scope.public_settings.site_widget_wp_api.url.length > 0;
+    }
+
     if (!publicSettings.site_widget_contact_form_receiver || publicSettings.site_widget_contact_form_receiver.length == 0) {
       publicSettings.site_widget_contact_form_receiver = $scope.private_settings.site_email_address_admin;
     }
 
-    if ($scope.isCodeValid) {
+    if ($scope.public_settings.hasOwnProperty('site_widget_wp_api') && $scope.public_settings.site_widget_wp_api.url) {
+      var req = {
+        method: 'GET',
+        url: $scope.public_settings.site_widget_wp_api.url + 'posts',
+        transformRequest: function(data, headersGetter) {
+          var headers = headersGetter();
+          // headers['location'] = 'WP-Service';
+          delete headers['X-Auth-Token'];
+          return headers;
+        },
+        withCredentials: false,
+        functionLocation: 'wp_service'
+      };
+
+      $http(req).then(function(data, status, headers, config) {
+        $scope.wp_error = false;
+        publicSettings['site_widget_wp_api'] = $scope.public_settings.site_widget_wp_api;
+        requestQueue.push(Restangular.one('portal/setting/public').customPUT(publicSettings));
+      }, function(failure) {
+        if (failure.status != 200) {
+          $scope.wp_error = true;
+          requestQueue.push(Restangular.one('portal/setting/public').customPUT(publicSettings));
+        }
+      })
+    } else {
       requestQueue.push(Restangular.one('portal/setting/public').customPUT(publicSettings));
-      $q.all(requestQueue).then(function() {
-        msg = {
-          'header': "success_message_save_changes_button",
-        }
-        $rootScope.floatingMessage = msg;
-        $scope.hideFloatingMessage();
-      }, function(failed) {
-        msg = {
-          'header': failed.data.message,
-        }
-        $rootScope.floatingMessage = msg;
-        $scope.hideFloatingMessage();
-      });
     }
+
+    $q.all(requestQueue).then(function() {
+      msg = {
+        'header': "success_message_save_changes_button",
+      }
+      $rootScope.floatingMessage = msg;
+      $scope.hideFloatingMessage();
+    }, function(failed) {
+      msg = {
+        'header': failed.data.message,
+      }
+      $rootScope.floatingMessage = msg;
+      $scope.hideFloatingMessage();
+    });
   }
 
   $scope.stripeConnect = function() {
