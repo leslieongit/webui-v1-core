@@ -1978,4 +1978,23 @@ app.controller('UserProfileCtrl', function($q, $route, $routeParams, $rootScope,
     }
   };
 
+  function missingText(array) {
+    $translate(['steps', 'stepsmessage', 'step', 'stepmessage']).then(function(value) {
+      if (array.length > 1) {
+        $scope.steps = value.steps;
+        $scope.stepsmessage = value.stepsmessage;
+        $scope.missingFieldsText = $scope.steps + "\"" + array.toString() + "\"" + $scope.stepsmessage;
+      } else {
+        $scope.step = value.step;
+        $scope.stepmessage = value.stepmessage;
+        $scope.missingFieldsText = $scope.step + "\"" + array.toString() + "\"" + $scope.stepmessage;
+      }
+      msg = {
+        'header': $scope.missingFieldsText,
+      };
+      $rootScope.floatingMessage = msg;
+      $scope.hideFloatingMessage();
+
+    });
+  }
 });

@@ -183,6 +183,7 @@ app.controller('TransactionDetailsCtrl', function($scope, $q, $routeParams, $tim
       $scope.cardnum = value.transaction_details_card_number;
       $scope.noreward = value.transaction_details_na;
       $scope.tid = value.transaction_details_transaction_id;
+      $scope.tcampaign = $scope.campaign.name;
       $scope.treward = value.transaction_details_reward;
       $scope.tamount = value.transaction_details_amount;
       $scope.tstatus = value.transaction_details_status;
@@ -197,6 +198,7 @@ app.controller('TransactionDetailsCtrl', function($scope, $q, $routeParams, $tim
       $scope.attributes = value.transaction_details_reward_attribute;
       $scope.csvHeaders = {
         'ID': $scope.tid,
+        'Campaign': $scope.tcampaign,
         'Reward': $scope.treward,
         'Amount': $scope.tamount,
         'Status': $scope.tstatus,
@@ -262,6 +264,7 @@ app.controller('TransactionDetailsCtrl', function($scope, $q, $routeParams, $tim
               // data1 = {'$scope.personname': $scope.addbacker.first_name, '$scope.personemail':$scope.addbacker.email,'$scope.personaddress':$scope.completeaddress};
               data1 = {
                 'ID': value.stripe_transaction_id,
+                'Campaign': $scope.campaign.name,
                 'Reward': $scope.rewardname,
                 'Amount': value.backer[0].amount,
                 'Status': $scope.tstatus,
@@ -277,6 +280,7 @@ app.controller('TransactionDetailsCtrl', function($scope, $q, $routeParams, $tim
             } else {
               data1 = {
                 'ID': value.stripe_transaction_id,
+                'Campaign': $scope.campaign.name,
                 'Reward': $scope.rewardname,
                 'Amount': value.backer[0].amount,
                 'Status': $scope.tstatus,

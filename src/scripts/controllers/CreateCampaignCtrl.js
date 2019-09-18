@@ -406,9 +406,8 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
     });
     Restangular.one('campaign', campaign_id).one('ever_published').customGET().then(function(success) {
 
-      $scope.fundingExist = $scope.direct_transaction && $scope.user.person_type_id != 1 || !$scope.contributionEnabled || $scope.isStepFundingDelayed && !success.ever_published;
+      $scope.fundingExist = $scope.direct_transaction || !$scope.contributionEnabled || $scope.isStepFundingDelayed && !success.ever_published;
       $scope.master_show_reward = false;
-
       if ($scope.showRewardsTab) {
         $scope.master_show_reward = true;
       }
@@ -423,7 +422,7 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
         $scope.backUrl = "getstarted/" + $routeParams.campaign_id;
 
         if ($scope.master_show_reward) {
-          if (($scope.hideAllCampaignRewardsFields || typeof $scope.hideAllCampaignRewardsFields !== 'undefined') && ($scope.showCampaignDescription || typeof $scope.hideAllCampaignRewardsFields !== 'undefined')) {
+          if (($scope.hideAllCampaignRewardsFields || typeof $scope.hideAllCampaignRewardsFields !== 'undefined') && ($scope.showCampaignDescription || typeof $scope.showCampaignDescription !== 'undefined')) {
             $scope.thirdStepPath = 'story';
           } else {
             $scope.thirdStepPath = 'rewards';
@@ -451,7 +450,6 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
           $scope.backUrl = "campaign-setup/" + $routeParams.campaign_id;
         }
       }
-
       if ($routeParams.revision_id) {
         $scope.nextStepUrl += '?revision_id=' + $routeParams.revision_id;
         $scope.backUrl += '?revision_id=' + $routeParams.revision_id;

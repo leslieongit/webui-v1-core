@@ -27,6 +27,7 @@
   "transaction_details_charity_amount": "Gift Amount",
   "transaction_details_na": "No Reward - Direct Contribution",
   "transaction_details_transaction_id": "ID",
+  "transaction_details_campaign": "Campaign",
   "transaction_details_date": "Date",
   "transaction_details_backer_deleted": "Backer Disabled",
   "transaction_details_contributors_email": "Contributor Email",

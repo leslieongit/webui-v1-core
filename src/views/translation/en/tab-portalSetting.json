@@ -775,7 +775,7 @@
   "tab_portalsetting_campaign_restrict_stripe_change_title": "Restrict Stripe Account Changes",
   "tab_portalsetting_campaign_restrict_stripe_change_note": "This option restricts stripe account changes on the post processing campaigns only where there are 1 or more contributions to prevent problems with stripe processing workflow",
   "tab_portalsetting_campaign_restrict_stripe_change_restrict": "Restrict Stripe Changes",
-  "tab_portalsetting_campaign_accept_profile_data_on_pledge_title": "Contribution Invididual Profile and Organization Attributes",
+  "tab_portalsetting_campaign_accept_profile_data_on_pledge_title": "Contribution Individual Profile and Organization Attributes",
   "tab_portalsetting_campaign_accept_profile_data_on_pledge_note": "This option allows contributor to select either Individual Profile or Business Organization and shows Address and Phone Number sections in addition to main ones that user can fill out so that information can be exported at later time.",
   "tab_portalsetting_campaign_accept_profile_data_on_pledge_toggle": "Enable",
   "tab_portalsetting_campaign_pledge_redirect_title": "Global Contribution Redirect",

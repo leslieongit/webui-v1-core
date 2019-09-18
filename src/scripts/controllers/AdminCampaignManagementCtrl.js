@@ -1195,10 +1195,11 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
         $scope.allTransactionArray = $scope.allTransactionArray.concat(resArr.data);
       });
       var nativeLookup = $scope.public_settings.site_theme_shipping_native_lookup;
-      var value = $translate.instant(['transaction_details_withdrawn', 'transaction_details_card_number', 'transaction_details_Manual_Transaction', 'transaction_details_na', 'transaction_details_transaction_id', 'transaction_details_contributors_first', 'transaction_details_contributors_last', 'transaction_details_reward', 'transaction_details_amount', 'transaction_details_status', 'transaction_details_date', 'transaction_details_contributors_email', 'transaction_details_shipping_address', 'transaction_details_phone_number', 'transaction_details_reward_attribute', "transaction_details_charity_UK_taxpayer", "transaction_details_charity_giftaid", "transaction_details_charity_fullname", "transaction_details_charity_fulladdress", "transaction_details_charity_postcode", "transaction_details_charity_amount", "transaction_details_organization_name", "transaction_details_organization_email", "transaction_details_organization_phone", "transaction_details_organization_address", "tab_campaign_transaction_details_tip_amount"]);
+      var value = $translate.instant(['transaction_details_withdrawn', 'transaction_details_campaign', 'transaction_details_card_number', 'transaction_details_Manual_Transaction', 'transaction_details_na', 'transaction_details_transaction_id', 'transaction_details_contributors_first', 'transaction_details_contributors_last', 'transaction_details_reward', 'transaction_details_amount', 'transaction_details_status', 'transaction_details_date', 'transaction_details_contributors_email', 'transaction_details_shipping_address', 'transaction_details_phone_number', 'transaction_details_reward_attribute', "transaction_details_charity_UK_taxpayer", "transaction_details_charity_giftaid", "transaction_details_charity_fullname", "transaction_details_charity_fulladdress", "transaction_details_charity_postcode", "transaction_details_charity_amount", "transaction_details_organization_name", "transaction_details_organization_email", "transaction_details_organization_phone", "transaction_details_organization_address", "tab_campaign_transaction_details_tip_amount"]);
       $scope.cardnum = value.transaction_details_card_number;
       $scope.noreward = value.transaction_details_na;
       $scope.tid = value.transaction_details_transaction_id;
+      $scope.tcampaign = value.transaction_details_campaign;
       $scope.treward = value.transaction_details_reward;
       $scope.tamount = value.transaction_details_amount;
       $scope.tstatus = value.transaction_details_status;
@@ -1217,6 +1218,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       $scope.tbusiness_organization_address = value.transaction_details_organization_address;
       $scope.csvHeaders = {
         'ID': $scope.tid,
+        'Campaign': $scope.tcampaign,
         'Reward': $scope.treward,
         'Amount': $scope.tamount,
         'Status': $scope.tstatus,
@@ -1259,7 +1261,6 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
         var organization_email = '';
         $scope.businessDataPhoneNumber = '';
         $scope.busCompleteaddress = '';
-
         if (value.card) {
           $scope.cardn = '****' + ' ' + '****' + ' ' + '****' + value.card[0].last4;
           $scope.tstatus = globalStripeStatus[value.stripe_transaction_status_id - 1];
@@ -1330,6 +1331,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
               // data1 = {'$scope.personname': $scope.addbacker.first_name, '$scope.personemail':$scope.addbacker.email,'$scope.personaddress':$scope.completeaddress};
               data1 = {
                 'ID': value.stripe_transaction_id,
+                'Campaign': $scope.campaign_name,
                 'Reward': $scope.rewardname,
                 'Amount': value.backer[0].amount,
                 'Status': $scope.tstatus,
@@ -1349,6 +1351,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
             } else {
               data1 = {
                 'ID': value.stripe_transaction_id,
+                'Campaign': $scope.campaign_name,
                 'Reward': $scope.rewardname,
                 'Amount': value.backer[0].amount,
                 'Status': $scope.tstatus,

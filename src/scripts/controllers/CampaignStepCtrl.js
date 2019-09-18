@@ -62,7 +62,7 @@ app.controller('CampaignStepCtrl', function($location, CampaignSettingsService, 
         }
         $scope.decideStepsNeeded();
       });
-
+      
       if (($scope.hideAllCampaignRewardsFields) && ($scope.showCampaignDescription)) {
         $scope.thirdStepPath = 'story';
       } else {
@@ -176,8 +176,6 @@ app.controller('CampaignStepCtrl', function($location, CampaignSettingsService, 
       return $scope.campaign.name && $scope.campaign.blurb && $scope.campaign.funding_goal && $scope.campaign.starts && $scope.campaign.ends && hasImage() && $scope.campaign.categories;
     }
   };
-
-
 
   $scope.validateDetailStep = function() {
     if ($scope.showCampaignImageField) {
