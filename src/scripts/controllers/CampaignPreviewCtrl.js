@@ -901,7 +901,7 @@ app.controller('CampaignPreviewCtrl', function($timeout, $interval, $location, $
 
   $scope.completionCheck = function() {
 
-    var reqFieldsCheck;
+    var reqFieldsCheck, basicsReqField;
 
     if ($scope.create) {
       if (!$('#creationCheck').checkbox('is checked')) {
@@ -925,7 +925,7 @@ app.controller('CampaignPreviewCtrl', function($timeout, $interval, $location, $
         $scope.rewardsCheck = false;
       }
     } else {
-      //rewads is not required
+      //rewards is not required
       $scope.rewardsCheck = true;
     }
     if ($scope.in_revision) {
@@ -940,18 +940,19 @@ app.controller('CampaignPreviewCtrl', function($timeout, $interval, $location, $
 
     // Toggle check for campaign steps with hidden required fields
     if ($scope.hideCampaignBlurbField && $scope.hideCampaignCategoryField && $scope.hideCampaignImageField) {
-      reqFieldsCheck = (campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
+      reqFieldsCheck = (campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.funding_goal && campaign.currency_id && $scope.rewardsCheck && checkFunding()) ? true : false;
     } else if ($scope.hideCampaignImageField) {
-      basicsReqField = (campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
+      reqFieldsCheck = (campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
     } else if ($scope.hideCampaignBlurbField) {
-      basicsReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.categories && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
+      reqFieldsCheck = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.categories && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
     } else if ($scope.hideCampaignCategoryField) {
-      basicsReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
+      reqFieldsCheck = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
     } else {
       reqFieldsCheck = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
-    }
-
-    if ((reqFieldsCheck || basicsReqField)) {
+    } 
+    console.log($scope.hideCampaignBlurbField);
+    console.log(campaign.name, campaign.raise_mode_id, campaign.profile_type_id, campaign.funding_goal, campaign.currency_id, campaign.description, $scope.rewardsCheck, checkFunding());
+    if ((reqFieldsCheck)) {
       $scope.loadingText = true;
 
       CreateCampaignService.sendForReview().then(function(success) {
@@ -1014,9 +1015,9 @@ app.controller('CampaignPreviewCtrl', function($timeout, $interval, $location, $
           if ($scope.hideAllCampaignRewardsFields) {
             step3ReqField = (campaign.description) ? true : false;
           } else {
-            step3ReqField = !($scope.public_settings.site_theme_campaign_show_reward_required && !campaign.pledges);
+            step3ReqField = ($scope.public_settings.site_theme_campaign_show_reward_required || campaign.pledges !== null);
           }
-          if (!step3ReqField) {
+          if (step3ReqField) {
             // set error message if no rewards
             steps.push(value.rewards);
           }
