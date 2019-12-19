@@ -27,7 +27,7 @@
           <div class="ic-contribution-summary">
             <h2 class="section-header ui inverted top attached header">
               <span class="section-label-header">{{'guest_contribution_contribution_summary'|translate}}</span>
-              <div class="contribution-selection" ng-show="(guestOption == 2 || guestOption == 4) && !contributionTypeRadio && !anonymousContributionTypeOnly">
+              <div class="contribution-selection" ng-if="!forceAnonymousPledge" ng-show="(guestOption == 2 || guestOption == 4) && !contributionTypeRadio && !anonymousContributionTypeOnly">
                 <div class="ui dropdown card-type" id="contributionMethod">
                   <div class="text"> {{contribution[0].name | translate}}</div>
                   <i class="dropdown icon" style="margin-left: 10px;"></i>
@@ -890,6 +890,9 @@
           <h2 class="ui inverted top attached header" translate="guest_campaign_Phone_Number_Info" ng-if="(campaign.pledges[pledgeindex].shipping.length && guestOption != 1) || (acceptExtraPledgeData && (guestOption == 2 || guestOption == 4))"></h2>
           <div class="shipping-info campaign-bg ui middle attached basic segment" ng-if="(campaign.pledges[pledgeindex].shipping.length && guestOption != 1) || (acceptExtraPledgeData && (guestOption == 2 || guestOption == 4))">
             <div class="formbg ui two column stackable grid">
+              <div class="ui corner red label" data-content="Required Field" sui-popup="" ng-if="acceptExtraPledgeData">
+                <i class="white asterisk icon"></i>
+              </div>
               <div class="five wide column left-col">
                 <h3 class="ui header" translate="guest_campaign_Phone_Number"></h3>
                 <p translate>guest_campaign_phone_number_message</p>
@@ -945,22 +948,7 @@
                     <span class="currency" ng-bind-html="campaign.currencies[0].code_iso4217_alpha"></span>
                   </td>
                 </tr>
-                <tr ng-if="shippingOption.length">
-                  <td class="payment-label" translate> guest_contribution_your_shipping</td>
-                  <td class="payment-amnt">
-                    <span ng-bind-html="shipOptions[0].cost || 0 | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
-                    <span class="currency" ng-bind-html="campaign.currencies[0].code_iso4217_alpha"></span>
-                  </td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td translate> guest_contribution_total_payment </td>
-                  <td>
-                    <span ng-bind-html="total(shipOptions[0].cost) | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
-                    <span class="currency" ng-bind-html="campaign.currencies[0].code_iso4217_alpha"></span>
-                  </td>
-                </tr>
+
                 <tr ng-if="tip.dollar_amount">
                   <td translate> guest_contribution_your_tip </td>
                   <td>
@@ -968,6 +956,25 @@
                     <span class="currency" ng-bind-html="tipInfo.code_iso4217_alpha"></span>
                   </td>
                 </tr>
+                
+                <tr ng-if="shippingOption.length">
+                  <td class="payment-label" translate> guest_contribution_your_shipping</td>
+                  <td class="payment-amnt">
+                    <span ng-bind-html="shipOptions[0].cost || 0 | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
+                    <span class="currency" ng-bind-html="campaign.currencies[0].code_iso4217_alpha"></span>
+                  </td>
+                </tr>
+                
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td translate> guest_contribution_total_payment </td>
+                  <td>
+                    <span ng-bind-html="total(shipOptions[0].cost, tip.dollar_amount) | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
+                    <span class="currency" ng-bind-html="campaign.currencies[0].code_iso4217_alpha"></span>
+                  </td>
+                </tr>
+                
               </tfoot>
             </table>
           </div>
@@ -1128,7 +1135,7 @@
                     <input type="checkbox">
                     <label translate> pledge_campaign_anon_contribution_only_label </label>
                   </div>
-                  <div class="contribution-selection" ng-show="(guestOption == 2 || guestOption ==4) && !contributionTypeRadio && !anonymousContributionTypeOnly">
+                  <div class="contribution-selection" ng-if="!forceAnonymousPledge" ng-show="(guestOption == 2 || guestOption ==4) && !contributionTypeRadio && !anonymousContributionTypeOnly">
                     <div class="ui selection dropdown card-type" id="contributionMethod">
                       <div class="text"> {{contribution[0].name | translate}}</div>
                       <i class="dropdown icon" style="margin-left: 10px;"></i>
@@ -1275,9 +1282,7 @@
                       <h3 class="reward-title ui header">{{campaign.pledges[pledgeindex].name}}</h3>
                       <div class="reward-description fr-view" html-render html="campaign.pledges[pledgeindex].description"></div>
                     </div>
-                    <div ng-if="!pledgeLevel">
-                      <div translate> guest_contribution_noreward_message</div>
-                    </div>
+                    
                     <div class="campaign-reward-info-bottom ui two column grid">
                       <div class="column">
                         <div class="reward-amount" ng-if="selectedReward">
@@ -1286,6 +1291,9 @@
                             <span class="currency" ng-bind-html="campaign.currencies[0].code_iso4217_alpha"></span>
                           </div>
                           <span class="shipping-label" ng-show="campaign.pledges[pledgeindex].shipping"> {{'guest_contribution_shipping'| translate}} </span>
+                        </div>
+                        <div class="no-reward-text" ng-if="!selectedReward">
+                          <span translate> guest_contribution_noreward_message</span>
                         </div>
                       </div>
                       <div class="column">
@@ -1663,7 +1671,7 @@
                     <div class="fields" ng-show="guestOption == 3">
                       <input type="text" name="namecard" placeholder="{{'pledge_campaign_name_on_card'| translate}}" ng-model="stripeExtraDetails.name">
                     </div>
-                    <div class="field">
+                    <div class="field stripe-elements-field">
                       <label translate> guest_contribution_payment_card_number </label>
                       <div id="card-number-element-wrap">
                         <i class="pf pf-credit-card" id="brand-icon"></i>
@@ -1739,22 +1747,6 @@
                         </td>
                       </tr>
 
-                      <tr ng-if="shippingOption.length">
-                        <td class="payment-label" translate> guest_contribution_your_shipping</td>
-                        <td class="payment-amnt">
-                          <span ng-bind-html="shipOptions[0].cost || 0 | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
-                          <span class="currency" ng-bind-html="campaign.currencies[0].code_iso4217_alpha"></span>
-                        </td>
-                      </tr>
-                      <tr class="payment-row">
-                        <td></td>
-                        <td class="payment-amnt">
-                          <span ng-bind-html="total(shipOptions[0].cost) | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
-                          <span class="currency" ng-bind-html="campaign.currencies[0].code_iso4217_alpha"></span>
-                        </td>
-                      </tr>
-                    </tbody>
-                    <tfoot>
                       <tr ng-if="tip.dollar_amount">
                         <td translate> guest_contribution_your_tip </td>
                         <td>
@@ -1762,7 +1754,23 @@
                           <span class="currency" ng-bind-html="tipInfo.code_iso4217_alpha"></span>
                         </td>
                       </tr>
-                    </tfoot>
+
+                      <tr ng-if="shippingOption.length">
+                        <td class="payment-label" translate> guest_contribution_your_shipping</td>
+                        <td class="payment-amnt">
+                          <span ng-bind-html="shipOptions[0].cost || 0 | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
+                          <span class="currency" ng-bind-html="campaign.currencies[0].code_iso4217_alpha"></span>
+                        </td>
+                      </tr>
+                      
+                      <tr class="payment-row">
+                        <td></td>
+                        <td class="payment-amnt">
+                          <span ng-bind-html="total(shipOptions[0].cost, tip.dollar_amount) | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
+                          <span class="currency" ng-bind-html="campaign.currencies[0].code_iso4217_alpha"></span>
+                        </td>
+                      </tr>
+                    </tbody>
                   </table>
                 </div>
                 <div class="ui pledge-btns basic btn segment" ng-hide="guestOption == 1">

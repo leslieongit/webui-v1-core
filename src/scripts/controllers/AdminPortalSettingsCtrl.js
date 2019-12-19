@@ -1849,6 +1849,7 @@ app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location
     } else {
       $scope.minamount = 1;
     }
+
     if ($scope.public_settings.site_campaign_private) {
       $scope.public_settings.site_campaign_custom_uri = true;
     }

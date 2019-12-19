@@ -101,9 +101,9 @@
       </h4>
       <div class="menu">
 
-        <a ng-show="User.portal_admin" class="item menu-item" ng-class="{active: $location.path() === '/admin/dashboard'}" href="/admin/dashboard" translate> mobile_header_administration </a>
-        <a ng-show="User.campaign_manager" class="item menu-item" ng-class="{active: $location.path() === '/campaign-manager'}" href="/campaign-manager" translate> mobile_header_mycampaigns </a>
-        <a ng-show="User.campaign_backer" class="item menu-item" ng-class="{active: $location.path() === '/pledge-history'}" href="/pledge-history" translate> mobile_header_mycontributions </a>
+        <a ng-if="User.portal_admin" class="item menu-item" ng-click="navItem()" ng-class="{active: $location.path() === '/admin/dashboard' && $location.hash() !== 'subscription-settings'}" href="/admin/dashboard/" translate> mobile_header_administration </a>
+        <a ng-if="User.campaign_manager" class="item menu-item" ng-class="{active: $location.path() === '/campaign-manager'}" href="/campaign-manager" translate> mobile_header_mycampaigns </a>
+        <a ng-if="User.campaign_backer" class="item menu-item" ng-class="{active: $location.path() === '/pledge-history'}" href="/pledge-history" translate> mobile_header_mycontributions </a>
         <a class="item menu-item" class="item menu-item" ng-class="{active: $location.path() === 'message-center'}" href="/message-center" translate> mobile_header_mymessages</a>
 
 

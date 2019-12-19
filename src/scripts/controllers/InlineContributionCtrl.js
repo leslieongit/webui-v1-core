@@ -18,6 +18,7 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
   $scope.failed_submit = false;
   $scope.accountInfo = {};
   $scope.charity = {};
+  $scope.totalAmountPlusTip = 0;
   // $scope.rdm_pw = $scope.randomPasswordGenerator();
   // grab rewards variation choice if set
   if ($routeParams.attr) {
@@ -203,6 +204,8 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
     $scope.acceptExtraPledgeData = portal_settings.site_campaign_profile_data_on_pledge;
     $scope.tippingOptions = portal_settings.site_tipping;
     $scope.displayCampaignDisclaimer = success.public_setting.site_campaign_campaign_toggle_disclaimer_text;
+    $scope.forceAnonymousPledge = portal_settings.site_campaign_always_anonymous_contribution;
+
     if (typeof $scope.tippingOptions === 'undefined' || $scope.tippingOptions == null) {
       $scope.tippingOptions = { toggle: false };
     }
@@ -411,7 +414,7 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
         $scope.campaign[setting_name] = setting_value;
       });
 
-      if (typeof $scope.public_settings.site_theme_campaign_per_min != 'undefined' && $scope.public_settings.site_theme_campaign_per_min) {
+      if ($scope.public_settings && typeof $scope.public_settings.site_theme_campaign_per_min != 'undefined' && $scope.public_settings.site_theme_campaign_per_min) {
         if (typeof $scope.campaign.min_contribution != 'undefined') {
           $scope.public_settings.site_theme_campaign_min_contribute_amount = parseFloat($scope.campaign.min_contribution);
           $scope.pledgeAmount = parseFloat($scope.pledgeAmount);
@@ -423,13 +426,13 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
           }
         }
       }
-      if (typeof $scope.public_settings.site_theme_campaign_per_max != 'undefined' && $scope.public_settings.site_theme_campaign_per_max) {
+      if ($scope.public_settings && typeof $scope.public_settings.site_theme_campaign_per_max != 'undefined' && $scope.public_settings.site_theme_campaign_per_max) {
         if (typeof $scope.campaign.max_contribution != 'undefined') {
           $scope.max_amoumt = parseFloat($scope.campaign.max_contribution);
           $scope.allow_max = true;
         }
       }
-      if ($scope.public_settings.site_campaign_enable_organization_name) {
+      if ($scope.public_settings && typeof $scope.public_settings.site_campaign_enable_organization_name != 'undefined' && $scope.public_settings.site_campaign_enable_organization_name) {
         Restangular.one('portal/person/attribute?filters={"person_id":"' + $scope.campaign.managers[0].id + '"}').customGET().then(function(success) {
           $scope.organization_name.value = success[0].attributes['organization_name'];
           $scope.organization_name.ein = success[0].attributes['ein'];
@@ -461,7 +464,6 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
   $scope.contributionSelectionHelp = "Contribution Selection 1 is selected";
   $scope.contributionSelected = function(type) {
     $scope.selecteContribution = type.type;
-
     // Defining the help text according to the selected item
     if ($scope.selecteContribution == 1) {
       $scope.contributionSelectionHelp = "Contribution Selection 1 is selected";
@@ -617,17 +619,14 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
   }
 
   $scope.checkContribution = function() {
-
     if ($scope.selecteContribution == 2) {
       $scope.anonymous_contribution = true;
-
     } else {
       $scope.anonymous_contribution = false;
     }
 
     if ($scope.selecteContribution == 3) {
       $scope.partial_anonymous_contribution = 1;
-
     } else {
       $scope.partial_anonymous_contribution = 0;
     }
@@ -1508,7 +1507,9 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
               personal_phone_number: $scope.person.number,
               occupation: $scope.person.occupation || '',
               employer: $scope.person.employer || '',
-              inline_token: $scope.registering_user.inline_token
+              inline_token: $scope.registering_user.inline_token,
+              anonymous_contribution: $scope.anonymous_contribution,
+              anonymous_contribution_partial: $scope.partial_anonymous_contribution
             };
 
             if ($scope.tippingOptions.toggle) {
@@ -1642,21 +1643,16 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
 
   //submit form
   $scope.submit = function() {
-
     // if toggle is set so anon is a checkbox
     if ($scope.anonymousContributionTypeOnly) {
-      if ($scope.selecteContributionAnon == true) {
-        $scope.selecteContribution = 2;
-      } else {
-        $scope.selecteContribution = 1;
-      }
+      $scope.selecteContribution = 2;
     }
-
+    
     // variable to store all attribute values
     var pledgeAttributes = {};
 
     //If toggle is on, we need to assign a dummy city ID - 
-    if ($scope.site_campaign_alt_city_input_toggle) {
+    if ($scope.site_campaign_alt_city_input_toggle && !$scope.alt_shipping) {
       $scope.address.city_id = 258463;
     }
 
@@ -1699,6 +1695,9 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
         if ($scope.acceptExtraPledgeData && $scope.selectAccountCaptureType == 2) {
           $scope.newBusinessFormValidation();
         }
+        if ($scope.acceptExtraPledgeData) {
+          newPhoneNumberValidation();
+        }
         break;
       case 3:
         $scope.guestCheckoutValidation();
@@ -1711,8 +1710,12 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
         $scope.newAddressFormValidation();
         //Business Org Validation
         if ($scope.acceptExtraPledgeData && $scope.selectAccountCaptureType == 2) {
-          $scope.newBusinessFormValidation();
+          // $scope.newBusinessFormValidation();
         }
+        if ($scope.acceptExtraPledgeData) {
+          newPhoneNumberValidation();
+        }
+
         break;
     }
 
@@ -2381,6 +2384,9 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
         }
       });
 
+      if($scope.forceAnonymousPledge) {
+        $scope.anonymous_contribution = 1;
+      }
 
       var data = {
         stripe_account_card_id: stripe_card_id,
@@ -2713,6 +2719,21 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
           }
         }
       });
+
+    }
+    
+    if(address && address.hasOwnProperty('subcountry_id')) {
+      setSubCountryAltShipping(address.subcountry_id);
+    }
+  }
+
+  function setSubCountryAltShipping(subcountry_id) {
+    if($scope.alt_shipping && $scope.site_campaign_alt_city_input_toggle) {
+      Restangular.one('locale').customGET('city', {"subcountry_id": subcountry_id}).then(function(success) {
+        if(success && success.length) {
+          $scope.address.city_id = success[0].city_id;
+        }
+      });
     }
   }
 
@@ -2842,11 +2863,17 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
     }
   }
 
-  $scope.total = function(shipping) {
+  $scope.total = function(shipping, tip) {
     if (shipping) {
       $scope.totalAmount = parseFloat($scope.pledgeAmount) + parseFloat(shipping);
     } else {
       $scope.totalAmount = $scope.pledgeAmount;
+    }
+
+    // Calculate tip with current total amount & display this as total ONLY on the template to avoid backend issues
+    if (tip) {
+      $scope.totalAmountPlusTip = parseFloat($scope.totalAmount) + parseFloat(tip);
+      return $scope.totalAmountPlusTip;
     }
 
     var total = parseFloat($scope.totalAmount);

@@ -11,6 +11,7 @@
 	"navbar_logout": "Log Out",
 	"navbar_signup_login": "Sign Up/Log In",
 	"navbar_search": "Search for Campaign...",
+	"navbar_unsubscribe": "Unsubscribe",
 
 	"page404_error_header": "404",
 	"page404_error_message": "Error, page not found.",

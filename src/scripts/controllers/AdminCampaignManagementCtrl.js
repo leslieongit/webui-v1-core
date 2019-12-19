@@ -1,21 +1,21 @@
 //------------------------------------------------------
 //       CAMPAIGN MANAGEMENT / CAMPAIGN CONTROLLER
 //------------------------------------------------------
-app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsService, CreateCampaignService, $scope, Geolocator, $timeout, Restangular, RestFullResponse, $translatePartialLoader, $translate, TimeStatusService, LANG, PortalSettingsService) {
+app.controller('AdminCampaignsCtrl', function ($q, $rootScope, CampaignSettingsService, CreateCampaignService, $scope, Geolocator, $timeout, Restangular, RestFullResponse, $translatePartialLoader, $translate, TimeStatusService, LANG, PortalSettingsService) {
 
-  $scope.clearMessage = function() {
+  $scope.clearMessage = function () {
     $rootScope.floatingMessage = [];
   };
   var msg = {};
-
+  $scope.companies = [];
   $scope.campaign_buffer = [];
   // campaign status request
-  Restangular.one('campaign/status').customGET().then(function(success) {
+  Restangular.one('campaign/status').customGET().then(function (success) {
     $scope.campaignStatus = success;
   });
   $scope.isFeaturedCampaignsLoaded = false;
-  $scope.loadCampaignRevisions = function() {
-    Restangular.one('portal/campaign-revision').customGET().then(function(success) {
+  $scope.loadCampaignRevisions = function () {
+    Restangular.one('portal/campaign-revision').customGET().then(function (success) {
       $scope.campaignRevisions = success.plain();
     });
   }
@@ -88,6 +88,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     amount: '',
     cheque_ref: '',
     postal_code: '',
+    created: '',
     anonymous: $scope.isAnonymous[0]
   };
   $scope.address = {
@@ -107,13 +108,19 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
   $scope.selectedRevisions = [];
   $scope.tip = { value: null, type: 'Dollar' };
 
-  PortalSettingsService.getSettingsObj().then(function(success) {
+  $scope.organizationFields = {
+    name: '',
+    email: ''
+  };
+
+  PortalSettingsService.getSettingsObj().then(function (success) {
     $scope.portal_settings = success.public_setting;
     $scope.isISODate = success.public_setting.site_theme_campaign_display_iso_date;
     $scope.enableCampaignRevisions = success.public_setting.site_campaign_enable_campaign_revisions;
     $scope.isFeaturedCampaignLimitIncreased = success.public_setting.site_increase_featured_campaigns_limit;
     $scope.tippingOptions = success.public_setting.site_tipping;
-
+    $scope.isProfileContribAttributes = success.public_setting.site_campaign_profile_data_on_pledge;
+    
     if ($scope.tippingOptions && $scope.tippingOptions.toggle) {
       if (!$scope.tippingOptions.toggle_dynamic && $scope.tippingOptions.toggle_tiers) {
         if ($scope.tippingOptions.tiers) {
@@ -134,15 +141,25 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     if ($scope.portal_settings.site_campaign_always_anonymous_contribution) {
       $scope.isAnonymous = $scope.isAnonymous.slice($scope.isAnonymous.length - 1);
     }
+
+    if ($scope.isProfileContribAttributes) {
+      $scope.selectedAccountType = 'Individual';
+
+      $scope.accountTypeSelected = function (type) {
+        $scope.selectedAccountType = type;
+      }
+
+      $scope.getCompany();      
+    }
   });
 
 
 
-  $translate(["Landline Phone Number", "Mobile Phone Number", "Fax Phone Number"]).then(function(phoneNumberType) {
+  $translate(["Landline Phone Number", "Mobile Phone Number", "Fax Phone Number"]).then(function (phoneNumberType) {
     globalPhoneNumberType = phoneNumberType;
   });
 
-  $translate(["stripe_status_status_new_ready_process", "stripe_status_status_new_being_processed", "stripe_status_status_processed_success", "stripe_status_status_processed_failure", "stripe_status_type_pledge_preauth", "stripe_status_type_pledge_capture"]).then(function(stripeTranslation) {
+  $translate(["stripe_status_status_new_ready_process", "stripe_status_status_new_being_processed", "stripe_status_status_processed_success", "stripe_status_status_processed_failure", "stripe_status_type_pledge_preauth", "stripe_status_type_pledge_capture"]).then(function (stripeTranslation) {
     for (var stripeResp in stripeTranslation) {
       if (stripeTranslation.hasOwnProperty(stripeResp)) {
         if (globalStripeStatus.length < 4) {
@@ -154,8 +171,14 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     }
   });
 
+  $scope.getCompany = function () {
+    Restangular.one('account/business').customGET().then(function (success) {
+      $scope.companies = success;
+    });
+  }
+
   // This will enable transaction button in selected campaign by removing disabled class
-  $scope.setEnabled = function() {
+  $scope.setEnabled = function () {
     var campaignClassDisabled = ".campaign" + $scope.selectedCampaign + " .transaction_button";
     jQuery(campaignClassDisabled).removeClass('disabled');
   }
@@ -163,8 +186,8 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
   // Hide the success or error message that appears at top
   // Reset msgHide so it can still show msg later
   // $scope.clearMessage() is defined in app.js
-  var hideMsg = function() {
-    $timeout(function() {
+  var hideMsg = function () {
+    $timeout(function () {
       // jQuery(".message-seg").hide("fast");
       $scope.msgHide = true;
       //$scope.clearMessage();
@@ -174,7 +197,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
 
   $('.order-by-priority').checkbox('check');
 
-  $scope.sortByPriority = function() {
+  $scope.sortByPriority = function () {
     $scope.nameshow = false;
     $scope.idshow = false;
     $scope.startshow = false;
@@ -185,7 +208,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     }
   }
 
-  $scope.changeOrderStart = function() {
+  $scope.changeOrderStart = function () {
     $('.order-by-priority').checkbox('uncheck');
     $scope.idshow = false;
     $scope.startshow = true;
@@ -204,7 +227,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     updateCampaignListing($scope.sortOrFiltersCampaign);
   }
 
-  $scope.changeOrderName = function() {
+  $scope.changeOrderName = function () {
     $('.order-by-priority').checkbox('uncheck');
     $scope.idshow = false;
     $scope.startshow = false;
@@ -224,7 +247,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
   }
   $scope.manualOrder = false;
 
-  $scope.clearReward = function() {
+  $scope.clearReward = function () {
     $(".reward.dropdown").dropdown("clear");
     $scope.selectedReward = null;
     $scope.shipAdd = false;
@@ -256,7 +279,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
    **  @params canme - The campaign name (optional)
    **  @params cstatus - The campaign status (optional)
    */
-  $scope.addManual = function(cid, cname, cstatus) {
+  $scope.addManual = function (cid, cname, cstatus) {
     initializeUserObj();
     clearAddress();
     // Popup modal that contains form for manual transaction
@@ -276,7 +299,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       $scope.cEntryStatus = cstatus;
     }
 
-    CreateCampaignService.load($scope.cid).then(function(success) {
+    CreateCampaignService.load($scope.cid).then(function (success) {
       $scope.campaignSelected = success;
       // Set campaign Currency
       $scope.ccurrency = success.currencies;
@@ -288,7 +311,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     });
   }
 
-  $scope.verifyReward = function(selectedReward) {
+  $scope.verifyReward = function (selectedReward) {
     $scope.selectedReward = selectedReward;
     if (selectedReward.shipping) {
       $scope.shipAdd = true;
@@ -297,11 +320,11 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     }
   }
 
-  $scope.setAnonymous = function(anonymous) {
+  $scope.setAnonymous = function (anonymous) {
     $scope.user.anonymous = anonymous;
   }
 
-  $scope.tipTypeSelection = function(type) {
+  $scope.tipTypeSelection = function (type) {
     $scope.tip = { value: null, type: 'Dollar' };
     if (type == 'tiers') {
       if ($scope.tippingOptions.tiers) {
@@ -315,12 +338,13 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     $scope.selectedTipType = type;
   };
 
-  $scope.tipTierSelection = function(value, type) {
+  $scope.tipTierSelection = function (value, type) {
     $scope.tip = { value: parseInt(value), type: type };
   };
 
   $scope.transaction_message = false;
-  $scope.addTransaction = function() {
+
+  $scope.addTransaction = function () {
     var not_validated = $('form.manual-trans-form').find('.ng-invalid,.has-error');
     if (not_validated.length > 0) {
       $scope.formError = true;
@@ -345,6 +369,8 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       password_confirm: retVal,
       inline_registration: true, // do not send cofirmation email
     };
+
+
     $scope.pdata = {
       entry_id: $scope.campaignSelected.entry_id,
       pledge_level_id: '',
@@ -386,9 +412,9 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       }
     }
 
-    Restangular.one('portal/setting').getList().then(function(success) {
+    Restangular.one('portal/setting').getList().then(function (success) {
       $scope.public_set = {};
-      angular.forEach(success, function(value) {
+      angular.forEach(success, function (value) {
         if (value.setting_type_id == 3) {
           $scope.public_set[value.name] = value.value;
           if ($scope.public_set.site_payment_gateway == 2) {
@@ -398,21 +424,192 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       });
     });
 
-    Restangular.one('account/email').customGET(userdata.email).then(function(success) {
+    Restangular.one('account/email').customGET(userdata.email).then(function (success) {
       $scope.personId = success.person_id;
       $scope.pdata.person_id = $scope.personId;
       $scope.TransactionAdd($scope.personId);
 
-    }, function(failed) {
-      Restangular.one('register').customPOST(userdata).then(function(success) {
+    }, function (failed) {
+
+      Restangular.one('register').customPOST(userdata).then(function (success) {
         $scope.registering_user = success;
         $scope.pdata.person_id = success.person_id;
-        $scope.TransactionAdd($scope.personId);
-      }, function(failed) {});
+        $scope.TransactionAdd($scope.pdata.person_id);
+      });
+
     });
   }
 
-  $scope.TransactionAdd = function(personID) {
+  $scope.addProfileTransaction = function () {
+    var not_validated = $('form.manual-trans-form').find('.ng-invalid,.has-error');
+    if (not_validated.length > 0) {
+      $scope.formError = true;
+      return;
+    }
+    $scope.formError = false;
+    $scope.transaction_error = false;
+    $scope.errorMessae = "";
+    var length = 15;
+    var charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    var retVal = "";
+    var n = charset.length;
+    for (var i = 0; i < length; i++) {
+      retVal += charset.charAt(Math.floor(Math.random() * n));
+    }
+
+    var userdata = {
+      first_name: $scope.user.first_name,
+      last_name: $scope.user.last_name,
+      email: $scope.user.email,
+      password: retVal,
+      password_confirm: retVal,
+      inline_registration: true, // do not send cofirmation email
+    };
+
+    // $scope.user.created.toString()
+    
+    if (typeof $scope.user.created == "string") {
+      $scope.user.created = new Date($scope.user.created);
+    }
+    if ($scope.user.created && typeof $scope.user.created === "object") {
+      if ($scope.user.created.toString().length > 19) {
+        var month = $scope.user.created.getMonth();
+        if (month >= 9) {
+          month = $scope.user.created.getMonth() + 1;
+        } else {
+          month = $scope.user.created.getMonth() + 1;
+          month = "0" + month;
+        }
+        var day = $scope.user.created.getDate();
+        if (day > 9) {} else {
+
+          day = "0" + day;
+        }
+        var hours = $scope.user.created.getHours();
+        if (hours > 9) {} else {
+          hours = "0" + hours;
+        }
+        var mins = $scope.user.created.getMinutes();
+        if (mins > 9) {} else {
+          mins = "0" + mins;
+        }
+        var datestring = $scope.user.created.getFullYear() + "-" + month + "-" + day + " " + hours + ":" + mins + ":00";
+        $scope.user.created = datestring;
+      } else {
+        $scope.user.created = $scope.user.created.substring(0, 16) + ":00";
+      }
+    }
+
+    $scope.pdata = {
+      entry_id: $scope.campaignSelected.entry_id,
+      pledge_level_id: '',
+      amount: $scope.user.amount,
+      created:  $scope.user.created,
+      person_id: '',
+      anonymous_contribution: '',
+      anonymous_contribution_partial: '',
+      shipping_address_id: '',
+      phone_number_id: '',
+      use_widgetmakr: '',
+      email_notify: $scope.email_notify,
+      reference_no: $scope.user.cheque_ref
+    };
+    $scope.pdata.email_notify = $(".ui.checkbox.notifyEmail input").prop("checked");
+
+    if ($scope.user.anonymous.type_id == 1) {
+      $scope.pdata.anonymous_contribution_partial = 1;
+      $scope.pdata.anonymous_contribution = 0;
+    } else if ($scope.user.anonymous.type_id == 2) {
+      $scope.pdata.anonymous_contribution_partial = 0;
+      $scope.pdata.anonymous_contribution = 1;
+    } else {
+      $scope.pdata.anonymous_contribution_partial = 0;
+      $scope.pdata.anonymous_contribution = 0;
+    }
+
+    if ($scope.portal_settings.site_campaign_always_anonymous_contribution) {
+      $scope.pdata.anonymous_contribution_partial = 0;
+      $scope.pdata.anonymous_contribution = 1;
+    }
+
+    if ($scope.tippingOptions && $scope.tippingOptions.toggle) {
+      if ($scope.tip.value && $scope.tip.value != 0) {
+        if ($scope.tip.type == 'Dollar') {
+          $scope.pdata.amount_tip = parseFloat($scope.tip.value);
+        } else {
+          $scope.pdata.amount_tip = (parseFloat($scope.tip.value) / 100) * $scope.user.amount;
+        }
+      }
+    }
+
+    Restangular.one('portal/setting').getList().then(function (success) {
+      $scope.public_set = {};
+      angular.forEach(success, function (value) {
+        if (value.setting_type_id == 3) {
+          $scope.public_set[value.name] = value.value;
+          if ($scope.public_set.site_payment_gateway == 2) {
+            $scope.pdata.use_widgetmakr = 1;
+          }
+        }
+      });
+    });
+
+    Restangular.one('account/email').customGET(userdata.email).then(function (success) {
+      $scope.personId = success.person_id;
+      $scope.pdata.person_id = $scope.personId;
+      $scope.TransactionProfileAdd($scope.personId);
+
+    }, function (failed) {
+
+      Restangular.one('register').customPOST(userdata).then(function (success) {
+        $scope.registering_user = success;
+        $scope.pdata.person_id = success.person_id;
+        $scope.TransactionProfileAdd($scope.pdata.person_id);
+      });
+
+    });
+  }
+
+  function manualTransactionPromise(business_organization_id) {
+    if ($scope.selectedReward != null) {
+      $scope.pdata.pledge_level_id = $scope.selectedReward.pledge_level_id;
+    }
+
+    $scope.pdata.business_organization_id = business_organization_id;
+
+    Restangular.one('campaign/' + $scope.campaignSelected.entry_id + '/pledge/manual').customPOST($scope.pdata).then(function(success) {
+      msg = {
+        'header': 'tab_campaigns_manual_transaction_added',
+      }
+      $rootScope.floatingMessage = msg;
+      $scope.hideFloatingMessage();
+      $scope.manualOrder = false;
+      $scope.user = '';
+      hideMsg();
+
+      // Regrab the data and hide the modal
+      $scope.showdetail($scope.cid, $scope.cname, $scope.cEntryStatus, $scope.ccurrency, $scope.total_backers, $scope.backer_offset);
+      $scope.setEnabled();
+      // $('.manual_transaction').modal('hide');
+      $scope.showManualTransactionFromCamp = false;
+      $scope.showManualTransactionFromTrans = false;
+
+    }, function(failed) {
+      $scope.eMessage = failed.data.message;
+
+      if (failed.data.code == 'account_profile_stripe_pledge_direct_off_missing_connected') {
+        msg = {
+          'header': 'portal_setting_pledge_campaign_missing_connect',
+        }
+        $rootScope.floatingMessage = msg;
+        $scope.hideFloatingMessage();
+        hideMsg();
+      }
+
+    });
+  }
+
+  $scope.TransactionProfileAdd = function(personID) {
     //$scope.clearMessage();
     msg = {
       'loading': true,
@@ -423,9 +620,68 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     var prePromisesArray = [];
     var phoneReqResult, addressReqResult;
 
+    if($scope.selectedAccountType == 'Organization') {
+
+      preBusinessOrgReq = Restangular.one("account/business").customPOST({
+        "business_organization_id": '',
+        "person_id": personID,
+        "name": $scope.organizationFields.name,
+        "description": $scope.organizationFields.description
+      });
+
+      preBusinessOrgReq.then(function(success) {
+        var business_organization_id = success.business_organization_id;
+        
+        if($scope.user.phone && $scope.user.phone.length) {
+          phoneReq = Restangular.one('account/phone-number').customPOST({
+            "number": $scope.user.phone,
+            "phone_number_type_id": 2,
+            "business_organization_id": business_organization_id
+          });
+
+          prePromisesArray.push(phoneReq);
+        }
+
+        if($scope.user.city_id && $scope.user.address1 && $scope.user.address1.length) {
+          addressReq = Restangular.one("account/address").customPOST({
+            city_id: $scope.user.city_id,
+            street1: $scope.user.address1,
+            street2: $scope.user.address2,
+            mail_code: $scope.user.postal_code,
+            person_id: $scope.pdata.person_id,
+            business_organization_id: business_organization_id
+          });
+
+          prePromisesArray.push(addressReq);
+        }
+        
+        if(prePromisesArray && prePromisesArray.length) {
+          $q.all(prePromisesArray).then(function(success) {
+            
+            angular.forEach(success, function(value) {
+              if(value && value.hasOwnProperty('address_id')) {
+                $scope.pdata.shipping_address_id = value.address_id;
+              }
+              if(value && value.hasOwnProperty('phone_number_id')) {
+                $scope.pdata.phone_number_id = value.phone_number_id;
+              }
+            });
+  
+            manualTransactionPromise(business_organization_id);
+  
+          });        
+        } else {
+          manualTransactionPromise(business_organization_id);
+        }
+      });    
+      
+      return;
+    } 
+
     var prePhoneReq = Restangular.one("account").customGET("phone-number", {
       "person_id": personID
     });
+
     prePhoneReq.then(function(success) {
       phoneReqResult = success;
     });
@@ -433,9 +689,11 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     var preAddressReq = Restangular.one("account").customGET("address", {
       "person_id": personID
     });
+
     preAddressReq.then(function(success) {
       addressReqResult = success;
     });
+
 
     prePromisesArray = [prePhoneReq, preAddressReq];
 
@@ -471,36 +729,35 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
 
       if ($scope.selectedReward != null) {
         $scope.pdata.pledge_level_id = $scope.selectedReward.pledge_level_id;
-        if ($scope.selectedReward.shipping != null) {
-          if ($scope.user.address1) {
-            var shipdetails = {
-              city_id: $scope.user.city_id,
-              street1: $scope.user.address1,
-              street2: $scope.user.address2,
-              mail_code: $scope.user.postal_code,
-              person_id: $scope.pdata.person_id
-            }
-            var addressReq;
+      }
 
-            if (addressReqResult.personal && addressReqResult.personal.length) {
-              shipdetails.shipping_address_id = addressReqResult.personal[0].id;
-              addressReq = Restangular.one("account/address", addressReqResult.personal[0].id).customPUT(shipdetails);
-            } else {
-              addressReq = Restangular.one("account/address").customPOST(shipdetails);
-            }
-
-            addressReq.then(function(success) {
-              $scope.pdata.shipping_address_id = success.address_id;
-            }, function(failed) {
-              $scope.pdata.shipping_address_id = '';
-            });
-
-            promisesArray.push(addressReq);
-          } else {
-            $scope.transaction_error = true;
-            $scope.eMessage = "tab_campaigns_shipping_address_required";
-          }
+      if ($scope.user.address1) {
+        var shipdetails = {
+          city_id: $scope.user.city_id,
+          street1: $scope.user.address1,
+          street2: $scope.user.address2,
+          mail_code: $scope.user.postal_code,
+          person_id: $scope.pdata.person_id
         }
+        var addressReq;
+
+        if (addressReqResult.personal && addressReqResult.personal.length) {
+          shipdetails.shipping_address_id = addressReqResult.personal[0].id;
+          addressReq = Restangular.one("account/address", addressReqResult.personal[0].id).customPUT(shipdetails);
+        } else {
+          addressReq = Restangular.one("account/address").customPOST(shipdetails);
+        }
+
+        addressReq.then(function(success) {
+          $scope.pdata.shipping_address_id = success.address_id;
+        }, function(failed) {
+          $scope.pdata.shipping_address_id = '';
+        });
+
+        promisesArray.push(addressReq);
+      } else {
+        $scope.transaction_error = true;
+        $scope.eMessage = "tab_campaigns_shipping_address_required";
       }
 
       $q.all(promisesArray).then(function(success) {
@@ -538,7 +795,144 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     });
   }
 
-  $scope.changeOrderId = function() {
+  $scope.TransactionAdd = function(personID) {
+    //$scope.clearMessage();
+    msg = {
+      'loading': true,
+      'loading_message': 'in_progress'
+    }
+    $rootScope.floatingMessage = msg;
+    // Check phone and address first before actually adding transaction
+    var prePromisesArray = [];
+    var phoneReqResult, addressReqResult;
+
+    var prePhoneReq = Restangular.one("account").customGET("phone-number", {
+      "person_id": personID
+    });
+
+    prePhoneReq.then(function(success) {
+      phoneReqResult = success;
+    });
+
+    var preAddressReq = Restangular.one("account").customGET("address", {
+      "person_id": personID
+    });
+
+    preAddressReq.then(function(success) {
+      addressReqResult = success;
+    });
+
+    prePromisesArray = [prePhoneReq, preAddressReq];
+
+    if($scope.selectedAccountType == 'Organization') {
+      preBusinessOrgReq = Restangular.one("account/business").customPOST({
+        "business_organization_id": '',
+        "person_id": personID,
+        "name": $scope.organizationFields.name,
+        "description": $scope.organizationFields.description
+      });
+    }
+
+
+    $q.all(prePromisesArray).then(function(success) {
+      var promisesArray = [];
+
+      $scope.phoneInfo = {
+        number: $scope.user.phone,
+        person_id: $scope.pdata.person_id
+      }
+
+      if ($scope.user.phone) {
+        var phoneReq;
+        if (phoneReqResult.personal == null) {
+          phoneReq = Restangular.one('account/phone-number').customPOST({
+            "number": $scope.user.phone,
+            "phone_number_type_id": 2
+          });
+        } else if (phoneReqResult.personal[0]) {
+          phoneReq = Restangular.one('account/phone-number', phoneReqResult.personal[0].id).customPUT({
+            "person_id": personID,
+            "number": $scope.user.phone
+          });
+        }
+        phoneReq.then(function(success) {
+          $scope.pdata.phone_number_id = success.phone_number_id;
+        }, function(failed) {
+          $scope.pdata.phone_number_id = "";
+        });
+
+        promisesArray.push(phoneReq);
+      }
+
+      if ($scope.selectedReward != null) {
+        $scope.pdata.pledge_level_id = $scope.selectedReward.pledge_level_id;
+      }
+
+      if ($scope.user.address1) {
+        var shipdetails = {
+          city_id: $scope.user.city_id,
+          street1: $scope.user.address1,
+          street2: $scope.user.address2,
+          mail_code: $scope.user.postal_code,
+          person_id: $scope.pdata.person_id
+        }
+        var addressReq;
+
+        if (addressReqResult.personal && addressReqResult.personal.length) {
+          shipdetails.shipping_address_id = addressReqResult.personal[0].id;
+          addressReq = Restangular.one("account/address", addressReqResult.personal[0].id).customPUT(shipdetails);
+        } else {
+          addressReq = Restangular.one("account/address").customPOST(shipdetails);
+        }
+
+        addressReq.then(function(success) {
+          $scope.pdata.shipping_address_id = success.address_id;
+        }, function(failed) {
+          $scope.pdata.shipping_address_id = '';
+        });
+
+        promisesArray.push(addressReq);
+      } else {
+        $scope.transaction_error = true;
+        $scope.eMessage = "tab_campaigns_shipping_address_required";
+      }
+
+      $q.all(promisesArray).then(function(success) {
+        Restangular.one('campaign/' + $scope.campaignSelected.entry_id + '/pledge/manual').customPOST($scope.pdata).then(function(success) {
+          msg = {
+            'header': 'tab_campaigns_manual_transaction_added',
+          }
+          $rootScope.floatingMessage = msg;
+          $scope.hideFloatingMessage();
+          $scope.manualOrder = false;
+          $scope.user = '';
+          hideMsg();
+
+          // Regrab the data and hide the modal
+          $scope.showdetail($scope.cid, $scope.cname, $scope.cEntryStatus, $scope.ccurrency, $scope.total_backers, $scope.backer_offset);
+          $scope.setEnabled();
+          // $('.manual_transaction').modal('hide');
+          $scope.showManualTransactionFromCamp = false;
+          $scope.showManualTransactionFromTrans = false;
+
+        }, function(failed) {
+          $scope.eMessage = failed.data.message;
+
+          if (failed.data.code == 'account_profile_stripe_pledge_direct_off_missing_connected') {
+            msg = {
+              'header': 'portal_setting_pledge_campaign_missing_connect',
+            }
+            $rootScope.floatingMessage = msg;
+            $scope.hideFloatingMessage();
+            hideMsg();
+          }
+
+        });
+      });
+    });
+  }
+
+  $scope.changeOrderId = function () {
     $('.order-by-priority').checkbox('uncheck');
     $scope.idshow = true;
     $scope.startshow = false;
@@ -557,7 +951,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     updateCampaignListing($scope.sortOrFiltersCampaign);
   }
 
-  $scope.changeOrderEnd = function() {
+  $scope.changeOrderEnd = function () {
     $('.order-by-priority').checkbox('uncheck');
     $scope.idshow = false;
     $scope.startshow = false;
@@ -577,21 +971,21 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
   }
 
   updateCampaignListing($scope.sortOrFiltersCampaign);
-  $scope.updateCampaignListing = function() {
+  $scope.updateCampaignListing = function () {
     updateCampaignListing($scope.sortOrFiltersCampaign);
   }
 
-  $scope.updateSortCampaign = function(sort) {
+  $scope.updateSortCampaign = function (sort) {
     $scope.sortOrFiltersCampaign.sort = sort ? sort : "";
     updateCampaignListing($scope.sortOrFiltersCampaign);
   }
 
-  $scope.updateFiltersCampaignCategory = function(category) {
+  $scope.updateFiltersCampaignCategory = function (category) {
     $scope.sortOrFiltersCampaign.filters.category = category.id;
     updateCampaignListing($scope.sortOrFiltersCampaign);
   }
 
-  $scope.updateFiltersCampaignStatus = function(status) {
+  $scope.updateFiltersCampaignStatus = function (status) {
     if (status) {
       $scope.sortOrFiltersCampaign.filters.entry_status_id = status.id;
     } else {
@@ -600,7 +994,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     updateCampaignListing($scope.sortOrFiltersCampaign);
   }
 
-  $scope.updateFiltersCampaignType = function(type) {
+  $scope.updateFiltersCampaignType = function (type) {
     if (type == 1) {
       $scope.sortOrFiltersCampaign.filters.hidden = true;
     } else {
@@ -610,11 +1004,11 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
   }
 
   function updateCampaignListing(sortOrFilters) {
-    RestFullResponse.all('campaign').getList(sortOrFilters).then(function(success) {
+    RestFullResponse.all('campaign').getList(sortOrFilters).then(function (success) {
       $scope.campaigns = success.data;
       $scope.campaigndata = [];
       // Uncheck all select all checkboxes.
-      $(".campaign-select-all input").each(function() {
+      $(".campaign-select-all input").each(function () {
         $(this).prop('checked', false);;
       });
 
@@ -651,7 +1045,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
         $scope.csvHeaders["Bank"] = value.tab_campaign_bank;
       }
       $scope.campaigndata.push($scope.csvHeaders);
-      angular.forEach($scope.campaigns, function(values) {
+      angular.forEach($scope.campaigns, function (values) {
         CampaignSettingsService.setCampaignId(values.entry_id);
         CampaignSettingsService.processSettings(values.settings);
         values.settings = CampaignSettingsService.getSettings();
@@ -752,10 +1146,10 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       reqArg.page += 1;
     }
 
-    return $q.all(campaignRequestArray).then(function(success) {
+    return $q.all(campaignRequestArray).then(function (success) {
       $scope.allCampaignscsv = [];
       $scope.allCampaignsCompletecsv = [];
-      success.forEach(function(resArr) {
+      success.forEach(function (resArr) {
         $scope.allCampaignsArray = $scope.allCampaignsArray.concat(resArr.data);
       });
 
@@ -781,7 +1175,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
         $scope.csvHeaders["bank"] = value.tab_campaign_bank;
       }
       $scope.allCampaignscsv.push($scope.csvHeaders);
-      angular.forEach($scope.allCampaignsArray, function(values) {
+      angular.forEach($scope.allCampaignsArray, function (values) {
         CampaignSettingsService.processSettings(values.settings);
         values.settings = CampaignSettingsService.getSettings();
         var data2 = {};
@@ -887,10 +1281,10 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       reqArg.page += 1;
     }
 
-    return $q.all(campaignRequestArray).then(function(success) {
+    return $q.all(campaignRequestArray).then(function (success) {
       $scope.allCampaignscsv = [];
       $scope.allCampaignsCompletecsv = [];
-      success.forEach(function(resArr) {
+      success.forEach(function (resArr) {
         $scope.allCampaignsArray = $scope.allCampaignsArray.concat(resArr.data);
       });
 
@@ -928,7 +1322,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
         $scope.csvHeaders["bank"] = value.tab_campaign_bank;
       }
       $scope.allCampaignsCompletecsv.push($scope.csvHeaders);
-      angular.forEach($scope.allCampaignsArray, function(values) {
+      angular.forEach($scope.allCampaignsArray, function (values) {
         CampaignSettingsService.setCampaignId(values.entry_id);
         CampaignSettingsService.processSettings(values.settings);
         values.settings = CampaignSettingsService.getSettings();
@@ -955,7 +1349,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
           path_external = values.files[0].path_external;
         }
         if (values.cities) {
-          angular.forEach(values.cities, function(city) {
+          angular.forEach(values.cities, function (city) {
             campaign_locations = campaign_locations + city.city_full + "; ";
           })
         }
@@ -1058,7 +1452,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     @params cname - campaign name (required)
     @params cstatus - campaign entry_status (optional)
     */
-  $scope.showdetail = function(index, cname, cstatus, ccurrency, total_backers, backer_offset) {
+  $scope.showdetail = function (index, cname, cstatus, ccurrency, total_backers, backer_offset) {
 
     $scope.cindex = index;
     $scope.cname = cname;
@@ -1091,9 +1485,9 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       $scope.approvedCamp = "true";
     }
     Restangular.one('portal/setting').getList().then(
-      function(success) {
+      function (success) {
         $scope.public_settings = {};
-        angular.forEach(success, function(value) {
+        angular.forEach(success, function (value) {
           if (value.setting_type_id == 3) {
             $scope.public_settings[value.name] = value.value;
             $scope.payment_gateway = $scope.public_settings.site_payment_gateway;
@@ -1102,7 +1496,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
         if ($scope.payment_gateway == 1) {
           Restangular.one('campaign/' + index + '/stats').customGET(null, {
             summary: 1
-          }).then(function(success) {
+          }).then(function (success) {
             $scope.transaction_summary = success;
             //renderSummaryChart();
           });
@@ -1113,7 +1507,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
           Restangular.one('campaign/' + index + '/stats').customGET(null, {
             summary: 1,
             use_widgetmakr: 1
-          }).then(function(success) {
+          }).then(function (success) {
             $scope.transaction_summary = success;
             $scope.getTransactions(index);
             //renderSummaryChart();
@@ -1121,7 +1515,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
         }
 
       },
-      function(failure) {
+      function (failure) {
         msg = {
           'header': failure.data.message,
         }
@@ -1130,7 +1524,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       });
   };
 
-  $scope.setSelectedCampaign = function(selectedC) {
+  $scope.setSelectedCampaign = function (selectedC) {
     $scope.selectedCampaign = selectedC;
   }
 
@@ -1143,8 +1537,8 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     "summary": 0
   };
 
-  $scope.getTransactions = function(index) {
-    RestFullResponse.all('campaign/' + index + '/stats').getList($scope.transaction_pagination).then(function(success) {
+  $scope.getTransactions = function (index) {
+    RestFullResponse.all('campaign/' + index + '/stats').getList($scope.transaction_pagination).then(function (success) {
       $scope.transaction_detail = success.data;
       $scope.na = "";
       var headers = success.headers();
@@ -1163,7 +1557,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
   }
 
   // Create transaction csv based on all transaction data 
-  $scope.createTransactionCSV = function(campaign_id) {
+  $scope.createTransactionCSV = function (campaign_id) {
     var transactionRequestArray = [];
     var totalNumTransaction = $scope.transaction_pagination.totalentries;
     var requiredNumCalls = 0;
@@ -1189,9 +1583,9 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       transactionRequestArray.push(request);
       $scope.transaction_pagination_csv.page += 1;
     }
-    return $q.all(transactionRequestArray).then(function(success) {
+    return $q.all(transactionRequestArray).then(function (success) {
       $scope.allTransactioncsv = [];
-      success.forEach(function(resArr) {
+      success.forEach(function (resArr) {
         $scope.allTransactionArray = $scope.allTransactionArray.concat(resArr.data);
       });
       var nativeLookup = $scope.public_settings.site_theme_shipping_native_lookup;
@@ -1254,7 +1648,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       }
 
       $scope.allTransactioncsv.push($scope.csvHeaders);
-      angular.forEach($scope.allTransactionArray, function(value) {
+      angular.forEach($scope.allTransactionArray, function (value) {
         // ($scope.twithdraw);
         var data1 = {};
         var organization_name = '';
@@ -1294,6 +1688,9 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
               $scope.busShipadd.country = $scope.busShipadd.country_native_name != null ? $scope.busShipadd.country_native_name : $scope.busShipadd.country;
               $scope.busCompleteaddress = $scope.busShipadd.country + ", " + $scope.busShipadd.mail_code + ", " + $scope.shipadd.subcountry + ", " + $scope.busShipadd.city + ", " + $scope.busShipadd.street1;
             } else {
+              if ($scope.busShipadd.hasOwnProperty('city_alt') && $scope.public_settings.hasOwnProperty('site_campaign_alt_city_input_toggle')) {
+                $scope.busShipadd.city = $scope.busShipadd.city_alt;
+              }
               $scope.busCompleteaddress = $scope.busShipadd.street1 + " , " + $scope.busShipadd.city + " " + $scope.busShipadd.subcountry + " " + $scope.busShipadd.mail_code + " , " + $scope.busShipadd.country;
             }
           }
@@ -1327,7 +1724,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
                 }
                 $scope.completeaddress = $scope.shipadd.street1 + ", " + $scope.shipadd.city + " " + $scope.shipadd.subcountry + " " + $scope.shipadd.mail_code + " , " + $scope.shipadd.country;
               }
-
+              
               // data1 = {'$scope.personname': $scope.addbacker.first_name, '$scope.personemail':$scope.addbacker.email,'$scope.personaddress':$scope.completeaddress};
               data1 = {
                 'ID': value.stripe_transaction_id,
@@ -1405,7 +1802,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     });
   }
 
-  $scope.goBackUser = function() {
+  $scope.goBackUser = function () {
     if (!$scope.showManualTransactionFromTrans) {
       $scope.details = false;
       $scope.user = "";
@@ -1421,11 +1818,11 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
   }
   $scope.showManualTransactionFromTrans = false;
 
-  $scope.backCampaign = function() {
+  $scope.backCampaign = function () {
     // $scope.showManualTransaction = false;
   }
 
-  $scope.showContact = function(index) {
+  $scope.showContact = function (index) {
     var nativeLookup = $scope.public_settings.site_theme_shipping_native_lookup;
     $scope.shippingPhoneNumber = null;
     $scope.shippingAdress = null;
@@ -1434,7 +1831,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       var phoneType = $scope.transaction_detail[index].backer[0].person[0].person_shipping_phone_number[0].phone_number_type;
 
       $scope.shippingPhoneNumber = phoneNumber;
-      $translate(phoneType).then(function(translation) {
+      $translate(phoneType).then(function (translation) {
         $scope.shippingPhoneType = translation;
       });
     }
@@ -1489,7 +1886,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     } else {
       $table = $('.campaign-table');
     }
-    $table.find('tbody > tr').each(function(index) {
+    $table.find('tbody > tr').each(function (index) {
       if ($(this).find('.t-check-box input').prop('checked')) {
         if ($scope.isTransaction) {
           selectedItems.push($scope.transaction_detail[index]);
@@ -1501,7 +1898,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     return selectedItems;
   }
 
-  $scope.changeCampaignsStatus = function(statusID) {
+  $scope.changeCampaignsStatus = function (statusID) {
     //$scope.clearMessage();
     msg = {
       'loading': true,
@@ -1518,23 +1915,23 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       $scope.hideFloatingMessage();
 
     } else {
-      angular.forEach(campaignQueue, function(campaign) {
+      angular.forEach(campaignQueue, function (campaign) {
         var data = {
           entry_status_id: statusID,
         };
         // make put request to change campaign status
-        requestQueue.push(Restangular.one('campaign', campaign.id).customPUT(data).then(function(success) {
+        requestQueue.push(Restangular.one('campaign', campaign.id).customPUT(data).then(function (success) {
           campaign = success;
           $scope.syncCampaignandFeatured(campaign.id, "entry_status_id", statusID);
         }));
       });
-      $q.all(requestQueue).then(function() {
+      $q.all(requestQueue).then(function () {
         msg = {
           'header': 'tab_campaigns_campaign_status_set',
         }
         $rootScope.floatingMessage = msg;
         $scope.hideFloatingMessage();
-      }, function(failed) {
+      }, function (failed) {
         msg = {
           'header': failure.data.message,
         }
@@ -1544,10 +1941,10 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     }
   }
 
-  $scope.progressStatusEnabled = function() {
+  $scope.progressStatusEnabled = function () {
     return $scope.portal_settings.site_campaign_state_hide && $scope.portal_settings.site_campaign_state_settings.length >= 1;
   }
-  $scope.changeMultipleCampaignsStatus = function() {
+  $scope.changeMultipleCampaignsStatus = function () {
     if (getSelectedItems().length === 0) {
       msg = {
         'header': "tab_campaigns_select_error",
@@ -1556,9 +1953,9 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       $scope.hideFloatingMessage();
     } else {
       $('.change-status-modal').modal({
-        onApprove: function() {
-          angular.forEach($scope.progressQueue, function(campaign) {
-            Restangular.one("campaign", campaign["id"]).one("setting").customPUT(campaign["data"]).then(function(success) {});
+        onApprove: function () {
+          angular.forEach($scope.progressQueue, function (campaign) {
+            Restangular.one("campaign", campaign["id"]).one("setting").customPUT(campaign["data"]).then(function (success) { });
           });
         }
       }).modal('show');
@@ -1566,15 +1963,15 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
   }
 
   // click event for State select
-  $scope.stateSelected = function(data) {
+  $scope.stateSelected = function (data) {
     var campaignQueue = getSelectedItems();
-    angular.forEach(campaignQueue, function(campaign) {
+    angular.forEach(campaignQueue, function (campaign) {
       var campaignId = campaign["entry_id"];
       // var campaignId = 106;
       $scope.progressQueue = [];
-      CampaignSettingsService.retreiveSettings(campaignId).then(function(success) {
+      CampaignSettingsService.retreiveSettings(campaignId).then(function (success) {
         $scope.data = {};
-        angular.forEach(success, function(value) {
+        angular.forEach(success, function (value) {
           $scope.data[value.name] = value.value;
         });
 
@@ -1590,7 +1987,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
 
   }
 
-  $scope.featureCampaigns = function(feature) {
+  $scope.featureCampaigns = function (feature) {
     //$scope.clearMessage();
     msg = {
       'loading': true,
@@ -1606,23 +2003,23 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       $rootScope.floatingMessage = msg;
       $scope.hideFloatingMessage();
     } else {
-      angular.forEach(campaignQueue, function(campaign) {
+      angular.forEach(campaignQueue, function (campaign) {
         var data = {
           featured: feature,
         };
-        requestQueue.push(Restangular.one('campaign', campaign.id).customPUT(data).then(function(success) {
+        requestQueue.push(Restangular.one('campaign', campaign.id).customPUT(data).then(function (success) {
           campaign.featured = feature;
           $scope.syncCampaignandFeatured(campaign.id, "featured", feature);
         }));
       });
-      $q.all(requestQueue).then(function() {
+      $q.all(requestQueue).then(function () {
         msg = {
           'header': 'tab_campaigns_campaign_featured_set',
         }
         $rootScope.floatingMessage = msg;
         $scope.hideFloatingMessage();
         $scope.getFeaturedCampaigns();
-      }, function(failed) {
+      }, function (failed) {
         msg = {
           'header': failure.data.message,
         }
@@ -1632,7 +2029,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     }
   }
 
-  $scope.hideCampaigns = function(hide) {
+  $scope.hideCampaigns = function (hide) {
     //$scope.clearMessage();
     msg = {
       'loading': true,
@@ -1649,25 +2046,25 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       $rootScope.floatingMessage = msg;
       $scope.hideFloatingMessage();
     } else {
-      angular.forEach(campaignQueue, function(campaign) {
+      angular.forEach(campaignQueue, function (campaign) {
         var data = {
           hidden: hide,
         };
-        requestQueue.push(Restangular.one('campaign', campaign.id).customPUT(data).then(function(success) {
+        requestQueue.push(Restangular.one('campaign', campaign.id).customPUT(data).then(function (success) {
           campaign.hidden = hide;
           $scope.syncCampaignandFeatured(campaign.id, "hidden", hide);
         }));
       });
-      $q.all(requestQueue).then(function() {
-          /*$scope.getFeaturedCampaigns();
-          updateCampaignListing();*/
-          msg = {
-            'header': 'tab_campaigns_campaign_visibility_set',
-          }
-          $rootScope.floatingMessage = msg;
-          $scope.hideFloatingMessage();
-        },
-        function(failure) {
+      $q.all(requestQueue).then(function () {
+        /*$scope.getFeaturedCampaigns();
+        updateCampaignListing();*/
+        msg = {
+          'header': 'tab_campaigns_campaign_visibility_set',
+        }
+        $rootScope.floatingMessage = msg;
+        $scope.hideFloatingMessage();
+      },
+        function (failure) {
           msg = {
             'header': failure.data.message,
           }
@@ -1676,7 +2073,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
         });
     }
   }
-  $scope.getTotalItemsCampaign = function() {
+  $scope.getTotalItemsCampaign = function () {
     var desiredtotal = $scope.sortOrFiltersCampaign.pagination.entriesperpage * $scope.sortOrFiltersCampaign.page_limit;
     if (desiredtotal > $scope.sortOrFiltersCampaign.pagination.totalentries)
       return $scope.sortOrFiltersCampaign.pagination.totalentries;
@@ -1684,15 +2081,15 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       return desiredtotal;
   }
 
-  $scope.editCampaign = function($event, campaign) {
+  $scope.editCampaign = function ($event, campaign) {
     $scope.campaign = campaign;
     window.open('getstarted/' + campaign.entry_id);
   }
 
   // Look up city based on search term, then find the cityID and store it
-  $scope.searchCampaignCities = function(term) {
+  $scope.searchCampaignCities = function (term) {
     var cityID = null;
-    Geolocator.searchCities(term).then(function(cities) {
+    Geolocator.searchCities(term).then(function (cities) {
       $scope.cities = cities;
       cityID = Geolocator.lookupCityID($scope.campaign.city);
       if (cityID) {
@@ -1705,7 +2102,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
   $scope.cities = [];
 
   // search city input
-  $scope.searchCities = function(term) {
+  $scope.searchCities = function (term) {
     var cityID = null; // variable to hold city ID
     var countryID = null;
     var native_lookup = $scope.native_lookup == true ? 1 : 0;
@@ -1713,13 +2110,13 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       // Check setting here to choose which one to use, check the layout
       // This one is to search cities directly
       if (!$scope.alt_shipping) {
-        Geolocator.searchCities(term, native_lookup).then(function(cities) {
+        Geolocator.searchCities(term, native_lookup).then(function (cities) {
           $scope.cities = cities;
         });
       }
       // This one is to search with subcountry id to limit the area
       else {
-        Geolocator.searchCitiesBySubcountry(term, $scope.selectedSubcountry.selected.id, native_lookup).then(function(cities) {
+        Geolocator.searchCitiesBySubcountry(term, $scope.selectedSubcountry.selected.id, native_lookup).then(function (cities) {
           if (native_lookup) {
             for (var i in cities) {
               if (cities[i].city_native_name != null) {
@@ -1740,19 +2137,19 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
   }
 
   // get featured campaigns
-  $scope.getFeaturedCampaigns = function() {
+  $scope.getFeaturedCampaigns = function () {
     Restangular.all('campaign').getList({
       "sort": '-display_priority',
       'filters': {
         'featured': "t",
       },
       'page_entries': $scope.featuredCampaignsLimit,
-    }).then(function(success) {
+    }).then(function (success) {
       // Emit event for hiding loader.
       //$scope.$emit("loading_finished");
       $scope.isFeaturedCampaignsLoaded = true;
       $scope.campaign_buffer = success;
-      angular.forEach($scope.campaign_buffer, function(campaign) {
+      angular.forEach($scope.campaign_buffer, function (campaign) {
         CampaignSettingsService.processSettings(campaign.settings);
         campaign.settings = CampaignSettingsService.getSettings();
       });
@@ -1760,7 +2157,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
   }
 
   // set single campaign
-  $scope.setFeatured = function(campaign, feature) {
+  $scope.setFeatured = function (campaign, feature) {
     //$scope.clearMessage();
 
     msg = {
@@ -1778,7 +2175,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     };
 
     Restangular.one('campaign', id).customPUT(data).then(
-      function(success) {
+      function (success) {
         campaign.featured = feature;
         $scope.syncCampaignandFeatured(id, "featured", feature);
         $scope.getFeaturedCampaigns();
@@ -1788,7 +2185,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
         $rootScope.floatingMessage = msg;
         $scope.hideFloatingMessage();
       },
-      function(failure) {
+      function (failure) {
         msg = {
           'header': failure.data.message,
         }
@@ -1798,7 +2195,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     );
   }
 
-  $scope.syncCampaignandFeatured = function(entry_id, key, value) {
+  $scope.syncCampaignandFeatured = function (entry_id, key, value) {
 
     // Sync up campaigns, without having to g
     for (var j = 0; j < $scope.campaigns.length; j++) {
@@ -1817,7 +2214,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     }
   }
 
-  $scope.searchCampaignBy = function(search_value) {
+  $scope.searchCampaignBy = function (search_value) {
     //Reset filter
     $scope.sortOrFiltersCampaign.filters["name"] = "";
     $scope.sortOrFiltersCampaign.filters["manager"] = "";
@@ -1827,12 +2224,12 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
 
   //Search Type
   $scope.searchTypeChosen = "name";
-  $scope.searchType = function(search_type) {
+  $scope.searchType = function (search_type) {
     $("#searchname").val("");
     $scope.searchTypeChosen = search_type
   }
 
-  $scope.deleteItems = function() {
+  $scope.deleteItems = function () {
     //$scope.clearMessage();
     msg = {
       'loading': true,
@@ -1849,9 +2246,9 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       $scope.hideFloatingMessage();
     } else {
       $('.delete-multi-items-modal').modal('setting', {
-        onApprove: function() {
-          angular.forEach(itemQueue, function(item) {
-            angular.forEach($scope.campaignRevisions, function(revision) {
+        onApprove: function () {
+          angular.forEach(itemQueue, function (item) {
+            angular.forEach($scope.campaignRevisions, function (revision) {
               if (item.entry_id == revision.entry_id) {
                 requestQueue.push(deleteRevisionById(revision.entry_id, revision.entry_revision_id));
               }
@@ -1863,32 +2260,32 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
             }
           });
 
-          $q.all(requestQueue).then(function() {
-              $scope.loadCampaignRevisions();
-              if ($scope.isTransaction) {
-                if (requestQueue.length == 1) {
-                  msg = {
-                    'header': 'tab_campaign_transaction_has_benn_deleted_single',
-                  }
-                } else {
-                  msg = {
-                    'header': 'tab_campaign_transaction_has_benn_deleted_plural',
-                  }
+          $q.all(requestQueue).then(function () {
+            $scope.loadCampaignRevisions();
+            if ($scope.isTransaction) {
+              if (requestQueue.length == 1) {
+                msg = {
+                  'header': 'tab_campaign_transaction_has_benn_deleted_single',
                 }
-                // Refresh transaction data
-                $scope.showdetail(detailTransactionData.cindex, detailTransactionData.cname, detailTransactionData.cstatus);
               } else {
                 msg = {
-                    'header': 'tab_campaign_selected_deleted_success',
-                  }
-                  // Refresh campaign data
-                updateCampaignListing($scope.sortOrFiltersCampaign);
-                $scope.getFeaturedCampaigns();
+                  'header': 'tab_campaign_transaction_has_benn_deleted_plural',
+                }
               }
-              $rootScope.floatingMessage = msg;
-              $scope.hideFloatingMessage();
-            },
-            function(failure) {
+              // Refresh transaction data
+              $scope.showdetail(detailTransactionData.cindex, detailTransactionData.cname, detailTransactionData.cstatus);
+            } else {
+              msg = {
+                'header': 'tab_campaign_selected_deleted_success',
+              }
+              // Refresh campaign data
+              updateCampaignListing($scope.sortOrFiltersCampaign);
+              $scope.getFeaturedCampaigns();
+            }
+            $rootScope.floatingMessage = msg;
+            $scope.hideFloatingMessage();
+          },
+            function (failure) {
               msg = {
                 'header': failure.data.message,
               }
@@ -1900,12 +2297,12 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     }
   }
 
-  $scope.reviewCampaign = function(campaign, e) {
+  $scope.reviewCampaign = function (campaign, e) {
     var data = {
       entry_status_id: 12,
     };
     Restangular.one('campaign', campaign.entry_id.toString()).customPUT(data).then(
-      function(success) {
+      function (success) {
         for (var i = 0; i < $scope.campaigns.length; i++) {
           if ($scope.campaigns[i].entry_id == success.entry_id) {
             $scope.campaigns[i] = success;
@@ -1913,7 +2310,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
           }
         }
       },
-      function(failure) {
+      function (failure) {
         msg = {
           'header': failure.data.message,
         }
@@ -1924,7 +2321,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     window.open('/campaign-review/' + campaign.entry_id);
   }
 
-  $scope.updateCampaignStatus = function(campaign, status) {
+  $scope.updateCampaignStatus = function (campaign, status) {
     //$scope.clearMessage();
     msg = {
       'loading': true,
@@ -1936,8 +2333,8 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     campaign_status = {
       entry_status_id: campaign.entry_status_id
     };
-    Restangular.one('campaign/' + campaign.entry_id.toString()).customPUT(campaign_status).then(function(success) {
-      $translate(['Campaign', 'updated']).then(function(value) {
+    Restangular.one('campaign/' + campaign.entry_id.toString()).customPUT(campaign_status).then(function (success) {
+      $translate(['Campaign', 'updated']).then(function (value) {
         $scope.c = value.Campaign;
         $scope.update = value.updated
         msg = {
@@ -1950,7 +2347,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
         $scope.syncCampaignandFeatured(campaign.entry_id, "entry_status_id", status.entry_status_id);
       });
 
-    }, function(failure) {
+    }, function (failure) {
 
       msg = {
         'header': failure.data.message,
@@ -1968,7 +2365,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     }
   }
 
-  Date.prototype.yyyymmdd = function() {
+  Date.prototype.yyyymmdd = function () {
     var yyyy = this.getFullYear().toString();
     var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
     var dd = this.getDate().toString();
@@ -1979,7 +2376,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
   };
 
   // change end of campaigns to current time
-  $scope.endCampaignTest = function() {
+  $scope.endCampaignTest = function () {
     $scope.clearMessage();
     var campaignQueue = getSelectedItems(),
       requestQueue = [];
@@ -1990,7 +2387,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       $rootScope.floatingMessage = msg;
       $scope.hideFloatingMessage();
     } else {
-      angular.forEach(campaignQueue, function(campaign) {
+      angular.forEach(campaignQueue, function (campaign) {
         var id = campaign.entry_id,
           currentdate = new Date(),
           tmp = new Date(Date.parse(currentdate)),
@@ -2005,19 +2402,19 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
           // entry_status_id: 5,
         };
 
-        requestQueue.push(Restangular.one('campaign', campaign.id).customPUT(data).then(function(success) {
+        requestQueue.push(Restangular.one('campaign', campaign.id).customPUT(data).then(function (success) {
           campaign = success;
           $scope.syncCampaignandFeatured(campaign.id, "ends", ret1);
         }));
       });
 
-      $q.all(requestQueue).then(function() {
+      $q.all(requestQueue).then(function () {
         msg = {
           'header': 'tab_campaigns_campaign_ended',
         }
         $rootScope.floatingMessage = msg;
         $scope.hideFloatingMessage();
-      }, function(failure) {
+      }, function (failure) {
         msg = {
           'header': failure.data.message,
         }
@@ -2028,67 +2425,67 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
   }
 
   // auto set the current date/time as end date/time and change status to capture complete
-  $scope.endCampaign = function() {
-      //$scope.clearMessage();
+  $scope.endCampaign = function () {
+    //$scope.clearMessage();
+    msg = {
+      'loading': true,
+      'loading_message': 'in_progress'
+    }
+    $rootScope.floatingMessage = msg;
+    var campaignQueue = getSelectedItems(),
+      requestQueue = [];
+    if (campaignQueue.length === 0) {
       msg = {
-        'loading': true,
-        'loading_message': 'in_progress'
+        'header': "tab_campaigns_select_error",
       }
       $rootScope.floatingMessage = msg;
-      var campaignQueue = getSelectedItems(),
-        requestQueue = [];
-      if (campaignQueue.length === 0) {
+      $scope.hideFloatingMessage();
+    } else {
+      angular.forEach(campaignQueue, function (campaign) {
+        var id = campaign.entry_id,
+
+          currentdate = new Date(),
+          tmp1 = new Date(Date.parse(currentdate));
+        tmp1.setDate(tmp1.getDate());
+
+        var ret1 = tmp1.yyyymmdd();
+        data = {
+          ends: ret1,
+          time_remaining: "00:00:00",
+          days_remaining: 0,
+          hours_remaining: 0,
+          minutes_remaining: 0,
+          seconds_remaining: 0,
+          days_remaining_inclusive: 0,
+          hours_remaining_inclusive: 0,
+          minutes_remaining_inclusive: 0,
+          seconds_remaining_inclusive: 0,
+        };
+        requestQueue.push(Restangular.one('campaign', campaign.id).customPUT(data).then(function (success) {
+          campaign = success;
+          $scope.syncCampaignandFeatured(campaign.id, "ends", ret1);
+        }));
+      });
+
+      $q.all(requestQueue).then(function () {
         msg = {
-          'header': "tab_campaigns_select_error",
+          'header': 'tab_campaigns_campaign_ended',
         }
         $rootScope.floatingMessage = msg;
         $scope.hideFloatingMessage();
-      } else {
-        angular.forEach(campaignQueue, function(campaign) {
-          var id = campaign.entry_id,
-
-            currentdate = new Date(),
-            tmp1 = new Date(Date.parse(currentdate));
-          tmp1.setDate(tmp1.getDate());
-
-          var ret1 = tmp1.yyyymmdd();
-          data = {
-            ends: ret1,
-            time_remaining: "00:00:00",
-            days_remaining: 0,
-            hours_remaining: 0,
-            minutes_remaining: 0,
-            seconds_remaining: 0,
-            days_remaining_inclusive: 0,
-            hours_remaining_inclusive: 0,
-            minutes_remaining_inclusive: 0,
-            seconds_remaining_inclusive: 0,
-          };
-          requestQueue.push(Restangular.one('campaign', campaign.id).customPUT(data).then(function(success) {
-            campaign = success;
-            $scope.syncCampaignandFeatured(campaign.id, "ends", ret1);
-          }));
-        });
-
-        $q.all(requestQueue).then(function() {
-          msg = {
-            'header': 'tab_campaigns_campaign_ended',
-          }
-          $rootScope.floatingMessage = msg;
-          $scope.hideFloatingMessage();
-          // Refresh campaign data
-          //updateCampaignListing($scope.sortOrFiltersCampaign);
-        }, function(failure) {
-          msg = {
-            'header': failure.data.message,
-          }
-          $rootScope.floatingMessage = msg;
-          $scope.hideFloatingMessage();
-        });
-      }
+        // Refresh campaign data
+        //updateCampaignListing($scope.sortOrFiltersCampaign);
+      }, function (failure) {
+        msg = {
+          'header': failure.data.message,
+        }
+        $rootScope.floatingMessage = msg;
+        $scope.hideFloatingMessage();
+      });
     }
-    ///
-  $scope.customEntryPerPage = function(number) {
+  }
+  ///
+  $scope.customEntryPerPage = function (number) {
     $scope.sortOrFiltersCampaign.page_entries = number;
     updateCampaignListing($scope.sortOrFiltersCampaign);
   }
@@ -2114,10 +2511,10 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
   $scope.campaignSortOptions = {
     placeholder: "campaign-sortable-item",
     connectWith: '.campaign-sortable',
-    start: function(e, ui) {
+    start: function (e, ui) {
       $scope.duringSort = 1;
     },
-    update: function(event, ui) {
+    update: function (event, ui) {
       /*      $scope.duringSort = 0;
             mousex = event.pageX;
             mousey = event.pageY;
@@ -2160,7 +2557,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
               }
             }*/
     },
-    stop: function(event, ui) {
+    stop: function (event, ui) {
       // REORDER FEATURES CAMPAIGNS
       for (var i = 0; i < $scope.campaign_buffer.length; i++) {
         $scope.campaign_buffer[i].display_priority = 4 - i;
@@ -2170,14 +2567,14 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
   }
 
 
-  $scope.getTime = function(campaign) {
+  $scope.getTime = function (campaign) {
     $scope.timeStatusObj = TimeStatusService.getTimeStatus(campaign);
     campaign.timeStatNum = $scope.timeStatusObj.timeStatusNumber;
     campaign.timeStatText = $scope.timeStatusObj.timeStatusText;
 
     if (campaign.ends == null) {
       campaign.timeStatNum = "";
-      $translate(['tab_campaign_campaign_continuous']).then(function(value) {
+      $translate(['tab_campaign_campaign_continuous']).then(function (value) {
         campaign.timeStatText = value.tab_campaign_campaign_continuous;
       });
     }
@@ -2203,12 +2600,12 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     }
   }
 
-  $scope.setCountry = function(country) {
+  $scope.setCountry = function (country) {
     $scope.selectedCountry.selected = country;
   }
 
   function getCountries() {
-    Geolocator.getCountries().then(function(countries) {
+    Geolocator.getCountries().then(function (countries) {
       if ($scope.native_lookup) {
         for (var i in countries) {
           if (countries[i].native_name != null) {
@@ -2234,7 +2631,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
   }
 
   function getSubcountries(countryID) {
-    Geolocator.getSubcountriesByCountry(countryID).then(function(subcountries) {
+    Geolocator.getSubcountriesByCountry(countryID).then(function (subcountries) {
       // Check which language to show
       if ($scope.native_lookup) {
         for (var i in subcountries) {
@@ -2257,7 +2654,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     $scope.user.street2 = "";
   }
 
-  $scope.deleteTransaction = function() {
+  $scope.deleteTransaction = function () {
     msg = {
       'loading': true,
       'loading_message': 'in_progress'
@@ -2266,7 +2663,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     var reqArr = [];
     var arrCheckBox = $(".transactions-table-body").find(".ui.checkbox");
     var deleteSelectReward = false;
-    $.each(arrCheckBox, function(index, value) {
+    $.each(arrCheckBox, function (index, value) {
       if ($(value).hasClass("checked")) {
         deleteSelectReward = true;
         var campaignId = $scope.transaction_detail[index].backer[0].entry_id;
@@ -2274,7 +2671,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
         reqArr.push(req);
       }
     });
-    $q.all(reqArr).then(function(success) {
+    $q.all(reqArr).then(function (success) {
       $scope.showdetail($scope.cindex, $scope.cname, $scope.cstatus, $scope.ccurrency, $scope.total_backers, $scope.backer_offset);
       msg = {
         header: 'tab_campaigns_transactions_deleted_success'
@@ -2294,7 +2691,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     }
   }
 
-  $scope.editTransaction = function(transaction) {
+  $scope.editTransaction = function (transaction) {
     var backer = transaction.backer[0];
     transaction.editing = transaction.editing == undefined ? false : transaction.editing;
     if (transaction.editing) {
@@ -2302,14 +2699,14 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
         "amount": backer.amount
       }
       Restangular.one("campaign", backer.entry_id).one("pledge", backer.entry_backer_id).customPUT(param)
-        .then(function(success) {
+        .then(function (success) {
           transaction = success;
         });
     }
     transaction.editing = !transaction.editing;
   }
 
-  $scope.editTipTransaction = function(transaction) {
+  $scope.editTipTransaction = function (transaction) {
     var backer = transaction.backer[0];
     transaction.tipEditing = transaction.tipEditing == undefined ? false : transaction.tipEditing;
     if (transaction.tipEditing) {
@@ -2318,7 +2715,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
         "amount_tip": backer.amount_tip
       }
       Restangular.one("campaign", backer.entry_id).one("pledge", backer.entry_backer_id).customPUT(param)
-        .then(function(success) {
+        .then(function (success) {
           transaction = success;
         });
     }
@@ -2326,7 +2723,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
   }
 
   // watching variable changes
-  $scope.$watch('selectedCity.selected', function(value, oldValue) {
+  $scope.$watch('selectedCity.selected', function (value, oldValue) {
     if (value != oldValue && value) {
       cityID = Geolocator.lookupCityID(value.name);
 
@@ -2340,7 +2737,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     }
   });
 
-  $scope.$watch("selectedCountry.selected", function(value, oldValue) {
+  $scope.$watch("selectedCountry.selected", function (value, oldValue) {
     if (value != oldValue && value) {
       $scope.selectedCity.selected = undefined;
       $scope.selectedSubcountry.selected = undefined;
@@ -2348,15 +2745,15 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
     }
   });
   //Show Modal for backers offset
-  $scope.updateBackerOffset = function() {
+  $scope.updateBackerOffset = function () {
     $('.small.backer-offset-modal.modal').modal({
-      onHide: function() {},
-      onShow: function() {},
-      onApprove: function() {
+      onHide: function () { },
+      onShow: function () { },
+      onApprove: function () {
         var data = {
           backer_offset: $scope.backer_offset
         }
-        Restangular.one('campaign', $scope.cid).customPUT(data).then(function(success) {
+        Restangular.one('campaign', $scope.cid).customPUT(data).then(function (success) {
           $scope.backer_offset = success.backer_offset;
         })
       }
@@ -2364,23 +2761,23 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
   }
 
   // Toggle view for campaign revisions
-  $scope.toggleCampaignRevisionsView = function() {
+  $scope.toggleCampaignRevisionsView = function () {
     $scope.isCampaignRevisionsView = !$scope.isCampaignRevisionsView;
   }
 
 
   // Select individual campaign revision
-  $scope.selectRevisionItem = function(event, revisionData) {
+  $scope.selectRevisionItem = function (event, revisionData) {
     $scope.selectedRevisions.push(revisionData);
   }
 
   // Delete all the selected revision
-  $scope.deleteSelectedRevision = function() {
+  $scope.deleteSelectedRevision = function () {
     var requestQueue = [];
 
     for (var i = 0; i < $scope.selectedRevisions.length; i++) {
       var tempCampaignId = $scope.selectedRevisions[i].entry_id;
-      Restangular.one('campaign', $scope.selectedRevisions[i].entry_id).one('resource-revision/file/').customGET().then(function(success) {
+      Restangular.one('campaign', $scope.selectedRevisions[i].entry_id).one('resource-revision/file/').customGET().then(function (success) {
         if (success.length) {
           var campaignImages = [];
           var campaignHeaderImages = [];
@@ -2400,7 +2797,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
           }
         }
       });
-      Restangular.one('campaign', $scope.selectedRevisions[i].entry_id).one('faq-revision').getList().then(function(success) {
+      Restangular.one('campaign', $scope.selectedRevisions[i].entry_id).one('faq-revision').getList().then(function (success) {
         if (success.length) {
           if (success[0].faq_revision_id) {
             Restangular.one('campaign', tempCampaignId).one('faq-revision').customDELETE(success[0].faq_revision_id);
@@ -2410,14 +2807,14 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       requestQueue.push(Restangular.one('campaign', $scope.selectedRevisions[i].entry_id).one('setting-revision/bio_enable').customDELETE());
       requestQueue.push(deleteRevisionById($scope.selectedRevisions[i].entry_id, $scope.selectedRevisions[i].entry_revision_id));
     }
-    $q.all(requestQueue).then(function() {
+    $q.all(requestQueue).then(function () {
       $scope.loadCampaignRevisions();
       msg = {
         'header': 'tab_campaigns_revision_delete_successful',
       }
       $rootScope.floatingMessage = msg;
       $scope.hideFloatingMessage();
-    }, function(failed) {
+    }, function (failed) {
       msg = {
         'header': failed.data.message,
       }
@@ -2432,12 +2829,12 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
   }
 
   // Delete all the revisions
-  $scope.deleteAllRevisions = function() {
+  $scope.deleteAllRevisions = function () {
     var requestQueue = [];
 
     for (var i = 0; i < $scope.campaignRevisions.length; i++) {
       var tempCampaignId = $scope.campaignRevisions[i].entry_id;
-      Restangular.one('campaign', $scope.campaignRevisions[i].entry_id).one('resource-revision/file/').customGET().then(function(success) {
+      Restangular.one('campaign', $scope.campaignRevisions[i].entry_id).one('resource-revision/file/').customGET().then(function (success) {
         if (success.length) {
           var campaignImages = [];
           var campaignHeaderImages = [];
@@ -2457,7 +2854,7 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
           }
         }
       });
-      Restangular.one('campaign', $scope.campaignRevisions[i].entry_id).one('faq-revision').getList().then(function(success) {
+      Restangular.one('campaign', $scope.campaignRevisions[i].entry_id).one('faq-revision').getList().then(function (success) {
         if (success.length) {
           if (success[0].faq_revision_id) {
             Restangular.one('campaign', tempCampaignId).one('faq-revision').customDELETE(success[0].faq_revision_id);
@@ -2468,14 +2865,14 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
       requestQueue.push(deleteRevisionById($scope.campaignRevisions[i].entry_id, $scope.campaignRevisions[i].entry_revision_id));
     }
 
-    $q.all(requestQueue).then(function() {
+    $q.all(requestQueue).then(function () {
       $scope.loadCampaignRevisions();
       msg = {
         'header': 'tab_campaigns_revision_delete_successful',
       }
       $rootScope.floatingMessage = msg;
       $scope.hideFloatingMessage();
-    }, function(failed) {
+    }, function (failed) {
       msg = {
         'header': failed.data.message,
       }
@@ -2488,8 +2885,8 @@ app.controller('AdminCampaignsCtrl', function($q, $rootScope, CampaignSettingsSe
 
 });
 
-app.filter('dateconv', function($filter) {
-  return function(input) {
+app.filter('dateconv', function ($filter) {
+  return function (input) {
     if (input == null) {
       return "";
     }

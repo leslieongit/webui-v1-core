@@ -413,7 +413,7 @@
                 {{'campaign_page_faq' | translate }}
                 <span class="count-label ui label">{{campaign.faqs[0].faq_pairs.length || 0}}</span>
               </a>
-              <a class="item" data-tab="backers" ng-click="toggleHash('campaign_page_backers')" ng-show="(showBacker || ((showBacker || backer_length) && public_settings.site_theme_campaign_backer_option !='2')) && !isBackersOnSidebar" id="mobile-backer">{{' campaign_page_backers' | translate}}
+              <a class="item" data-tab="backers" ng-class="{'hide-mobile': moveBackersBelowCreatorAccordionMobile}" ng-click="toggleHash('campaign_page_backers')" ng-show="(showBacker || ((showBacker || backer_length) && public_settings.site_theme_campaign_backer_option !='2')) && !isBackersOnSidebar" id="mobile-backer">{{' campaign_page_backers' | translate}}
                 <span class="count-label ui label">{{backer_length}}</span>
               </a>
               <a class="item" data-tab="streams" ng-click="toggleHash('campaign_page_streams')" ng-show="(showStream || (($scope.showStream || campaign.streams.length) && public_settings.site_theme_campaign_stream_option !='2')) && !isUpdatesOnMainBlock" id="mobile-stream"> {{ 'campaign_page_streams' | translate}}
@@ -578,7 +578,7 @@
               </div>
             </div>
             <!-- tab end -->
-            <div class="ui middle attached tab segment " data-tab="faq" id="faq-seg" ng-show="!isRemoveCampaignFaq">
+            <div class="ui middle attached tab segment " data-tab="faq" id="faq-seg" ng-if="!isRemoveCampaignFaq">
               <div class="campaign-info ui two column stackable grid addborder">
                 <div class="left-col left floated ten wide column">
                   <div class="ui warning message" ng-show="!FAQ || faqs==0" translate>campaign_page_nofaq</div>
@@ -615,7 +615,7 @@
               <div id="backer-list" class="campaign-info ui two column stackable grid addborder">
                 <div class="left ten wide column">
                   <div class="ui warning message" ng-show="backer_length==0" translate>campaign_page_nobackers </div>
-                  <div ng-repeat="backer in campaign.backers" class="campaign-backerbox" ng-class="{'no-profile-link' : isHideBackerProfileLink }" ng-click="visitProfile($index)">
+                  <div ng-repeat="backer in campaign.backers" class="campaign-backerbox" ng-class="{'no-profile-link' : isHideBackerProfileLink || backer.anonymous_contribution || backer.anonymous_contribution_partial}" ng-click="visitProfile(backer, $event)">
                     <div class="campaign-backer ui segment">
                       <div class="campaign-backer-top ui two column stackable grid">
                         <div class="left-col five wide column">
@@ -623,7 +623,7 @@
                             <img class="ui avatar image" ng-src="{{server + '/image/campaign_profile/'+backer.person_files[0].path_external}}" ng-if="backer.person_files">
                             <img src="images/placeholder-images/placeholder_profile_photo.png" class="ui avatar image pp_placeholder" ng-if="!backer.person_files">
                             <span>{{backer.first_name}} {{backer.last_name}}</span>
-                            <span ng-show="backer.anonymous_contribution" translate>campaign_page_anonymous_backer</span>
+                            <span ng-if="backer.anonymous_contribution" translate>campaign_page_anonymous_backer</span>
                           </div>
                         </div>
                         <div class="right-col eleven wide column">
@@ -696,7 +696,7 @@
               </div>
             </div>
             <!-- tab end -->
-            <div class="ui middle attached tab segment addborder" data-tab="comments" id="comment-seg" ng-show="!isCommentsOnMainBlock && !public_settings.site_campaign_comments_display_replace_reward">
+            <div class="ui middle attached tab segment addborder" data-tab="comments" id="comment-seg" ng-if="!isCommentsOnMainBlock && !public_settings.site_campaign_comments_display_replace_reward">
               <div class="campaign-info ui grid stackable">
                 <div class="insert-fb-comments" ng-show="comment_system == 'facebook'">
                   <div id="fb-root"></div>
@@ -796,7 +796,7 @@
                     <div class="ui warning message" ng-if="!user.person_id" translate>
                       custom_comment_login_message
                     </div>
-                    <form class="ui form" id="comment-form" validate ng-model="comment_form" ng-if="user.person_id">
+                    <form class="ui form comment-form" validate ng-model="comment_form" ng-if="user.person_id">
                       <div class="ui divider"></div>
                       <h2 class="ui header" translate>custom_comment_form_header</h2>
                       <div class="field">
@@ -805,7 +805,7 @@
                       </div>
                       <div class="field">
                         <label translate>custom_comment_form_comment</label>
-                        <textarea id="custom_comment_message" name="comment_message" ng-model="comment_form.message" required></textarea>
+                        <textarea class="custom_comment_message" name="comment_message" ng-model="comment_form.message" required></textarea>
                       </div>
                       <div class="field">
                         <div class="ui blue labeled submit button" ng-click="addComment(comment_form);" translate>

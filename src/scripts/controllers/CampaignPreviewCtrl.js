@@ -944,14 +944,12 @@ app.controller('CampaignPreviewCtrl', function($timeout, $interval, $location, $
     } else if ($scope.hideCampaignImageField) {
       reqFieldsCheck = (campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
     } else if ($scope.hideCampaignBlurbField) {
-      reqFieldsCheck = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.categories && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
+      reqFieldsCheck = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
     } else if ($scope.hideCampaignCategoryField) {
       reqFieldsCheck = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
     } else {
       reqFieldsCheck = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
     } 
-    console.log($scope.hideCampaignBlurbField);
-    console.log(campaign.name, campaign.raise_mode_id, campaign.profile_type_id, campaign.funding_goal, campaign.currency_id, campaign.description, $scope.rewardsCheck, checkFunding());
     if ((reqFieldsCheck)) {
       $scope.loadingText = true;
 
@@ -991,12 +989,13 @@ app.controller('CampaignPreviewCtrl', function($timeout, $interval, $location, $
           } else if ($scope.hideCampaignImageField) {
             step1ReqField = (campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id) ? true : false;
           } else if ($scope.hideCampaignBlurbField) {
-            step1ReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.categories && campaign.funding_goal && campaign.currency_id) ? true : false;
+            step1ReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.funding_goal && campaign.currency_id) ? true : false;
           } else if ($scope.hideCampaignCategoryField) {
             step1ReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.funding_goal && campaign.currency_id) ? true : false;
           } else {
             step1ReqField = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id) ? true : false;
           }
+
           if (!step1ReqField) {
             steps.push(value.basics);
           }

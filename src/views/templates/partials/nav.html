@@ -44,9 +44,9 @@
                 <i class="dashboard icon"></i> {{'navbar_dashBoard' | translate}}
               </h4>
             </div>
-            <a ng-show="User.portal_admin" class="item" ng-class="{active: $location.path() === '/admin/dashboard'}" href="admin/dashboard" translate> navbar_adminstrator</a>
-            <a ng-show="User.campaign_manager && !hideCampaignNav" class="item" ng-class="{active: $location.path() === '/campaign-manager'}" href="campaign-manager" translate> navbar_mytitle </a>
-            <a ng-show="User.campaign_backer" class="item" ng-class="{active: $location.path() === '/pledge-history'}" href="pledge-history" translate> navbar_mycontribution </a>
+            <a ng-if="User.portal_admin" class="item" ng-click="navItem()" ng-class="{active: $location.path() === '/admin/dashboard' && $location.hash() !== 'subscription-settings'}" href="/admin/dashboard/" translate> navbar_adminstrator</a>
+            <a ng-if="User.campaign_manager && !hideCampaignNav" class="item" ng-class="{active: $location.path() === '/campaign-manager'}" href="campaign-manager" translate> navbar_mytitle </a>
+            <a ng-if="User.campaign_backer" class="item" ng-class="{active: $location.path() === '/pledge-history'}" href="pledge-history" translate> navbar_mycontribution </a>
             <a class="item" ng-class="{active: $location.path() === 'message-center'}" href="message-center" translate>navbar_mymessage</a>
             <div class="header">
               <h4 class="ui header" translate>
@@ -56,10 +56,10 @@
             <a class="item" ng-class="{active: $location.path() === '/profile-setting'}" href="profile-setting" translate>
 							navbar_profilesetting
 						</a>
-            <a class="item" ng-show="enabledContribution" ng-class="{active: $location.path() === '/payment-setting'}" href="payment-setting" translate ng-hide="payment_gateway==2">
+            <a class="item" ng-if="enabledContribution" ng-class="{active: $location.path() === '/payment-setting'}" href="payment-setting" translate ng-hide="payment_gateway==2">
 							navbar_paymentsetting
 						</a>
-            <a ng-show="User.isLoggedIn()" class="item" ng-click="User.setLoggedOut()" translate>navbar_logout</a>
+            <a ng-if="User.isLoggedIn()" class="item" ng-click="User.setLoggedOut()" translate>navbar_logout</a>
           </div>
           <!-- <i data-loading class="loading icon"></i> -->
         </div>

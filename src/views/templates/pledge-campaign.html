@@ -28,7 +28,7 @@
           <div class="pc-contribution-summary">
             <h2 class="section-header ui inverted top attached header">
               <span translate="pledge_campaign_main_header"></span>
-              <div class="contribution-selection" ng-show="!contributionTypeRadio && !anonymousContributionTypeOnly">
+              <div class="contribution-selection"  ng-if="!forceAnonymousPledge" ng-show="!contributionTypeRadio && !anonymousContributionTypeOnly">
                 <div class="ui dropdown card-type" id="contributionMethod">
                   <div class="text">
                     <span translate="{{contribution[0].name}}"></span>
@@ -246,7 +246,7 @@
                     <div class="reward-etd" ng-if="selectedReward.estimated_delivery_time">{{'pledge_campaign_estimate_dlivery' | translate}} {{selectedReward.estimated_delivery_time | formatDate:"MMMM DD, YYYY" }}</div>
                   </div>
 
-                  <div ng-if="selectedReward && !pledgeLevel">
+                  <div ng-if="!selectedReward && !pledgeLevel">
                     <div translate> pledge_campaign_reward_message</div>
                   </div>
                 </div>
@@ -257,7 +257,7 @@
                     <h4 class="title" translate>pledge_campaign_yourcontribution</h4>
                     <form class="ui form contribution-form">
                       <div class="field">
-                        <div ng-show="allowDecimalNotation == 2 || allowDecimalNotation == 3" class="contribution-input-decimal fluid">
+                        <div ng-show="allowDecimalNotation == 2 || allowDecimalNotation == 3" class="contribution-input with-decimal">
                           <div class="ui label currency-symbol" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
                           <div class="input-wrap">
                             <input name="contribution_amount" ng-class="{'has-error': pledgeAmount < selectedReward.amount || !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}" type="text" min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}"
@@ -1278,6 +1278,9 @@
           <h2 ng-if="(shippingOption.length || requiresShipping) || acceptExtraPledgeData" class="ui inverted top attached header" translate="pledge_campaign_Phone_Number_Info"></h2>
           <div ng-if="(shippingOption.length || requiresShipping) || acceptExtraPledgeData" class="shipping-info campaign-bg ui middle attached basic segment">
             <div class="formbg ui two column stackable grid">
+              <div class="ui corner red label" data-content="Required Field" sui-popup="" ng-if="acceptExtraPledgeData">
+                <i class="white asterisk icon"></i>
+              </div>
               <div class="five wide column left-col">
                 <h3 class="ui header" translate="pledge_campaign_Phone_Number"></h3>
                 <p ng-if="!public_settings.site_campaign_reward_phone_required" translate="pledge_campaign_phone_number_message"></p>
@@ -1378,6 +1381,13 @@
                       <span class="currency" ng-bind-html="campaign.currencies[0].code_iso4217_alpha"></span>
                     </td>
                   </tr>
+                  <tr ng-if="tip.dollar_amount">
+                    <td translate> pledge_campaign_your_tip </td>
+                    <td>
+                      <span ng-bind-html="tip.dollar_amount | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
+                      <span class="currency" ng-bind-html="tipInfo.code_iso4217_alpha"></span>
+                    </td>
+                  </tr>
                   <tr ng-if="shippingOption.length">
                     <td class="payment-label" translate> pledge_campaign_your_shiping</td>
                     <td class="payment-amnt">
@@ -1392,23 +1402,18 @@
                       <span class="currency" ng-bind-html="campaign.currencies[0].code_iso4217_alpha"></span>
                     </td>
                   </tr>
+                  
                 </tbody>
                 <tfoot>
                   <tr>
                     <td translate> pledge_campaign_total_payment </td>
                     <td>
-                      <span ng-if="!pledgeReplace" ng-bind-html="total(shipOptions[0].cost) | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
-                      <span ng-if="pledgeReplace" ng-bind-html="replacedTotal(totalReplacedCost, totalPledgeReplacementShippingCost) | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
+                      <span ng-if="!pledgeReplace" ng-bind-html="total(shipOptions[0].cost, tip.dollar_amount) | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
+                      <span ng-if="pledgeReplace" ng-bind-html="replacedTotal(totalReplacedCost, totalPledgeReplacementShippingCost, tip.dollar_amount) | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
                       <span class="currency" ng-bind-html="campaign.currencies[0].code_iso4217_alpha"></span>
                     </td>
                   </tr>
-                  <tr ng-if="tip.dollar_amount">
-                    <td translate> pledge_campaign_your_tip </td>
-                    <td>
-                      <span ng-bind-html="tip.dollar_amount | formatCurrency:tipInfo.code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
-                      <span class="currency" ng-bind-html="tipInfo.code_iso4217_alpha"></span>
-                    </td>
-                  </tr>
+                  
                 </tfoot>
               </table>
             </div>
@@ -1534,7 +1539,7 @@
                     <h4 class="title" translate>pledge_campaign_yourcontribution</h4>
                     <form class="ui form contribution-form">
                       <div class="field">
-                        <div ng-show="allowDecimalNotation == 2 || allowDecimalNotation == 3" class="contribution-input-decimal fluid">
+                        <div ng-show="allowDecimalNotation == 2 || allowDecimalNotation == 3" class="contribution-input with-decimal">
                           <div class="ui label currency-symbol" ng-bind-html=" ' ' | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></div>
                           <div class="input-wrap">
                             <input name="contribution_amount" ng-class="{'has-error': pledgeAmount < selectedReward.amount || !pledgeAmount ||  pledgeAmount < public_settings.site_theme_campaign_min_contribute_amount || (pledgeAmount > max_amoumt && allow_max)}" type="text" min="{{selectedReward.amount || public_settings.site_theme_campaign_min_contribute_amount}}"
@@ -1592,7 +1597,7 @@
                   <input type="checkbox">
                   <label translate> pledge_campaign_anon_contribution_only_label </label>
                 </div>
-                <div class="contribution-selection" ng-show="!contributionTypeRadio && !anonymousContributionTypeOnly">
+                <div class="contribution-selection" ng-if="!forceAnonymousPledge" ng-show="!contributionTypeRadio && !anonymousContributionTypeOnly">
                   <div class="ui selection dropdown card-type" id="contributionMethod">
                     <div class="text">
                       <span translate="{{contribution[0].name}}"></span>
@@ -1748,9 +1753,7 @@
                     <div ng-show="reward_html_editor" html-render html="selectedReward.description"></div>
                   </div>
 
-                  <div class="no-reward-text" ng-if="!selectedReward">
-                    <span translate> pledge_campaign_reward_message</span>
-                  </div>
+                  
                   <div class="campaign-reward-info-bottom ui two column grid">
                     <div class="column">
                       <div class="reward-amount" ng-if="selectedReward">
@@ -1759,6 +1762,9 @@
                           <span class="currency" ng-bind-html="campaign.currencies[0].code_iso4217_alpha"></span>
                         </div>
                         <span class="shipping-label" ng-show="selectedReward.shipping">{{'pledge_campaign_shipping'|translate}} </span>
+                      </div>
+                      <div class="no-reward-text" ng-if="!selectedReward">
+                        <span translate> pledge_campaign_reward_message</span>
                       </div>
                     </div>
                     <div class="column">
@@ -2379,22 +2385,6 @@
                         </td>
                       </tr>
 
-                      <tr ng-if="shippingOption.length">
-                        <td class="payment-label" translate> pledge_campaign_your_shiping</td>
-                        <td class="payment-amnt">
-                          <span ng-bind-html="shipOptions[0].cost || 0 | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
-                          <span class="currency" ng-bind-html="campaign.currencies[0].code_iso4217_alpha"></span>
-                        </td>
-                      </tr>
-                      <tr class="payment-row">
-                        <td></td>
-                        <td class="payment-amnt">
-                          <span ng-bind-html="total(shipOptions[0].cost) | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
-                          <span class="currency" ng-bind-html="campaign.currencies[0].code_iso4217_alpha"></span>
-                        </td>
-                      </tr>
-                    </tbody>
-                    <tfoot>
                       <tr class="tip-row" ng-if="tip.dollar_amount">
                         <td translate> pledge_campaign_your_tip </td>
                         <td>
@@ -2402,7 +2392,23 @@
                           <span class="currency" ng-bind-html="tipInfo.code_iso4217_alpha"></span>
                         </td>
                       </tr>
-                    </tfoot>
+
+                      <tr ng-if="shippingOption.length">
+                        <td class="payment-label" translate> pledge_campaign_your_shiping</td>
+                        <td class="payment-amnt">
+                          <span ng-bind-html="shipOptions[0].cost || 0 | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
+                          <span class="currency" ng-bind-html="campaign.currencies[0].code_iso4217_alpha"></span>
+                        </td>
+                      </tr>
+                      
+                      <tr class="payment-row">
+                        <td></td>
+                        <td class="payment-amnt">
+                          <span ng-bind-html="total(shipOptions[0].cost, tip.dollar_amount) | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></span>
+                          <span class="currency" ng-bind-html="campaign.currencies[0].code_iso4217_alpha"></span>
+                        </td>
+                      </tr>
+                    </tbody>
                   </table>
                 </div>
                 <div class="pledge-btns ui basic btn segment">

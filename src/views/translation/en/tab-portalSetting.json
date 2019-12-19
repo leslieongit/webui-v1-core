@@ -478,7 +478,7 @@
   "tab_portalsetting_campaign_campaign_always_capture": "Always Capture Funds",
   "tab_portalsetting_campaign_campaign_always_capture_hint": "This option will force capture of funds in post processing mode even if there are failed pledges on campaign.",
   "tab_portalsetting_campaign_group_management_non_admin": "Non-Admin Can Manage Campaign Groups",
-  "tab_portalsetting_campaign_group_management_non_admin_note": "Allows regular users to manage campaigns.",
+  "tab_portalsetting_campaign_group_management_non_admin_note": "Allows regular users to manage campaign groups.",
   "tab_portalsetting_campaign_always_anonymous_contribution": "Force Anonymous Contributions",
   "tab_portalsetting_campaign_always_anonymous_contribution_note": "Force all contributions to be anonymous by default",
   "tab_portalsetting_campaign_contribution_type": "Contribution Type",

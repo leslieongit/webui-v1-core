@@ -481,7 +481,7 @@
               </div>
             </div>
 
-            <div class="formbg ui two column stackable grid optional-field" ng-show="category_ids.length && subcategories.length" ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
+            <div class="formbg ui two column stackable grid optional-field" ng-if="category_ids.length && subcategories.length" ng-class="{'revision-active' : enableCampaignRevisions && campaign.entry_status_id == 2 && user.person_type_id == 2}">
               <div class="five wide column">
                 <h3 class="ui header">
                   <span translate="get_started_subcategory"></span>

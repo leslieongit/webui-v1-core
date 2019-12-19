@@ -72,6 +72,16 @@
 
 				<div ng-show="transaction_detail.length">
 					<h3 class="ui header" translate> transaction_details_transactiontext  </h3>
+					<p>
+						<div class="ui grid">
+							<div class="three wide column">
+								<i class="circular icon hide" data-content="Anonymous Contribution" data-variation="inverted"></i> {{'tab_campaign_transaction_details_anon' | translate}}
+							</div>
+							<div class="six wide column">
+								<i class="circular icon unhide" data-content="Partial Anonymous Contribution" data-variation="inverted"></i> {{'tab_campaign_transaction_details_partially_anon' | translate}}
+							</div>
+						</div>
+					</p>
 					<div class="ui inverted divider"></div>
 					<table class="ui basic small table transactions-table">
 						<thead>
@@ -92,12 +102,17 @@
 							<tr ng-repeat="trans in transaction_detail" ng-if="trans.backer.length">
 							    <td ng-show="payment_gateway==1">{{trans.stripe_transaction_id}}</td>
 							     <td ng-show="payment_gateway==2">{{trans.widgetmakr_transaction_id}}</td>
-								<td><span ng-if="trans.backer[0].pledge_level.length">
-								 <span title="{{trans.backer[0].pledge_level[0].name}}">
-								   {{(trans.backer[0].pledge_level[0].name).slice(0,30)}}</span>
-								  <span ng-show="(trans.backer[0].pledge_level[0].name).length>30">&nbsp;...</span>
+								<td>
+									<i ng-if="trans.backer[0].anonymous_contribution" class="circular icon hide" data-content="Anonymous Contribution" data-variation="inverted"></i>
+									<i ng-if="trans.backer[0].anonymous_contribution_partial" class="circular icon unhide" data-content="Anonymous Contribution" data-variation="inverted"></i> 
+									<span ng-if="trans.backer[0].pledge_level.length">
+										<span title="{{trans.backer[0].pledge_level[0].name}}">
+											{{(trans.backer[0].pledge_level[0].name).slice(0,30)}}
+										</span>
+								  	<span ng-show="(trans.backer[0].pledge_level[0].name).length>30">&nbsp;...</span>
 								  </span>
-								 <span ng-hide="trans.backer[0].pledge_level.length"> {{'transaction_details_na' | translate}} </span></td>
+								 <span ng-hide="trans.backer[0].pledge_level.length"> {{'transaction_details_na' | translate}} </span>
+								</td>
 								<td ng-bind-html="trans.backer[0].amount | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option" ></td>
 
 								<td> <span ng-if="trans.backer.length &&  trans.backer[0].person.length" title="{{trans.backer[0].person[0].first_name +''+ trans.backer[0].person[0].last_name}}">{{(trans.backer[0].person[0].first_name +" "+ trans.backer[0].person[0].last_name).slice(0,18)}} </span>

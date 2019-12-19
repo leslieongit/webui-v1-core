@@ -568,6 +568,19 @@
 				<div class="inner-item lv1 ui two column grid">
 					<div class="left-col ten wide column">
 						<!-- <div class="path-wrap"> -->
+						<a class="path" ng-href="{{API_URL.url + API_URL.loc }}api-docs#account-campaign-replicate-POST" ref="account-campaign-replicate-POST" ng-click="nameClick($event)">account/campaign/replicate</a>
+						<!-- </div> -->
+					</div>
+					<div class="right-col six wide column">
+						
+						<div class="method-button ui basic button" ng-click="gotoElement($event)" ref="account-campaign-replicate-POST">POST</div>
+						
+					</div>
+				</div>
+				
+				<div class="inner-item lv1 ui two column grid">
+					<div class="left-col ten wide column">
+						<!-- <div class="path-wrap"> -->
 						<a class="path" ng-href="{{API_URL.url + API_URL.loc }}api-docs#account-campaign-resource-POST" ref="account-campaign-resource-POST" ng-click="nameClick($event)">account/campaign/resource</a>
 						<!-- </div> -->
 					</div>
@@ -1198,6 +1211,19 @@
 				<div class="inner-item lv1 ui two column grid">
 					<div class="left-col ten wide column">
 						<!-- <div class="path-wrap"> -->
+						<a class="path" ng-href="{{API_URL.url + API_URL.loc }}api-docs#account-profile-person_inline_disable-PUT" ref="account-profile-person_inline_disable-PUT" ng-click="nameClick($event)">account/profile/person_inline_disable</a>
+						<!-- </div> -->
+					</div>
+					<div class="right-col six wide column">
+						
+						<div class="method-button ui basic button" ng-click="gotoElement($event)" ref="account-profile-person_inline_disable-PUT">PUT</div>
+						
+					</div>
+				</div>
+				
+				<div class="inner-item lv1 ui two column grid">
+					<div class="left-col ten wide column">
+						<!-- <div class="path-wrap"> -->
 						<a class="path" ng-href="{{API_URL.url + API_URL.loc }}api-docs#account-profile-phone_number-POST" ref="account-profile-phone_number-POST" ng-click="nameClick($event)">account/profile/phone_number</a>
 						<!-- </div> -->
 					</div>
@@ -1709,12 +1735,12 @@
 				<div class="inner-item lv1 ui two column grid">
 					<div class="left-col ten wide column">
 						<!-- <div class="path-wrap"> -->
-						<a class="path" ng-href="{{API_URL.url + API_URL.loc }}api-docs#account-profile-stripe-charge-amount-GET" ref="account-profile-stripe-charge-amount-GET" ng-click="nameClick($event)">account/profile/stripe/charge-amount</a>
+						<a class="path" ng-href="{{API_URL.url + API_URL.loc }}api-docs#account-profile-stripe-charge_amount-GET" ref="account-profile-stripe-charge_amount-GET" ng-click="nameClick($event)">account/profile/stripe/charge_amount</a>
 						<!-- </div> -->
 					</div>
 					<div class="right-col six wide column">
 						
-						<div class="method-button ui basic button" ng-click="gotoElement($event)" ref="account-profile-stripe-charge-amount-GET">GET</div>
+						<div class="method-button ui basic button" ng-click="gotoElement($event)" ref="account-profile-stripe-charge_amount-GET">GET</div>
 						
 					</div>
 				</div>
@@ -1795,6 +1821,32 @@
 					<div class="right-col six wide column">
 						
 						<div class="method-button ui basic button" ng-click="gotoElement($event)" ref="account-profile-stripe-linked-GET">GET</div>
+						
+					</div>
+				</div>
+				
+				<div class="inner-item lv1 ui two column grid">
+					<div class="left-col ten wide column">
+						<!-- <div class="path-wrap"> -->
+						<a class="path" ng-href="{{API_URL.url + API_URL.loc }}api-docs#account-profile-stripe-payment_intent_direct-POST" ref="account-profile-stripe-payment_intent_direct-POST" ng-click="nameClick($event)">account/profile/stripe/payment_intent_direct</a>
+						<!-- </div> -->
+					</div>
+					<div class="right-col six wide column">
+						
+						<div class="method-button ui basic button" ng-click="gotoElement($event)" ref="account-profile-stripe-payment_intent_direct-POST">POST</div>
+						
+					</div>
+				</div>
+				
+				<div class="inner-item lv1 ui two column grid">
+					<div class="left-col ten wide column">
+						<!-- <div class="path-wrap"> -->
+						<a class="path" ng-href="{{API_URL.url + API_URL.loc }}api-docs#account-profile-stripe-payment_intent_direct-confirm-POST" ref="account-profile-stripe-payment_intent_direct-confirm-POST" ng-click="nameClick($event)">account/profile/stripe/payment_intent_direct/confirm</a>
+						<!-- </div> -->
+					</div>
+					<div class="right-col six wide column">
+						
+						<div class="method-button ui basic button" ng-click="gotoElement($event)" ref="account-profile-stripe-payment_intent_direct-confirm-POST">POST</div>
 						
 					</div>
 				</div>
@@ -2368,6 +2420,8 @@
 															
 														
 															
+														
+															
 																<tr>
 																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['password'] != null" class="has-lookup-table">password</span><i class="info circle icon" ng-show="lookup_table['password'] != null"></i><span ng-hide="lookup_table['password'] != null">password</span></td>
 																	<td>string</td>
@@ -2396,6 +2450,14 @@
 														
 															
 														
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['express_checkout'] != null" class="has-lookup-table">express_checkout</span><i class="info circle icon" ng-show="lookup_table['express_checkout'] != null"></i><span ng-hide="lookup_table['express_checkout'] != null">express_checkout</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
 															
 														
 															
@@ -3067,7 +3129,7 @@
 												
 												<tr class="item">
 													<td class="key"><span class="ui horizontal black label"> Filters </span></td> 
-													<td class="value">category, tag, location, name, entry_status_id, featured, description, blurb, backer, manager, hidden</td>
+													<td class="value">category, tag, location, name, entry_status_id, featured, description, blurb, backer, manager, hidden, group_id, group_id_with, group_id_without, starts, ends, funded_amount</td>
 												</tr>
 												
 											</tbody>
@@ -6844,6 +6906,8 @@
 														
 															
 														
+															
+														
 														
 															
 																<tr>
@@ -6855,7 +6919,7 @@
 														
 															
 																<tr>
-																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['amount_tip'] != null" class="has-lookup-table">amount_tip</span><i class="info circle icon" ng-show="lookup_table['amount_tip'] != null"></i><span ng-hide="lookup_table['amount_tip'] != null">amount_tip</span></td>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['business_organization_id'] != null" class="has-lookup-table">business_organization_id</span><i class="info circle icon" ng-show="lookup_table['business_organization_id'] != null"></i><span ng-hide="lookup_table['business_organization_id'] != null">business_organization_id</span></td>
 																	<td>string</td>
 																	<td class = "highlight-False">False</td>
 																</tr>
@@ -6911,7 +6975,7 @@
 														
 															
 																<tr>
-																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['force_tip_processing'] != null" class="has-lookup-table">force_tip_processing</span><i class="info circle icon" ng-show="lookup_table['force_tip_processing'] != null"></i><span ng-hide="lookup_table['force_tip_processing'] != null">force_tip_processing</span></td>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['amount_tip'] != null" class="has-lookup-table">amount_tip</span><i class="info circle icon" ng-show="lookup_table['amount_tip'] != null"></i><span ng-hide="lookup_table['amount_tip'] != null">amount_tip</span></td>
 																	<td>string</td>
 																	<td class = "highlight-False">False</td>
 																</tr>
@@ -6948,6 +7012,14 @@
 															
 																<tr>
 																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['attributes'] != null" class="has-lookup-table">attributes</span><i class="info circle icon" ng-show="lookup_table['attributes'] != null"></i><span ng-hide="lookup_table['attributes'] != null">attributes</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['force_tip_processing'] != null" class="has-lookup-table">force_tip_processing</span><i class="info circle icon" ng-show="lookup_table['force_tip_processing'] != null"></i><span ng-hide="lookup_table['force_tip_processing'] != null">force_tip_processing</span></td>
 																	<td>string</td>
 																	<td class = "highlight-False">False</td>
 																</tr>
@@ -7197,6 +7269,8 @@
 															
 														
 															
+														
+															
 																<tr>
 																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['amount'] != null" class="has-lookup-table">amount</span><i class="info circle icon" ng-show="lookup_table['amount'] != null"></i><span ng-hide="lookup_table['amount'] != null">amount</span></td>
 																	<td>string</td>
@@ -7224,6 +7298,14 @@
 																</tr>
 															
 														
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['business_organization_id'] != null" class="has-lookup-table">business_organization_id</span><i class="info circle icon" ng-show="lookup_table['business_organization_id'] != null"></i><span ng-hide="lookup_table['business_organization_id'] != null">business_organization_id</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
 														
 															
 																<tr>
@@ -7401,6 +7483,8 @@
 															
 														
 															
+														
+															
 																<tr>
 																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['card_id'] != null" class="has-lookup-table">card_id</span><i class="info circle icon" ng-show="lookup_table['card_id'] != null"></i><span ng-hide="lookup_table['card_id'] != null">card_id</span></td>
 																	<td>string</td>
@@ -7452,6 +7536,14 @@
 														
 															
 														
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['business_organization_id'] != null" class="has-lookup-table">business_organization_id</span><i class="info circle icon" ng-show="lookup_table['business_organization_id'] != null"></i><span ng-hide="lookup_table['business_organization_id'] != null">business_organization_id</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
 														
 															
 																<tr>
@@ -7631,6 +7723,8 @@
 															
 														
 															
+														
+															
 																<tr>
 																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['amount'] != null" class="has-lookup-table">amount</span><i class="info circle icon" ng-show="lookup_table['amount'] != null"></i><span ng-hide="lookup_table['amount'] != null">amount</span></td>
 																	<td>string</td>
@@ -7660,6 +7754,14 @@
 														
 															
 														
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['business_organization_id'] != null" class="has-lookup-table">business_organization_id</span><i class="info circle icon" ng-show="lookup_table['business_organization_id'] != null"></i><span ng-hide="lookup_table['business_organization_id'] != null">business_organization_id</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
 														
 															
 																<tr>
@@ -7874,6 +7976,8 @@
 															
 														
 															
+														
+															
 																<tr>
 																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['entry_id'] != null" class="has-lookup-table">entry_id</span><i class="info circle icon" ng-show="lookup_table['entry_id'] != null"></i><span ng-hide="lookup_table['entry_id'] != null">entry_id</span></td>
 																	<td>integer</td>
@@ -7901,6 +8005,14 @@
 															
 																<tr>
 																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['expires'] != null" class="has-lookup-table">expires</span><i class="info circle icon" ng-show="lookup_table['expires'] != null"></i><span ng-hide="lookup_table['expires'] != null">expires</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['priority'] != null" class="has-lookup-table">priority</span><i class="info circle icon" ng-show="lookup_table['priority'] != null"></i><span ng-hide="lookup_table['priority'] != null">priority</span></td>
 																	<td>string</td>
 																	<td class = "highlight-False">False</td>
 																</tr>
@@ -8152,6 +8264,8 @@
 															
 														
 															
+														
+															
 																<tr>
 																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['entry_id'] != null" class="has-lookup-table">entry_id</span><i class="info circle icon" ng-show="lookup_table['entry_id'] != null"></i><span ng-hide="lookup_table['entry_id'] != null">entry_id</span></td>
 																	<td>integer</td>
@@ -8187,6 +8301,14 @@
 															
 																<tr>
 																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['expires'] != null" class="has-lookup-table">expires</span><i class="info circle icon" ng-show="lookup_table['expires'] != null"></i><span ng-hide="lookup_table['expires'] != null">expires</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['priority'] != null" class="has-lookup-table">priority</span><i class="info circle icon" ng-show="lookup_table['priority'] != null"></i><span ng-hide="lookup_table['priority'] != null">priority</span></td>
 																	<td>string</td>
 																	<td class = "highlight-False">False</td>
 																</tr>
@@ -8461,6 +8583,342 @@
 																<tr>
 																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['raise_mode_id'] != null" class="has-lookup-table">raise_mode_id</span><i class="info circle icon" ng-show="lookup_table['raise_mode_id'] != null"></i><span ng-hide="lookup_table['raise_mode_id'] != null">raise_mode_id</span></td>
 																	<td>integer</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+													</tbody>
+												</table><!-- TABLE END -->
+											</div>
+										</div>
+										
+									</div> <!-- lv1 end -->
+									
+								</div>
+								
+							<div class="api-doc-info">
+								<div class="ui pointing secondary menu menu-tabs">
+									
+									
+									
+									<div class="item active api-POST" id="account-campaign-replicate-POST" data-tab="account-campaign-replicate-POST" ng-click="addHash($event)"><a>POST</a></div>
+									
+									
+									
+								</div>
+								
+								
+								
+								<div class="ui segment lv1 tab active" data-tab="account-campaign-replicate-POST">
+									
+									
+										<table class="ui small very basic table api-ref-info">
+											<tbody>
+												<tr class="item">
+													<td class="key"><span class="ui horizontal black label"> Name </span></td>
+													<td class="value segment-name">account/campaign/replicate</td>
+												</tr>
+												<tr class="item">
+													<td class="key"><span class="ui horizontal black label"> Description </span></td>
+													<td class="value">replicate the campaign</td>
+												</tr>
+												<tr class="item">
+													<td class="key"><span class="ui horizontal black label"> Call Syntax </span></td>
+													<a><td class="value call-syntax">{{API_URL.url}}{{API_URL.loc}}campaign/&lt;Campaign ID&gt;/replicate</td></a>
+												</tr>
+
+												
+											</tbody>
+										</table><!-- TABLE END -->
+										
+										<div class="item button-segment">
+											<div class="buttons">
+												<div class="ui small very basic button parameter-button left floated" ng-click="showRequest($event)">Show Parameters</div>
+												<div class="ui small basic button share-button left floated" ng-click="showShare($event)">Share</div>
+												<div class="ui small input left floated share-url" style="display:none">
+													<div class="field">
+														<input type="text">
+													</div>
+												</div>
+											</div>
+											<div class="request lv2">
+												<table class="ui table segment">
+													<thead>
+														<tr>
+															<th class="four wide center">Field Name</th>
+															<th class="two wide center">Type</th>
+															<th class="two wide center">Required</th>
+														</tr>
+													</thead>
+													<tbody>
+														
+															
+														
+															
+														
+															
+														
+															
+														
+															
+														
+															
+														
+															
+														
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['entry_id'] != null" class="has-lookup-table">entry_id</span><i class="info circle icon" ng-show="lookup_table['entry_id'] != null"></i><span ng-hide="lookup_table['entry_id'] != null">entry_id</span></td>
+																	<td>integer</td>
+																	<td class = "highlight-True">True</td>
+																</tr>
+															
+														
+															
+														
+															
+														
+															
+														
+															
+														
+															
+														
+															
+														
+															
+														
+															
+														
+															
+														
+															
+														
+															
+														
+															
+														
+															
+														
+															
+														
+															
+														
+															
+														
+															
+														
+															
+														
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['backer_offset'] != null" class="has-lookup-table">backer_offset</span><i class="info circle icon" ng-show="lookup_table['backer_offset'] != null"></i><span ng-hide="lookup_table['backer_offset'] != null">backer_offset</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['runtime_days'] != null" class="has-lookup-table">runtime_days</span><i class="info circle icon" ng-show="lookup_table['runtime_days'] != null"></i><span ng-hide="lookup_table['runtime_days'] != null">runtime_days</span></td>
+																	<td>integer</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['city_id'] != null" class="has-lookup-table">city_id</span><i class="info circle icon" ng-show="lookup_table['city_id'] != null"></i><span ng-hide="lookup_table['city_id'] != null">city_id</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['display_priority'] != null" class="has-lookup-table">display_priority</span><i class="info circle icon" ng-show="lookup_table['display_priority'] != null"></i><span ng-hide="lookup_table['display_priority'] != null">display_priority</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['raise_mode_id'] != null" class="has-lookup-table">raise_mode_id</span><i class="info circle icon" ng-show="lookup_table['raise_mode_id'] != null"></i><span ng-hide="lookup_table['raise_mode_id'] != null">raise_mode_id</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['private'] != null" class="has-lookup-table">private</span><i class="info circle icon" ng-show="lookup_table['private'] != null"></i><span ng-hide="lookup_table['private'] != null">private</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['currency_id'] != null" class="has-lookup-table">currency_id</span><i class="info circle icon" ng-show="lookup_table['currency_id'] != null"></i><span ng-hide="lookup_table['currency_id'] != null">currency_id</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['featured'] != null" class="has-lookup-table">featured</span><i class="info circle icon" ng-show="lookup_table['featured'] != null"></i><span ng-hide="lookup_table['featured'] != null">featured</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['profile_type_id'] != null" class="has-lookup-table">profile_type_id</span><i class="info circle icon" ng-show="lookup_table['profile_type_id'] != null"></i><span ng-hide="lookup_table['profile_type_id'] != null">profile_type_id</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['business_organization_id'] != null" class="has-lookup-table">business_organization_id</span><i class="info circle icon" ng-show="lookup_table['business_organization_id'] != null"></i><span ng-hide="lookup_table['business_organization_id'] != null">business_organization_id</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['duration_type_id'] != null" class="has-lookup-table">duration_type_id</span><i class="info circle icon" ng-show="lookup_table['duration_type_id'] != null"></i><span ng-hide="lookup_table['duration_type_id'] != null">duration_type_id</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['funding_goal'] != null" class="has-lookup-table">funding_goal</span><i class="info circle icon" ng-show="lookup_table['funding_goal'] != null"></i><span ng-hide="lookup_table['funding_goal'] != null">funding_goal</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['hidden'] != null" class="has-lookup-table">hidden</span><i class="info circle icon" ng-show="lookup_table['hidden'] != null"></i><span ng-hide="lookup_table['hidden'] != null">hidden</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['blurb'] != null" class="has-lookup-table">blurb</span><i class="info circle icon" ng-show="lookup_table['blurb'] != null"></i><span ng-hide="lookup_table['blurb'] != null">blurb</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['ends'] != null" class="has-lookup-table">ends</span><i class="info circle icon" ng-show="lookup_table['ends'] != null"></i><span ng-hide="lookup_table['ends'] != null">ends</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['description'] != null" class="has-lookup-table">description</span><i class="info circle icon" ng-show="lookup_table['description'] != null"></i><span ng-hide="lookup_table['description'] != null">description</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['force_direct_transaction'] != null" class="has-lookup-table">force_direct_transaction</span><i class="info circle icon" ng-show="lookup_table['force_direct_transaction'] != null"></i><span ng-hide="lookup_table['force_direct_transaction'] != null">force_direct_transaction</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['uri_path'] != null" class="has-lookup-table">uri_path</span><i class="info circle icon" ng-show="lookup_table['uri_path'] != null"></i><span ng-hide="lookup_table['uri_path'] != null">uri_path</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['name'] != null" class="has-lookup-table">name</span><i class="info circle icon" ng-show="lookup_table['name'] != null"></i><span ng-hide="lookup_table['name'] != null">name</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['created'] != null" class="has-lookup-table">created</span><i class="info circle icon" ng-show="lookup_table['created'] != null"></i><span ng-hide="lookup_table['created'] != null">created</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['stripe_account_id'] != null" class="has-lookup-table">stripe_account_id</span><i class="info circle icon" ng-show="lookup_table['stripe_account_id'] != null"></i><span ng-hide="lookup_table['stripe_account_id'] != null">stripe_account_id</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['starts'] != null" class="has-lookup-table">starts</span><i class="info circle icon" ng-show="lookup_table['starts'] != null"></i><span ng-hide="lookup_table['starts'] != null">starts</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['skip_path_update'] != null" class="has-lookup-table">skip_path_update</span><i class="info circle icon" ng-show="lookup_table['skip_path_update'] != null"></i><span ng-hide="lookup_table['skip_path_update'] != null">skip_path_update</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['modified'] != null" class="has-lookup-table">modified</span><i class="info circle icon" ng-show="lookup_table['modified'] != null"></i><span ng-hide="lookup_table['modified'] != null">modified</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['maximum_allowed_funds_raised'] != null" class="has-lookup-table">maximum_allowed_funds_raised</span><i class="info circle icon" ng-show="lookup_table['maximum_allowed_funds_raised'] != null"></i><span ng-hide="lookup_table['maximum_allowed_funds_raised'] != null">maximum_allowed_funds_raised</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['category_id'] != null" class="has-lookup-table">category_id</span><i class="info circle icon" ng-show="lookup_table['category_id'] != null"></i><span ng-hide="lookup_table['category_id'] != null">category_id</span></td>
+																	<td>string</td>
 																	<td class = "highlight-False">False</td>
 																</tr>
 															
@@ -13151,6 +13609,10 @@
 															
 														
 															
+														
+															
+														
+															
 																<tr>
 																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['name'] != null" class="has-lookup-table">name</span><i class="info circle icon" ng-show="lookup_table['name'] != null"></i><span ng-hide="lookup_table['name'] != null">name</span></td>
 																	<td>string</td>
@@ -13170,10 +13632,26 @@
 															
 														
 															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['description'] != null" class="has-lookup-table">description</span><i class="info circle icon" ng-show="lookup_table['description'] != null"></i><span ng-hide="lookup_table['description'] != null">description</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
 														
 															
 																<tr>
-																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['description'] != null" class="has-lookup-table">description</span><i class="info circle icon" ng-show="lookup_table['description'] != null"></i><span ng-hide="lookup_table['description'] != null">description</span></td>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['inline_token'] != null" class="has-lookup-table">inline_token</span><i class="info circle icon" ng-show="lookup_table['inline_token'] != null"></i><span ng-hide="lookup_table['inline_token'] != null">inline_token</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['email'] != null" class="has-lookup-table">email</span><i class="info circle icon" ng-show="lookup_table['email'] != null"></i><span ng-hide="lookup_table['email'] != null">email</span></td>
 																	<td>string</td>
 																	<td class = "highlight-False">False</td>
 																</tr>
@@ -13238,7 +13716,17 @@
 																</tr>
 															
 														
+															
 														
+														
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['inline_token'] != null" class="has-lookup-table">inline_token</span><i class="info circle icon" ng-show="lookup_table['inline_token'] != null"></i><span ng-hide="lookup_table['inline_token'] != null">inline_token</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
 															
 														
 													</tbody>
@@ -13296,6 +13784,8 @@
 														
 															
 														
+															
+														
 														
 															
 																<tr>
@@ -13309,6 +13799,14 @@
 																<tr>
 																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['business_organization_id'] != null" class="has-lookup-table">business_organization_id</span><i class="info circle icon" ng-show="lookup_table['business_organization_id'] != null"></i><span ng-hide="lookup_table['business_organization_id'] != null">business_organization_id</span></td>
 																	<td>integer</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['inline_token'] != null" class="has-lookup-table">inline_token</span><i class="info circle icon" ng-show="lookup_table['inline_token'] != null"></i><span ng-hide="lookup_table['inline_token'] != null">inline_token</span></td>
+																	<td>string</td>
 																	<td class = "highlight-False">False</td>
 																</tr>
 															
@@ -13365,8 +13863,6 @@
 													<tbody>
 														
 															
-														
-															
 																<tr>
 																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['business_organization_id'] != null" class="has-lookup-table">business_organization_id</span><i class="info circle icon" ng-show="lookup_table['business_organization_id'] != null"></i><span ng-hide="lookup_table['business_organization_id'] != null">business_organization_id</span></td>
 																	<td>integer</td>
@@ -13378,6 +13874,30 @@
 														
 															
 														
+															
+														
+															
+														
+															
+														
+														
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['description'] != null" class="has-lookup-table">description</span><i class="info circle icon" ng-show="lookup_table['description'] != null"></i><span ng-hide="lookup_table['description'] != null">description</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['inline_token'] != null" class="has-lookup-table">inline_token</span><i class="info circle icon" ng-show="lookup_table['inline_token'] != null"></i><span ng-hide="lookup_table['inline_token'] != null">inline_token</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
 														
 															
 																<tr>
@@ -13388,10 +13908,8 @@
 															
 														
 															
-														
-															
 																<tr>
-																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['name'] != null" class="has-lookup-table">name</span><i class="info circle icon" ng-show="lookup_table['name'] != null"></i><span ng-hide="lookup_table['name'] != null">name</span></td>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['email'] != null" class="has-lookup-table">email</span><i class="info circle icon" ng-show="lookup_table['email'] != null"></i><span ng-hide="lookup_table['email'] != null">email</span></td>
 																	<td>string</td>
 																	<td class = "highlight-False">False</td>
 																</tr>
@@ -13399,7 +13917,7 @@
 														
 															
 																<tr>
-																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['description'] != null" class="has-lookup-table">description</span><i class="info circle icon" ng-show="lookup_table['description'] != null"></i><span ng-hide="lookup_table['description'] != null">description</span></td>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['name'] != null" class="has-lookup-table">name</span><i class="info circle icon" ng-show="lookup_table['name'] != null"></i><span ng-hide="lookup_table['name'] != null">name</span></td>
 																	<td>string</td>
 																	<td class = "highlight-False">False</td>
 																</tr>
@@ -14252,6 +14770,92 @@
 									
 									
 									
+									<div class="item active api-PUT" id="account-profile-person_inline_disable-PUT" data-tab="account-profile-person_inline_disable-PUT" ng-click="addHash($event)"><a>PUT</a></div>
+									
+									
+									
+								</div>
+								
+								
+								
+								<div class="ui segment lv1 tab active" data-tab="account-profile-person_inline_disable-PUT">
+									
+									
+										<table class="ui small very basic table api-ref-info">
+											<tbody>
+												<tr class="item">
+													<td class="key"><span class="ui horizontal black label"> Name </span></td>
+													<td class="value segment-name">account/profile/person_inline_disable</td>
+												</tr>
+												<tr class="item">
+													<td class="key"><span class="ui horizontal black label"> Description </span></td>
+													<td class="value">disable token and person record based on inline token and person_id provided</td>
+												</tr>
+												<tr class="item">
+													<td class="key"><span class="ui horizontal black label"> Call Syntax </span></td>
+													<a><td class="value call-syntax">{{API_URL.url}}{{API_URL.loc}}account/person-inline-disable</td></a>
+												</tr>
+
+												
+											</tbody>
+										</table><!-- TABLE END -->
+										
+										<div class="item button-segment">
+											<div class="buttons">
+												<div class="ui small very basic button parameter-button left floated" ng-click="showRequest($event)">Show Parameters</div>
+												<div class="ui small basic button share-button left floated" ng-click="showShare($event)">Share</div>
+												<div class="ui small input left floated share-url" style="display:none">
+													<div class="field">
+														<input type="text">
+													</div>
+												</div>
+											</div>
+											<div class="request lv2">
+												<table class="ui table segment">
+													<thead>
+														<tr>
+															<th class="four wide center">Field Name</th>
+															<th class="two wide center">Type</th>
+															<th class="two wide center">Required</th>
+														</tr>
+													</thead>
+													<tbody>
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['person_id'] != null" class="has-lookup-table">person_id</span><i class="info circle icon" ng-show="lookup_table['person_id'] != null"></i><span ng-hide="lookup_table['person_id'] != null">person_id</span></td>
+																	<td>integer</td>
+																	<td class = "highlight-True">True</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['inline_token'] != null" class="has-lookup-table">inline_token</span><i class="info circle icon" ng-show="lookup_table['inline_token'] != null"></i><span ng-hide="lookup_table['inline_token'] != null">inline_token</span></td>
+																	<td>string</td>
+																	<td class = "highlight-True">True</td>
+																</tr>
+															
+														
+														
+															
+														
+															
+														
+													</tbody>
+												</table><!-- TABLE END -->
+											</div>
+										</div>
+										
+									</div> <!-- lv1 end -->
+									
+								</div>
+								
+							<div class="api-doc-info">
+								<div class="ui pointing secondary menu menu-tabs">
+									
+									
+									
 									<div class="item active api-POST" id="account-profile-phone_number-POST" data-tab="account-profile-phone_number-POST" ng-click="addHash($event)"><a>POST</a></div>
 									
 									
@@ -14798,6 +15402,8 @@
 															
 														
 															
+														
+															
 																<tr>
 																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['resource_content_type'] != null" class="has-lookup-table">resource_content_type</span><i class="info circle icon" ng-show="lookup_table['resource_content_type'] != null"></i><span ng-hide="lookup_table['resource_content_type'] != null">resource_content_type</span></td>
 																	<td>string</td>
@@ -14822,6 +15428,14 @@
 																</tr>
 															
 														
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['region_id'] != null" class="has-lookup-table">region_id</span><i class="info circle icon" ng-show="lookup_table['region_id'] != null"></i><span ng-hide="lookup_table['region_id'] != null">region_id</span></td>
+																	<td>integer</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
 															
 														
 															
@@ -15082,6 +15696,8 @@
 															
 														
 															
+														
+															
 																<tr>
 																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['resource_id'] != null" class="has-lookup-table">resource_id</span><i class="info circle icon" ng-show="lookup_table['resource_id'] != null"></i><span ng-hide="lookup_table['resource_id'] != null">resource_id</span></td>
 																	<td>string</td>
@@ -15116,6 +15732,14 @@
 																</tr>
 															
 														
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['region_id'] != null" class="has-lookup-table">region_id</span><i class="info circle icon" ng-show="lookup_table['region_id'] != null"></i><span ng-hide="lookup_table['region_id'] != null">region_id</span></td>
+																	<td>integer</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
 															
 														
 															
@@ -17623,11 +18247,15 @@
 															
 														
 															
+														
+															
 																<tr>
 																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['resource_content_type'] != null" class="has-lookup-table">resource_content_type</span><i class="info circle icon" ng-show="lookup_table['resource_content_type'] != null"></i><span ng-hide="lookup_table['resource_content_type'] != null">resource_content_type</span></td>
 																	<td>string</td>
 																	<td class = "highlight-True">True</td>
 																</tr>
+															
+														
 															
 														
 															
@@ -17641,6 +18269,22 @@
 														
 															
 														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['category_id'] != null" class="has-lookup-table">category_id</span><i class="info circle icon" ng-show="lookup_table['category_id'] != null"></i><span ng-hide="lookup_table['category_id'] != null">category_id</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['region_id'] != null" class="has-lookup-table">region_id</span><i class="info circle icon" ng-show="lookup_table['region_id'] != null"></i><span ng-hide="lookup_table['region_id'] != null">region_id</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
 															
 														
 															
@@ -17769,6 +18413,10 @@
 													<tbody>
 														
 															
+														
+															
+														
+															
 																<tr>
 																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['resource_type'] != null" class="has-lookup-table">resource_type</span><i class="info circle icon" ng-show="lookup_table['resource_type'] != null"></i><span ng-hide="lookup_table['resource_type'] != null">resource_type</span></td>
 																	<td>string</td>
@@ -17778,6 +18426,22 @@
 														
 															
 														
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['category_id'] != null" class="has-lookup-table">category_id</span><i class="info circle icon" ng-show="lookup_table['category_id'] != null"></i><span ng-hide="lookup_table['category_id'] != null">category_id</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['region_id'] != null" class="has-lookup-table">region_id</span><i class="info circle icon" ng-show="lookup_table['region_id'] != null"></i><span ng-hide="lookup_table['region_id'] != null">region_id</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
 														
 															
 														
@@ -17849,11 +18513,23 @@
 															
 														
 															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['resource_id'] != null" class="has-lookup-table">resource_id</span><i class="info circle icon" ng-show="lookup_table['resource_id'] != null"></i><span ng-hide="lookup_table['resource_id'] != null">resource_id</span></td>
+																	<td>string</td>
+																	<td class = "highlight-True">True</td>
+																</tr>
+															
+														
+															
 																<tr>
 																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['resource_content_type'] != null" class="has-lookup-table">resource_content_type</span><i class="info circle icon" ng-show="lookup_table['resource_content_type'] != null"></i><span ng-hide="lookup_table['resource_content_type'] != null">resource_content_type</span></td>
 																	<td>string</td>
 																	<td class = "highlight-True">True</td>
 																</tr>
+															
+														
 															
 														
 															
@@ -17864,19 +18540,27 @@
 																</tr>
 															
 														
+														
+															
+														
 															
 																<tr>
-																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['resource_id'] != null" class="has-lookup-table">resource_id</span><i class="info circle icon" ng-show="lookup_table['resource_id'] != null"></i><span ng-hide="lookup_table['resource_id'] != null">resource_id</span></td>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['region_id'] != null" class="has-lookup-table">region_id</span><i class="info circle icon" ng-show="lookup_table['region_id'] != null"></i><span ng-hide="lookup_table['region_id'] != null">region_id</span></td>
 																	<td>string</td>
-																	<td class = "highlight-True">True</td>
+																	<td class = "highlight-False">False</td>
 																</tr>
 															
 														
-														
 															
 														
 															
 														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['category_id'] != null" class="has-lookup-table">category_id</span><i class="info circle icon" ng-show="lookup_table['category_id'] != null"></i><span ng-hide="lookup_table['category_id'] != null">category_id</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
 															
 														
 															
@@ -19636,6 +20320,12 @@
 													<tbody>
 														
 															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['publishable_key'] != null" class="has-lookup-table">publishable_key</span><i class="info circle icon" ng-show="lookup_table['publishable_key'] != null"></i><span ng-hide="lookup_table['publishable_key'] != null">publishable_key</span></td>
+																	<td>string</td>
+																	<td class = "highlight-True">True</td>
+																</tr>
+															
 														
 															
 														
@@ -19647,12 +20337,6 @@
 																</tr>
 															
 														
-															
-																<tr>
-																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['client_id'] != null" class="has-lookup-table">client_id</span><i class="info circle icon" ng-show="lookup_table['client_id'] != null"></i><span ng-hide="lookup_table['client_id'] != null">client_id</span></td>
-																	<td>string</td>
-																	<td class = "highlight-True">True</td>
-																</tr>
 															
 														
 															
@@ -19673,12 +20357,6 @@
 														
 														
 															
-																<tr>
-																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['publishable_key'] != null" class="has-lookup-table">publishable_key</span><i class="info circle icon" ng-show="lookup_table['publishable_key'] != null"></i><span ng-hide="lookup_table['publishable_key'] != null">publishable_key</span></td>
-																	<td>string</td>
-																	<td class = "highlight-False">False</td>
-																</tr>
-															
 														
 															
 																<tr>
@@ -19690,6 +20368,12 @@
 														
 															
 														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['client_id'] != null" class="has-lookup-table">client_id</span><i class="info circle icon" ng-show="lookup_table['client_id'] != null"></i><span ng-hide="lookup_table['client_id'] != null">client_id</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
 															
 														
 															
@@ -19800,10 +20484,8 @@
 															
 														
 															
-														
-															
 																<tr>
-																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['client_id'] != null" class="has-lookup-table">client_id</span><i class="info circle icon" ng-show="lookup_table['client_id'] != null"></i><span ng-hide="lookup_table['client_id'] != null">client_id</span></td>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['publishable_key'] != null" class="has-lookup-table">publishable_key</span><i class="info circle icon" ng-show="lookup_table['publishable_key'] != null"></i><span ng-hide="lookup_table['publishable_key'] != null">publishable_key</span></td>
 																	<td>string</td>
 																	<td class = "highlight-True">True</td>
 																</tr>
@@ -19811,6 +20493,10 @@
 														
 															
 														
+															
+														
+														
+															
 														
 															
 														
@@ -19818,12 +20504,10 @@
 														
 															
 																<tr>
-																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['publishable_key'] != null" class="has-lookup-table">publishable_key</span><i class="info circle icon" ng-show="lookup_table['publishable_key'] != null"></i><span ng-hide="lookup_table['publishable_key'] != null">publishable_key</span></td>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['client_id'] != null" class="has-lookup-table">client_id</span><i class="info circle icon" ng-show="lookup_table['client_id'] != null"></i><span ng-hide="lookup_table['client_id'] != null">client_id</span></td>
 																	<td>string</td>
 																	<td class = "highlight-False">False</td>
 																</tr>
-															
-														
 															
 														
 															
@@ -19848,7 +20532,7 @@
 									
 									
 									
-									<div class="item active api-GET" id="account-profile-stripe-charge-amount-GET" data-tab="account-profile-stripe-charge-amount-GET" ng-click="addHash($event)"><a>GET</a></div>
+									<div class="item active api-GET" id="account-profile-stripe-charge_amount-GET" data-tab="account-profile-stripe-charge_amount-GET" ng-click="addHash($event)"><a>GET</a></div>
 									
 									
 									
@@ -19856,14 +20540,14 @@
 								
 								
 								
-								<div class="ui segment lv1 tab active" data-tab="account-profile-stripe-charge-amount-GET">
+								<div class="ui segment lv1 tab active" data-tab="account-profile-stripe-charge_amount-GET">
 									
 									
 										<table class="ui small very basic table api-ref-info">
 											<tbody>
 												<tr class="item">
 													<td class="key"><span class="ui horizontal black label"> Name </span></td>
-													<td class="value segment-name">account/profile/stripe/charge-amount</td>
+													<td class="value segment-name">account/profile/stripe/charge_amount</td>
 												</tr>
 												<tr class="item">
 													<td class="key"><span class="ui horizontal black label"> Description </span></td>
@@ -19871,7 +20555,7 @@
 												</tr>
 												<tr class="item">
 													<td class="key"><span class="ui horizontal black label"> Call Syntax </span></td>
-													<a><td class="value call-syntax">{{API_URL.url}}{{API_URL.loc}}account/stripe/charge-amount</td></a>
+													<a><td class="value call-syntax">{{API_URL.url}}{{API_URL.loc}}account/stripe/charge-amount/[&lt;Currency ID&gt;]</td></a>
 												</tr>
 
 												
@@ -20520,6 +21204,188 @@
 																	<td>string</td>
 																	<td class = "highlight-False">False</td>
 																</tr>
+															
+														
+													</tbody>
+												</table><!-- TABLE END -->
+											</div>
+										</div>
+										
+									</div> <!-- lv1 end -->
+									
+								</div>
+								
+							<div class="api-doc-info">
+								<div class="ui pointing secondary menu menu-tabs">
+									
+									
+									
+									<div class="item active api-POST" id="account-profile-stripe-payment_intent_direct-POST" data-tab="account-profile-stripe-payment_intent_direct-POST" ng-click="addHash($event)"><a>POST</a></div>
+									
+									
+									
+								</div>
+								
+								
+								
+								<div class="ui segment lv1 tab active" data-tab="account-profile-stripe-payment_intent_direct-POST">
+									
+									
+										<table class="ui small very basic table api-ref-info">
+											<tbody>
+												<tr class="item">
+													<td class="key"><span class="ui horizontal black label"> Name </span></td>
+													<td class="value segment-name">account/profile/stripe/payment_intent_direct</td>
+												</tr>
+												<tr class="item">
+													<td class="key"><span class="ui horizontal black label"> Description </span></td>
+													<td class="value">create SCA direct charge payment intent</td>
+												</tr>
+												<tr class="item">
+													<td class="key"><span class="ui horizontal black label"> Call Syntax </span></td>
+													<a><td class="value call-syntax">{{API_URL.url}}{{API_URL.loc}}account/stripe/payment-intent-direct</td></a>
+												</tr>
+
+												
+											</tbody>
+										</table><!-- TABLE END -->
+										
+										<div class="item button-segment">
+											<div class="buttons">
+												<div class="ui small very basic button parameter-button left floated" ng-click="showRequest($event)">Show Parameters</div>
+												<div class="ui small basic button share-button left floated" ng-click="showShare($event)">Share</div>
+												<div class="ui small input left floated share-url" style="display:none">
+													<div class="field">
+														<input type="text">
+													</div>
+												</div>
+											</div>
+											<div class="request lv2">
+												<table class="ui table segment">
+													<thead>
+														<tr>
+															<th class="four wide center">Field Name</th>
+															<th class="two wide center">Type</th>
+															<th class="two wide center">Required</th>
+														</tr>
+													</thead>
+													<tbody>
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['currency'] != null" class="has-lookup-table">currency</span><i class="info circle icon" ng-show="lookup_table['currency'] != null"></i><span ng-hide="lookup_table['currency'] != null">currency</span></td>
+																	<td>string</td>
+																	<td class = "highlight-True">True</td>
+																</tr>
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['amount'] != null" class="has-lookup-table">amount</span><i class="info circle icon" ng-show="lookup_table['amount'] != null"></i><span ng-hide="lookup_table['amount'] != null">amount</span></td>
+																	<td>string</td>
+																	<td class = "highlight-True">True</td>
+																</tr>
+															
+														
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['payment_method_id'] != null" class="has-lookup-table">payment_method_id</span><i class="info circle icon" ng-show="lookup_table['payment_method_id'] != null"></i><span ng-hide="lookup_table['payment_method_id'] != null">payment_method_id</span></td>
+																	<td>string</td>
+																	<td class = "highlight-True">True</td>
+																</tr>
+															
+														
+														
+															
+														
+															
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['description'] != null" class="has-lookup-table">description</span><i class="info circle icon" ng-show="lookup_table['description'] != null"></i><span ng-hide="lookup_table['description'] != null">description</span></td>
+																	<td>string</td>
+																	<td class = "highlight-False">False</td>
+																</tr>
+															
+														
+															
+														
+													</tbody>
+												</table><!-- TABLE END -->
+											</div>
+										</div>
+										
+									</div> <!-- lv1 end -->
+									
+								</div>
+								
+							<div class="api-doc-info">
+								<div class="ui pointing secondary menu menu-tabs">
+									
+									
+									
+									<div class="item active api-POST" id="account-profile-stripe-payment_intent_direct-confirm-POST" data-tab="account-profile-stripe-payment_intent_direct-confirm-POST" ng-click="addHash($event)"><a>POST</a></div>
+									
+									
+									
+								</div>
+								
+								
+								
+								<div class="ui segment lv1 tab active" data-tab="account-profile-stripe-payment_intent_direct-confirm-POST">
+									
+									
+										<table class="ui small very basic table api-ref-info">
+											<tbody>
+												<tr class="item">
+													<td class="key"><span class="ui horizontal black label"> Name </span></td>
+													<td class="value segment-name">account/profile/stripe/payment_intent_direct/confirm</td>
+												</tr>
+												<tr class="item">
+													<td class="key"><span class="ui horizontal black label"> Description </span></td>
+													<td class="value">confirm SCA direct charge payment intent</td>
+												</tr>
+												<tr class="item">
+													<td class="key"><span class="ui horizontal black label"> Call Syntax </span></td>
+													<a><td class="value call-syntax">{{API_URL.url}}{{API_URL.loc}}account/stripe/payment-intent-direct/confirm/&lt;Payment Intent ID&gt;</td></a>
+												</tr>
+
+												
+											</tbody>
+										</table><!-- TABLE END -->
+										
+										<div class="item button-segment">
+											<div class="buttons">
+												<div class="ui small very basic button parameter-button left floated" ng-click="showRequest($event)">Show Parameters</div>
+												<div class="ui small basic button share-button left floated" ng-click="showShare($event)">Share</div>
+												<div class="ui small input left floated share-url" style="display:none">
+													<div class="field">
+														<input type="text">
+													</div>
+												</div>
+											</div>
+											<div class="request lv2">
+												<table class="ui table segment">
+													<thead>
+														<tr>
+															<th class="four wide center">Field Name</th>
+															<th class="two wide center">Type</th>
+															<th class="two wide center">Required</th>
+														</tr>
+													</thead>
+													<tbody>
+														
+															
+																<tr>
+																	<td><span ng-click="showLookupTable($event)" ng-style="{color: 'blue'}" ng-show="lookup_table['payment_intent_id'] != null" class="has-lookup-table">payment_intent_id</span><i class="info circle icon" ng-show="lookup_table['payment_intent_id'] != null"></i><span ng-hide="lookup_table['payment_intent_id'] != null">payment_intent_id</span></td>
+																	<td>string</td>
+																	<td class = "highlight-True">True</td>
+																</tr>
+															
+														
+														
 															
 														
 													</tbody>

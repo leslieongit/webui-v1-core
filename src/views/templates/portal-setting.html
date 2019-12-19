@@ -15,6 +15,7 @@
 						<a class="item" data-tab="pages" ng-click="clickHash('pages')" translate="portal_setting_pages"></a>
 						<a class="item" data-tab="portal-settings" ng-click="clickHash('portal-settings')" translate="portal_setting_portal_setting"></a>
 						<a class="item" data-tab="web-settings" ng-click="clickHash('web-settings')" translate="portal_setting_webhook_setting"></a>
+						<a class="item" data-tab="subscription-settings" ng-click="clickHash('subscription-settings')" translate="portal_setting_subscription_settings_tab_label"></a>
 					</div>
 				</div>
 			</div>
@@ -56,6 +57,11 @@
 			<div class="ui tab site-setting-content" data-tab="web-settings">
 				<div ng-if="showapi">
 					<div class="menu-tab-content" ng-include src="'views/templates/partials/admin-dashboard/tab-api-settings.html'"></div>
+				</div>
+			</div>
+			<div class="ui tab site-setting-content" data-tab="subscription-settings">
+				<div ng-if="showSubscriptionSettings">
+					<div class="menu-tab-content" ng-include src="'views/templates/partials/admin-dashboard/tab-subscription-settings.html'"></div>
 				</div>
 			</div>
 

@@ -65,6 +65,7 @@ app.run(function($sce, $http, $window, $rootScope, $route, $location, $templateC
   $translatePartialLoader.addPart('transaction-management');
   $translatePartialLoader.addPart('message-center');
   $translatePartialLoader.addPart('portal-setting');
+  $translatePartialLoader.addPart('subscription-settings');
   $translatePartialLoader.addPart('tab-report');
   $translatePartialLoader.addPart('tab-user');
   $translatePartialLoader.addPart('tab-category');

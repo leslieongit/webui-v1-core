@@ -446,7 +446,7 @@
                     {{'campaign_page_faq' | translate }}
                     <span class="count-label ui label">{{campaign.faqs[0].faq_pairs.length || 0}}</span>
                   </a>
-                  <a class="item" data-tab="backers" ng-click="toggleHash('campaign_page_backers')" ng-show="(showBacker || ((showBacker || backer_length) && public_settings.site_theme_campaign_backer_option !='2')) && !isBackersOnSidebar"
+                  <a class="item" data-tab="backers" ng-class="{'hide-mobile': moveBackersBelowCreatorAccordionMobile}" ng-click="toggleHash('campaign_page_backers')" ng-show="(showBacker || ((showBacker || backer_length) && public_settings.site_theme_campaign_backer_option !='2')) && !isBackersOnSidebar"
                     id="mobile-backer">{{' campaign_page_backers' | translate}}
                     <span class="count-label ui label">{{backer_length}}</span>
                   </a>
@@ -674,8 +674,7 @@
                       <div class="ui warning message" ng-show="backer_length==0" translate>campaign_page_nobackers
                       </div>
 
-                      <div ng-repeat="backer in campaign.backers" class="campaign-backerbox" ng-class="{'no-profile-link' : isHideBackerProfileLink }"
-                        ng-click="visitProfile($index)">
+                      <div ng-repeat="backer in campaign.backers" class="campaign-backerbox" ng-class="{'no-profile-link' : backer.anonymous_contribution || backer.anonymous_contribution_partial}">
                         <div class="campaign-backer ui segment">
                           <div class="campaign-backer-top ui two column stackable grid">
                             <div class="left-col five wide column">
@@ -866,7 +865,7 @@
                         <div class="ui warning message" ng-if="!user.person_id" translate>
                           custom_comment_login_message
                         </div>
-                        <form class="ui form" id="comment-form" validate ng-model="comment_form" ng-if="user.person_id">
+                        <form class="ui form comment-form" validate ng-model="comment_form" ng-if="user.person_id">
                           <div class="ui divider"></div>
                           <h2 class="ui header" translate>custom_comment_form_header</h2>
                           <div class="field">

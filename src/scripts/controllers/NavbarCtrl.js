@@ -8,7 +8,6 @@ app.controller('NavbarCtrl', function ($location, $route, $scope, $rootScope, Re
   $scope.showLogoPlaceholder = false;
   $scope.$location = $location;
 
-
   PortalSettingsService.getSettingsObj().then(function (success) {
     $scope.public_setting = success.public_setting;
     // get site logo
@@ -106,7 +105,9 @@ app.controller('NavbarCtrl', function ($location, $route, $scope, $rootScope, Re
           }
         }
       }
-
+      $scope.navItem = function(){
+        $route.reload();
+      }
     });
 
     $scope.stickyMenu = success.public_setting.site_theme_sticky_menu;

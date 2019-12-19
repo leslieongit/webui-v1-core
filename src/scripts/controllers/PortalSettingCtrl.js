@@ -143,6 +143,8 @@ app.controller('PortalSettingCtrl', function($location, $browser, $compile, $roo
     $scope.showusers = true;
   } else if ($location.hash() == "web-settings") {
     $scope.showapi = true;
+  } else if ($location.hash() == "subscription-settings") {
+    $scope.showSubscriptionSettings = true;
   }
 
   // Upon when page loads, we set status for it so loader wouldn't show
@@ -181,6 +183,8 @@ app.controller('PortalSettingCtrl', function($location, $browser, $compile, $roo
       $scope.showpages = true;
     } else if (tabName == 'web-settings') {
       $scope.showapi = true;
+    } else if (tabName == 'subscription-settings') {
+      $scope.showSubscriptionSettings = true;
     }
 
     // Checks if this page has been visited before

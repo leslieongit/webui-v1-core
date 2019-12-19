@@ -14,11 +14,10 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
     address_id: null
   };
 
-
   $scope.organization_name = {};
 
   $scope.selectedContributionAnon = {};
-
+  $scope.totalAmountPlusTip = 0;
   $scope.user = UserService;
   $scope.RESOURCE_REGIONS = RESOURCE_REGIONS;
   $scope.campaign_loc = $rootScope.currentLoc;
@@ -55,7 +54,7 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
     phonetype: ''
   }
 
-  $scope.selectedReward = {};
+  $scope.selectedReward = null;
 
   $scope.contributionMessage = '';
   if ($rootScope.contributionMessage) {
@@ -136,6 +135,7 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
   $scope.tipInfo;
   $scope.requiresShipping = false;
   $scope.pledgeReplaceShippingFound = false;
+  
   $scope.pledgeReplacement = function() {
     if ($routeParams.r != null) {
       var plid_index, reward_id;
@@ -221,6 +221,8 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
     $scope.acceptExtraPledgeData = portal_settings.site_campaign_profile_data_on_pledge;
     $scope.tippingOptions = portal_settings.site_tipping;
     $scope.displayCampaignDisclaimer = success.public_setting.site_campaign_campaign_toggle_disclaimer_text;
+    $scope.forceAnonymousPledge = portal_settings.site_campaign_always_anonymous_contribution;
+
     if (typeof $scope.tippingOptions === 'undefined' || $scope.tippingOptions == null) {
       $scope.tippingOptions = { toggle: false };
     }
@@ -613,6 +615,7 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
   if ($scope.pledgeLevel) {
     Restangular.one('campaign', $scope.campaign_id).one('pledge-level', $scope.pledgeLevel).get().then(function(success) {
       $scope.selectedReward = success;
+
       $scope.rname = $scope.selectedReward.name;
     });
   }
@@ -1688,6 +1691,9 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
 
   function attachBusinessToAddressPhone(business_id, businessPromises, address, phoneInfo, businessData, promises, pledgeAttributes) {
 
+    if(!pledgeAttributes) {
+      pledgeAttributes = {}
+    }
     addAddressPhoneNumber(business_id, businessPromises, address, phoneInfo, true);
     //Resolve Address/Phone
     if (businessPromises && businessPromises.length) {
@@ -1726,7 +1732,7 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
 
 
     //If toggle is on, we need to assign a dummy city ID - 
-    if ($scope.site_campaign_alt_city_input_toggle) {
+    if ($scope.site_campaign_alt_city_input_toggle && !$scope.alt_shipping) {
       $scope.address.city_id = 258463;
     }
 
@@ -1966,7 +1972,6 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
         });
 
         //Pledge
-        console.log('addAddressPhoneNumber');
         generateTokenOrPledge(promises, pledgeAttributes, businessData);
       });
 
@@ -1994,6 +1999,10 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
           $scope.business_organization_id = value.business_organization_id;
         }
       });
+
+      if($scope.forceAnonymousPledge) {
+        $scope.anonymous_contribution = 1;
+      }
 
       // setup the object for POST request
       var pledgeInfo = {
@@ -2527,6 +2536,19 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
           }
         });
       }
+
+      setSubCountryAltShipping(address.subcountry_id);
+
+    }
+  }
+
+  function setSubCountryAltShipping(subcountry_id) {
+    if($scope.alt_shipping && $scope.site_campaign_alt_city_input_toggle) {
+      Restangular.one('locale').customGET('city', {"subcountry_id": subcountry_id}).then(function(success) {
+        if(success && success.length) {
+          $scope.address.city_id = success[0].city_id;
+        }
+      });
     }
   }
 
@@ -2782,25 +2804,33 @@ app.controller('PledgeCampaignCtrl', function($q, $location, $rootScope, $scope,
   }
 
   // total cost of shipping
-  $scope.total = function(shipping) {
+  $scope.total = function(shipping, tip) {
     if (shipping) {
       $scope.totalAmount = parseFloat($scope.pledgeAmount) + parseFloat(shipping);
     } else {
       $scope.totalAmount = $scope.pledgeAmount;
     }
+    // Calculate tip with current total amount & display this as total ONLY on the template to avoid backend issues
+    if (tip) {
+      $scope.totalAmountPlusTip = parseFloat($scope.totalAmount) + parseFloat(tip);
+      return $scope.totalAmountPlusTip;
+    }
+
     var total = parseFloat($scope.totalAmount);
-    // if($scope.tip.dollar_amount) {
-    //   total += parseFloat($scope.tip.dollar_amount);
-    // }
     return total;
   }
 
-  $scope.replacedTotal = function(amount, shipping) {
+  $scope.replacedTotal = function(amount, shipping, tip) {
     var total = 0;
     if (shipping) {
       amount = parseFloat(amount) + parseFloat(shipping);
     } else {
       amount = amount;
+    }
+    // Calculate tip with current total amount & display this as total ONLY on the template to avoid backend issues
+    if (tip) {
+      $scope.totalAmountPlusTip = parseFloat(amount) + parseFloat(tip);
+      return $scope.totalAmountPlusTip;
     }
     total = parseFloat(amount);
     return total;

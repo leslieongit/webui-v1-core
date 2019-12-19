@@ -8,7 +8,8 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
   $scope.clearMessage = function() {
     $rootScope.floatingMessage = [];
   };
-  var msg;
+
+  var reward_priority = -1;
 
   var countriesWithShippingStatus = [];
   $scope.froalaOptionsCampaigns = {};
@@ -223,7 +224,8 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
           shipping: [],
           pledge_level_id: val.pledge_level_id,
           attributes: tempAttributes,
-          expires: val.expires
+          expires: val.expires,
+          priority: val.priority
         };
         var cID = [];
         $scope.rewards_data.push(rewardsModel);
@@ -333,6 +335,8 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
     }
     // Get countries
     $scope.getCountries();
+
+    reward_priority = $scope.rewards_data.length;
   }
 
   function checkNative(addressData) {
@@ -671,6 +675,13 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
       if ($scope.campaign.maximum_allowed_funds_raised) {
         $scope.thresholdvalue.value = $scope.campaign.maximum_allowed_funds_raised;
         $('#maxthreshold').checkbox('check');
+      }
+
+      if($scope.public_settings.hasOwnProperty('site_campaign_max_threshold_hide') && $scope.public_settings.site_campaign_max_threshold_hide) {
+        $scope.campaign.maximum_allowed_funds_raised = 0;
+        $scope.thresholdvalue.value = 0;
+        $('#maxthreshold').checkbox('uncheck');
+        
       }
 
       if (success.uri_paths.length) {
@@ -1925,7 +1936,8 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
           pledge_level_id: val.pledge_level_id,
           id: val.pledge_level_id,
           attributes: val.attributes,
-          expires: val.expires
+          expires: val.expires,
+          priority: val.priority
         };
         $scope.campaign.rewards.push(rewardsModel);
         if (val.shipping.length > 0) {
@@ -2007,6 +2019,7 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
       if ($scope.campaign.entry_status_id !== 2) {
         delete $scope.campaign.entry_status_id;
       }
+
       if ($scope.currentPath == 'getstarted') {
         // Concate the selected protocal to the user entered link/path.
         // If the field is empty, delete the attribute from settings
@@ -2024,7 +2037,7 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
             delete $scope.campaign.settings.top_header_link;
           }
         }
-        if ($('#maxthreshold').checkbox('is checked')) {
+        if ($('#maxthreshold').checkbox('is checked') && !$scope.public_settings.site_campaign_max_threshold_hide) {
           if ($scope.thresholdvalue.value > $scope.campaign.funding_goal) {
             $scope.campaign.maximum_allowed_funds_raised = $scope.thresholdvalue.value;
           } else {
@@ -2304,6 +2317,7 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
         }
       });
     }
+    
     $scope.campaign.rewards.forEach(function(reward) {
       if ($("#description" + ($scope.campaign.rewards.indexOf(reward) + 1)).froalaEditor('codeView.isActive') && $("#description" + ($scope.campaign.rewards.indexOf(reward) + 1)).froalaEditor('codeView.get') != "") {
         reward.description = $("#description" + ($scope.campaign.rewards.indexOf(reward) + 1)).froalaEditor('codeView.get');
@@ -2322,6 +2336,7 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
           }
           reward.expires = reward.expires.substring(0, 10);
         }
+
         if (!reward.id) {
           reward.entry_id = campaign_id;
           request1 = Restangular.one('campaign', campaign_id).one('pledge-level').customPOST(reward);
@@ -2354,7 +2369,7 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
       }
     });
   }
-
+  
   // for each reward save multiple shipping options
   function saveShippingOption(reward, rewardID) {
     var shipping = $scope.campaign.rewards[$scope.campaign.rewards.indexOf(reward)].shipping;
@@ -2876,7 +2891,7 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
         description: ' ',
         shipping_option_id: '',
         shipping: [],
-        attributes: {}
+        attributes: {},
       };
     } else {
       var rewardsModel = {
@@ -2890,6 +2905,11 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
       };
     }
     if (arr) {
+
+      if(reward_priority == -1) {
+        reward_priority = 0;
+      }
+      rewardsModel.priority = reward_priority++;
       arr.push(angular.copy(rewardsModel));
     }
   }

@@ -233,7 +233,7 @@ app.controller('CampaignCtrl', function($timeout, $http, $element, $anchorScroll
   // Comment Form Validation
   var comment_error_msg = $translate.instant('custom_commment_form_error_msg');
   setTimeout(function() {
-    $('#comment-form')
+    $('.comment-form')
       .form({
         comment_message: {
           identifier: 'comment_message',
@@ -369,10 +369,11 @@ app.controller('CampaignCtrl', function($timeout, $http, $element, $anchorScroll
     // Reply
     else if (comment_action == "reply") {
       $scope.comment_form.message += "'@" + comment_id + "' \n";
+
       //scrolls to text area and focus
-      $location.hash('comment-form');
+      var commentMessageTextarea = document.querySelector('.ui.tab.active .custom_comment_message');
       $anchorScroll();
-      document.getElementById("custom_comment_message").focus();
+      commentMessageTextarea.focus();
     }
   }
 
@@ -981,6 +982,8 @@ app.controller('CampaignCtrl', function($timeout, $http, $element, $anchorScroll
           $('#campaign-seg').removeClass('active');
 
           var hash = $location.hash();
+
+          $scope.campaignTabHash = hash;
           switch (hash) {
             case translate.campaign_page_faq:
               var faqLength = 0;
@@ -1049,6 +1052,8 @@ app.controller('CampaignCtrl', function($timeout, $http, $element, $anchorScroll
         $location.search('').replace();
         $scope.makeLink(translatedKey);
         $scope.checklink();
+
+        $scope.campaignTabHash = translatedKey;
       }
 
       // Override original page title once we get campaign name back
@@ -1292,10 +1297,11 @@ app.controller('CampaignCtrl', function($timeout, $http, $element, $anchorScroll
   $scope.amountNextLevel = false;
 
   // showing the backer profile
-  $scope.visitProfile = function(index) {
-    if (!$scope.isHideBackerProfileLink) {
-      $scope.campaign.backers
-      $window.open('profile/' + $scope.campaign.backers[index].person_id);
+  $scope.visitProfile = function(backerData, event) {
+    if (!$scope.isHideBackerProfileLink && typeof $scope.isHideBackerProfileLink !== 'undefined' || !backerData.anonymous_contribution && !backerData.anonymous_contribution_partial) {
+      $window.open('profile/' + backerData.person_id);
+    } else {
+      event.preventDefault();
     }
   }
 
@@ -1819,6 +1825,5 @@ app.controller('CampaignCtrl', function($timeout, $http, $element, $anchorScroll
   //////////////////////////////////////////////////////////
 
   $scope.reloadFacebook = function() {
-    console.log('hasda');
   }
 });

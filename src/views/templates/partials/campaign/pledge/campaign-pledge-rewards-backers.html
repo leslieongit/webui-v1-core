@@ -211,7 +211,7 @@
         <div class="ui warning message" ng-if="!user.person_id" translate>
           custom_comment_login_message
         </div>
-        <form class="ui form" id="comment-form" validate ng-model="comment_form" ng-if="user.person_id">
+        <form class="ui form comment-form" validate ng-model="comment_form" ng-if="user.person_id">
           <div class="ui divider"></div>
           <h2 class="ui header" translate>custom_comment_form_header</h2>
           <div class="field">
@@ -220,7 +220,7 @@
           </div>
           <div class="field">
             <label translate>custom_comment_form_comment</label>
-            <textarea id="custom_comment_message" name="comment_message" ng-model="comment_form.message" required></textarea>
+            <textarea class="custom_comment_message" name="comment_message" ng-model="comment_form.message" required></textarea>
           </div>
           <div class="field">
             <div class="ui blue labeled submit button" ng-click="addComment(comment_form);" translate>
@@ -303,7 +303,7 @@
     </h3>
     <div class="backer-content active content">
       <div class="ui warning message" ng-show="backer_length==0" translate>campaign_page_nobackers </div>
-      <div ng-repeat="backer in campaign.backers" class="campaign-backerbox" ng-class="{'no-profile-link' : isHideBackerProfileLink }" ng-click="visitProfile($index)">
+      <div ng-repeat="backer in campaign.backers" class="campaign-backerbox" ng-class="{'no-profile-link' : isHideBackerProfileLink || backer.anonymous_contribution || backer.anonymous_contribution_partial}" ng-click="visitProfile(backer, $event)">
         <div class="campaign-backer ui segment">
           <div class="campaign-backer-top ui two column stackable grid">
             <div class="left-col" ng-class="{'ten wide column': !public_settings.site_campaign_page_simplify_backer, 'sixteen wide column': public_settings.site_campaign_page_simplify_backer}">
@@ -314,7 +314,7 @@
                   {{backer.first_name}} {{backer.last_name}}
                   <h3 ng-if="public_settings.site_campaign_page_simplify_backer" class="backed-amount simplify_backer ui header" ng-bind-html="backer.total_amount | formatCurrency:campaign.currencies[0].code_iso4217_alpha:public_setting.site_campaign_decimal_option"></h3>
                 </span>
-                <span ng-show="backer.anonymous_contribution" translate>campaign_page_anonymous_backer</span>
+                <span ng-if="backer.anonymous_contribution" translate>campaign_page_anonymous_backer</span>
               </div>
             </div>
             <div class="right-col six wide column" ng-if="!public_settings.site_campaign_page_simplify_backer">

@@ -205,13 +205,13 @@ app.controller('CompleteFundingCtrl', function($translate, CampaignSettingsServi
           prompt: translation.complete_funding_bank_errormessage
         }]
       },
-      bank_cpf: {
-        identifier: 'bank_cpf',
-        rules: [{
-          type: 'empty',
-          prompt: translation.complete_funding_bank_errormessage
-        }]
-      },
+      // bank_cpf: {
+      //   identifier: 'bank_cpf',
+      //   rules: [{
+      //     type: 'empty',
+      //     prompt: translation.complete_funding_bank_errormessage
+      //   }]
+      // },
       bank_code: {
         identifier: 'bank_code',
         rules: [{

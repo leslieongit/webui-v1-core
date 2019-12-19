@@ -1148,23 +1148,34 @@
           margin-bottom: 0;
           border-radius: 0;
           text-align: center;
+
           @media (min-width: 768px) {
             display: none;
           }
+
           @media (max-width: 767px) {
             display: block;
           }
 
           .item {
             background: rgba(0, 0, 0, .03);
+
+            &.hide-mobile {
+              @media (max-width: 767px) {
+                display: none !important;
+              }
+            }
+
             &.active {
               font-weight: normal !important;
             }
+
             >.count-label {
               float: none;
               color: black;
               margin-left: 8px !important;
             }
+
             &.active {
               -webkit-box-shadow: none;
               box-shadow: none;
@@ -1176,6 +1187,7 @@
 
       .ui.middle.attached.segment {
         border-top: 0;
+
         @media (max-width: 767px) {
           border: 0;
           margin: 0;
@@ -1387,12 +1399,12 @@
           cursor: pointer;
 
           &.no-profile-link {
-            cursor: default;
+            cursor: auto;
+            pointer-events: none;
 
-            .backer-user,
-            img,
-            span {
-              cursor: default;
+            * {
+              pointer-events: none;
+              cursor: auto;
             }
           }
         }
@@ -2256,6 +2268,8 @@
             }
 
             td {
+              padding-left: 15px;
+              padding-right: 15px;
               &:first-child {
                 text-align: left;
                 font-weight: bold;
@@ -2410,8 +2424,8 @@
                   padding: .67861em 1em;
                   background: #eee;
                   border-radius: 4px;
-                  border: 1px solid #ddd;
-                  font-size: 1.28571429em;
+                  border: 1px solid rgba(39, 41, 43, 0.15);
+                  font-size: 18px;
                   line-height: 1.2142em;
                 }
               }
@@ -2451,7 +2465,7 @@
           display: flex;
 
           >* {
-            font-size: 1.28571429em;
+            font-size: 18px;
           }
 
           &.with-decimal {
@@ -2470,6 +2484,9 @@
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
             margin-right: 0;
+            border: 1px solid rgba(39, 41, 43, 0.05);
+            border-right: 0;
+
           }
 
           .ui.label {
@@ -2479,12 +2496,15 @@
             -webkit-box-align: center;
             -ms-flex-align: center;
             align-items: center;
+            padding-top: 14px;
+            padding-bottom: 14px;
           }
 
           input {
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
             border-left: 0;
+            font-size: inherit !important;
           }
 
           .decimal-value {
@@ -2519,7 +2539,11 @@
     }
 
     #contribution-layout-1 {
-
+      .ui.dropdown {
+        display: -webkit-inline-box;
+        display: -ms-inline-flexbox;
+        display: inline-flex;
+      }
       input,
       .ui.dropdown,
       textarea,
@@ -2538,16 +2562,25 @@
           .contribution-input {
             .ui.label {
               position: absolute;
-              left: 0;
               top: 0;
               bottom: 0;
               background: transparent;
-              padding: 15px 0 15px 15px;
               font-size: 18px;
+              border: 0;
+              color: rgba(0,0,0,.8);
+              font-weight: normal;
+            }
+
+            .currency-symbol {
+              left: 0;
+            }
+
+            .decimal-value {
+              right: 0;
             }
 
             input {
-              padding-left: 26px;
+              padding-left: 55px;
               border: 1px solid rgba(39, 41, 43, 0.15);
             }
           }
@@ -2557,6 +2590,7 @@
           .amount {
             font-size: 18px;
             padding: 12px 0;
+            line-height: 1.2142em;
           }
         }
 
@@ -2733,6 +2767,11 @@
               }
             }
           }
+        }
+      }
+      .stripe-credit-card-form {
+        .stripe-elements-field {
+          margin-top: 15px;
         }
       }
     }

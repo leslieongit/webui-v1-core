@@ -477,7 +477,7 @@
         <div class="ui warning message" ng-if="!user.person_id" translate>
           custom_comment_login_message
         </div>
-        <form class="ui form" id="comment-form" validate ng-model="comment_form" ng-if="user.person_id">
+        <form class="ui form comment-form" validate ng-model="comment_form" ng-if="user.person_id">
           <div class="ui divider"></div>
           <h2 class="ui header" translate>custom_comment_form_header</h2>
           <div class="field">
@@ -486,7 +486,7 @@
           </div>
           <div class="field">
             <label translate>custom_comment_form_comment</label>
-            <textarea id="custom_comment_message" name="comment_message" ng-model="comment_form.message" required></textarea>
+            <textarea class="custom_comment_message" name="comment_message" ng-model="comment_form.message" required></textarea>
           </div>
           <div class="field">
             <div class="ui blue labeled submit button" ng-click="addComment(comment_form);" translate>
@@ -572,8 +572,8 @@
     </h3>
     <div class="backer-content active content">
       <div class="ui warning message" ng-show="backer_length==0" translate>campaign_page_nobackers </div>
-      <div ng-repeat="backer in campaign.backers" class="campaign-backerbox" ng-class="{'no-profile-link' : isHideBackerProfileLink }"
-        ng-click="visitProfile($index)">
+      <div ng-repeat="backer in campaign.backers" class="campaign-backerbox" ng-class="{'no-profile-link' : isHideBackerProfileLink || backer.anonymous_contribution || backer.anonymous_contribution_partial}"
+        ng-click="visitProfile(backer, $event)">
         <div class="campaign-backer ui segment">
           <div class="campaign-backer-top ui two column stackable grid">
             <div class="left-col ten wide column">
@@ -581,7 +581,7 @@
                 <img class="ui avatar image" ng-src="{{server + '/image/campaign_profile/'+backer.person_files[0].path_external}}" ng-if="backer.person_files">
                 <img src="images/placeholder-images/placeholder_profile_photo.png" class="ui avatar image pp_placeholder" ng-if="!backer.person_files">
                 <span>{{backer.first_name}} {{backer.last_name}}</span>
-                <span ng-show="backer.anonymous_contribution" translate>campaign_page_anonymous_backer</span>
+                <span ng-if="backer.anonymous_contribution" translate>campaign_page_anonymous_backer</span>
               </div>
             </div>
             <div class="right-col six wide column">
