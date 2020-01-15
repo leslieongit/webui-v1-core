@@ -68,7 +68,7 @@
                   <div class="limit" ng-if="pledge.item_limit != null">{{'campaign_pledge_campaign_reward_limited' | translate}} {{pledge.item_limit - pledge.total_pledges}} {{'campaign_pledge_campaign_reward_limited_leftoff' | translate}} {{pledge.item_limit}}
                   </div>
                   <div class="reward-etd" ng-if="pledge.estimated_delivery_time"> {{'campaign_pledge_campaign_reward_estimated_shiping' | translate}}
-                    <span class="f-delivery-date">{{pledge.estimated_delivery_time | formatDate:"MMMM YYYY"}} </span>
+                    <span class="f-delivery-date">{{pledge.estimated_delivery_time | formatDate:"MMM D, YYYY"}} </span>
                   </div>
                 </div>
                 <button class="choose-reward-btn ui large fluid button" ng-click="dateInPast(campaign.ends,campaign.seconds_remaining) || campaign.entry_status_id != 2 || pledge.total_pledges == pledge.item_limit || (thresholdallowed && campaign.funded_amount + pledge.amount > campaign.maximum_allowed_funds_raised) || campaign.campaign_started=='f' || submitPledge($event, pledge, $index)">
@@ -125,7 +125,7 @@
                   <div class="limit" ng-if="pledge.item_limit != null">{{'campaign_pledge_campaign_reward_limited' | translate}} {{pledge.item_limit - pledge.total_pledges}} {{'campaign_pledge_campaign_reward_limited_leftoff' | translate}} {{pledge.item_limit}}
                   </div>
                   <div class="reward-etd" ng-if="pledge.estimated_delivery_time"> {{'campaign_pledge_campaign_reward_estimated_shiping' | translate}}
-                    <span class="f-delivery-date">{{pledge.estimated_delivery_time | formatDate:"MMMM YYYY"}} </span>
+                    <span class="f-delivery-date">{{pledge.estimated_delivery_time | formatDate:"MMM D, YYYY"}} </span>
                   </div>
                 </div>
               </div>
@@ -167,8 +167,9 @@
                 <span class="author" ng-style="comments_font_color" ng-show="comment.comment_person[0].id == null" translate="custom_comment_anonymous_user"></span>
                 <div class="metadata">
                   <span class="date" ng-if="!public_settings.site_campaign_comments_display_verbose_date" ng-style="comments_font_color">{{'custom_comment_time'
-                    | translate}} {{comment.created| limitTo: 19}}</span>
-                  <span class="date" ng-if="public_settings.site_campaign_comments_display_verbose_date" ng-style="comments_font_color">{{comment.timeNumber}}{{comment.timePeriod
+                    | translate}} {{comment.created | formatDate:"MMM D, YYYY h:mm A"}}</span>
+                  <span class="date" ng-if="public_settings.site_campaign_comments_display_verbose_date" ng-style="comments_font_color">{{'custom_comment_commented_text'
+                    | translate}} {{comment.timeNumber}}{{comment.timePeriod
                     | translate}}</span>
 
                 </div>
@@ -326,7 +327,7 @@
           <div class="backed-campaigns" ng-if="backer.total_backed>1 && !isHideBackedCampaignsAmount">
             <i class="certificate icon"></i>{{'campaign_page_backed' | translate}} {{backer.total_backed}} {{'campaign_page_backed_campaigns' | translate}}</div>
           <div class="ui message" ng-repeat="pledge in backer.notes" ng-if="pledge.note">
-            <small>{{pledge.created | formatDate:"MMMM DD, YYYY"}}</small>
+            <small>{{pledge.created | formatDate:"MMM D, YYYY"}}</small>
             <p>{{pledge.note}}</p>
           </div>
         </div>

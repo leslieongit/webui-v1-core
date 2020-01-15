@@ -422,6 +422,61 @@ app.controller('CampaignPreviewCtrl', function($timeout, $interval, $location, $
           //("retrieving all campaign comments");
           RestFullResponse.one('campaign/' + $scope.campaign_id).customGET("comment", $scope.sortOrFiltersComments).then(function(success) {
             $scope.comments = success.data;
+
+            // calculate comment creation time ago
+            $scope.comments.forEach(function(comment, index) {
+              var secondsElapsed = (Date.now() - Date.parse(comment.created)) / 1000;
+              var timePeriod = "";
+              var timeNumber = 0;
+
+              if (secondsElapsed < 60) {
+                //less than a minute ago
+                timeNumber = "";
+                timePeriod = "custom_comment_time_less_minute";
+              } else if (secondsElapsed < 3600) {
+                // less than an hour ago
+                timeNumber = parseInt((secondsElapsed / 60));
+                timePeriod = (timeNumber == 1) ? "custom_comment_time_a_minute" : "custom_comment_time_minute";
+
+                $scope.comments[index].timeAgo = timePeriod;
+              } else if (secondsElapsed < 86400) {
+                // less than a day ago
+                timeNumber = parseInt((secondsElapsed / 3600));
+                timePeriod = (timeNumber == 1) ? "custom_comment_time_a_hour" : "custom_comment_time_hour";
+
+                $scope.comments[index].timeAgo = timePeriod;
+              } else if (secondsElapsed < 604800) {
+                // less than a week ago
+                timeNumber = parseInt((secondsElapsed / 86400));
+                timePeriod = (timeNumber == 1) ? "custom_comment_time_a_day" : "custom_comment_time_day";
+
+                $scope.comments[index].timeAgo = timePeriod;
+              } else if (secondsElapsed < 2592000) {
+                // less than a year ago
+                timeNumber = parseInt((secondsElapsed / 604800));
+                timePeriod = (timeNumber == 1) ? "custom_comment_time_a_week" : "custom_comment_time_week";
+
+                $scope.comments[index].timeAgo = timePeriod;
+              } else if (secondsElapsed < 31557600) {
+                // less than a year ago
+                timeNumber = parseInt((secondsElapsed / 2592000));
+                timePeriod = (timeNumber == 1) ? "custom_comment_time_a_month" : "custom_comment_time_month";
+
+                $scope.comments[index].timeAgo = timePeriod;
+              } else {
+                // more than a year ago
+                timeNumber = parseInt((secondsElapsed / 31557600));
+                timePeriod = (timeNumber == 1) ? "custom_comment_time_a_year" : "custom_comment_time_year";
+
+                $scope.comments[index].timeAgo = timePeriod;
+              }
+
+              $scope.comments[index].timeNumber = (timeNumber == 1) ? "" : timeNumber;
+              $scope.comments[index].timePeriod = timePeriod;
+
+
+            });
+
             var headers = success.headers();
             $scope.sortOrFiltersComments.pagination.currentpage = headers['x-pager-current-page'];
             $scope.sortOrFiltersComments.pagination.numpages = headers['x-pager-last-page'];

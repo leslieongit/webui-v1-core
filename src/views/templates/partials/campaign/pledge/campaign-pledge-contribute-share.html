@@ -108,8 +108,7 @@
               <div class="campaign-start-date">
                 <span ng-show="campaign.campaign_started=='t'">{{'campaign_pledge_campaign_start_date' | translate}}</span>
                 <span ng-show="campaign.campaign_started=='f'">{{'campaign_pledge_campaign_start_date1' | translate}}</span>
-                <span ng-hide="public_settings.site_theme_campaign_display_iso_date">{{campaign.starts_date_time | formatDate:"MMM
-                  DD YYYY"}} {{campaign.starts_date_time | formatDate:"h:mm A"}} {{campaign.timezoneText}} </span>
+                <span ng-hide="public_settings.site_theme_campaign_display_iso_date">{{campaign.starts_date_time | formatDate:"MMM D, YYYY"}} {{campaign.starts_date_time | formatDate:"h:mm A"}} {{campaign.timezoneText}} </span>
                 <span ng-show="public_settings.site_theme_campaign_display_iso_date" class="alt-data-layout">{{campaign.starts_date_time
                   | formatDate:"YYYY/MM/DD"}} {{campaign.starts_date_time | formatDate:"H:mm"}} {{campaign.timezoneText}}
                 </span>
@@ -117,7 +116,7 @@
               <div class="campaign-end-date">
                 <div ng-hide="public_settings.site_theme_campaign_display_iso_date">
                   <span ng-hide="campaign.ends==null">{{'campaign_pledge_campaign_end_date' | translate}} {{campaign.ends |
-                    formatDate:"MMM DD YYYY"}} {{campaign.ends | formatDate:"h:mm A"}} {{campaign.timezoneText}} </span>
+                    formatDate:"MMM D, YYYY"}} {{campaign.ends | formatDate:"h:mm A"}} {{campaign.timezoneText}} </span>
                 </div>
                 <div ng-show="public_settings.site_theme_campaign_display_iso_date">
                   <span class="alt-data-layout" ng-hide="campaign.ends==null">{{'campaign_pledge_campaign_end_date' | translate}}
@@ -127,7 +126,7 @@
             </div>
             <div class="campaign-start-date" ng-show="!public_settings.site_theme_campaign_display_iso_date && campaign.ends">
               <span ng-show="!public_settings.site_theme_campaign_show_start_date">{{'campaign_pledge_campaign_end_date_show'
-                | translate}} {{campaign.ends | formatDate:"MMM DD YYYY"}} {{campaign.timezoneText}}.
+                | translate}} {{campaign.ends | formatDate:"MMM D, YYYY"}} {{campaign.timezoneText}}.
               </span>
             </div>
             <div class="campaign-end-date" ng-show="public_settings.site_theme_campaign_display_iso_date && campaign.ends">

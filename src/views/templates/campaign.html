@@ -173,7 +173,7 @@
                             <span ng-show="campaign.campaign_started=='t'">{{'campaign_pledge_campaign_start_date' | translate}}</span>
                             <span ng-show="campaign.campaign_started=='f'">{{'campaign_pledge_campaign_start_date1' | translate}}</span>
                             <span ng-hide="public_settings.site_theme_campaign_display_iso_date">{{campaign.starts_date_time
-                              | formatDate:"MMM DD YYYY"}} {{campaign.starts_date_time | formatDate:"h:mm A"}} {{campaign.timezoneText}}
+                              | formatDate:"MMM D, YYYY"}} {{campaign.starts_date_time | formatDate:"h:mm A"}} {{campaign.timezoneText}}
                             </span>
                             <span ng-show="public_settings.site_theme_campaign_display_iso_date" class="alt-data-layout">{{campaign.starts_date_time
                               | formatDate:"YYYY/MM/DD"}} {{campaign.starts_date_time | formatDate:"H:mm"}} {{campaign.timezoneText}}
@@ -182,7 +182,7 @@
                           <div class="campaign-end-date">
                             <div ng-hide="public_settings.site_theme_campaign_display_iso_date">
                               <span ng-hide="campaign.ends==null">{{'campaign_pledge_campaign_end_date' | translate}} {{campaign.ends
-                                | formatDate:"MMM DD YYYY"}} {{campaign.ends | formatDate:"h:mm A"}} {{campaign.timezoneText}}
+                                | formatDate:"MMM D, YYYY"}} {{campaign.ends | formatDate:"h:mm A"}} {{campaign.timezoneText}}
                               </span>
                             </div>
                             <div ng-show="public_settings.site_theme_campaign_display_iso_date">
@@ -195,7 +195,7 @@
                         </div>
                         <div class="campaign-start-date" ng-show="!public_settings.site_theme_campaign_display_iso_date && campaign.ends">
                           <span ng-show="!public_settings.site_theme_campaign_show_start_date">{{'campaign_pledge_campaign_end_date_show'
-                            | translate}} {{campaign.ends | formatDate:"MMM DD YYYY"}} {{campaign.timezoneText}}.
+                            | translate}} {{campaign.ends | formatDate:"MMM D, YYYY"}} {{campaign.timezoneText}}.
                           </span>
                         </div>
                         <div class="campaign-end-date" ng-show="public_settings.site_theme_campaign_display_iso_date && campaign.ends">
@@ -480,7 +480,7 @@
                               <i class="users basic icon"></i>{{'campaign_pledge_campaign_nobacker' | translate}}</div>
                             <div class="limit" ng-if="pledge.item_limit != null">{{'campaign_pledge_campaign_reward_limited' | translate}} {{pledge.item_limit - pledge.total_pledges}} {{'campaign_pledge_campaign_reward_limited_leftoff' | translate}} {{pledge.item_limit}}</div>
                             <div class="reward-etd" ng-if="pledge.estimated_delivery_time"> {{'campaign_pledge_campaign_reward_estimated_shiping' | translate}}
-                              <span class="f-delivery-date">{{pledge.estimated_delivery_time | formatDate:"MMMM YYYY"}} </span>
+                              <span class="f-delivery-date">{{pledge.estimated_delivery_time | formatDate:"MMM D, YYYY"}} </span>
                             </div>
                           </div>
                           <button class="choose-reward-btn ui large fluid button" ng-click="dateInPast(campaign.ends,campaign.seconds_remaining) || campaign.entry_status_id != 2 || pledge.total_pledges == pledge.item_limit || (thresholdallowed && campaign.funded_amount + pledge.amount > campaign.maximum_allowed_funds_raised) || campaign.campaign_started=='f' || submitPledge($event, pledge, $index)">
@@ -529,7 +529,7 @@
                               <i class="users basic icon"></i>{{'campaign_pledge_campaign_nobacker' | translate}}</div>
                             <div class="limit" ng-if="pledge.item_limit != null">{{'campaign_pledge_campaign_reward_limited' | translate}} {{pledge.item_limit - pledge.total_pledges}} {{'campaign_pledge_campaign_reward_limited_leftoff' | translate}} {{pledge.item_limit}}</div>
                             <div class="reward-etd" ng-if="pledge.estimated_delivery_time"> {{'campaign_pledge_campaign_reward_estimated_shiping' | translate}}
-                              <span class="f-delivery-date">{{pledge.estimated_delivery_time | formatDate:"MMMM YYYY"}} </span>
+                              <span class="f-delivery-date">{{pledge.estimated_delivery_time | formatDate:"MMM D, YYYY"}} </span>
                             </div>
                           </div>
                         </div>
@@ -635,7 +635,7 @@
                       <div class="backed-campaigns" ng-if="backer.total_backed>1 && !isHideBackedCampaignsAmount">
                         <i class="certificate icon"></i>{{'campaign_page_backed' | translate}} {{backer.total_backed}} {{'campaign_page_backed_campaigns' | translate}}</div>
                       <div class="ui message" ng-repeat="pledge in backer.notes" ng-if="pledge.note">
-                        <small>{{pledge.created | formatDate:"MMM DD YYYY"}}</small>
+                        <small>{{pledge.created | formatDate:"MMM D, YYYY"}}</small>
                         <p>{{pledge.note}}</p>
                       </div>
                     </div>
@@ -659,7 +659,7 @@
                     <div class="stream-full-content ui segment">
                       <div class="stream-header">
                         <h4 class="ui header left floated">{{'campaign_page_stream_text' | translate}} #{{stream.sindex}}</h4>
-                        <h4 class="ui header right floated">{{toDate(stream.modified)}}</h4>
+                        <h4 class="ui header right floated">{{toDate(stream.modified) | formatDate:"MMM D, YYYY h:mm A"}}</h4>
                       </div>
                       <h3 class="stream-title ui header">{{stream.title}}</h3>
                       <div html-render html="stream.message" id="streamfull" class="fr-view"></div>
@@ -672,7 +672,7 @@
                         <div class="stream-header">
                           <h4 class="ui header left floated">{{'campaign_page_stream_text' | translate}} #{{campaign.streams.length - $index}}
                           </h4>
-                          <h4 class="ui header right floated">{{toDate(stream.modified)}}</h4>
+                          <h4 class="ui header right floated">{{toDate(stream.modified) | formatDate:"MMM D, YYYY h:mm A"}}</h4>
                         </div>
                         <div class="stream-content">
                           <h3 class="stream-title ui header">
@@ -753,8 +753,9 @@
                             <span class="author" ng-style="comments_font_color" ng-show="comment.comment_person[0].id == null" translate="custom_comment_anonymous_user"></span>
                             <div class="metadata">
                               <span class="date" ng-if="!public_settings.site_campaign_comments_display_verbose_date" ng-style="comments_font_color">{{'custom_comment_time'
-                                | translate}} {{comment.created| limitTo: 19}}</span>
-                              <span class="date" ng-if="public_settings.site_campaign_comments_display_verbose_date" ng-style="comments_font_color">{{comment.timeNumber}}{{comment.timePeriod
+                                | translate}} {{comment.created | formatDate:"MMM D, YYYY h:mm A"}}</span>
+                              <span class="date" ng-if="public_settings.site_campaign_comments_display_verbose_date" ng-style="comments_font_color">{{'custom_comment_commented_text'
+                                | translate}} {{comment.timeNumber}}{{comment.timePeriod
                                 | translate}}</span>
                             </div>
                             <div class="text subject" ng-style="comments_font_color" ng-if="comment.title">
@@ -1028,7 +1029,7 @@
                                 <i class="users basic icon"></i>{{'campaign_pledge_campaign_nobacker' | translate}}</div>
                               <div class="limit" ng-if="pledge.item_limit != null">{{'campaign_pledge_campaign_reward_limited' | translate}} {{pledge.item_limit - pledge.total_pledges}} {{'campaign_pledge_campaign_reward_limited_leftoff' | translate}} {{pledge.item_limit}}</div>
                               <div class="reward-etd" ng-if="pledge.estimated_delivery_time"> {{'campaign_pledge_campaign_reward_estimated_shiping' | translate}}
-                                <span class="f-delivery-date">{{pledge.estimated_delivery_time | formatDate:"MMMM YYYY"}}
+                                <span class="f-delivery-date">{{pledge.estimated_delivery_time | formatDate:"MMM D, YYYY"}}
                                 </span>
                               </div>
                             </div>

@@ -138,7 +138,7 @@
             <!--<span class="date">{{translate("campaign_comment_on_text")}}
                 {{setDateObject(comment.created) | date:'medium'}}</span>-->
             <span class="date">{{translate("campaign_comment_on_text")}}
-                {{getDateForDisplay(comment.created) | amDateFormat:'lll'}}</span>
+                {{comment.created | amDateFormat:'lll'}}</span>
           </div>
           <div class="comment-title" *ngIf="!comment.isEditing" CommentsFontColor>
             {{comment.title}}

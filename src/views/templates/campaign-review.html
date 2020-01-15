@@ -741,7 +741,7 @@
                     <div class="stream-full-content ui segment">
                       <div class="stream-header">
                         <h4 class="ui header left floated">{{'campaign_page_stream_text' | translate}} #{{stream.sindex}}</h4>
-                        <h4 class="ui header right floated">{{toDate(stream.modified)}}</h4>
+                        <h4 class="ui header right floated">{{toDate(stream.modified) | formatDate:"MMM D, YYYY h:mm A"}}</h4>
                       </div>
                       <h3 class="stream-title ui header">{{stream.title}}</h3>
                       <div html-render html="stream.message" id="streamfull" class="fr-view"></div>
@@ -755,7 +755,7 @@
                           <h4 class="ui header left floated">{{'campaign_page_stream_text' | translate}} #{{campaign.streams.length
                             - $index}}
                           </h4>
-                          <h4 class="ui header right floated">{{toDate(stream.modified)}}</h4>
+                          <h4 class="ui header right floated">{{toDate(stream.modified) | formatDate:"MMM D, YYYY h:mm A"}}</h4>
                         </div>
                         <div class="stream-content">
                           <h3 class="stream-title ui header">
@@ -842,9 +842,10 @@
                             <div class="metadata">
                               <span class="date" ng-if="!public_settings.site_campaign_comments_display_verbose_date"
                                 ng-style="comments_font_color">{{'custom_comment_time'
-                                | translate}} {{comment.created| limitTo: 19}}</span>
+                                | translate}} {{comment.created | formatDate:"MMM D, YYYY h:mm A"}}</span>
                               <span class="date" ng-if="public_settings.site_campaign_comments_display_verbose_date"
-                                ng-style="comments_font_color">{{comment.timeNumber}}{{comment.timePeriod
+                                ng-style="comments_font_color">{{'custom_comment_commented_text'
+                                | translate}} {{comment.timeNumber}}{{comment.timePeriod
                                 | translate}}</span>
                             </div>
                             <div class="text subject" ng-style="comments_font_color" ng-if="comment.title">

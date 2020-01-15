@@ -2464,6 +2464,34 @@ app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location
     }, 1000);
   }
 
+  $scope.validateEmail = function(email){ 
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (!re.test(email.toLowerCase())){
+      return false;
+    }
+    return true;
+  }
+  $scope.validateMailSendFrom = function() {
+    var translation = $translate.instant(['tab_portalsetting_Mail_SendFrom_invalid']);
+    msg = {
+      'header': translation.tab_portalsetting_Mail_SendFrom_invalid
+    }
+    $rootScope.floatingMessage = msg;
+    $('html, body').animate({
+      scrollTop: $("#mail-sendfrom").offset().top
+    }, 1000);
+  }
+  $scope.validateMailAdmin = function() {
+    var translation = $translate.instant(['tab_portalsetting_Mail_Admin_invalid']);
+    msg = {
+      'header': translation.tab_portalsetting_Mail_Admin_invalid
+    }
+    $rootScope.floatingMessage = msg;
+    $('html, body').animate({
+      scrollTop: $("#mail-admin").offset().top
+    }, 1000);
+  }
+
   $scope.validateTippingOptions = function() {
     var translation = $translate.instant(['tab_portalsetting_tipping_error']);
     $('.campaign-tipping-form.ui.form').form({
@@ -2502,6 +2530,21 @@ app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location
       $scope.validateTippingOptions();
       return;
     }
+
+    if($scope.private_settings.site_email_address_from){
+      if(!$scope.validateEmail($scope.private_settings.site_email_address_from)){
+        $scope.validateMailSendFrom();
+        return;
+      }
+    }
+
+    if($scope.private_settings.site_email_address_admin){
+      if(!$scope.validateEmail($scope.private_settings.site_email_address_admin)){
+        $scope.validateMailAdmin();
+        return;
+      }
+    }
+
     //need placeholder to save
     if (!$scope.public_settings.site_analytics_code) {
       $scope.public_settings.site_analytics_code = "<script></script>";

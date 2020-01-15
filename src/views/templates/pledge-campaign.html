@@ -131,7 +131,7 @@
                       <div class="reward-description fr-view" ng-hide="reward_html_editor" html-render html="selectedReward.description"></div>
                       <!-- <div ng-show="reward_html_editor" ng-bind-html="selectedReward.description"></div> -->
                       <div ng-show="reward_html_editor" html-render html="selectedReward.description"></div>
-                      <div class="reward-etd" ng-if="selectedReward.estimated_delivery_time">{{'pledge_campaign_estimate_dlivery' | translate}} {{selectedReward.estimated_delivery_time | formatDate:"MMMM DD, YYYY" }}</div>
+                      <div class="reward-etd" ng-if="selectedReward.estimated_delivery_time">{{'pledge_campaign_estimate_dlivery' | translate}} {{selectedReward.estimated_delivery_time | formatDate:"MMM D, YYYY" }}</div>
                     </div>
 
                     <div ng-if="!selectedReward">
@@ -243,7 +243,7 @@
                     <div class="reward-description fr-view" ng-hide="reward_html_editor" html-render html="selectedReward.description"></div>
                     <!-- <div ng-show="reward_html_editor" ng-bind-html="selectedReward.description"></div> -->
                     <div ng-show="reward_html_editor" html-render html="selectedReward.description"></div>
-                    <div class="reward-etd" ng-if="selectedReward.estimated_delivery_time">{{'pledge_campaign_estimate_dlivery' | translate}} {{selectedReward.estimated_delivery_time | formatDate:"MMMM DD, YYYY" }}</div>
+                    <div class="reward-etd" ng-if="selectedReward.estimated_delivery_time">{{'pledge_campaign_estimate_dlivery' | translate}} {{selectedReward.estimated_delivery_time | formatDate:"MMM D, YYYY" }}</div>
                   </div>
 
                   <div ng-if="!selectedReward && !pledgeLevel">
@@ -1746,7 +1746,7 @@
 
                 <div class="ui segment reward-wrap" ng-if="campaign.pledges && !pledgeReplace">
                   <div ng-if="selectedReward">
-                    <div class="reward-etd" ng-if="selectedReward.estimated_delivery_time">{{'pledge_campaign_estimate_dlivery' | translate}} {{selectedReward.estimated_delivery_time | formatDate:"MMMM DD, YYYY" }}</div>
+                    <div class="reward-etd" ng-if="selectedReward.estimated_delivery_time">{{'pledge_campaign_estimate_dlivery' | translate}} {{selectedReward.estimated_delivery_time | formatDate:"MMM D, YYYY" }}</div>
                     <h3 class="reward-title ui header">{{selectedReward.name}}</h3>
                     <div class="reward-description fr-view" ng-hide="reward_html_editor" html-render html="selectedReward.description"></div>
                     <!-- <div ng-show="reward_html_editor" ng-bind-html="selectedReward.description"></div> -->
@@ -1799,7 +1799,7 @@
                       <div class="reward-description fr-view" ng-hide="reward_html_editor" html-render html="selectedReward.description"></div>
                       <!-- <div ng-show="reward_html_editor" ng-bind-html="selectedReward.description"></div> -->
                       <div ng-show="reward_html_editor" html-render html="selectedReward.description"></div>
-                      <div class="reward-etd" ng-if="selectedReward.estimated_delivery_time">{{'pledge_campaign_estimate_dlivery' | translate}} {{selectedReward.estimated_delivery_time | formatDate:"MMMM DD, YYYY" }}</div>
+                      <div class="reward-etd" ng-if="selectedReward.estimated_delivery_time">{{'pledge_campaign_estimate_dlivery' | translate}} {{selectedReward.estimated_delivery_time | formatDate:"MMM D, YYYY" }}</div>
                     </div>
 
                     <div ng-if="!selectedReward">

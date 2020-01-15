@@ -113,7 +113,7 @@
                         </div>
                       </div>
                       <div class="reward-description fr-view" html-render html="campaign.pledges[pledgeindex].description"></div>
-                      <div class="reward-etd" ng-if="campaign.pledges[pledgeindex].estimated_delivery_time">{{'guest_contribution_estimate_delivery' | translate}} {{campaign.pledges[pledgeindex].estimated_delivery_time | formatDate:"MMMM DD, YYYY" }}</div>
+                      <div class="reward-etd" ng-if="campaign.pledges[pledgeindex].estimated_delivery_time">{{'guest_contribution_estimate_delivery' | translate}} {{campaign.pledges[pledgeindex].estimated_delivery_time | formatDate:"MMM D, YYYY" }}</div>
                     </div>
                     <div ng-if="!pledgeLevel">
                       <div translate> guest_contribution_noreward_message</div>

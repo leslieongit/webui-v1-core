@@ -911,14 +911,18 @@ export class AppComponent implements OnInit {
     };
     let d = new Date();
     let dateNow = d.getTime();
-    let startTime = this.setDateObject(this.mCampaign.starts).getTime();
+    let startDate = new Date(this.mCampaign.starts);
+    let startTime = startDate.getTime();
     let refTime;
-    if (this.mCampaign.ends) {
-      refTime = dateNow < this.setDateObject(this.mCampaign.ends).getTime() ? dateNow : this.setDateObject(this.mCampaign.ends).getTime();
+    if(this.mCampaign.ends){
+      let endDate = new Date(this.mCampaign.ends);
+      let endTime = endDate.getTime();
+      refTime = (dateNow < endTime) ? dateNow : endTime;
     }
-    else {
+    else{
       refTime = dateNow;
     }
+
     let elapsedSecond = (refTime - startTime) / 1000;
     let elapsedMinute = elapsedSecond / 60;
     let elapsedHour = elapsedMinute / 60;

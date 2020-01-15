@@ -164,7 +164,7 @@
                           <span *ngIf="!pledge.pledge_levels" ProfileFontColor>Direct Contribution</span>
                         </td>
                         <td ProfileFontColor>
-                          {{getDateForDisplay(pledge.created) | amDateFormat:'ll'}}
+                          {{pledge.created | amDateFormat:'ll'}}
                         </td>
                         <td>
                           <span *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2" ProfileFontColor>{{pledge.amount | currency:campaign.currencies[0].code_iso4217_alpha:true}}</span>

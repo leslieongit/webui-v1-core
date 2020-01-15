@@ -51,7 +51,7 @@
 					<span ng-show="campaign.ends!=null" ng-if="!campaign.settings.days_to_go_hide" class="c-value" ng-class="{'time-closed' : dateInPast(campaign.ends,campaign.seconds_remaining)}">{{days_rem }} {{day_text | translate}}</span>
 				</div>
 				<div class="item f-duration">
-					<div ng-if="!campaign.settings.days_to_go_hide || !dateInPast(campaign.ends)"> {{'campaign_pledge_campaign_started_on'|translate}} {{campaign.created | formatDate:"MMM DD YYYY"}} {{'campaign_pledge_campaign_close_on'|translate}} {{campaign.ends | formatDate:"MMMM DD YYYY"}}. </div>
+					<div ng-if="!campaign.settings.days_to_go_hide || !dateInPast(campaign.ends)"> {{'campaign_pledge_campaign_started_on'|translate}} {{campaign.created | formatDate:"MMM D, YYYY"}} {{'campaign_pledge_campaign_close_on'|translate}} {{campaign.ends | formatDate:"MMM D, YYYY"}}. </div>
 					<div class="closed-msg" ng-if="!campaign.settings.days_to_go_hide || dateInPast(campaign.ends)"> {{'campaign_pledge_campaign_end_message' | translate}} </div>
 				</div>
 			</div> <!-- FUNDING RUN TIME END -->
@@ -104,7 +104,7 @@
 								<div class="reward-backers" ng-if="pledge.total_backers == 0"><i class="community basic icon"></i>   {{'PledgeSection_Nobackers' | translate}} </div>
 								<div class="limit" ng-if="pledge.item_limit != null">  {{'PledgeSection_Limitedrewards' | translate}} {{pledge.item_limit - pledge.total_pledges}} {{'PledgeSection_LeftOf' | translate}}  {{pledge.item_limit}}</div>
 								<div class="reward-etd" ng-if="pledge.estimated_delivery_time"> {{'PledgeSection_EstimatedShip' | translate}}
-									<span class="f-delivery-date">{{pledge.estimated_delivery_time | formatDate:"MMMM YYYY"}} </span>
+									<span class="f-delivery-date">{{pledge.estimated_delivery_time | formatDate:"MMM D, YYYY"}} </span>
 								</div>
 							</div>
 						</div>

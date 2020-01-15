@@ -104,11 +104,11 @@
                         <span *ngIf="mCampaign.campaign_started == 't'">
                           {{translate("campaign_page_started_on_text")}}
                         </span>
-                        <span>{{getDateForDisplay(mCampaign.starts) | amDateFormat:'lll'}} {{mCampaign.timezone_abbrev}}</span>
+                        <span>{{mCampaign.starts | amDateFormat:'lll'}} {{mCampaign.timezone_abbrev}}</span>
                       </div>
                       <div class="campaign-end-date" *ngIf="mCampaign.ends">
                         <span>{{translate("campaign_page_ends_on_text")}}</span>
-                        <span>{{getDateForDisplay(mCampaign.ends) | amDateFormat:'lll'}} {{mCampaign.timezone_abbrev}}</span>
+                        <span>{{mCampaign.ends | amDateFormat:'lll'}} {{mCampaign.timezone_abbrev}}</span>
                       </div>
                     </div>
                   </div>
@@ -379,7 +379,7 @@
                             </h4>
                           </div>-->
                           <div class="stream-date">
-                            <h4 class="ui header" FontColor StreamsFontColor>{{getDateForDisplay(stream.created) | amDateFormat:'lll'}} {{mCampaign.timezone_abbrev}}
+                            <h4 class="ui header" FontColor StreamsFontColor>{{stream.created | amDateFormat:'lll'}}
                             </h4>
                           </div>
                         </div>
@@ -397,7 +397,7 @@
                         <h4 class="ui header" FontColor>{{translate("campaign_page_update_text")}} #{{selectedStream.index}}</h4>
                       </div>-->
                       <div class="stream-date">
-                        <h4 class="ui header" FontColor StreamsFontColor>{{getDateForDisplay(selectedStream.created) | amDateFormat:'lll'}}</h4>
+                        <h4 class="ui header" FontColor StreamsFontColor>{{selectedStream.created | amDateFormat:'lll'}}</h4>
                       </div>
                     </div>
                     <div class="stream-middle">
@@ -685,9 +685,8 @@
                               </span>
                             </div>
                           </div>
-                          <div class="reward-meta reward-delivery-date" *ngIf="reward.estimated_delivery_time" RewardsFontColor>{{translate("campaign_page_estimated_delivery_text")}}
-                            <span RewardsFontColor>{{getDateForDisplay(reward.estimated_delivery_time) | amDateFormat:'lll'}}
-                              {{mCampaign.timezone_abbrev}}</span>
+                          <div class="reward-meta reward-delivery-date" *ngIf="reward.estimated_delivery_time" RewardsFontColor><span>{{translate("campaign_page_estimated_delivery_text")}} </span>
+                            <span RewardsFontColor>{{reward.estimated_delivery_time | amDateFormat:'ll'}}</span>
                           </div>
                         </div>
                         <div class="campaign-reward-hover" ThemeColor (click)="selectReward(index + 1, true)">
@@ -1183,8 +1182,8 @@
                           {{ mCampaign.currencies[0].code_iso4217_alpha | currencySymbolNumber}} {{contribution.amount | number:'1.0-0' }} {{mCampaign.currencies[0]["code_iso4217_alpha"]}}
                         </td>
                       </tr>
-                      <tr>
-                        <td PaymentFontColor>{{translate("campaign_page_review_shipping_text")}}</td>
+                      <tr *ngIf="isRewardShipping">
+                        <td PaymentFontColor><strong>{{translate("campaign_page_review_shipping_text")}}</strong></td>
                         <td *ngIf="settingDecimalOption == 1 || settingDecimalOption == 2" PaymentFontColor>
                           {{ mCampaign.currencies[0].code_iso4217_alpha | currencySymbolNumber}} {{shippingFee | number:'1.2-2' }} {{mCampaign.currencies[0]["code_iso4217_alpha"]}}
                         </td>
@@ -1305,9 +1304,8 @@
                               </span>
                             </div>
                           </div>
-                          <div class="reward-meta reward-delivery-date" *ngIf="reward.estimated_delivery_time" RewardsFontColor>{{translate("campaign_page_estimated_delivery_text")}}
-                            <span RewardsFontColor>{{getDateForDisplay(reward.estimated_delivery_time) | amDateFormat:"lll"}}
-                              {{mCampaign.timezone_abbrev}}</span>
+                          <div class="reward-meta reward-delivery-date" *ngIf="reward.estimated_delivery_time" RewardsFontColor><span>{{translate("campaign_page_estimated_delivery_text")}} </span>
+                            <span RewardsFontColor>{{reward.estimated_delivery_time | amDateFormat:'ll'}}</span>
                           </div>
                         </div>
                         <div class="contribution-input ui form">

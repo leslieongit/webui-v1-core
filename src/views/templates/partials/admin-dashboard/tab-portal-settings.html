@@ -1374,7 +1374,7 @@
             </div>
           </div>
 
-          <div class="ui two column stackable setting-bg grid">
+          <div class="ui two column stackable setting-bg grid" id="mail-sendfrom">
             <div class="four wide column">
               <h3 class="ui header main-font-color" translate> tab_portalsetting_Mail_SendFrom </h3>
               <p translate>
@@ -1384,14 +1384,14 @@
 
             <div class="twelve wide column">
               <div class="ui fluid form field">
-                <input class="email-form" validate-email sui-popup name="email-from" type="text" ng-model="private_settings.site_email_address_from" ng-attr-placeholder="    {{'tab_portalsetting_Sendermail' | translate}} " data-content="    {{'tab_portalsetting_Sendermail_datacontent' | translate}}"
+                <input class="email-form" sui-popup name="email-from" type="email" ng-model="private_settings.site_email_address_from" ng-attr-placeholder="    {{'tab_portalsetting_Sendermail' | translate}} " data-content="    {{'tab_portalsetting_Sendermail_datacontent' | translate}}"
                   data-position="top left">
               </div>
             </div>
 
           </div>
 
-          <div class="ui two column stackable setting-bg grid">
+          <div class="ui two column stackable setting-bg grid" id="mail-admin">
             <div class="four wide column">
               <h3 class="ui header main-font-color" translate> tab_portalsetting_Mail_Admin </h3>
               <p translate>
@@ -1401,7 +1401,7 @@
             <div class="twelve wide column">
 
               <div class="ui fluid form field">
-                <input name="admin-email" validate-email type="text" class="email-to" sui-popup name="email-to" ng-model="private_settings.site_email_address_admin" ng-attr-placeholder="  {{'tab_portalsetting_Mail_receiver' | translate}}" data-content="    {{'tab_portalsetting_Sendermail_datacontent' | translate}}"
+                <input name="admin-email" type="email" class="email-to" sui-popup name="email-to" ng-model="private_settings.site_email_address_admin" ng-attr-placeholder="  {{'tab_portalsetting_Mail_receiver' | translate}}" data-content="    {{'tab_portalsetting_Sendermail_datacontent' | translate}}"
                   data-position="top left">
               </div>
             </div>
@@ -3882,8 +3882,8 @@
                     <input type="checkbox">
                     <label>
                       <span translate="tab_portalsetting_bank_form_enabled_toggle_note"></span>
-                      <span translate ng-show="public_settings.site_campaign_fee_direct_transaction">tab_portalsetting_bank_form_enabled_off</span>
-                      <span translate ng-show="!public_settings.site_campaign_fee_direct_transaction">tab_portalsetting_bank_form_enabled_on</span>
+                      <span translate ng-show="public_settings.site_campaign_country_funding_step">tab_portalsetting_bank_form_enabled_off</span>
+                      <span translate ng-show="!public_settings.site_campaign_country_funding_step">tab_portalsetting_bank_form_enabled_on</span>
                     </label>
                   </div>
                 </div>

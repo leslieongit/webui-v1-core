@@ -430,6 +430,11 @@
               padding-bottom: 0;
             }
           }
+          .reward-delivery-date {
+            span:not(:last-child) {
+              margin-right: 5px;
+            }
+          }
         }
       }
 
