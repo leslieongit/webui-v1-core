@@ -46,14 +46,17 @@
                 <div id="{{'reward-variation-' + $index}}" class="reward-variation">
                   <div class="reward-variation-item" ng-repeat="variation in pledge.attributes.variation">
                     <label>{{variation.name}}</label>
-                    <div class="ui fluid selection dropdown">
+                     <div class="ui fluid selection dropdown" id="dropdown-{{variation.name}}">
                       <input type="hidden" name="variation_value">
                       <i class="dropdown icon"></i>
                       <div class="default text">{{variation.name}}</div>
                       <div class="menu">
-                        <div class="item" data-value="{{$index}}" ng-click="selectRewardAttribute($event, choiceItem, $parent.$parent.$index)" ng-repeat="choiceItem in variation.choice track by $index">{{choiceItem.value}}</div>
+                        <div class="item" data-value="{{$index}}" ng-click="selectRewardAttribute($event, choiceItem, $parent.$parent.$index)" ng-repeat="choiceItem in variation.choice track by $index">
+                          {{choiceItem.value}}
+                          {{preselectRewardAttributes()}}
+                        </div>
                       </div>
-                    </div>
+                      </div> 
                   </div>
                 </div>
                 <div class="bottom">
@@ -128,6 +131,10 @@
                     <span class="f-delivery-date">{{pledge.estimated_delivery_time | formatDate:"MMM D, YYYY"}} </span>
                   </div>
                 </div>
+                <button class="choose-reward-btn no-attrs ui large fluid button" ng-click="dateInPast(campaign.ends,campaign.seconds_remaining) || campaign.entry_status_id != 2 || pledge.total_pledges == pledge.item_limit || (thresholdallowed && campaign.funded_amount + pledge.amount > campaign.maximum_allowed_funds_raised) || campaign.campaign_started=='f' || submitPledge($event, pledge, $index)">
+                  <span ng-show="!customText.toggle" translate>campaign_page_choose_reward_text</span>
+                  <span ng-show="customText.toggle">{{pledge.rewardCustom}}</span>
+                </button>
               </div>
             </div>
           </li>

@@ -192,7 +192,7 @@ export class AppComponent implements OnInit {
     },
     {
       "id": 2,
-      "name": "Fully Anonymouse Contribution"
+      "name": "Fully Anonymous Contribution"
     }
   ];
 
@@ -202,6 +202,7 @@ export class AppComponent implements OnInit {
   loginPassword: string;
   
   logginErrorMessage: string;
+
 
   isContributionMessageEnabled: boolean = false;
   isShippingFeeExcluded: boolean = false;
@@ -280,7 +281,7 @@ export class AppComponent implements OnInit {
 
   constructor( @Inject(CampaignService) campaignService: CampaignService, @Inject(TranslationService) private translationService: TranslationService, @Inject(UserService) userService: UserService, @Inject(StripeService) stripeService: StripeService, @Inject(SettingsService) settingsService: SettingsService, private elementRef: ElementRef, private domSanitization: DomSanitizer, private http: Http, private cPipe: CurrencyPipe, private dPipe: DecimalPipe, private sPipe:CurrencySymbolNumberPipe) {
     if (process.env.ENV == "development") {
-      window["widgetHost"] = "https://coral.thrinacia.com";
+      window["widgetHost"] = "https://sansar.thrinacia.com";
       window["DefaultPreferredLang"] = {
         "defaultLang": "en",
         "preferredLang": "en"
@@ -899,6 +900,21 @@ export class AppComponent implements OnInit {
       return null;
     }
   }
+  
+  /**
+  * convert postgresql date to ISO format 
+  * @param {String} date the date string
+  * @return {String}     the string in ISO format 
+  */
+  SQLTimestampToISO(date){
+    date = date.replace(' ', 'T');
+    if(date.length > 19){
+      if(date.charAt(date.length-3) != ':'){
+        date = date+":00"
+      }
+    }
+    return date;
+  }
 
   /**
    * get how long the campaign has beeing raising money
@@ -909,21 +925,7 @@ export class AppComponent implements OnInit {
       "unit": "",
       "elapsed": 0
     };
-    let d = new Date();
-    let dateNow = d.getTime();
-    let startDate = new Date(this.mCampaign.starts);
-    let startTime = startDate.getTime();
-    let refTime;
-    if(this.mCampaign.ends){
-      let endDate = new Date(this.mCampaign.ends);
-      let endTime = endDate.getTime();
-      refTime = (dateNow < endTime) ? dateNow : endTime;
-    }
-    else{
-      refTime = dateNow;
-    }
-
-    let elapsedSecond = (refTime - startTime) / 1000;
+    let elapsedSecond = this.mCampaign.seconds_elapsed;
     let elapsedMinute = elapsedSecond / 60;
     let elapsedHour = elapsedMinute / 60;
     let elapsedDay = elapsedHour / 24;
@@ -1090,6 +1092,7 @@ export class AppComponent implements OnInit {
     this.changeView(true);
     this.rewardIndex = rewardIndex > 0 ? rewardIndex + (this.rewardContributionPageConfig.currentPage - 1) * this.rewardContributionPageConfig.itemsPerPage : 0;
     if (this.rewardIndex > 0) {
+      jQuery(".guestTab").attr('style', 'display: none !important;');
       let reward = this.mCampaign.pledges[this.rewardIndex - 1];
       this.contribution["amount"] = reward.amount;
       this.contribution["rewardName"] = reward.name;
@@ -1130,6 +1133,7 @@ export class AppComponent implements OnInit {
         this.isAddingPhone = false;
       }
     } else {
+      jQuery(".guestTab").attr('style', 'display: inline-block !important;');
       this.contribution["amount"] = this.minContributionAmount;
       this.contribution["rewardName"] = "Contribution";
       this.contribution["attributes"] = null;
@@ -2009,9 +2013,9 @@ export class AppComponent implements OnInit {
       this.formValidationPhone();
     }
 
-    if (this.requireRewardAttributes) {
+    //if (this.requireRewardAttributes) {
       this.formValidationAttributes();
-    }
+    //}
 
     if (this.tippingOptions.toggle) {
       this.formValidationTip();

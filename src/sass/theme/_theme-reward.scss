@@ -12,6 +12,9 @@
           }
         }
         .choose-reward-btn {
+          &.no-attrs{
+            margin-top: 15px;
+          }
           @if $main-color==#ffffff {
             background-color: #ffffff !important;
             color: rgba(0, 0, 0, .8);

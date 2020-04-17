@@ -907,9 +907,9 @@
                       TabBackgroundColor TabSelectedFontColor>{{translate("campaign_page_create_account_tab")}}</a>
                     <a class="item" *ngIf="currentPaymentLoginTab != 'register' && (contributeBehaviour == 1 || contributeBehaviour == 3 || contributeBehaviour == 6 || contributeBehaviour == 8)" (click)="setCreatingAccount(); setContributeType(CONTRIBUTION_TYPE_REGISTER); setCurrentLoginTab('register')"
                       TabUnselectedFontColor>{{translate("campaign_page_create_account_tab")}}</a>
-                    <a class="item active" *ngIf="currentPaymentLoginTab == 'guest' && (contributeBehaviour == 2 || contributeBehaviour == 3 || contributeBehaviour == 7 || contributeBehaviour == 8)" (click)="setContributeType(CONTRIBUTION_TYPE_GUEST); setCurrentLoginTab('guest')"
+                    <a class="item active guestTab" *ngIf="currentPaymentLoginTab == 'guest' && (contributeBehaviour == 2 || contributeBehaviour == 3 || contributeBehaviour == 7 || contributeBehaviour == 8)" (click)="setContributeType(CONTRIBUTION_TYPE_GUEST); setCurrentLoginTab('guest')"
                       TabBackgroundColor TabSelectedFontColor>{{translate("campaign_page_guest_tab")}}</a>
-                    <a class="item" *ngIf="currentPaymentLoginTab != 'guest' && (contributeBehaviour == 2 || contributeBehaviour == 3 || contributeBehaviour == 7 || contributeBehaviour == 8)" (click)="setContributeType(CONTRIBUTION_TYPE_GUEST); setCurrentLoginTab('guest')"
+                    <a class="item guestTab" *ngIf="currentPaymentLoginTab != 'guest' && (contributeBehaviour == 2 || contributeBehaviour == 3 || contributeBehaviour == 7 || contributeBehaviour == 8)" (click)="setContributeType(CONTRIBUTION_TYPE_GUEST); setCurrentLoginTab('guest')"
                       TabUnselectedFontColor>{{translate("campaign_page_guest_tab")}}</a>
                     <a class="item active" *ngIf="currentPaymentLoginTab == 'express' && (contributeBehaviour == 5 || contributeBehaviour == 6 || contributeBehaviour == 7 || contributeBehaviour == 8)" (click)="setContributeType(CONTRIBUTION_TYPE_EXPRESS); setCurrentLoginTab('express')"
                       TabBackgroundColor TabSelectedFontColor>{{translate("campaign_page_express_tab")}}</a>
@@ -1156,11 +1156,11 @@
                   <div class="fields" *ngIf="contribution.attributes.variation">
                     <div class="eight wide field" *ngFor="let attribute of contribution.attributes.variation; let vIndex = index">
                       <label>{{attribute.name}}</label>
-                      <div class="ui dropdown selection fluid" ngSemantic>
-                        <input type="hidden" name="attribute">
-                        <i class="dropdown icon"></i>
-                        <div class="default text">{{attribute.name}}</div>
-                        <div class="menu">
+                       <div class="ui dropdown selection fluid" ngSemantic>
+                          <input type="hidden" name="attribute">
+                          <i class="dropdown icon"></i>
+                          <div class="default text">{{attribute.name}}</div>
+                          <div class="menu">
                           <div class="item" *ngFor="let choice of attribute.choice; let cIndex = index" (click)="chooseAttribute(choice.value, vIndex)">{{choice.value}}</div>
                         </div>
                       </div>

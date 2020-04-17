@@ -1,5 +1,6 @@
-@import 'stripe';
-@import 'colors';
+@import "stripe";
+@import "colors";
+
 /* Any/All global styling must go here*/
 
 /* Make sure to comment out the section you are styling */
@@ -14,8 +15,8 @@
 
 .theme-color-setting {
   .color-grid {
-    >.color-list {
-      >.color-item:first-child {
+    > .color-list {
+      > .color-item:first-child {
         margin-left: 1em !important;
         padding-left: 3px !important;
       }
@@ -124,9 +125,9 @@ html {
     }
 
     .ui.dropdown {
-      &>.default {
+      & > .default {
         &.text {
-          color: rgba(140, 140, 140, .8);
+          color: rgba(140, 140, 140, 0.8);
         }
       }
     }
@@ -145,7 +146,7 @@ html {
         line-height: 1.2142em;
         height: auto;
         padding: .67861em 1em;
-        border: 1px solid rgba(39, 41, 43, .15);
+        border: 1px solid rgba(39, 41, 43, 0.15);
         -webkit-box-shadow: none;
         box-shadow: none;
 
@@ -176,7 +177,7 @@ html {
 
       &.select2-dropdown-open {
         .select2-drop-active {
-          border: 1px solid rgba(39, 41, 43, .15);
+          border: 1px solid rgba(39, 41, 43, 0.15);
           border-top: 0;
           border-top-color: rgba(39, 41, 43, 0.15);
           -webkit-box-shadow: none !important;
@@ -199,8 +200,7 @@ html {
       }
     }
 
-    .ui.stackable.grid>.wide.column {
-
+    .ui.stackable.grid > .wide.column {
       &[ng\:cloak],
       &[ng-cloak],
       &[data-ng-cloak],
@@ -288,18 +288,19 @@ html {
 
         .campaign-thumb {
           margin-bottom: 3rem;
+
           .campaign-card {
             position: relative;
             color: #888;
             height: 100%;
-            
+
             .campaign-created {
               @media (max-width: 767px) {
                 position: static;
                 padding: 0;
               }
             }
-            
+
             .video-container {
               overflow: hidden;
               position: relative;
@@ -320,7 +321,6 @@ html {
               }
 
               &.video-iframe-tag {
-
                 .video-banner,
                 .video-thumbnail {
                   iframe {
@@ -336,7 +336,6 @@ html {
               }
 
               &.video-video-tag {
-
                 .video-banner,
                 .video-thumbnail {
                   video {
@@ -357,6 +356,7 @@ html {
               @media (max-width: 767px) {
                 margin-bottom: 0;
               }
+
               .campaign-title {
                 margin-bottom: 10px;
                 min-height: 40px;
@@ -386,7 +386,6 @@ html {
               background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #fff 26%);
 
               .campaign-stats {
-
                 // overflow-x: auto;
                 #progress-status {
                   margin: 10px 0;
@@ -401,7 +400,7 @@ html {
                   }
                 }
 
-                >.funded-amount {
+                > .funded-amount {
                   text-align: center;
                   margin-bottom: 5px;
                   font-weight: bold;
@@ -611,7 +610,7 @@ html {
                     -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.08);
                     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.08);
 
-                    >div {
+                    > div {
                       text-align: left;
                       background-color: #86e01e;
                       position: relative;
@@ -664,19 +663,73 @@ html {
           -ms-flex-direction: column;
           flex-direction: column;
 
-          >textarea {
+          > textarea {
             -webkit-box-ordinal-group: 3;
             -ms-flex-order: 2;
             order: 2;
             padding-top: 0;
           }
 
-          >label {
+          > label {
             -webkit-box-ordinal-group: 2;
             -ms-flex-order: 1;
             order: 1;
             position: static;
           }
+        }
+      }
+    }
+
+    .ui.indicating.progress {
+    
+      &[data-percent^="1"],
+      &[data-percent^="2"] {
+        .bar {
+          background-color: #d95c5c;
+        }
+      }
+
+      &[data-percent^="3"] {
+        .bar {
+          background-color: #efbc72;
+        }
+      }
+
+      &[data-percent^="4"],
+      &[data-percent^="5"] {
+        .bar {
+          background-color: #e6bb48;
+        }
+      }
+
+      &[data-percent^="6"] {
+        .bar {
+          background-color: #ddc928;
+        }
+      }
+
+      &[data-percent^="7"], &[data-percent^="8"] {
+        .bar {
+          background-color: #b4d95c;
+        }
+      }
+
+      &[data-percent^="100"], &[data-percent^="9"] {
+        .bar {
+          background-color: #66da81;
+        }
+      }
+      &[data-percent="1"],
+      &[data-percent="2"],
+      &[data-percent="3"],
+      &[data-percent="4"],
+      &[data-percent="5"],
+      &[data-percent="6"],
+      &[data-percent="7"],
+      &[data-percent="8"],
+      &[data-percent="9"] {
+        .bar {
+          background-color: #d95c5c;
         }
       }
     }
@@ -703,7 +756,7 @@ i.info.circle.icon {
   cursor: pointer;
 }
 
-.ui.grid+.grid {
+.ui.grid + .grid {
   margin-top: 0;
 }
 
@@ -721,18 +774,17 @@ i.info.circle.icon {
 }
 
 .ui.button {
-  -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, .08) inset;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, .08) inset;
+  -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08) inset;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08) inset;
 
   &:hover {
-    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, .08)));
-    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .08));
-    color: rgba(0, 0, 0, .7);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.08)));
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.08));
+    color: rgba(0, 0, 0, 0.7);
   }
 }
 
 .ui[class*="very basic"].table:not(.sortable):not(.striped) {
-
   th:first-child,
   td:first-child {
     padding-left: 0.8em;
@@ -746,6 +798,7 @@ i.info.circle.icon {
 
 .ui.page.grid {
   position: relative;
+
   /*to fix custom page image overlay problem*/
   /* margin: 0;*/
 }
@@ -899,7 +952,7 @@ i.info.circle.icon {
     background: rgba(0, 0, 0, 0.8);
     border: 0;
 
-    >i.close {
+    > i.close {
       right: 11px !important;
       top: 17px !important;
     }
@@ -993,7 +1046,7 @@ button:disabled {
 /*jQuery UI Sortable*/
 
 .ui-sortable {
-  &>.ui-sortable-handle {
+  & > .ui-sortable-handle {
     position: relative;
     cursor: move;
     cursor: -webkit-grabbing;
@@ -1132,6 +1185,7 @@ button:disabled {
 .wrapper-youtube {
   position: relative;
   padding-bottom: 56.25%;
+
   /* 16:9 */
   padding-top: 25px;
   height: 0;
@@ -1186,7 +1240,7 @@ button:disabled {
   -webkit-box-shadow: none;
   box-shadow: none;
 
-  >.bar {
+  > .bar {
     display: block;
     height: 12px;
     -webkit-box-shadow: none;
@@ -1200,10 +1254,10 @@ button:disabled {
 .addthis_toolbox {
   float: right;
 
-  &>a:last-of-type {
+  & > a:last-of-type {
     padding-right: 0;
 
-    &>span {
+    & > span {
       margin-right: 0;
     }
   }
@@ -1256,7 +1310,6 @@ button:disabled {
 .top-nav-font-color-setting,
 .footer-font-color-setting,
 .footer-background-color-setting {
-
   .color-item,
   .top-nav-color-item {
     padding: 3px 3px 3px 3px !important;
@@ -1383,7 +1436,7 @@ button:disabled {
     padding: 20px;
     border-radius: 4px;
 
-    >p {
+    > p {
       margin-top: 0;
     }
   }
@@ -1408,7 +1461,6 @@ button:disabled {
 /*/////////////////////////////////////////////*/
 
 i.circular.icon {
-
   &.fb-blue,
   &.twitter-blue,
   &.google-plus-red,
@@ -1499,12 +1551,12 @@ i.circular.icon {
     background: #ffffff;
     border-radius: .2857rem;
     padding: .67861em 1em;
-    border: 1px solid rgba(39, 41, 43, .15);
+    border: 1px solid rgba(39, 41, 43, 0.15);
 
     &.StripeElement--focus {
       border-color: #BDBEBF;
-      -webkit-box-shadow: 1px 0 0 0 rgba(39, 41, 43, .3)inset;
-      box-shadow: 1px 0 0 0 rgba(39, 41, 43, .3)inset;
+      -webkit-box-shadow: 1px 0 0 0 rgba(39, 41, 43, 0.3) inset;
+      box-shadow: 1px 0 0 0 rgba(39, 41, 43, 0.3) inset;
       border-radius: 0 .2857rem .2857rem 0;
 
       &.StripeElement--invalid {
@@ -1529,4 +1581,39 @@ i.circular.icon {
 
 .campaign-disclaimer-text {
   margin: 15px 0;
+}
+
+.custom-dropdown {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  cursor: pointer;
+  word-wrap: break-word;
+  white-space: normal;
+  outline: 0;
+  -webkit-transform: rotateZ(0);
+  transform: rotateZ(0);
+  min-width: 180px;
+  background: #fff;
+  display: inline-block;
+  padding: .8em 1.1em;
+  color: rgba(0, 0, 0, 0.8);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border: 1px solid rgba(39, 41, 43, 0.15);
+  border-radius: .2857rem;
+  -webkit-transition: border-radius .1s ease,width .2s ease,box-shadow .2s ease,border .2s ease;
+  -webkit-transition: border-radius .1s ease,width .2s ease,border .2s ease,-webkit-box-shadow .2s ease;
+  transition: border-radius .1s ease,width .2s ease,border .2s ease,-webkit-box-shadow .2s ease;
+  transition: border-radius .1s ease,width .2s ease,box-shadow .2s ease,border .2s ease;
+  transition: border-radius .1s ease,width .2s ease,box-shadow .2s ease,border .2s ease,-webkit-box-shadow .2s ease;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  line-height: 1em;
+  tap-highlight-color: transparent;
+  outline: 0;
+  text-align: left;
+  -webkit-transition: border-radius .1s ease,width .2s ease;
+  transition: border-radius .1s ease,width .2s ease;
 }

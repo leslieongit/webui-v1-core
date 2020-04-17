@@ -80,9 +80,7 @@
                       <span ng-if="campaign.name.length > 50">...</span>
                     </div>
                     <div class="campaign-created meta" am-time-ago="campaign.created"></div>
-                    <div class="description">{{campaign.blurb | limitTo:150}}
-                      <span ng-if="campaign.blurb.length > 150">...</span>
-                    </div>
+                    <div class="description" html-render html=campaign.blurb></div>
                   </div>
                   <!-- campaign-desc end -->
                 </a>
@@ -120,9 +118,7 @@
                       <span ng-if="(campaign.managers[0].first_name.length + campaign.managers[0].last_name.length) > 20">...</span>
                     </div>
                     <div class="campaign-created meta" am-time-ago="campaign.created"></div>
-                    <div class="description">{{campaign.blurb | limitTo:150}}
-                      <span ng-if="campaign.blurb.length > 150">...</span>
-                    </div>
+                    <div class="description" html-render html=campaign.blurb></div>
                   </div>
                   <!-- campaign-desc end -->
                 </a>

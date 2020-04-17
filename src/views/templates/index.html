@@ -392,7 +392,7 @@
 
     <div class="lm-grid-wrap">
       <div class="lm-column-grid ui center aligned three column stackable page grid">
-        <div class="lm-column column" ng-show="home_page_text.bottom_banner.left_column.display">
+        <div class="lm-column column" ng-if="home_page_text.bottom_banner.left_column.display">
           <div class="icon-header ui medium icon header">
             <i class="{{home_page_text.bottom_banner.left_column.icon_class}}"></i>
             <span ng-style="bottom_banner_column_header_font_style">{{home_page_text.bottom_banner.left_column.header}}</span>
@@ -400,7 +400,7 @@
           </div>
         </div>
 
-        <div class="lm-column column" ng-show="home_page_text.bottom_banner.middle_column.display">
+        <div class="lm-column column" ng-if="home_page_text.bottom_banner.middle_column.display">
           <div class="icon-header ui medium icon header">
             <i class="{{home_page_text.bottom_banner.middle_column.icon_class}}"></i>
             <span ng-style="bottom_banner_column_header_font_style">{{home_page_text.bottom_banner.middle_column.header}}</span>
@@ -409,7 +409,7 @@
         </div>
         <!-- column end -->
 
-        <div class="lm-column column" ng-show="home_page_text.bottom_banner.right_column.display">
+        <div class="lm-column column" ng-if="home_page_text.bottom_banner.right_column.display">
           <div class="icon-header ui medium icon header">
             <i class="{{home_page_text.bottom_banner.right_column.icon_class}}"></i>
             <span ng-style="bottom_banner_column_header_font_style">{{home_page_text.bottom_banner.right_column.header}}</span>

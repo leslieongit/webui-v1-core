@@ -602,8 +602,8 @@
                           <input type="text" ng-model="public_settings.site_home_page_text.main_banner.button_text_link">
                         </div>
                         <div class="ui four wide column">
-                          <div class="field display-button-checkbox">
-                            <input type="checkbox" ng-model="public_settings.site_home_page_text.main_banner.display_button">
+                          <div class="field display-button-checkbox ui checkbox" ng-model="public_settings.site_home_page_text.main_banner.display_button">
+                            <input type="checkbox">
                             <label translate>tab_portalsetting_Start_Project_Button</label>
                           </div>
                         </div>
@@ -739,9 +739,9 @@
                       <div class="bottom-banner-divider ui section divider"></div>
 
                       <h4 class="column-header ui header" translate> tab_portalsetting_Bottom_Header_leftcolumn </h4>
-                      <div class="display">
+                      <div class="display ui checkbox" ng-model="public_settings.site_home_page_text.bottom_banner.left_column.display" ng-true-value="1" ng-false-value="0">
                         <label translate> tab_portalsetting_Bottom_Header_Display </label>
-                        <input type="checkbox" ng-model="public_settings.site_home_page_text.bottom_banner.left_column.display" ng-true-value="1" ng-false-value="0">
+                        <input type="checkbox">
                       </div>
                       <div class="field">
                         <label translate> tab_portalsetting_Bottom_Header_Icon_class </label>
@@ -756,9 +756,9 @@
                         <textarea type="text" ng-attr-placeholder="Paragraph" ng-model="public_settings.site_home_page_text.bottom_banner.left_column.paragraph"></textarea>
                       </div>
                       <h4 class="column-header ui header" translate> tab_portalsetting_Bottom_Header_Middlecolumn </h4>
-                      <div class="display">
+                      <div class="display ui checkbox" ng-model="public_settings.site_home_page_text.bottom_banner.middle_column.display" ng-true-value="1" ng-false-value="0">
                         <label translate> tab_portalsetting_Bottom_Header_Display</label>
-                        <input type="checkbox" ng-model="public_settings.site_home_page_text.bottom_banner.middle_column.display" ng-true-value="1" ng-false-value="0">
+                        <input type="checkbox">
                       </div>
                       <div class="field">
                         <label translate>tab_portalsetting_Bottom_Header_Icon_class</label>
@@ -773,9 +773,9 @@
                         <textarea type="text" ng-attr-placeholder="{{'tab_portalsetting_Bottom_Header_paragraph' | translate}}" ng-model="public_settings.site_home_page_text.bottom_banner.middle_column.paragraph"></textarea>
                       </div>
                       <h4 class="column-header ui header" translate> tab_portalsetting_Right_column </h4>
-                      <div class="display">
+                      <div class="display ui checkbox" ng-model="public_settings.site_home_page_text.bottom_banner.right_column.display" ng-true-value="1" ng-false-value="0">
                         <label translate>tab_portalsetting_Bottom_Header_Display</label>
-                        <input type="checkbox" ng-model="public_settings.site_home_page_text.bottom_banner.right_column.display" ng-true-value="1" ng-false-value="0">
+                        <input type="checkbox" >
                       </div>
                       <div class="field">
                         <label translate>tab_portalsetting_Bottom_Header_Icon_class </label>
@@ -864,8 +864,8 @@
                       <input type="text" ng-model="public_settings.site_home_page_text.bottom_banner.learn_more_button_text_link">
                     </div>
                     <div class="ui four wide column">
-                      <div class="field display-button-checkbox">
-                        <input type="checkbox" ng-model="public_settings.site_home_page_text.bottom_banner.learn_more_display_button">
+                      <div class="field display-button-checkbox ui checkbox" ng-model="public_settings.site_home_page_text.bottom_banner.learn_more_display_button">
+                        <input type="checkbox">
                         <label translate>tab_portalsetting_Bottom_Banner_Learn_more_Button</label>
                       </div>
                     </div>
@@ -1384,7 +1384,7 @@
 
             <div class="twelve wide column">
               <div class="ui fluid form field">
-                <input class="email-form" sui-popup name="email-from" type="email" ng-model="private_settings.site_email_address_from" ng-attr-placeholder="    {{'tab_portalsetting_Sendermail' | translate}} " data-content="    {{'tab_portalsetting_Sendermail_datacontent' | translate}}"
+                <input class="email-form" sui-popup name="email-from" type="text" ng-model="private_settings.site_email_address_from" ng-attr-placeholder="    {{'tab_portalsetting_Sendermail' | translate}} " data-content="    {{'tab_portalsetting_Sendermail_datacontent' | translate}}"
                   data-position="top left">
               </div>
             </div>
@@ -1401,7 +1401,7 @@
             <div class="twelve wide column">
 
               <div class="ui fluid form field">
-                <input name="admin-email" type="email" class="email-to" sui-popup name="email-to" ng-model="private_settings.site_email_address_admin" ng-attr-placeholder="  {{'tab_portalsetting_Mail_receiver' | translate}}" data-content="    {{'tab_portalsetting_Sendermail_datacontent' | translate}}"
+                <input name="admin-email" type="text" class="email-to" sui-popup name="email-to" ng-model="private_settings.site_email_address_admin" ng-attr-placeholder="  {{'tab_portalsetting_Mail_receiver' | translate}}" data-content="    {{'tab_portalsetting_Sendermail_datacontent' | translate}}"
                   data-position="top left">
               </div>
             </div>
@@ -1925,6 +1925,19 @@
               </div>
             </div>
           </div>
+
+          <div class="ui two column stackable setting-bg grid">
+            <div class="four wide column">
+              <h3 class="ui header main-font-color" translate="tab_portalsetting_campaign_private"></h3>
+              <p translate="tab_portalsetting_campaign_private_help"></p>
+            </div>
+            <div class="twelve wide column">
+              <div class="ui checkbox" ng-model="public_settings.site_campaign_private">
+                <input type="checkbox">
+              </div>
+            </div>
+          </div>
+
           <div class="ui two column stackable setting-bg grid">
             <div class="four wide column">
               <h3 class="ui header main-font-color" translate> tab_portalsetting_Campaign_Custom_uri </h3>
@@ -1934,7 +1947,7 @@
             </div>
             <div class="twelve wide column">
               <div class="ui checkbox" ng-model="public_settings.site_campaign_custom_uri">
-                <input type="checkbox">
+                <input type="checkbox" ng-disabled="public_settings.site_campaign_private">
               </div>
             </div>
           </div>
@@ -2576,18 +2589,6 @@
                   <div class="item" data-value="creator" translate="tab_portalsetting_campaign_social_sharing_campaign_creator" ng-click="setSharingOptions(sharingOptions.sharing_backers)"></div>
                   <div class="item" data-value="disabled" translate="tab_portalsetting_campaign_social_sharing_disabled" ng-click="setSharingOptions(sharingOptions.sharing_disabled)"></div>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="ui two column stackable setting-bg grid">
-            <div class="four wide column">
-              <h3 class="ui header main-font-color" translate="tab_portalsetting_campaign_private"></h3>
-              <p translate="tab_portalsetting_campaign_private_help"></p>
-            </div>
-            <div class="twelve wide column">
-              <div class="ui checkbox" ng-model="public_settings.site_campaign_private">
-                <input type="checkbox">
               </div>
             </div>
           </div>

@@ -1880,6 +1880,18 @@ app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location
       return;
     }
 
+    if($scope.public_settings.site_theme_alt_shipping_layout){
+      console.log($scope.public_settings.site_theme_default_shipping_country);
+      if(!$scope.public_settings.site_theme_default_shipping_country || !$scope.public_settings.site_theme_default_shipping_country.name){
+        var translate = $translate.instant(['tab_portalsetting_campaign_default_shipping_error_msg']);
+        msg = {
+          'header': translate.tab_portalsetting_campaign_default_shipping_error_msg
+        };
+        $rootScope.floatingMessage = msg;
+        $scope.hideFloatingMessage();
+        return;
+      }
+    }
     var publicSettings = {
       site_theme_no_campaign_message: $scope.public_settings.site_theme_no_campaign_message,
       site_theme_campaign_grid_display: $scope.public_settings.site_theme_campaign_grid_display,
@@ -2465,10 +2477,13 @@ app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location
   }
 
   $scope.validateEmail = function(email){ 
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    var re = /(?:"?([^"]*)"?\s)?(?:<?(.+@[^>]+)>?)/
     if (!re.test(email.toLowerCase())){
+      console.log('email '+email+' not valid') 
       return false;
     }
+
+    console.log('email '+email+' is valid') 
     return true;
   }
   $scope.validateMailSendFrom = function() {
@@ -2530,7 +2545,7 @@ app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location
       $scope.validateTippingOptions();
       return;
     }
-
+    console.log($scope.private_settings)
     if($scope.private_settings.site_email_address_from){
       if(!$scope.validateEmail($scope.private_settings.site_email_address_from)){
         $scope.validateMailSendFrom();

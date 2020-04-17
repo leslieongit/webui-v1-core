@@ -677,7 +677,35 @@ app.controller('CampaignPreviewCtrl', function($timeout, $interval, $location, $
             $scope.backers_pagination.totalentries = headers['x-pager-total-entries'];
             $scope.backers_pagination.entriesperpage = headers['x-pager-entries-per-page'];
           }
-        );
+        ).then(function(){
+          if ($scope.public_settings.site_theme_campaign_backer_option != null) {
+            if ($scope.public_settings.site_theme_campaign_backer_option == '2') {
+              $scope.hideb = true;
+              $scope.showBacker = 0;
+            }
+            if ($scope.public_settings.site_theme_campaign_backer_option == '1') {
+              $scope.showBacker = 1;
+              $scope.validUser = 1;
+            }
+            if ($scope.public_settings.site_theme_campaign_backer_option == '0') {
+              $scope.showBacker = 0;
+              $scope.validUser = 1;
+            }
+            if ($scope.public_settings.site_theme_campaign_backer_option == '3') {
+              if ($scope.user.auth_token) {
+                $scope.showBacker = 1;
+                $scope.validUser = 1;
+              } else {
+                $scope.showBacker = 0;
+                $scope.validUser = 0;
+              }
+            }
+          } else {
+            $scope.showBacker = 1;
+            $scope.validUser = 1;
+          }
+          $scope.backer_show = (($scope.showBacker || (($scope.showBacker || $scope.campaign.backers.length) && $scope.public_settings.site_theme_campaign_backer_option != '2')) && $scope.validUser);
+        });
       }
       $scope.getBackers();
 
@@ -836,34 +864,6 @@ app.controller('CampaignPreviewCtrl', function($timeout, $interval, $location, $
           } else {
             $scope.showFaq = 1;
           }
-
-          if ($scope.public_settings.site_theme_campaign_backer_option != null) {
-            if ($scope.public_settings.site_theme_campaign_backer_option == '2') {
-              $scope.hideb = true;
-              $scope.showBacker = 0;
-            }
-            if ($scope.public_settings.site_theme_campaign_backer_option == '1') {
-              $scope.showBacker = 1;
-              $scope.validUser = 1;
-            }
-            if ($scope.public_settings.site_theme_campaign_backer_option == '0') {
-              $scope.showBacker = 0;
-              $scope.validUser = 1;
-            }
-            if ($scope.public_settings.site_theme_campaign_backer_option == '3') {
-              if ($scope.user.auth_token) {
-                $scope.showBacker = 1;
-                $scope.validUser = 1;
-              } else {
-                $scope.showBacker = 0;
-                $scope.validUser = 0;
-              }
-            }
-          } else {
-            $scope.showBacker = 1;
-            $scope.validUser = 1;
-          }
-          $scope.backer_show = (($scope.showBacker || (($scope.showBacker || $scope.campaign.backers.length) && $scope.public_settings.site_theme_campaign_backer_option != '2')) && $scope.validUser);
 
           if ($scope.public_settings.site_theme_campaign_comment_option != null) {
             if ($scope.public_settings.site_theme_campaign_comment_option == '2') {
@@ -1088,60 +1088,69 @@ app.controller('CampaignPreviewCtrl', function($timeout, $interval, $location, $
   };
 
   function checkTime() {
-    var date = moment();
-    var end = moment($scope.campaign.ends);
-    var d1 = moment($scope.campaign.starts);
-    var d2 = moment();
-    var check = moment.duration(d2.diff(end)).asMinutes();
-    if (moment($scope.campaign.ends) < moment(new Date())) {
-      $scope.min = Math.abs(moment.duration(end.diff(d1)).asMinutes());
-      $scope.days = Math.abs(moment.duration(end.diff(d1)).asDays());
-      $scope.hours = Math.abs(moment.duration(end.diff(d1)).asHours());
-      $scope.week = Math.abs(moment.duration(end.diff(d1)).asWeeks());
-      $scope.month = Math.abs(moment.duration(end.diff(d1)).asMonths());
-    } else {
-      $scope.min = moment.duration(d2.diff(d1)).asMinutes();
-      $scope.days = moment.duration(d2.diff(d1)).asDays();
-      $scope.hours = moment.duration(d2.diff(d1)).asHours();
-      $scope.week = moment.duration(d2.diff(d1)).asWeeks();
-      $scope.month = moment.duration(d2.diff(d1)).asMonths();
+    // duration
+    var elapsedSecond = $scope.campaign.seconds_elapsed;
+    var elapsedMinute = elapsedSecond / 60;
+    var elapsedHour = elapsedMinute / 60;
+    var elapsedDay = elapsedHour / 24;
+    var elapsedMonth = elapsedDay / 30;
+    var elapsedYear = elapsedMonth / 12;
+
+    if (elapsedYear >= 1) {
+      $scope.duration = Math.floor(elapsedYear);
+      if ($scope.duration > 1) {
+        $scope.dtype = "years";
+      }
+      else {
+        $scope.dtype = "year";
+      }
     }
-    if ($scope.month > 1) {
-      $scope.duration = parseInt($scope.month);
-      if ($scope.month > 1 && $scope.month < 2) {
-        $scope.dtype = "month";
-      } else {
+    else if (elapsedMonth >= 1) {
+      $scope.duration = Math.floor(elapsedMonth);
+      if ($scope.duration > 1) {
         $scope.dtype = "months";
       }
-    } else if ($scope.week > 1) {
-      $scope.duration = parseInt($scope.week);
-      if ($scope.week > 1 && $scope.week < 2) {
-        $scope.dtype = "week";
-      } else {
-        $scope.dtype = "weeks";
-      }
-    } else if ($scope.days > 1) {
-      $scope.duration = parseInt($scope.days);
-      if ($scope.days > 1 && $scope.days < 2) {
-        $scope.dtype = "day";
-      } else {
-        $scope.dtype = "days";
-      }
-    } else if ($scope.hours > 1) {
-      $scope.duration = parseInt($scope.hours);
-      if ($scope.hours > 1 && $scope.hours < 2) {
-        $scope.dtype = "hour";
-      } else {
-        $scope.dtype = "hours";
-      }
-    } else if ($scope.min > 1) {
-      $scope.duration = parseInt($scope.min);
-      if ($scope.min > 1 && $scope.min < 2) {
-        $scope.dtype = "min";
-      } else {
-        $scope.dtype = "mins";
+      else {
+        $scope.dtype = "month";
       }
     }
+    else if (elapsedDay >= 1) {
+      $scope.duration = Math.floor(elapsedDay);
+      if ($scope.duration > 1) {
+        $scope.dtype = "days";
+      }
+      else {
+        $scope.dtype = "day";
+      }
+    }
+    else if (elapsedHour >= 1) {
+      $scope.duration = Math.floor(elapsedHour);
+      if ($scope.duration > 1) {
+        $scope.dtype = "hours";
+      }
+      else {
+        $scope.dtype = "hour";
+      }
+    }
+    else if (elapsedMinute >= 1) {
+      $scope.duration = Math.floor(elapsedMinute);
+      if ($scope.duration > 1) {
+        $scope.dtype = "minutes";
+      }
+      else {
+        $scope.dtype = "minute";
+      }
+    }
+    else if (elapsedSecond >= 1) {
+      $scope.duration = Math.floor(elapsedSecond);
+      if ($scope.duration > 1) {
+        $scope.dtype = "seconds";
+      }
+      else {
+        $scope.dtype = "second";
+      }
+    }
+    //end duration
   }
 
   function missingText(array) {

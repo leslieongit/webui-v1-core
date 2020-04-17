@@ -1644,7 +1644,7 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
   //submit form
   $scope.submit = function() {
     // if toggle is set so anon is a checkbox
-    if ($scope.anonymousContributionTypeOnly) {
+    if ($scope.selecteContributionAnon) {
       $scope.selecteContribution = 2;
     }
     
@@ -2563,7 +2563,9 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
             $rootScope.charity = $scope.charity;
           }
           // redirect
-          $location.path('/pledge-campaign').search({ 'eid': $scope.campaign_id, 'm': $scope.pledgeAmount, 'tiptype': $scope.selectedTipType });
+          $location.path('/pledge-campaign');
+          /*
+          $location.path('/pledge-campaign'+params).search({ 'eid': $scope.campaign_id, 'm': $scope.pledgeAmount, 'tiptype': $scope.selectedTipType });
           if ($scope.selectedTipType == 'dynamic') {
             $location.path('/pledge-campaign').search({ 'eid': $scope.campaign_id, 'm': $scope.pledgeAmount, 'tiptype': $scope.selectedTipType, 'tipvalue': $scope.tip.dollar_amount });
           } else if ($scope.selectedTipType == 'tiers') {
@@ -2575,6 +2577,7 @@ app.controller('InlineContributionCtrl', function($rootScope, $q, $location, $sc
             }
             $location.path('/pledge-campaign').search({ 'eid': $scope.campaign_id, 'm': $scope.pledgeAmount, 'tiptype': $scope.selectedTipType, 'tipindex': tierLoop });
           }
+          */
 
         }, function(failed) {
           msg = {

@@ -1805,6 +1805,7 @@
               .reward-bg-wrap {
                 background: #fff;
                 padding: 20px;
+                overflow: initial;
 
                 .reward-variation {
                   label {
@@ -2270,6 +2271,7 @@
             td {
               padding-left: 15px;
               padding-right: 15px;
+
               &:first-child {
                 text-align: left;
                 font-weight: bold;
@@ -2354,7 +2356,8 @@
           .ui.two.column.stackable.grid {
             background: none;
             padding: 0;
-            margin: 0;
+            margin-top: 0;
+            margin-bottom: 0;
           }
 
           .reward-header {
@@ -2372,6 +2375,8 @@
 
             .reward-wrap {
               margin: 0;
+              padding-left: 30px;
+              padding-right: 30px;
               border-top-left-radius: 0;
               word-wrap: break-word;
 
@@ -2401,32 +2406,33 @@
               }
             }
 
-            .ui.two.column.stackable.grid.pledge-amount {
-              margin: 0 -1rem;
+            .ui.column.stackable.grid {
+              &.pledge-amount {
 
-              .extra-pledge,
-              .your-pledge {
-                .title {
-                  margin-bottom: 0.6em;
+                .extra-pledge,
+                .your-pledge {
+                  .title {
+                    margin-bottom: 0.6em;
+                  }
                 }
-              }
 
-              .your-pledge {
-                .contrib-field {
-                  display: -webkit-box;
-                  display: -ms-flexbox;
-                  display: flex;
+                .your-pledge {
+                  .contrib-field {
+                    display: -webkit-box;
+                    display: -ms-flexbox;
+                    display: flex;
+                  }
                 }
-              }
 
-              .extra-pledge {
-                .amount {
-                  padding: .67861em 1em;
-                  background: #eee;
-                  border-radius: 4px;
-                  border: 1px solid rgba(39, 41, 43, 0.15);
-                  font-size: 18px;
-                  line-height: 1.2142em;
+                .extra-pledge {
+                  .amount {
+                    padding: .67861em 1em;
+                    background: #eee;
+                    border-radius: 4px;
+                    border: 1px solid rgba(39, 41, 43, 0.15);
+                    font-size: 18px;
+                    line-height: 1.2142em;
+                  }
                 }
               }
             }
@@ -2544,6 +2550,7 @@
         display: -ms-inline-flexbox;
         display: inline-flex;
       }
+
       input,
       .ui.dropdown,
       textarea,
@@ -2567,7 +2574,7 @@
               background: transparent;
               font-size: 18px;
               border: 0;
-              color: rgba(0,0,0,.8);
+              color: rgba(0, 0, 0, .8);
               font-weight: normal;
             }
 
@@ -2769,6 +2776,7 @@
           }
         }
       }
+
       .stripe-credit-card-form {
         .stripe-elements-field {
           margin-top: 15px;
@@ -5803,6 +5811,7 @@ body.loading .loader-modal {
           .reward-bg-wrap {
             background: #fff;
             padding: 20px;
+            overflow: initial;
 
             .reward-variation {
               label {

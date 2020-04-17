@@ -47,7 +47,7 @@ export class TranslationService {
         .map((res: Response) => res.json())
         .subscribe(
         translation => {
-          this.defaultTranslation = translation;
+          this.defaultTranslation = Object.assign({}, this.defaultTranslation, translation)
           this.setupPreferredTranslation(componentName);
         }
         );
@@ -61,7 +61,7 @@ export class TranslationService {
         .map((res: Response) => res.json())
         .subscribe(
         translation => {
-          this.preferredTranslation = translation;
+          this.preferredTranslation = Object.assign({}, this.defaultTranslation, translation);
           this.mergedTranslations();
         },
         error => {this.mergedTranslations()},
@@ -75,6 +75,7 @@ export class TranslationService {
     this.mergedTranslation = this.defaultTranslation;
     for (let index in this.defaultTranslation) {
       if (this.preferredTranslation[index]) {
+        console.log(index)
         this.mergedTranslation[index] = this.preferredTranslation[index];
       }
     }

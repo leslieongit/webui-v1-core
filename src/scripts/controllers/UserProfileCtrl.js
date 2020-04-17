@@ -103,30 +103,32 @@ app.controller('UserProfileCtrl', function($q, $route, $routeParams, $rootScope,
   $scope.userProfileAddressValidation = function() {
     var translation = $translate.instant(['profile_setup_address_1_prompt', 'profile_setup_address_mail_code_prompt']);
 
-    $('.ui.form#user-profile-form').form({
-      address1: {
-        identifier: 'address1',
-        rules: [{
-          type: 'empty',
-          prompt: translation.profile_setup_address_1_prompt
-        }]
-      },
-      mail_code: {
-        identifier: 'mail_code',
-        rules: [{
-          type: 'empty',
-          prompt: translation.profile_setup_address_mail_code_prompt
-        }]
-      }
-    }, {
-      inline: true,
-      onSuccess: function() {
-        $scope.valcheck = true;
-      },
-      onFailure: function() {
-        $scope.valcheck = false;
-      }
-    }).form('validate form');
+    if($scope.profile_type_id === 1){
+      $('.ui.form#user-profile-form').form({
+        address1: {
+          identifier: 'address1',
+          rules: [{
+            type: 'empty',
+            prompt: translation.profile_setup_address_1_prompt
+          }]
+        },
+        mail_code: {
+          identifier: 'mail_code',
+          rules: [{
+            type: 'empty',
+            prompt: translation.profile_setup_address_mail_code_prompt
+          }]
+        }
+      }, {
+        inline: true,
+        onSuccess: function() {
+          $scope.valcheck = true;
+        },
+        onFailure: function() {
+          $scope.valcheck = false;
+        }
+      }).form('validate form');
+   }
 
   }
 
@@ -1100,9 +1102,7 @@ app.controller('UserProfileCtrl', function($q, $route, $routeParams, $rootScope,
       $scope.inlineUserProfileAddressValidation();
       $scope.userProfileAddressValidation();
     }
-
     $rootScope.scrollToError();
-
     if ($scope.valcheck) {
 
       // New profile type fields
