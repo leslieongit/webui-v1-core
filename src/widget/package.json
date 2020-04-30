@@ -29,7 +29,7 @@
     "es6-shim": "^0.35.2",
     "froala-editor": "^2.3.5",
     "intl": "^1.2.5",
-    "jquery": "^2.2.4",
+    "jquery": "^3.5.0",
     "jquery.payment": "^1.4.3",
     "ng2-file-upload": "^1.1.4-2",
     "ng2-pagination": "^1.0.1",
