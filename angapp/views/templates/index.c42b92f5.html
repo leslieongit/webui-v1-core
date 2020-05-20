@@ -650,7 +650,7 @@
                 </div>
             </div>
             <!-- /.row -->
-        </div>        
+        </div>
     </div>
     <div ng-if="home_page_text.bottom_banner.display=='html'" style='padding-bottom: 50px;'>
         <div class="ui page grid">
@@ -665,7 +665,9 @@
                 <div class="col">
                     <div class="text-center" style="padding: 50px 0; color: #1e2978; font-size: large;">
                         <h1 class="my-4">How It Works</h1>
-                        <p style="padding: 0 70px;">We create a transparent and efficient market to drive innovation for consumer brands. We provide capital in the form of equity, credit, or both, based on your business's unique needs:</p>
+                        <p style="padding: 0 70px;">We create a transparent and efficient market to drive innovation for
+                            consumer brands. We provide capital in the form of equity, credit, or both, based on your
+                            business's unique needs:</p>
                     </div>
                 </div>
             </div>
@@ -689,7 +691,8 @@
                             <div id="collapseOne" aria-labelledby="headingOne" data-parent="#accordionExample"
                                 class="collapse show">
                                 <div class="card-body p-5">
-                                    <p class="font-weight-light m-0">Create a project that to which other investors will inject funds</p>
+                                    <p class="font-weight-light m-0">Create a project that to which other investors will
+                                        inject funds</p>
                                 </div>
                             </div>
                         </div><!-- End -->
@@ -706,7 +709,8 @@
                             <div id="collapseTwo" aria-labelledby="headingTwo" data-parent="#accordionExample"
                                 class="collapse">
                                 <div class="card-body p-5">
-                                    <p class="font-weight-light m-0">You may find a project to fund in our list and invest according to your capacity
+                                    <p class="font-weight-light m-0">You may find a project to fund in our list and
+                                        invest according to your capacity
                                     </p>
                                 </div>
                             </div>
@@ -718,13 +722,16 @@
                                 <h2 class="mb-0">
                                     <button type="button" data-toggle="collapse" data-target="#collapseThree"
                                         aria-expanded="false" aria-controls="collapseThree"
-                                        class="btn btn-link collapsed text-dark font-weight-bold text-uppercase collapsible-link">Settle Funds</button>
+                                        class="btn btn-link collapsed text-dark font-weight-bold text-uppercase collapsible-link">Settle
+                                        Funds</button>
                                 </h2>
                             </div>
                             <div id="collapseThree" aria-labelledby="headingThree" data-parent="#accordionExample"
                                 class="collapse">
                                 <div class="card-body p-5">
-                                    <p class="font-weight-light m-0">When a project has reached it's targeted funds, the loan will be paid and Lloyd CrowdFunding will redistribute the funds to the lenders.</p>
+                                    <p class="font-weight-light m-0">When a project has reached it's targeted funds, the
+                                        loan will be paid and Lloyd CrowdFunding will redistribute the funds to the
+                                        lenders.</p>
                                 </div>
                             </div>
                         </div><!-- End -->
@@ -733,14 +740,15 @@
                     <div class="row">
                         <div class="col">
                             <div class="text-center" style="padding: 50px 0; color: black;">
-                                <p>Each and every project is unique with your own creations. Still eager to know more?</p>
+                                <p>Each and every project is unique with your own creations. Still eager to know more?
+                                </p>
                                 <div class="lm-footer ui page grid">
                                     <div class="center aligned column">
                                         <div ng-if="learn_more_display_button" class="btn-wrap"><a
                                                 href="{{home_page_text.bottom_banner.learn_more_button_text_link}}"
                                                 class="redirect-button ui large right labeled icon button"><span
-                                                    ng-bind="home_page_text.bottom_banner.learn_more_button_text"></span> <i
-                                                    class="question icon"></i></a></div>
+                                                    ng-bind="home_page_text.bottom_banner.learn_more_button_text"></span>
+                                                <i class="question icon"></i></a></div>
                                     </div>
                                 </div>
                             </div>
@@ -748,23 +756,24 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
     </div>
-</div>
-<div class="partner-logos" ng-if="public_settings.logo_links.length > 0"  style="padding: 50px 0; background-color: #d3d3d3;">
-    <div class="ui page grid">
-        <div class="column">
-            <h2 class="ui header center aligned partner-logos-title" translate="index_partnership_title"></h2>
-            <div class="partner-logos-grid ui centered six column stackable grid">
-                <div class="column" ng-repeat="link in public_settings.logo_links"><img ng-if="!link.url"
-                        class="company-logo ui image rounded" src="{{server}}/image/site_logo_320x80/{{link.image_link}}"
-                        alt="{{link.url}}"> <a ng-if="link.url" target="_blank" href="{{link.url}}"><img
-                            ng-if="link.image_link" class="company-logo ui image"
-                            src="{{server}}/image/site_logo_320x80/{{link.image_link}}" alt="{{link.url}}"></a>
+    <div class="partner-logos" ng-if="public_settings.logo_links.length > 0"
+        style="padding: 50px 0; background-color: #d3d3d3;">
+        <div class="ui page grid">
+            <div class="column">
+                <h2 class="ui header center aligned partner-logos-title" translate="index_partnership_title"></h2>
+                <div class="partner-logos-grid ui centered six column stackable grid">
+                    <div class="column" ng-repeat="link in public_settings.logo_links"><img ng-if="!link.url"
+                            class="company-logo ui image rounded"
+                            src="{{server}}/image/site_logo_320x80/{{link.image_link}}" alt="{{link.url}}"> <a
+                            ng-if="link.url" target="_blank" href="{{link.url}}"><img ng-if="link.image_link"
+                                class="company-logo ui image"
+                                src="{{server}}/image/site_logo_320x80/{{link.image_link}}" alt="{{link.url}}"></a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </div>

@@ -24,8 +24,11 @@
   <link ng-controller="FavIconCtrl" rel="shortcut icon" ng-href="{{faviconURL}}" type="image/png">
 
   <!-- google fonts -->
-  <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700|Pacifico|Lato:400,700,400italic,700italic&subset=latin' rel='stylesheet' type='text/css'>
+  <link
+    href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700|Pacifico|Lato:400,700,400italic,700italic&subset=latin&display=swap'
+    rel='stylesheet' type='text/css'>
 
+  <link rel="stylesheet" href="app/bower_components/bootstrap/css/bootstrap.min.css">
   <!-- semantic UI 1.x css -->
   <link rel="stylesheet" href="app/bower_components/semantic-ui/dist/semantic.min.css">
   <link rel="stylesheet" href="app/bower_components/font-awesome/css/font-awesome.min.css">
@@ -33,7 +36,7 @@
   <link rel="stylesheet" href="app/bower_components/ngQuickDate/dist/ng-quick-date.css">
   <link rel="stylesheet" href="app/bower_components/select2/select2.css">
   <link rel="stylesheet" href="app/bower_components/angular-ui-select/dist/select.min.css">
-  <link rel="stylesheet" href="stylesheets/pgwslider.css">
+  <!-- <link rel="stylesheet" href="stylesheets/pgwslider.css"> -->
 
   <!-- DO NOT REMOVE CUSTOM FILES -->
   <link rel="stylesheet" href="stylesheets/custom-pages.css">
@@ -67,13 +70,15 @@
   <link rel="stylesheet" type="text/css" href="plugins/froala/css/plugins/quick_insert.min.css">
   <link rel="stylesheet" type="text/css" href="plugins/froala/css/plugins/table.min.css">
   <link rel="stylesheet" type="text/css" href="plugins/froala/css/plugins/video.min.css">
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
+  <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
 
 
 </head>
 
-<body ng-controller="MainCtrl" class="container main-color" id="{{$root.page_route}}" ng-class="theme_classes" translate-cloak ng-cloak>
+<body ng-controller="MainCtrl" class="container main-color" id="{{$root.page_route}}" ng-class="theme_classes"
+  translate-cloak ng-cloak>
   <div id="loader" class="ui page dimmer">
     <div class="content">
       <div class="center">
@@ -90,10 +95,11 @@
     </a>
     <a href="{{site_logo_link}}" class="item" id="logo" ng-cloak>
       <div class="logo-wrap">
-        <img class="ui image" ng-src="{{logoUrl}}">
+        <img class="ui image" ng-src="./images/logo.jpg">
       </div>
     </a>
-    <a ng-class="{active: $location.path() == '/' + page.path}" class="item menu-item" ng-repeat="page in headerMenu" ng-href="{{page.path}}" my-target="{{page.id}}" ng-bind="page.name" target="_self"></a>
+    <a ng-class="{active: $location.path() == '/' + page.path}" class="item menu-item" ng-repeat="page in headerMenu"
+      ng-href="{{page.path}}" my-target="{{page.id}}" ng-bind="page.name" target="_self"></a>
     <div ng-show="User.isLoggedIn()">
 
       <h4 class="ui horizontal header divider inverted mobile-menu-header" translate>
@@ -101,10 +107,17 @@
       </h4>
       <div class="menu">
 
-        <a ng-if="User.portal_admin" class="item menu-item" ng-click="navItem()" ng-class="{active: $location.path() === '/admin/dashboard' && $location.hash() !== 'subscription-settings'}" href="/admin/dashboard/" translate> mobile_header_administration </a>
-        <a ng-if="User.campaign_manager" class="item menu-item" ng-class="{active: $location.path() === '/campaign-manager'}" href="/campaign-manager" translate> mobile_header_mycampaigns </a>
-        <a ng-if="User.campaign_backer" class="item menu-item" ng-class="{active: $location.path() === '/pledge-history'}" href="/pledge-history" translate> mobile_header_mycontributions </a>
-        <a class="item menu-item" class="item menu-item" ng-class="{active: $location.path() === 'message-center'}" href="/message-center" translate> mobile_header_mymessages</a>
+        <a ng-if="User.portal_admin" class="item menu-item" ng-click="navItem()"
+          ng-class="{active: $location.path() === '/admin/dashboard' && $location.hash() !== 'subscription-settings'}"
+          href="/admin/dashboard/" translate> mobile_header_administration </a>
+        <a ng-if="User.campaign_manager" class="item menu-item"
+          ng-class="{active: $location.path() === '/campaign-manager'}" href="/campaign-manager" translate>
+          mobile_header_mycampaigns </a>
+        <a ng-if="User.campaign_backer" class="item menu-item"
+          ng-class="{active: $location.path() === '/pledge-history'}" href="/pledge-history" translate>
+          mobile_header_mycontributions </a>
+        <a class="item menu-item" class="item menu-item" ng-class="{active: $location.path() === 'message-center'}"
+          href="/message-center" translate> mobile_header_mymessages</a>
 
 
       </div>
@@ -112,10 +125,12 @@
         <i class="user icon"></i> mobile_header_personalsettings
       </h4>
       <div class="menu">
-        <a class="item menu-item" ng-class="{active: $location.path() === '/profile-setting'}" href="/profile-setting" translate>
+        <a class="item menu-item" ng-class="{active: $location.path() === '/profile-setting'}" href="/profile-setting"
+          translate>
           mobile_header_profilesettings
         </a>
-        <a class="item menu-item" ng-class="{active: $location.path() === '/payment-setting'}" href="/payment-setting" translate>
+        <a class="item menu-item" ng-class="{active: $location.path() === '/payment-setting'}" href="/payment-setting"
+          translate>
           mobile_header_paymentsettings
         </a>
       </div>
@@ -129,8 +144,65 @@
     </script>
     <div id="nav-wrapper" ng-include src="'views/templates/partials/nav.html'" ng-hide="$root.nav_disabled"></div>
     <div id="main-bg" ng-view autoscroll="true" ng-class="{ 'sticky-menu-push' : stickyMenu }"></div>
-    <div id="footer-wrapper" ng-include src="'views/templates/partials/footer.html'" id="site-footer" ng-show="checkhome||checkstart||checkexplore||checkpledgehistory||checkCstatus||checkmessage||checkperson||checkSaccount||checklogin||checkapi||checkfooter"
-      ng-if="!$root.footer_disabled"></div>
+    <!-- <div id="footer-wrapper" ng-include src="'views/templates/partials/footer.html'" id="site-footer" ng-show="checkhome||checkstart||checkexplore||checkpledgehistory||checkCstatus||checkmessage||checkperson||checkSaccount||checklogin||checkapi||checkfooter"
+      ng-if="!$root.footer_disabled"></div> -->
+    <div class="footer-wrapper">
+      <div class="container">
+        <section style="height:80px;"></section>
+        <div class="row" style="text-align:center;">
+
+        </div>
+        <!----------- Footer ------------>
+        <footer class="footer-bs">
+          <div class="row">
+            <div class="col-md-4 footer-brand animated fadeInLeft">
+              <div class="" style="padding: 10px 0;">
+                <img src="./images/logo-190-73.jpg" alt="" class="img-thumbnail" />
+              </div>
+              <p>Suspendisse hendrerit tellus laoreet luctus pharetra. Aliquam porttitor vitae orci nec
+                ultricies. Curabitur vehicula, libero eget faucibus faucibus, purus erat eleifend enim,
+                porta pellentesque ex mi ut sem.</p>
+              <p>© 2014 BS3 UI Kit, All rights reserved</p>
+            </div>
+            <div class="col-md-4 footer-nav animated fadeInUp">
+              <h4>Menu —</h4>
+              <ul class="pages">
+                <li><a href="#">Travel</a></li>
+                <li><a href="#">Nature</a></li>
+                <li><a href="#">Explores</a></li>
+                <li><a href="#">Science</a></li>
+                <li><a href="#">Advice</a></li>
+              </ul>
+            </div>
+            <div class="col-md-4 footer-social animated fadeInDown">
+              <h4>Follow Us</h4>
+              <ul>
+                <li><a href="#">Facebook</a></li>
+                <li><a href="#">Twitter</a></li>
+                <li><a href="#">Instagram</a></li>
+                <li><a href="#">RSS</a></li>
+              </ul>
+            </div>
+            <!-- <div class="col-md-3 footer-ns animated fadeInRight">
+                        <h4>Newsletter</h4>
+                        <p>A rover wearing a fuzzy suit doesn’t alarm the real penguins</p>
+                        <p>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search for...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button"><span
+                                            class="glyphicon glyphicon-envelope"></span></button>
+                                </span>
+                            </div> /input-group -->
+            </p>
+          </div>
+      </div>
+      </footer>
+      <section style="text-align:center; margin:10px auto;">
+        <!-- <p>Designed by <a href="http://enfoplus.net">Prince J. Sargbah</a></p> -->
+      </section>
+
+    </div>
   </div>
   <a href id="back-to-top" ng-click="backToTop()">
     <i class="large circular inverted double angle up icon"></i>
@@ -142,7 +214,7 @@
 
   <script src="app/bower_components/jquery-ui/jquery-ui.min.js"></script>
 
-  <script src="https://f.vimeocdn.com/js/froogaloop2.min.js"></script>
+  <script src="https://f.vimeocdn.com/js/froogaloop2.min.js" defer></script>
 
   <script src="scripts/app.js"></script>
   <script src="app_local.js"></script>
@@ -267,8 +339,11 @@
   <!-- ng-clip and zeroClipboard plug-in -->
   <script src="app/bower_components/ng-clip-master/dest/ng-clip.min.js"></script>
 
+  <!-- Bootstrap -->
+  <script src="app/bower_components/bootstrap/js/bootstrap.min.js"></script>
+
   <!-- Semantic UI 1.x script -->
-  <script src="app/bower_components/semantic-ui/dist/semantic.min.js"></script>
+  <script src="app/bower_components/semantic-ui/dist/semantic.min.js" defer></script>
 
   <script type="text/javascript" src="app/bower_components/jquery.payment/lib/jquery.payment.js"></script>
 
