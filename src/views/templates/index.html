@@ -110,58 +110,6 @@
           <span class="sr-only">Next</span>
         </a>
       </div>
-      <!-- Bootstrap Carousel -->
-      <!-- <div class="banner-media-content">
-          <div id="video-wrapper" ng-show="site_theme_banner_is_image==false"
-              ng-class="{'video-video-tag':site_theme_banner_video_link_type=='custom', 'video-iframe-tag' :site_theme_banner_video_link_type=='vimeo' || site_theme_banner_video_link_type=='youtube'}">
-              <div class="video-banner">
-                  <youtube-video ng-if="site_theme_banner_video_link_type=='youtube'"
-                      video-id="{{site_theme_banner_video_link}}" id="ytplayer" autoplay="true"
-                      mute="{{site_theme_banner_video_mute}}" modest-branding="true"></youtube-video><iframe
-                      id="vimeoplayer" allow="autoplay;" ng-if="site_theme_banner_video_link_type=='vimeo'"
-                      ng-src="{{site_theme_banner_video_link}}" frameborder="0"></iframe><video
-                      ng-if="site_theme_banner_video_link_type=='custom'"
-                      ng-attr-muted="{{site_theme_banner_video_mute ? '' : undefined}}" id="custom-video-player" loop
-                      autoplay>
-                      <source ng-src="{{site_theme_banner_video_link}}" type="video/mp4"></video>
-              </div>
-          </div>
-          <div ng-class="{'hide-desktop': site_theme_banner_is_image==false}" id="bgimage-wrapper"
-              class="masthead column" ng-controller="mastheadCtrl"></div>
-      </div> -->
-      <!-- <div class="banner-content">
-          <div class="banner-content-grid ui page grid" ng-style="blockAlignmentStyle">
-              <div class="column">
-                  <h1 class="header-title-one ui inverted huge header" ng-style="main_banner_font_color"
-                      ng-if="home_page_text.main_banner.header_one" ng-bind="home_page_text.main_banner.header_one">
-                  </h1>
-                  <h2 class="header-title-two ui inverted header" ng-style="main_banner_font_color"
-                      ng-if="home_page_text.main_banner.header_two" ng-bind="home_page_text.main_banner.header_two">
-                  </h2>
-                  <p class="header-description" ng-style="main_banner_font_color"
-                      ng-if="home_page_text.main_banner.paragraph" ng-bind="home_page_text.main_banner.paragraph"></p>
-                  <div class="masthead-button-wrap" ng-controller="CampaignStatusCtrl"><a
-                          href="{{home_page_text.main_banner.button_text_link}}"
-                          ng-if="home_page_text.main_banner.display_button && !hideStartCampaignPage">
-                          <div class="ui large masthead-button right labeled icon button"
-                              ng-if="!(campaign.entry_id && (campaign.entry_status_id == 1 || campaign.entry_status_id == 3)) && !hideStartButton">
-                              <span ng-bind="home_page_text.main_banner.button_text"></span> 
-                              <i class="right long arrow icon"></i></div>
-                      </a>
-                      <a ng-click="goToCampaignCreation()"
-                          ng-if="home_page_text.main_banner.display_button && hideStartCampaignPage">
-                          <div class="ui large masthead-button right labeled icon button"
-                              ng-if="!(campaign.entry_id && (campaign.entry_status_id == 1 || campaign.entry_status_id == 3)) && !hideStartButton">
-                              <span ng-bind="home_page_text.main_banner.button_text"></span> <i
-                                  class="right long arrow icon"></i></div>
-                      </a><a href="getstarted/{{campaign.entry_id}}"
-                          class="ui large masthhead-button right labeled teal icon button"
-                          ng-if="campaign.entry_id&& (campaign.entry_status_id == 1 || campaign.entry_status_id == 3)"><span
-                              translate="index_continue_project"></span> <i class="right long arrow icon"></i></a>
-                  </div>
-              </div>
-          </div>
-      </div> -->
     </div>
     <div ng-if="homepageCustomHtmlBlock" html-render html="homepageCustomHtmlBlock.html" class="fr-view"
       id="homepage-custom-html-block"></div>

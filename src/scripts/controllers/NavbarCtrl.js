@@ -13,7 +13,7 @@ app.controller('NavbarCtrl', function ($location, $route, $scope, $rootScope, Re
     // get site logo
     var logo_url = success.public_setting.site_logo.path_external;
     $scope.payment_gateway = success.public_setting.site_payment_gateway;
-    $scope.logoUrl = logo_url ? API_URL.url + '/image/site_logo_320x80/' + logo_url : "images/placeholder-images/placeholder_logo.png";
+    $scope.logoUrl = logo_url ? API_URL.url + '/image/site_logo_320x80/' + logo_url : "images/logo.jpg";
     if (typeof success.public_setting.site_logo_link == 'undefined') {
       $scope.site_logo_link = '/';
     } else {
