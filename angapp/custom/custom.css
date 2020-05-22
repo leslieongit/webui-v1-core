@@ -272,3 +272,7 @@ body.pushable>.pusher {
         font-size: initial;
     }
 } */
+
+body.pushable>.pusher {
+    background-color: #ffffff !important;
+}
