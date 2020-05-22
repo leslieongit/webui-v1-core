@@ -14,12 +14,14 @@
                 <div class="nav-main-right right menu">
                     <div class="item collapsible search-item" ng-controller="NavSearchCtrl">
                         <form action="" method="get" autocomplete="off">
+                            <!-- search -->
                             <div class="ui icon input" on-enter="navSearchCampaign()"><input
                                     id="main-nav-campaign-search" ng-change="search()" type="text"
                                     ng-model="searchingCampaign" ng-attr-placeholder=" {{'navbar_search' | translate}} "
                                     name="nav-search" autocomplete="off"> <i class="search link icon"
                                     ng-click="navSearchCampaign()"></i>
                             </div>
+                            <!-- Search -->
                         </form>
                     </div>
                     <div class="item collapsible user-greeting" ng-show="User.isLoggedIn()">

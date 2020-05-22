@@ -31,6 +31,14 @@ app.config(function($routeProvider, $locationProvider, RestangularProvider, $htt
             templateUrl: 'views/templates/login-register.html',
             title: 'Login'
         })
+        .when('/about', { // About page
+            templateUrl: 'views/templates/about.html',
+            title: 'About'
+        })
+        .when('/faq', { // FAQ page
+            templateUrl: 'views/templates/faq.html',
+            title: 'FAQ'
+        })
         .when('/getstarted/:campaign_id?', { // Campaign editing page
             templateUrl: 'views/templates/getstarted.html',
             controller: 'CreateCampaignCtrl',
