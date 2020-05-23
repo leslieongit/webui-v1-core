@@ -546,7 +546,7 @@ only screen and (min-device-pixel-ratio:1.5) {
 }
 
 #front-page .partner-logos .partner-logos-title {
-    color: #00b5ad;
+    color: #1e2979;
     padding-bottom: 10px
 }
 
@@ -715,7 +715,7 @@ only screen and (min-device-pixel-ratio:1.5) {
 }
 
 .theme-color-setting .color-grid .color-item:nth-child(3) a {
-    background-color: #00b5ad
+    background-color: #1e2979
 }
 
 .theme-color-setting .color-grid .color-item:nth-child(4) a {
@@ -6877,7 +6877,7 @@ body.loading .loader-modal {
 }
 
 .campaign-widget-code .widget-embed-code ::selection {
-    background: #00b5ad;
+    background: #1e2979;
     color: #fff
 }
 
@@ -7756,21 +7756,21 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-banner-3 #learnmore-wrap {
-    background-color: #00b5ad
+    background-color: #1e2979
 }
 
 .container.main-color.theme-banner-3 #socialicons-wrap .social-link:hover {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-banner-3 .mainbody-wrap .background-wrap .campaignsteps .setup.column.active .step-link {
-    background-color: #00b5ad;
+    background-color: #1e2979;
     color: #fff;
-    border-color: #00b5ad
+    border-color: #1e2979
 }
 
 .container.main-color.theme-banner-3 .ui.basic.top-header.segment {
-    background-color: #00b5ad
+    background-color: #1e2979
 }
 
 .container.main-color.theme-banner-3 .ui.basic.top-header.segment .ui.header {
@@ -7784,7 +7784,7 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-banner-3 #api-menu .menu-mainheader {
-    background: #00b5ad
+    background: #1e2979
 }
 
 .container.main-color.theme-banner-4 #learnmore-wrap {
@@ -8144,19 +8144,19 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-button-3 .collapsible-settings #m-user-settings {
-    background-color: #00b5ad
+    background-color: #1e2979
 }
 
 .container.main-color.theme-button-3 #login button,
 .container.main-color.theme-button-3 #register button {
-    background-color: #00b5ad;
+    background-color: #1e2979;
     color: #fff
 }
 
 .container.main-color.theme-button-3 .main-block-heading,
 .container.main-color.theme-button-3 .sidebar-heading {
-    background-color: #00b5ad;
-    border-color: #00b5ad
+    background-color: #1e2979;
+    border-color: #1e2979
 }
 
 .container.main-color.theme-button-3 .contribute-button,
@@ -8164,7 +8164,7 @@ body.loading .loader-modal {
 .container.main-color.theme-button-3 .redirect-button,
 .container.main-color.theme-button-3 .start-button,
 .container.main-color.theme-button-3 .view-more-btn {
-    background-color: #00b5ad;
+    background-color: #1e2979;
     color: #fff
 }
 
@@ -8673,7 +8673,7 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-font-3 a.text-link {
-    color: #00b5ad !important
+    color: #1e2979 !important
 }
 
 .container.main-color.theme-font-3 a.text-link:hover {
@@ -8681,114 +8681,114 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-font-3 #faq .faq-header h2 {
-    color: #00b5ad !important
+    color: #1e2979 !important
 }
 
 .container.main-color.theme-font-3 .campaign-top-header .campaign-description .campaign-link .item-wrap .city-link {
-    color: #00b5ad !important
+    color: #1e2979 !important
 }
 
 .container.main-color.theme-font-3 .text-setting-column h4.ui.header {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-font-3 .front-campaign-list .campaign-section-title .icon {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-font-3 .funding-wrap .ui.funding-info.list .item span.c-value {
-    color: #00b5ad !important
+    color: #1e2979 !important
 }
 
 .container.main-color.theme-font-3 .reward-wrap .reward-header .reward-amount .amount {
-    color: #00b5ad !important
+    color: #1e2979 !important
 }
 
 .container.main-color.theme-font-3 .payment-total .payment-row {
-    color: #00b5ad !important
+    color: #1e2979 !important
 }
 
 .container.main-color.theme-font-3 .account-tab-content h3.ui.header,
 .container.main-color.theme-font-3 .pledge-campaign-info h3.ui.header,
 .container.main-color.theme-font-3 .profile-tab-content h3.ui.header {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-font-3 .reward-information .reward-header .right-col .reward-value {
-    color: #00b5ad !important
+    color: #1e2979 !important
 }
 
 .container.main-color.theme-font-3 .reward-information .your-contrib .contrib-amnt {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-font-3 #footer-wrap .header {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-font-3 .ui.vertical.menu.project-sidebar-list .header.item {
-    background-color: #00b5ad;
+    background-color: #1e2979;
     color: #fff
 }
 
 .container.main-color.theme-font-3 .nav-tabs li.active {
     z-index: 500;
-    border-bottom: 4px solid #00b5ad
+    border-bottom: 4px solid #1e2979
 }
 
 .container.main-color.theme-font-3 .nav-tabs li.active a {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-font-3 .nav-tabs li.active tab-heading span.backer-number {
-    background-color: #00b5ad
+    background-color: #1e2979
 }
 
 .container.main-color.theme-font-3 .mainbody-wrap .explore-page .ui.explore.breadcrumb a {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-font-3 .mainbody-wrap .ui.basic.background-wrap.segment .ui.campaign-link.list .item .category-link,
 .container.main-color.theme-font-3 .mainbody-wrap .ui.basic.background-wrap.segment .ui.campaign-link.list .item .city-link {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-font-3 .mainbody-wrap .ui.basic.background-wrap.segment .ui.campaign-link.list .item .category-link:hover,
 .container.main-color.theme-font-3 .mainbody-wrap .ui.basic.background-wrap.segment .ui.campaign-link.list .item .city-link:hover {
-    color: #00b5ad;
+    color: #1e2979;
     text-decoration: underline
 }
 
 .container.main-color.theme-font-3 .mainbody-wrap .ui.basic.background-wrap.segment .ui.campaign-link.list .list {
     padding: 0;
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-font-3 #login h3,
 .container.main-color.theme-font-3 #register h3 {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-font-3 form[name=campaign_form] h3,
 .container.main-color.theme-font-3 form[name=profile_edit] h3,
 .container.main-color.theme-font-3 form[name=startfunding-form] h3 {
-    color: #00b5ad !important
+    color: #1e2979 !important
 }
 
 .container.main-color.theme-font-3 .site-setting-content h3 {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-font-3 .mainbody-wrap .ui.basic.background-wrap.segment .ui.basic.campaign-bg.segment .toggle-preview {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-font-3 .mainbody-wrap .ui.basic.background-wrap.segment .ui.basic.campaign-bg.segment .eleven.wide.column .invite-link p {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-font-3 .mainbody-wrap .ui.basic.background-wrap.segment .ui.basic.campaign-bg.segment .eleven.wide.column .invite-link a:hover {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-font-4 a.text-link {
@@ -9871,7 +9871,7 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-footer-background-3 #footer-wrap {
-    background-color: #00b5ad
+    background-color: #1e2979
 }
 
 .container.main-color.theme-footer-background-4 #footer-wrap {
@@ -9930,11 +9930,11 @@ body.loading .loader-modal {
 
 .container.main-color.theme-footer-font-3 #footer-wrap .ui.header,
 .container.main-color.theme-footer-font-3 #footer-wrap a {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-footer-font-3 #footer-wrap .copyright {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-footer-font-4 #footer-wrap .ui.header,
@@ -10063,12 +10063,12 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-reward-3 .rewards .pledge-level>li:hover {
-    background: #00b5ad !important;
-    color: #00b5ad !important
+    background: #1e2979 !important;
+    color: #1e2979 !important
 }
 
 .container.main-color.theme-reward-3 .rewards .pledge-level .choose-reward-btn {
-    background: #00b5ad !important;
+    background: #1e2979 !important;
     color: #fff
 }
 
@@ -10706,7 +10706,7 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-table-3 .mainbody-wrap.admin-dashboard #admin-setting-tabs .category-table .sort-cat.sort-cat-header .sort-row {
-    background: #00b5ad
+    background: #1e2979
 }
 
 .container.main-color.theme-table-3 .mainbody-wrap.admin-dashboard #admin-setting-tabs .category-table .sort-cat.sort-cat-header .sort-row .sort-td {
@@ -10748,9 +10748,9 @@ body.loading .loader-modal {
 .container.main-color.theme-table-3 table:not(.very) thead tr th,
 .container.main-color.theme-table-3 table:not(.very) thead tr th>* {
     padding: 1em .8em;
-    background: #00b5ad;
+    background: #1e2979;
     color: #fff;
-    border-color: #00b5ad
+    border-color: #1e2979
 }
 
 .container.main-color.theme-table-3 table:not(.very) tbody tr:nth-of-type(odd) {
@@ -10783,9 +10783,9 @@ body.loading .loader-modal {
 .container.main-color.theme-table-3 .contribution div.contribution-header {
     padding: 10px 8px;
     font-weight: 700;
-    background: #00b5ad;
+    background: #1e2979;
     color: #fff;
-    border-color: #00b5ad
+    border-color: #1e2979
 }
 
 .container.main-color.theme-table-3 .contribution div.data {
@@ -10810,25 +10810,25 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-table-3 .page-table .page-grid-header .fifteen.wide {
-    background-color: #00b5ad
+    background-color: #1e2979
 }
 
 .container.main-color.theme-table-3 .ad-tab-content .tab-table-header,
 .container.main-color.theme-table-3 .menu-management .tab-table-header {
-    background-color: #00b5ad;
+    background-color: #1e2979;
     color: #fff
 }
 
 .container.main-color.theme-table-3 .pagination>li>a,
 .container.main-color.theme-table-3 .pagination>li>span {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-table-3 .pagination>li>a:focus,
 .container.main-color.theme-table-3 .pagination>li>a:hover,
 .container.main-color.theme-table-3 .pagination>li>span:focus,
 .container.main-color.theme-table-3 .pagination>li>span:hover {
-    background-color: #00b5ad;
+    background-color: #1e2979;
     color: #fff !important
 }
 
@@ -10838,7 +10838,7 @@ body.loading .loader-modal {
 .container.main-color.theme-table-3 .pagination>.active>span,
 .container.main-color.theme-table-3 .pagination>.active>span:focus,
 .container.main-color.theme-table-3 .pagination>.active>span:hover {
-    background-color: #00b5ad;
+    background-color: #1e2979;
     color: #fff !important
 }
 
@@ -10854,7 +10854,7 @@ body.loading .loader-modal {
 .container.main-color.theme-table-3 .admin-dashboard .portal-setting-tabs table tbody .t-delete .edit.icon:hover,
 .container.main-color.theme-table-3 .admin-dashboard .portal-setting-tabs table tbody .t-edit .delete.icon:hover,
 .container.main-color.theme-table-3 .admin-dashboard .portal-setting-tabs table tbody .t-edit .edit.icon:hover {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-table-3 .admin-dashboard .portal-setting-tabs table tbody tr:hover {
@@ -12868,15 +12868,15 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-top-nav-background-3 .top-nav-bar {
-    background-color: #00b5ad
+    background-color: #1e2979
 }
 
 .container.main-color.theme-top-nav-background-3 #mobile-sidebar {
-    background-color: #00b5ad
+    background-color: #1e2979
 }
 
 .container.main-color.theme-top-nav-background-3 .main-menu.ui.inverted.menu .nav-wrap .nav-main-right .collapsible-settings .collapsible-settings-inner {
-    background-color: #00b5ad
+    background-color: #1e2979
 }
 
 .container.main-color.theme-top-nav-background-4 .top-nav-bar {
@@ -13041,29 +13041,29 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-top-nav-font-3 .top-nav-bar a {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-top-nav-font-3 #mobile-sidebar a {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-top-nav-font-3 .mobile-menu-header {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-top-nav-font-3 .ui.dropdown.collapsible,
 .container.main-color.theme-top-nav-font-3 .user-greeting {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-top-nav-font-3 .collapsible-settings i.setting {
-    color: #00b5ad
+    color: #1e2979
 }
 
 .container.main-color.theme-top-nav-font-3 .main-menu.ui.inverted.menu .nav-wrap .nav-main-right .collapsible-settings .header,
 .container.main-color.theme-top-nav-font-3 .main-menu.ui.inverted.menu .nav-wrap .nav-main-right .collapsible-settings .item {
-    color: #00b5ad !important
+    color: #1e2979 !important
 }
 
 .container.main-color.theme-top-nav-font-4 .top-nav-bar a {
