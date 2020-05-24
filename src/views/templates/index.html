@@ -653,6 +653,16 @@
           </div>
         </div>
         <!-- /.row -->
+        <div class="row">
+          <div class="col">
+            <div class="text-center col-pad">
+              <h3 style="color: white;">With all of the above industries, find out how we can work with you.</h3>
+
+              <a href="/how-it-works" class="btn btn-danger btn-lg batani">Read More <i
+                  class="fa fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -759,79 +769,107 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
+    <div style="padding-top: 100px; padding-bottom: 100px; background-color: #6c757d;">
+      <h2 class="ui header center aligned"><span style="color: #fff">The Products</span></h2>
+      <p style="color: #fff;" class="text-center">The promoter(s) can choose to invite the funds to come into the business as equity, quasi equity, a loan or a combination of the options</p>
+      <div class="ui two column stackable page grid center aligned">
+        <div class="column col-pad">
+          <img class="rounded" src="/images/equity-600-400.jpg" alt="" style="margin: 0 auto;">
+          <div class="text-center ">
+            <h3 class="ui header" style="color: #fff;">EQUITY</h3>
+            <p style="color: #fff;">The recommended range of equity stake to be made available is between 10% and 45% of the
+              funded company.</p>
+          </div>
+        </div>
+        <div class="column col-pad">
+          <img class="rounded" src="/images/equity-quasi-600-400.jpg" alt="" style="margin: 0 auto;">
+          <div class="text-center ">
+            <h3 class="ui header"><span style="color: #fff;">QUASI EQUITY</span></h3>
+            <p style="color: #fff;">These include Preference shares, debentures etc, together with all the options that come
+              with such instruments (convertible, redeemable, cumulative, participating etc)</p>
+          </div>
+        </div>
+        <div class="column col-pad">
+          <img class="rounded" src="/images/loan-600-400.jpg" alt="" style="margin: 0 auto;">
+          <div class="text-center">
+            <h3 class="ui header"><span style="color: #fff;">LOAN</span></h3>
+            <p style="color: #fff;">Vanilla loans will carry a market related risk driven interest rate, and will be for a
+              minimum of 6 months and a maximum of 5 years.</p>
+          </div>
+        </div>
+        <div class="column col-pad">
+          <img class="rounded" src="/images/equity-loan-600-400.jpg" alt="" style="margin: 0 auto;">
+          <div class="text-center">
+            <h3 class="ui header"><span style="color: #fff;">EQUITY/LOAN COMBINATION</span></h3>
+            <p style="color: #fff;">Combinations of the above in different proportions will be possible, depending on the
+              project being financed.</p>
+          </div>
+        </div>
+      </div>
+      <div class="text-center col-pad">
+        <h3 style="color: white;">With all of the above, the selected option(s) will be on the advice of LCC, and will depend on a number of
+          project related matters.</h3>
+    
+        <a href="/how-it-works" class="btn btn-danger btn-lg batani">How It Works <i class="fa fa-chevron-down"></i></a>
       </div>
     </div>
 
     <!-- LOGO -->
-    <div class="partner-logos" ng-if="public_settings.logo_links.length > 0" style="padding: 50px 0; background-color: #d3d3d3;">
+    <div class="partner-logos" ng-if="public_settings.logo_links.length > 0"
+      style="padding: 50px 0; background-color: #ffffff;">
       <div class="ui page grid">
         <div class="column">
           <h2 class="ui header center aligned partner-logos-title" translate="index_partnership_title"></h2>
+          <p class="text-center">Some of the expert partners listed below have not yet been approached officially, and
+            may change, should
+            one or more of them decline or be not eligible to participate in this initiative.</p>
           <div class="partner-logos-grid ui centered six column stackable grid">
             <div class="column" ng-repeat="link in public_settings.logo_links">
-              <img ng-if="!link.url" class="company-logo ui image"
-                src="../../images/partnerships/cabs-300-300.jpg" alt="CABS">
-              <a ng-if="link.url" target="_blank" href="https://cabs.co.zw">
-                <img ng-if="link.image_link" class="company-logo ui image"
-                  src="../../images/partnerships/cabs-300-300.jpg" alt="CABS">
+              <a id="partner-1">
+                <img class="company-logo ui image" src="../../images/partnerships/cabs-300-300.jpg" alt="CABS">
               </a>
             </div>
             <div class="column" ng-repeat="link in public_settings.logo_links">
-              <img ng-if="!link.url" class="company-logo ui image"
-                src="../../images/partnerships/thrinacia-300-300.jpg" alt="Thrinacia">
-              <a ng-if="link.url" target="_blank" href="{{link.url}}">
-                <img ng-if="link.image_link" class="company-logo ui image"
-                  src="../../images/partnerships/thrinacia-300-300.jpg" alt="Thrinacia">
-              </a>
+              <img ng-if="!link.url" class="company-logo ui image" src="../../images/partnerships/thrinacia-300-300.jpg"
+                alt="Thrinacia">
             </div>
             <div class="column" ng-repeat="link in public_settings.logo_links">
               <img ng-if="!link.url" class="company-logo ui image"
                 src="../../images/partnerships/coghan-welsh-300-300.jpg" alt="Coghan Welsh">
-              <a ng-if="link.url" target="_blank" href="{{link.url}}">
+              <!-- <a ng-if="link.url" target="_blank" href="{{link.url}}" id="partner-1">
                 <img ng-if="link.image_link" class="company-logo ui image"
                   src="../../images/partnerships/coghan-welsh-300-300.jpg" alt="Coghan Welsh">
-              </a>
+              </a> -->
             </div>
             <div class="column" ng-repeat="link in public_settings.logo_links">
-              <img ng-if="!link.url" class="company-logo ui image"
-                src="../../images/partnerships/acfa-300-300.jpg" alt="ACFA">
-              <a ng-if="link.url" target="_blank" href="{{link.url}}">
-                <img ng-if="link.image_link" class="company-logo ui image"
-                  src="../../images/partnerships/afca-300-300.jpg" alt="ACFA">
-              </a>
+              <img ng-if="!link.url" class="company-logo ui image" src="../../images/partnerships/acfa-300-300.jpg"
+                alt="ACFA">
             </div>
             <div class="column" ng-repeat="link in public_settings.logo_links">
               <img ng-if="!link.url" class="company-logo ui image"
                 src="../../images/partnerships/old-mutual-300-300.jpg" alt="Old Mutual">
-              <a ng-if="link.url" target="_blank" href="{{link.url}}">
-                <img ng-if="link.image_link" class="company-logo ui image"
-                  src="../../images/partnerships/old-mutual-300-300.jpg" alt="Old Mutual">
-              </a>
             </div>
             <div class="column" ng-repeat="link in public_settings.logo_links">
-              <img ng-if="!link.url" class="company-logo ui image"
-                src="../../images/partnerships/pna-300-300.jpg" alt="PNA">
-              <a ng-if="link.url" target="_blank" href="{{link.url}}">
-                <img ng-if="link.image_link" class="company-logo ui image"
-                  src="../../images/partnerships/pna-300-300.jpg" alt="PNA">
-              </a>
+              <img ng-if="!link.url" class="company-logo ui image" src="../../images/partnerships/pna-300-300.jpg"
+                alt="PNA">
             </div>
             <div class="column" ng-repeat="link in public_settings.logo_links">
-              <img ng-if="!link.url" class="company-logo ui image"
-                src="../../images/partnerships/ses-300-300.jpg" alt="SES">
-              <a ng-if="link.url" target="_blank" href="{{link.url}}">
-                <img ng-if="link.image_link" class="company-logo ui image"
-                  src="../../images/partnerships/ses-300-300.jpg" alt="SES">
-              </a>
+              <img ng-if="!link.url" class="company-logo ui image" src="../../images/partnerships/ses-300-300.jpg"
+                alt="SES">
             </div>
             <div class="column" ng-repeat="link in public_settings.logo_links">
               <img ng-if="!link.url" class="company-logo ui image"
                 src="../../images/partnerships/cabs-custodian-300-300.jpg" alt="CABS Custodian">
-              <a ng-if="link.url" target="_blank" href="{{link.url}}">
-                <img ng-if="link.image_link" class="company-logo ui image"
-                  src="../../images/partnerships/cabs-custodian-300-300.jpg" alt="CABS Custodian">
-              </a>
+            </div>
+          </div>
+          <div class="container" id="partner-extend">
+            <div class="row">
+              <div class="col" style="background-color: black;">
+                <img src="../../images/tatenda-mapigoti-CtqY0-G72qg-unsplash-1920-550.jpg" />
+              </div>
             </div>
           </div>
         </div>

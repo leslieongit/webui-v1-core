@@ -719,7 +719,7 @@ only screen and (min-device-pixel-ratio:1.5) {
 }
 
 .theme-color-setting .color-grid .color-item:nth-child(4) a {
-    background-color: #4c9ee7
+    background-color: #222d7b
 }
 
 .theme-color-setting .color-grid .color-item:nth-child(5) a {
@@ -7788,21 +7788,21 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-banner-4 #learnmore-wrap {
-    background-color: #4c9ee7
+    background-color: #222d7b
 }
 
 .container.main-color.theme-banner-4 #socialicons-wrap .social-link:hover {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-banner-4 .mainbody-wrap .background-wrap .campaignsteps .setup.column.active .step-link {
-    background-color: #4c9ee7;
+    background-color: #222d7b;
     color: #fff;
-    border-color: #4c9ee7
+    border-color: #222d7b
 }
 
 .container.main-color.theme-banner-4 .ui.basic.top-header.segment {
-    background-color: #4c9ee7
+    background-color: #222d7b
 }
 
 .container.main-color.theme-banner-4 .ui.basic.top-header.segment .ui.header {
@@ -7816,7 +7816,7 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-banner-4 #api-menu .menu-mainheader {
-    background: #4c9ee7
+    background: #222d7b
 }
 
 .container.main-color.theme-banner-5 #learnmore-wrap {
@@ -8173,19 +8173,19 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-button-4 .collapsible-settings #m-user-settings {
-    background-color: #4c9ee7
+    background-color: #222d7b
 }
 
 .container.main-color.theme-button-4 #login button,
 .container.main-color.theme-button-4 #register button {
-    background-color: #4c9ee7;
+    background-color: #222d7b;
     color: #fff
 }
 
 .container.main-color.theme-button-4 .main-block-heading,
 .container.main-color.theme-button-4 .sidebar-heading {
-    background-color: #4c9ee7;
-    border-color: #4c9ee7
+    background-color: #222d7b;
+    border-color: #222d7b
 }
 
 .container.main-color.theme-button-4 .contribute-button,
@@ -8193,7 +8193,7 @@ body.loading .loader-modal {
 .container.main-color.theme-button-4 .redirect-button,
 .container.main-color.theme-button-4 .start-button,
 .container.main-color.theme-button-4 .view-more-btn {
-    background-color: #4c9ee7;
+    background-color: #222d7b;
     color: #fff
 }
 
@@ -8792,7 +8792,7 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-font-4 a.text-link {
-    color: #4c9ee7 !important
+    color: #222d7b !important
 }
 
 .container.main-color.theme-font-4 a.text-link:hover {
@@ -8800,114 +8800,114 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-font-4 #faq .faq-header h2 {
-    color: #4c9ee7 !important
+    color: #222d7b !important
 }
 
 .container.main-color.theme-font-4 .campaign-top-header .campaign-description .campaign-link .item-wrap .city-link {
-    color: #4c9ee7 !important
+    color: #222d7b !important
 }
 
 .container.main-color.theme-font-4 .text-setting-column h4.ui.header {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-font-4 .front-campaign-list .campaign-section-title .icon {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-font-4 .funding-wrap .ui.funding-info.list .item span.c-value {
-    color: #4c9ee7 !important
+    color: #222d7b !important
 }
 
 .container.main-color.theme-font-4 .reward-wrap .reward-header .reward-amount .amount {
-    color: #4c9ee7 !important
+    color: #222d7b !important
 }
 
 .container.main-color.theme-font-4 .payment-total .payment-row {
-    color: #4c9ee7 !important
+    color: #222d7b !important
 }
 
 .container.main-color.theme-font-4 .account-tab-content h3.ui.header,
 .container.main-color.theme-font-4 .pledge-campaign-info h3.ui.header,
 .container.main-color.theme-font-4 .profile-tab-content h3.ui.header {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-font-4 .reward-information .reward-header .right-col .reward-value {
-    color: #4c9ee7 !important
+    color: #222d7b !important
 }
 
 .container.main-color.theme-font-4 .reward-information .your-contrib .contrib-amnt {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-font-4 #footer-wrap .header {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-font-4 .ui.vertical.menu.project-sidebar-list .header.item {
-    background-color: #4c9ee7;
+    background-color: #222d7b;
     color: #fff
 }
 
 .container.main-color.theme-font-4 .nav-tabs li.active {
     z-index: 500;
-    border-bottom: 4px solid #4c9ee7
+    border-bottom: 4px solid #222d7b
 }
 
 .container.main-color.theme-font-4 .nav-tabs li.active a {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-font-4 .nav-tabs li.active tab-heading span.backer-number {
-    background-color: #4c9ee7
+    background-color: #222d7b
 }
 
 .container.main-color.theme-font-4 .mainbody-wrap .explore-page .ui.explore.breadcrumb a {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-font-4 .mainbody-wrap .ui.basic.background-wrap.segment .ui.campaign-link.list .item .category-link,
 .container.main-color.theme-font-4 .mainbody-wrap .ui.basic.background-wrap.segment .ui.campaign-link.list .item .city-link {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-font-4 .mainbody-wrap .ui.basic.background-wrap.segment .ui.campaign-link.list .item .category-link:hover,
 .container.main-color.theme-font-4 .mainbody-wrap .ui.basic.background-wrap.segment .ui.campaign-link.list .item .city-link:hover {
-    color: #4c9ee7;
+    color: #222d7b;
     text-decoration: underline
 }
 
 .container.main-color.theme-font-4 .mainbody-wrap .ui.basic.background-wrap.segment .ui.campaign-link.list .list {
     padding: 0;
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-font-4 #login h3,
 .container.main-color.theme-font-4 #register h3 {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-font-4 form[name=campaign_form] h3,
 .container.main-color.theme-font-4 form[name=profile_edit] h3,
 .container.main-color.theme-font-4 form[name=startfunding-form] h3 {
-    color: #4c9ee7 !important
+    color: #222d7b !important
 }
 
 .container.main-color.theme-font-4 .site-setting-content h3 {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-font-4 .mainbody-wrap .ui.basic.background-wrap.segment .ui.basic.campaign-bg.segment .toggle-preview {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-font-4 .mainbody-wrap .ui.basic.background-wrap.segment .ui.basic.campaign-bg.segment .eleven.wide.column .invite-link p {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-font-4 .mainbody-wrap .ui.basic.background-wrap.segment .ui.basic.campaign-bg.segment .eleven.wide.column .invite-link a:hover {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-font-5 a.text-link {
@@ -9875,7 +9875,7 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-footer-background-4 #footer-wrap {
-    background-color: #4c9ee7
+    background-color: #222d7b
 }
 
 .container.main-color.theme-footer-background-5 #footer-wrap {
@@ -9939,11 +9939,11 @@ body.loading .loader-modal {
 
 .container.main-color.theme-footer-font-4 #footer-wrap .ui.header,
 .container.main-color.theme-footer-font-4 #footer-wrap a {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-footer-font-4 #footer-wrap .copyright {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-footer-font-5 #footer-wrap .ui.header,
@@ -10085,12 +10085,12 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-reward-4 .rewards .pledge-level>li:hover {
-    background: #4c9ee7 !important;
-    color: #4c9ee7 !important
+    background: #222d7b !important;
+    color: #222d7b !important
 }
 
 .container.main-color.theme-reward-4 .rewards .pledge-level .choose-reward-btn {
-    background: #4c9ee7 !important;
+    background: #222d7b !important;
     color: #fff
 }
 
@@ -10920,7 +10920,7 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-table-4 .mainbody-wrap.admin-dashboard #admin-setting-tabs .category-table .sort-cat.sort-cat-header .sort-row {
-    background: #4c9ee7
+    background: #222d7b
 }
 
 .container.main-color.theme-table-4 .mainbody-wrap.admin-dashboard #admin-setting-tabs .category-table .sort-cat.sort-cat-header .sort-row .sort-td {
@@ -10962,9 +10962,9 @@ body.loading .loader-modal {
 .container.main-color.theme-table-4 table:not(.very) thead tr th,
 .container.main-color.theme-table-4 table:not(.very) thead tr th>* {
     padding: 1em .8em;
-    background: #4c9ee7;
+    background: #222d7b;
     color: #fff;
-    border-color: #4c9ee7
+    border-color: #222d7b
 }
 
 .container.main-color.theme-table-4 table:not(.very) tbody tr:nth-of-type(odd) {
@@ -10997,9 +10997,9 @@ body.loading .loader-modal {
 .container.main-color.theme-table-4 .contribution div.contribution-header {
     padding: 10px 8px;
     font-weight: 700;
-    background: #4c9ee7;
+    background: #222d7b;
     color: #fff;
-    border-color: #4c9ee7
+    border-color: #222d7b
 }
 
 .container.main-color.theme-table-4 .contribution div.data {
@@ -11024,25 +11024,25 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-table-4 .page-table .page-grid-header .fifteen.wide {
-    background-color: #4c9ee7
+    background-color: #222d7b
 }
 
 .container.main-color.theme-table-4 .ad-tab-content .tab-table-header,
 .container.main-color.theme-table-4 .menu-management .tab-table-header {
-    background-color: #4c9ee7;
+    background-color: #222d7b;
     color: #fff
 }
 
 .container.main-color.theme-table-4 .pagination>li>a,
 .container.main-color.theme-table-4 .pagination>li>span {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-table-4 .pagination>li>a:focus,
 .container.main-color.theme-table-4 .pagination>li>a:hover,
 .container.main-color.theme-table-4 .pagination>li>span:focus,
 .container.main-color.theme-table-4 .pagination>li>span:hover {
-    background-color: #4c9ee7;
+    background-color: #222d7b;
     color: #fff !important
 }
 
@@ -11052,7 +11052,7 @@ body.loading .loader-modal {
 .container.main-color.theme-table-4 .pagination>.active>span,
 .container.main-color.theme-table-4 .pagination>.active>span:focus,
 .container.main-color.theme-table-4 .pagination>.active>span:hover {
-    background-color: #4c9ee7;
+    background-color: #222d7b;
     color: #fff !important
 }
 
@@ -11068,7 +11068,7 @@ body.loading .loader-modal {
 .container.main-color.theme-table-4 .admin-dashboard .portal-setting-tabs table tbody .t-delete .edit.icon:hover,
 .container.main-color.theme-table-4 .admin-dashboard .portal-setting-tabs table tbody .t-edit .delete.icon:hover,
 .container.main-color.theme-table-4 .admin-dashboard .portal-setting-tabs table tbody .t-edit .edit.icon:hover {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-table-4 .admin-dashboard .portal-setting-tabs table tbody tr:hover {
@@ -12880,15 +12880,15 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-top-nav-background-4 .top-nav-bar {
-    background-color: #4c9ee7
+    background-color: #222d7b
 }
 
 .container.main-color.theme-top-nav-background-4 #mobile-sidebar {
-    background-color: #4c9ee7
+    background-color: #222d7b
 }
 
 .container.main-color.theme-top-nav-background-4 .main-menu.ui.inverted.menu .nav-wrap .nav-main-right .collapsible-settings .collapsible-settings-inner {
-    background-color: #4c9ee7
+    background-color: #222d7b
 }
 
 .container.main-color.theme-top-nav-background-5 .top-nav-bar {
@@ -13067,29 +13067,29 @@ body.loading .loader-modal {
 }
 
 .container.main-color.theme-top-nav-font-4 .top-nav-bar a {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-top-nav-font-4 #mobile-sidebar a {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-top-nav-font-4 .mobile-menu-header {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-top-nav-font-4 .ui.dropdown.collapsible,
 .container.main-color.theme-top-nav-font-4 .user-greeting {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-top-nav-font-4 .collapsible-settings i.setting {
-    color: #4c9ee7
+    color: #222d7b
 }
 
 .container.main-color.theme-top-nav-font-4 .main-menu.ui.inverted.menu .nav-wrap .nav-main-right .collapsible-settings .header,
 .container.main-color.theme-top-nav-font-4 .main-menu.ui.inverted.menu .nav-wrap .nav-main-right .collapsible-settings .item {
-    color: #4c9ee7 !important
+    color: #222d7b !important
 }
 
 .container.main-color.theme-top-nav-font-5 .top-nav-bar a {
