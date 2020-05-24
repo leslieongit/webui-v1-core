@@ -284,6 +284,34 @@ body.pushable>.pusher {
     background-size: cover;
 }
 
+.inner-header-faq{
+    height: 400px;
+    background-image: url(/images/faq-1920-400.jpg);
+    background-position: center;
+    background-size: cover;
+}
+
+.inner-header-about{
+    height: 400px;
+    background-image: url(/images/about-1920-400.jpg);
+    background-position: center;
+    background-size: cover;
+}
+
+.inner-header-partnership{
+    height: 400px;
+    background-image: url(/images/about-1920-400.jpg);
+    background-position: center;
+    background-size: cover;
+}
+
+.inner-header-how-it-works{
+    height: 400px;
+    background-image: url(/images/how-to-1920-400.jpg);
+    background-position: center;
+    background-size: cover;
+}
+
 .ui.inverted.teal.segment {
     background-color: #1e2979 !important;
     color: #fff !important;
@@ -316,7 +344,7 @@ body.pushable>.pusher {
 .content-section-spacing-medium {
     padding-top: 40px;
     padding-bottom: 40px;
-}   
+}
 
 .middle-xs {
     -webkit-box-align: center;
@@ -338,4 +366,49 @@ body.pushable>.pusher {
 .footer-wrapper {
     padding: 50px 0;
     color: white;
+    background-color: #1e297a !important;
 }
+
+.footer-wrapper a {
+    color: white;
+}
+
+.footer-wrapper a:hover {
+    color: red;
+}
+
+.ui.inverted.menu .item,
+.ui.inverted.menu .item>a:not(.ui) {
+    color: #1e2979 !important;
+}
+
+.ui.inverted.menu {
+    background: #ffffff !important;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.batani {
+    border-radius: 20px;
+    /* height: 50px; */
+    width: 200px;
+}
+
+.col-pad {
+    padding: 50px !important;
+}
+
+.col-pad .text-center {
+    padding: 20px 34px;
+    font-size: initial;
+}
+
+#partner-extend {
+    display: none;
+}
+
+/* How to step process */
+
+/* end how to w */

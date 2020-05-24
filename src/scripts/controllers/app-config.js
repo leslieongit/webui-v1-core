@@ -39,6 +39,18 @@ app.config(function($routeProvider, $locationProvider, RestangularProvider, $htt
             templateUrl: 'views/templates/faq.html',
             title: 'FAQ'
         })
+        .when('/how-it-works', { // FAQ page
+            templateUrl: 'views/templates/how-it-works.html',
+            title: 'How It Works'
+        })
+        .when('/contact-us', { // FAQ page
+            templateUrl: 'views/templates/contact-us.html',
+            title: 'Contact Us'
+        })
+        .when('/partners', { // FAQ page
+            templateUrl: 'views/templates/partners.html',
+            title: 'Partners'
+        })
         .when('/getstarted/:campaign_id?', { // Campaign editing page
             templateUrl: 'views/templates/getstarted.html',
             controller: 'CreateCampaignCtrl',
