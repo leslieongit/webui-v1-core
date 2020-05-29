@@ -180,6 +180,9 @@ app.controller('CampaignStepCtrl', function($location, CampaignSettingsService, 
   $scope.validateDetailStep = function() {
     if ($scope.showCampaignImageField) {
       return hasImage();
+    } else if($scope.public_settings.site_campaign_enable_campaign_bio) {
+      if($scope.campaign && $scope.campaign.settings)
+        return $scope.campaign.settings.bio_enable;
     } else {
       return $scope.campaign.description;
     }

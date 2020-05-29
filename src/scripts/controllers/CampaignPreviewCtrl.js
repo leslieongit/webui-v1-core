@@ -1003,7 +1003,7 @@ app.controller('CampaignPreviewCtrl', function($timeout, $interval, $location, $
     } else if ($scope.hideCampaignCategoryField) {
       reqFieldsCheck = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
     } else {
-      reqFieldsCheck = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id && campaign.description && $scope.rewardsCheck && checkFunding()) ? true : false;
+      reqFieldsCheck = (hasImage() && campaign.name && campaign.raise_mode_id && campaign.profile_type_id && campaign.blurb && campaign.categories && campaign.funding_goal && campaign.currency_id && (campaign.description || campaign.settings.bio_enable) && $scope.rewardsCheck && checkFunding()) ? true : false;
     } 
     if ((reqFieldsCheck)) {
       $scope.loadingText = true;
@@ -1059,7 +1059,11 @@ app.controller('CampaignPreviewCtrl', function($timeout, $interval, $location, $
           if ($scope.showCampaignImageField) {
             step2ReqField = (hasImage()) ? true : false;
           } else {
-            step2ReqField = (campaign.description) ? true : false;
+            if($scope.public_settings.site_campaign_enable_campaign_bio) {
+              step2ReqField = (campaign.settings.bio_enable) ? true : false;
+            } else {
+              step2ReqField = (campaign.description) ? true : false;
+            }
           }
           if (!step2ReqField) {
             steps.push(value.details);
@@ -1067,11 +1071,15 @@ app.controller('CampaignPreviewCtrl', function($timeout, $interval, $location, $
 
           // Toggle check for campaign step 3 with hidden required fields
           if ($scope.hideAllCampaignRewardsFields) {
-            step3ReqField = (campaign.description) ? true : false;
+            if($scope.public_settings.site_campaign_enable_campaign_bio) {
+              step3ReqField = (campaign.settings.bio_enable) ? true : false;
+            } else {
+              step3ReqField = (campaign.description) ? true : false;
+            }
           } else {
-            step3ReqField = ($scope.public_settings.site_theme_campaign_show_reward_required || campaign.pledges !== null);
+            step3ReqField = ($scope.public_settings.site_theme_campaign_show_reward_required || campaign.pledges === null);
           }
-          if (step3ReqField) {
+          if (!step3ReqField) {
             // set error message if no rewards
             steps.push(value.rewards);
           }

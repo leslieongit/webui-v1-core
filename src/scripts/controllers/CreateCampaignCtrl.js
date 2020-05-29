@@ -3296,7 +3296,7 @@ app.controller('CreateCampaignCtrl', function($q, $location, $routeParams, $root
     }
 
     $scope.oldtype_id = angular.copy($scope.campaign.duration_type_id);
-    if (!values[0] || !values[1] || !values[2]) {
+    if (!values[0] || values[1] < 0 || !values[2]) {
       // unset campaign.ends
       $scope.campaign.ends_date_time = "";
     }

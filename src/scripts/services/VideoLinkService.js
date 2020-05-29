@@ -57,12 +57,21 @@ app.service('VideoLinkService', function($sce, RESOURCE_REGIONS) {
     }
     // Extract id of youtube or vimeo video.
     if (video_type == "youtube") {
-      // Regix to retrieve youtube video id
-      var regExp = /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
-      var match = link.match(regExp);
-      var video_id = match[1];
-      // var youtubeLink = "https://www.youtube.com/watch?v="+video_id+"&volume=0";
-      // this.onYouTubePlayerAPIReady(video_id, campaign_id);
+      // retrieve video id from URL
+      var url = new URL(link);
+      var video_id;
+      if(url.hostname == 'youtu.be'){
+        if(!url.pathname){
+          return;
+        }
+        video_id = url.pathname.slice(1,url.pathname.length);
+      }
+      else{
+        if(!url.searchParams){
+          return;
+        }
+        video_id = url.searchParams.get('v');
+      }
       this.set_video_link(video_id, false);
 
     } else if (video_type == "vimeo") {
