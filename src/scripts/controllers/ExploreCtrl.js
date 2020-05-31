@@ -689,14 +689,14 @@ app.controller('exploreHeadCtrl', function ($scope, Restangular, PortalSettingsS
       $rootScope.ogMeta.image = $scope.server + "/static/images/" + url;
       $('.explore-head').css('background-image', 'url(' + $rootScope.ogMeta.image + ')');
     } else {
-      $rootScope.ogMeta.image = "images/placeholder-images/placeholder_explore_bg.png";
+      $rootScope.ogMeta.image = "images/explore-1920-400.jpg";
       $('.explore-head').css('background-image', 'url(' + $rootScope.ogMeta.image + ')');
       $('.explore-head').css('background-size', 'cover');
       $('.explore-head').css('background-repeat', 'no-repeat');
       $('.explore-head').css('background-position', 'center center');
     }
   }, function (failure) {
-    $rootScope.ogMeta.image = "images/placeholder-images/placeholder_explore_bg.png";
+    $rootScope.ogMeta.image = "images/explore-1920-400.jpg";
     $('.explore-head').css('background-image', 'url(' + $rootScope.ogMeta.image + ')');
     $('.explore-head').css('background-size', 'cover');
     $('.explore-head').css('background-repeat', 'no-repeat');
@@ -712,14 +712,14 @@ app.controller('masthead2Ctrl', function ($scope, Restangular, $timeout, PortalS
       $rootScope.ogMeta.image = $scope.server + "/static/images/" + url;
       $('.masthead').css('background-image', 'url(' + $rootScope.ogMeta.image + ')');
     } else {
-      $rootScope.ogMeta.image = "images/placeholder-images/placeholder_explore_bg.png";
+      $rootScope.ogMeta.image = "images/explore-1920-400.jpg";
       $('.masthead').css('background-image', 'url(' + $rootScope.ogMeta.image + ')');
       $('.masthead').css('background-size', 'cover');
       $('.masthead').css('background-repeat', 'no-repeat');
       $('.masthead').css('background-position', 'center center');
     }
   }, function (failure) {
-    $rootScope.ogMeta.image = "images/placeholder-images/placeholder_explore_bg.png";
+    $rootScope.ogMeta.image = "images/explore-1920-400.jpg";
     $('.masthead').css('background-image', 'url(' + $rootScope.ogMeta.image + ')');
     $('.masthead').css('background-size', 'cover');
     $('.masthead').css('background-repeat', 'no-repeat');
