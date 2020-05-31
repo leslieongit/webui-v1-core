@@ -1,5 +1,5 @@
 // config file for the app
-app.config(function($routeProvider, $locationProvider, RestangularProvider, $httpProvider, API_URL, LANG, flowFactoryProvider, ngQuickDateDefaultsProvider, uiSelectConfig, $analyticsProvider, $provide, $compileProvider, $sceDelegateProvider, CDN) {
+app.config(function ($routeProvider, $locationProvider, RestangularProvider, $httpProvider, API_URL, LANG, flowFactoryProvider, ngQuickDateDefaultsProvider, uiSelectConfig, $analyticsProvider, $provide, $compileProvider, $sceDelegateProvider, CDN) {
     // $compileProvider.debugInfoEnabled(false);
     $httpProvider.interceptors.push('authHttpInterceptor');
     $httpProvider.defaults.useXDomain = true;
@@ -258,7 +258,7 @@ app.config(function($routeProvider, $locationProvider, RestangularProvider, $htt
             templateUrl: 'views/templates/api.html',
             controller: 'ApiCtrl',
             resolve: {
-                apiDocs: function($http) {
+                apiDocs: function ($http) {
                     return $http.get('/docs/api_docs.json');
                 }
             }
@@ -287,7 +287,7 @@ app.config(function($routeProvider, $locationProvider, RestangularProvider, $htt
         })
         .otherwise({
             resolve: {
-                "valid": function(ValidateURLService) {
+                "valid": function (ValidateURLService) {
                     return ValidateURLService.validate();
                 }
             },
@@ -298,7 +298,7 @@ app.config(function($routeProvider, $locationProvider, RestangularProvider, $htt
 
     flowFactoryProvider.defaults = {
         target: API_URL.url + API_URL.loc + '/photos',
-        query: function(file, chunk) {
+        query: function (file, chunk) {
             return {
                 "mediaType": file.file.type
             }
@@ -311,8 +311,8 @@ app.config(function($routeProvider, $locationProvider, RestangularProvider, $htt
         CDN.APP_URL
     ]);
 
-    var calendar_translation_error = function() {
-        $.get("views/translation/" + LANG.DEFAULT_LANG + "/calendar.json", function(data) {
+    var calendar_translation_error = function () {
+        $.get("views/translation/" + LANG.DEFAULT_LANG + "/calendar.json", function (data) {
             var date_translation = data.date_label;
             var time_translation = data.time_label;
             var sunday = data.weekday_short_sun;
@@ -446,7 +446,7 @@ app.config(function($routeProvider, $locationProvider, RestangularProvider, $htt
                         "posSuf": ""
                     }]
                 },
-                "pluralCat": function(n, opt_precision) {
+                "pluralCat": function (n, opt_precision) {
                     return PLURAL_CATEGORY.OTHER;
                 }
             });
@@ -466,7 +466,7 @@ app.config(function($routeProvider, $locationProvider, RestangularProvider, $htt
     $.ajax({
         url: "views/translation/" + LANG.PREFERRED_LANG + "/calendar.json",
         type: "GET",
-        success: function(data) {
+        success: function (data) {
 
             if (data.weekday_short_fri === undefined) {
                 calendar_translation_error();
@@ -606,7 +606,7 @@ app.config(function($routeProvider, $locationProvider, RestangularProvider, $htt
                         "posSuf": ""
                     }]
                 },
-                "pluralCat": function(n, opt_precision) {
+                "pluralCat": function (n, opt_precision) {
                     return PLURAL_CATEGORY.OTHER;
                 }
             });
