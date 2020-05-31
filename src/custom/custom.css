@@ -323,7 +323,7 @@ body.pushable>.pusher {
     background-position: center center !important;
     color: #0000 !important;
     background: url(../images/footer-logo.jpg);
-    height: 100px;
+    height: 200px;
 }
 
 .left-bar {
@@ -367,6 +367,7 @@ body.pushable>.pusher {
     padding: 50px 0;
     color: white;
     background-color: #1e297a !important;
+    border-bottom: 10px #ed1b24 solid;
 }
 
 .footer-wrapper a {
@@ -402,7 +403,7 @@ html {
 
 .col-pad .text-center {
     padding: 20px 34px;
-    font-size: initial;
+    font-size: large;
 }
 
 #partner-extend {
@@ -412,3 +413,12 @@ html {
 /* How to step process */
 
 /* end how to w */
+
+.large.text {
+    font-size: large !important;
+}
+
+.textwidget p, .menu-footer-menu-1-container a, .menu-investments-container a {
+    font-size: 18px;
+}
+

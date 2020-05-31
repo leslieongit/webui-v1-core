@@ -507,7 +507,7 @@ only screen and (min-device-pixel-ratio:1.5) {
 }
 
 #front-page #learnmore-wrap {
-    padding: 4% 0
+    /* padding: 4% 0 */
 }
 
 #front-page #learnmore-wrap .lm-grid-wrap {
