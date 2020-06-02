@@ -16,6 +16,14 @@ If you would like to try a demo version of this standalone Web UI with our origi
 4. Inside the angapp directory add the following file called "app_local.js" with the contents below.
 5. You can use apache, nginx (with rewriting) or standalone dev server via gulp
 
+<!-- htaccess rewritting example -->
+RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+
 ```javascript
 // API settings
 app.constant( 'API_URL', {
