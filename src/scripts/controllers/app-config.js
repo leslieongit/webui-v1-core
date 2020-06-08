@@ -31,8 +31,8 @@ app.config(function ($routeProvider, $locationProvider, RestangularProvider, $ht
             templateUrl: 'views/templates/login-register.html',
             title: 'Login'
         })
-        .when('/about', { // About page
-            templateUrl: 'views/templates/about.html',
+        .when('/about-us', { // About page
+            templateUrl: 'views/templates/about-us.html',
             title: 'About'
         })
         .when('/faq', { // FAQ page

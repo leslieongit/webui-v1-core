@@ -74,6 +74,20 @@
   <link rel="stylesheet" type="text/css"
     href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "Crowd Funding",
+      "name": "Lloyd Crowd Funding",
+      "author": {
+        "@type": "Person",
+        "name": "Bekithemba Nkomo"
+      },
+      "datePublished": "2020-03-10",
+      "description": "Lloyd Corporate Capital provides human, equity and debt capital as well as training and advisory services to businesses in Southern Africa.",
+      "prepTime": "PT20M"
+    }
+    </script>
 
 
 </head>
@@ -143,12 +157,12 @@
   <div class="pusher" style="overflow:initial" ng-show="partsDone">
     <script>
     </script>
-    <div id="nav-wrapper" ng-include src="'views/templates/partials/nav.html'" ng-hide="$root.nav_disabled"></div>
+    <div id="nav-wrapper" ng-include src="'views/templates/partials/nav.html'" ng-hide="$root.nav_disabled" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); padding: 10px 0;"></div>
     <div id="main-bg" ng-view autoscroll="true" ng-class="{ 'sticky-menu-push' : stickyMenu }"></div>
     <!-- <div id="footer-wrapper" ng-include src="'views/templates/partials/footer.html'" id="site-footer" ng-show="checkhome||checkstart||checkexplore||checkpledgehistory||checkCstatus||checkmessage||checkperson||checkSaccount||checklogin||checkapi||checkfooter"
       ng-if="!$root.footer_disabled"></div> -->
     <div class="footer-wrapper">
-      <div class="container">
+      <div class="container" style="max-width: 1440px;">
         <!-- Row from CC Site -->
         <div class="row">
           <div class="col-sm-8 flexbox">
@@ -160,9 +174,11 @@
                     <p><b>Bulawayo:</b> 8 Swansea Street, Belmont.</p>
                     <p><b>Harare:</b> 6 th floor Greenbridge, Eastgate Mall.</p>
                     <p><b>Johannesburg:</b> Unit 4, 150 Rivonia Street, Morningside, Sandton.</p>
-                    <p><b>Tel:</b> <a href="tel:+26329276562">+263 292 76562</a><br />
+                    <p><b>Tel:</b> <a href="tel:+26329276562">+263 292 276 562</a><br />
                       <b>Mobile:</b> <a href="tel:+263772600995">+263 772 600 995</a><br />
-                      <b>Email:</b> <a href="mailto:info@lloydcrowdfunding.com">info@lloydcrowdfunding.com</a></p>
+                      <b>Email:</b> <a href="mailto:info@lloydcrowdfunding.com">info@lloydcrowdfunding.com</a>
+                      <b>Email:</b> <a href="mailto:info@lloydccapital.com">info@lloydccapital.com</a>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -197,7 +213,7 @@
                     <ul id="menu-investments" class="menu">
                       <li id="menu-item-1459"
                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1459"><a
-                          href="how-it-works/#financiers">Financiers</a></li>
+                          href="how-it-works/about#financiers">Financiers</a></li>
                       <li id="menu-item-1461"
                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1461"><a
                           href="how-it-works/#promoters">Promoters</a></li>

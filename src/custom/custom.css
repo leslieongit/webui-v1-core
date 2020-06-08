@@ -9,11 +9,12 @@
     padding-top: 30px;
     padding-bottom: 30px;
     color: #fff;
-    text-align: left;
+    text-align: center;
     width: 30%;
     background-color: #1e2978b8;
     padding-left: 30px;
     padding-right: 30px;
+    text-shadow: gray 1px 1px;
 }
 
 .carousel-control-next-icon {
@@ -173,7 +174,8 @@ h4 {
 }
 
 .card-body {
-    text-align: center;
+    text-align: justify;
+    font-size: 16px;
 }
 
 .card-img-top {
@@ -322,7 +324,7 @@ body.pushable>.pusher {
     background-repeat: no-repeat !important;
     background-position: center center !important;
     color: #0000 !important;
-    background: url(../images/footer-logo.jpg);
+    background: url(../images/footer-logo-powered-400-500.jpg);
     height: 200px;
 }
 
@@ -367,7 +369,7 @@ body.pushable>.pusher {
     padding: 50px 0;
     color: white;
     background-color: #1e297a !important;
-    border-bottom: 10px #ed1b24 solid;
+    border-bottom: 20px #ed1b24 solid;
 }
 
 .footer-wrapper a {
@@ -418,7 +420,43 @@ html {
     font-size: large !important;
 }
 
-.textwidget p, .menu-footer-menu-1-container a, .menu-investments-container a {
-    font-size: 18px;
+.text-dark {
+    color: #1e2979!important;
 }
 
+.textwidget p, .menu-footer-menu-1-container a, .menu-investments-container a {
+    font-size: 15px;
+}
+
+.widgettitle h4 {
+    font-size: 20px !important;
+}
+
+h2.ui.header {
+    font-size: 2.714rem !important;
+}
+
+.card .btn {
+
+    font-size: 1.3rem;
+}
+
+.carousel-indicators .active {
+    background-color: #ed1b24;
+}
+
+.carousel-indicators li {
+    height: 10px;
+    box-shadow: red 1px 1px 2px;
+}
+
+.nav-wrapper {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.ui.page.grid {
+
+    padding-left: 15% !important;
+    padding-right: 15% !important;
+}
