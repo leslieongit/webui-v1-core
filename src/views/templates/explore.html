@@ -1,14 +1,16 @@
-<div ng-cloak>
-  <div class="explore-head" ng-controller="exploreHeadCtrl" ng-show="explore_page_text.display=='text'">
-    <div class="banner-content">
-      <div class="ui page grid">
-        <div class="column">
-          <h1 class="banner-title ui center aligned header" ng-bind="explore_page_text.banner_header"></h1>
-        </div>
+<div>
+  <div class="row">
+    <div class="col">
+      <div class="inner-header-about">
+        <!-- <img class="ui image" src="/images/placeholder-images/custom_page_header_placeholder_image.png" style="margin: 0 auto !important; width: 100%;"> -->
+        <h1 class="header-title">
+          Explore
+        </h1>
       </div>
     </div>
   </div>
-
+</div>
+<div ng-cloak>
   <div ng-show="explore_page_text.display=='html'">
     <div html-render html="explore_page_text.html" class="fr-view"></div>
   </div>
