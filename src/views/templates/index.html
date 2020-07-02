@@ -17,7 +17,8 @@
           <div class="carousel-item active">
             <img class="d-block w-100" src="../../images/christina-wocintechchat-com-faEfWCdOKIg-unsplash.jpg" alt="First slide">
             <div class="carousel-caption d-none d-md-block">
-              <h5 style="font-size: xxx-large;">Invest with and like the Pros.</h5>
+              <h4 style="font-size: 50px">Equity crowdfunding for businesses</h4><hr />
+              <h5 style="font-size: 35px">Invest With And Like The Pros.</h5>
               <p>As an investor, we invite you to allow us to help you invest in the same spaces and in the same way
                 that other professional investors do. We have vetted and rated businesses that are ready and waiting for
                 your financial, technical and market support.</p>
@@ -27,7 +28,8 @@
             <img class="d-block w-100" src="../../images/cytonn-photography-n95VMLxqM2I-unsplash1.jpg"
               alt="Second slide">
             <div class="carousel-caption d-none d-md-block">
-              <h5 style="font-size: xxx-large;">Grow Your Business.</h5>
+              <h4 style="font-size: 50px">Equity crowdfunding for businesses</h4><hr />
+              <h5 style="font-size: 35px">Grow Your Business.</h5>
               <p>As a business promoter, you have taken your business to the current level with a certain amount of
                 resources, and it is now time to invite other resources in the form of financial, human and other
                 capital to help you take your business to the next level.</p>
@@ -55,8 +57,9 @@
           <div class="carousel-item">
             <img class="d-block w-100" src="../../images/stock-market-2616931_1920.jpg" alt="Third slide">
             <div class="carousel-caption d-none d-md-block">
-              <h5 style="font-size: xxx-large;">Collaborating for Success.</h5>
-              <p>We facilitate the bringing together the vivid vision of the promoters,and the catalytic energy of the
+              <h4 style="font-size: 50px">Equity crowdfunding for businesses</h4><hr />
+              <h5 style="font-size: 35px">Collaborating For Success.</h5>
+              <p>We facilitate the bringing together of the vivid vision of the promoters,and the catalytic energy of the
                 financiers to result in the growth of an enterprise that would not otherwise be possible with the
                 parties apart.</p>
               <!-- <div class="masthead-button-wrap" ng-controller="CampaignStatusCtrl"><a
@@ -95,8 +98,7 @@
 
     <div class="promo-wrap" ng-if="home_page_text.middle_header || hasCategory">
       <div class="ui center aligned basic segment">
-        <h1 class="ui header" style="color: rgb(237, 27, 36);
-        font-size: xx-large;">{{home_page_text.middle_header}}</h1>
+        <h1 class="ui header" style="background-color: rgb(237, 27, 36); color: rgb(255,255,255); font-size: xxx-large; text-transform: uppercase; font-style: italic; letter-spacing: 8px; font-weight: bolder;">{{home_page_text.middle_header}}</h1>
         <a ng-href="explore?category={{category.id}}" ng-repeat="category in categories | orderBy:'display_priority'"
           class="ui random-color item large label" ng-if="!category.parent_category_id" ng-show="hasCategory"
           ng-bind="category.name">
@@ -149,7 +151,7 @@
               <div class="campaign-desc content">
                 <div class="header name campaign-title" ng-bind="campaign.name"></div>
                 <div class="campaign-creator ui ribbon label" ng-hide="public_settings.site_campaign_hide_creator_info"
-                  ng-if="!isCardLabelSwitch && !isHideCampaignCardCreatorCategory">
+                  ng-if="!isCardLabelSwitch && !isHideCampaignCardCreatorCategory" style="background-color: #f00; color: #fff;">
                   <div
                     ng-show="(campaign.profile_type_id == 1 || !(campaign.profile_type_id == 2 && campaign.business_organizations != null))">
                     <span translate="index_by"></span>
@@ -163,7 +165,7 @@
                   </div>
                 </div>
                 <div class="campaign-category ui ribbon label"
-                  ng-if="isCardLabelSwitch && campaign.categories && !isHideCampaignCardCreatorCategory">
+                  ng-if="isCardLabelSwitch && campaign.categories && !isHideCampaignCardCreatorCategory" style="background-color: #f00; color: #fff;">
                   <span ng-repeat="category in campaign.categories">{{category.name}}{{$last ? '' : ', '}}</span>
                 </div>
                 <div ng-init="getTimeZoneAbbr(campaign)" class="campaign-created meta"
@@ -382,7 +384,7 @@
               <div class="campaign-desc content">
                 <div class="campaign-title header" ng-bind='campaign.name'></div>
                 <div class="campaign-creator ui ribbon label" ng-hide="public_settings.site_campaign_hide_creator_info"
-                  ng-if="!isCardLabelSwitch && !isHideCampaignCardCreatorCategory">
+                  ng-if="!isCardLabelSwitch && !isHideCampaignCardCreatorCategory" style="background-color: #f00; color: #fff;">
                   <span
                     ng-show="(campaign.profile_type_id ==1 || !(campaign.profile_type_id == 2 && campaign.business_organizations != null))">{{'index_by' | translate}}
                     {{campaign.managers[0].first_name + " " + campaign.managers[0].last_name | limitTo : 20}}
@@ -395,7 +397,7 @@
                   </div>
                 </div>
                 <div class="campaign-category ui ribbon label"
-                  ng-if="isCardLabelSwitch && campaign.categories && !isHideCampaignCardCreatorCategory">
+                  ng-if="isCardLabelSwitch && campaign.categories && !isHideCampaignCardCreatorCategory" style="background-color: #f00; color: #fff;">
                   <span ng-repeat="category in campaign.categories">{{category.name}}{{$last ? '' : ', '}}</span>
                 </div>
                 <div ng-init="getTimeZoneAbbr(campaign)" class="campaign-created meta"
@@ -503,7 +505,7 @@
         </div>
 
         <div class="btn-wrap ui center aligned basic segment" ng-show="!infiniteScroller.recent">
-          <a href="explore" class="ui large button view-more-btn" translate='index_view_more'></a>
+          <a href="explore" class="ui large button view-more-btn">Investment Opportunities</a>
         </div>
 
         <div>
