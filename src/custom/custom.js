@@ -26,5 +26,7 @@ $(document).ready(function () {
     // $("#partner-1").on('click', function {
     //     $("#partner-extend").show();
     // });
+
+    // $('[rel="tooltip"]').tooltip(); 
     
 });

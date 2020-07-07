@@ -259,8 +259,8 @@ body.pushable > .pusher {
 }
 
 hr {
-    border-top: 1px solid #666979;
-    }
+  border-top: 1px solid #666979;
+}
 
 .header-title {
   color: #ed1b24 !important;
@@ -490,4 +490,78 @@ h2.ui.header {
 .ui.page.grid {
   padding-left: 15% !important;
   padding-right: 15% !important;
+}
+
+.btn-wrap {
+  overflow: hidden;
+  white-space: nowrap;
+  display: inline-block;
+  text-overflow: ellipsis;
+}
+
+.faq-title {
+  padding-top: 15px;
+  color: #1e2979;
+}
+
+@media (max-width: 320px) {
+  .faq-title {
+    padding-left: 10px;
+  }
+
+  .faq-options-title {
+    font-size: larger;
+  }
+
+  .main-menu.ui.inverted.menu .nav-wrap #logo img {
+    max-width: 200px !important;
+  }
+
+  .red-title {
+    font-size: x-large;
+  }
+
+  h2.ui.header {
+    font-size: xlarge !important;
+  }
+
+  .widgets-row {
+    padding-bottom: 100px;
+  }
+}
+
+@media (min-width: 320px) {
+  .faq-title {
+    padding-left: 10px;
+  }
+
+  .faq-options-title {
+    font-size: larger;
+  }
+
+  .main-menu.ui.inverted.menu .nav-wrap #logo img {
+    max-width: 200px !important;
+  }
+
+  .red-title {
+    font-size: x-large;
+  }
+
+  h2.ui.header {
+    font-size: xlarge !important;
+  }
+
+  .widgets-row {
+    padding-bottom: 100px;
+  }
+}
+
+.red-title {
+  background-color: rgb(237, 27, 36);
+  color: rgb(255, 255, 255) !important;
+  font-size: xxx-large;
+  text-transform: uppercase;
+  font-style: italic;
+  letter-spacing: 8px;
+  font-weight: bolder;
 }

@@ -17,7 +17,7 @@
           <div class="carousel-item active">
             <img class="d-block w-100" src="../../images/christina-wocintechchat-com-faEfWCdOKIg-unsplash.jpg" alt="First slide">
             <div class="carousel-caption d-none d-md-block">
-              <h4 style="font-size: 50px">Equity crowdfunding for businesses</h4><hr />
+              <h4 style="font-size: 50px">Equity Crowdfunding For Businesses</h4><hr />
               <h5 style="font-size: 35px">Invest With And Like The Pros.</h5>
               <p>As an investor, we invite you to allow us to help you invest in the same spaces and in the same way
                 that other professional investors do. We have vetted and rated businesses that are ready and waiting for
@@ -28,7 +28,7 @@
             <img class="d-block w-100" src="../../images/cytonn-photography-n95VMLxqM2I-unsplash1.jpg"
               alt="Second slide">
             <div class="carousel-caption d-none d-md-block">
-              <h4 style="font-size: 50px">Equity crowdfunding for businesses</h4><hr />
+              <h4 style="font-size: 50px">Equity Crowdfunding For Businesses</h4><hr />
               <h5 style="font-size: 35px">Grow Your Business.</h5>
               <p>As a business promoter, you have taken your business to the current level with a certain amount of
                 resources, and it is now time to invite other resources in the form of financial, human and other
@@ -57,7 +57,7 @@
           <div class="carousel-item">
             <img class="d-block w-100" src="../../images/stock-market-2616931_1920.jpg" alt="Third slide">
             <div class="carousel-caption d-none d-md-block">
-              <h4 style="font-size: 50px">Equity crowdfunding for businesses</h4><hr />
+              <h4 style="font-size: 50px">Equity Crowdfunding For Businesses</h4><hr />
               <h5 style="font-size: 35px">Collaborating For Success.</h5>
               <p>We facilitate the bringing together of the vivid vision of the promoters,and the catalytic energy of the
                 financiers to result in the growth of an enterprise that would not otherwise be possible with the
@@ -98,7 +98,7 @@
 
     <div class="promo-wrap" ng-if="home_page_text.middle_header || hasCategory">
       <div class="ui center aligned basic segment">
-        <h1 class="ui header" style="background-color: rgb(237, 27, 36); color: rgb(255,255,255); font-size: xxx-large; text-transform: uppercase; font-style: italic; letter-spacing: 8px; font-weight: bolder;">{{home_page_text.middle_header}}</h1>
+        <h1 class="ui header red-title">{{home_page_text.middle_header}}</h1>
         <a ng-href="explore?category={{category.id}}" ng-repeat="category in categories | orderBy:'display_priority'"
           class="ui random-color item large label" ng-if="!category.parent_category_id" ng-show="hasCategory"
           ng-bind="category.name">
@@ -731,15 +731,11 @@
         <div class="column">
           <h2 class="ui header center aligned partner-logos-title" translate="index_partnership_title">Partners</h2>
           <p class="text-center" style="font-size: large;">We are grateful to our professional technical partners who have agreed to continue supporting us in this business. We list some of them below:</p>
-          <div class="partner-logos-grid ui centered six column stackable grid">
+          <div class="partner-logos-grid ui centered five column stackable grid">
             <div class="column" ng-repeat="link in public_settings.logo_links">
               <a id="partner-1">
                 <img class="company-logo ui image" src="../../images/partnerships/cabs-300-300.jpg" alt="CABS">
               </a>
-            </div>
-            <div class="column" ng-repeat="link in public_settings.logo_links">
-              <img ng-if="!link.url" class="company-logo ui image" src="../../images/partnerships/thrinacia-300-300.jpg"
-                alt="Thrinacia">
             </div>
             <div class="column" ng-repeat="link in public_settings.logo_links">
               <img ng-if="!link.url" class="company-logo ui image"

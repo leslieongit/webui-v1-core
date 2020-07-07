@@ -110,7 +110,7 @@
     </a>
     <a href="{{site_logo_link}}" class="item" id="logo" ng-cloak>
       <div class="logo-wrap">
-        <img class="ui image" ng-src="./images/logo.jpg">
+        <img class="ui image" ng-src="./images/logo-622-146.jpg">
       </div>
     </a>
     <a ng-class="{active: $location.path() == '/' + page.path}" class="item menu-item" ng-repeat="page in headerMenu"
@@ -449,6 +449,7 @@
   <script type="text/javascript" src="app/bower_components/angular-froala/src/froala-sanitize.js"></script>
   <script>
     $.FroalaEditor.DEFAULTS.key = 'EKF1KXDA1INBc1KPc1TK==';
+    $('[rel="tooltip"]').tooltip(); 
   </script>
 </body>
 
