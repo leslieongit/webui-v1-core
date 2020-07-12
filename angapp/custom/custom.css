@@ -249,7 +249,7 @@ body.pushable > .pusher {
 
 /* Custom Logo width */
 .main-menu.ui.inverted.menu .nav-wrap #logo img {
-  max-width: 300px !important;
+  max-width: 400px !important;
 }
 
 .container.main-color.theme-top-nav-font-5 .top-nav-bar a {
@@ -263,9 +263,9 @@ hr {
 }
 
 .header-title {
-  color: #ed1b24 !important;
-  text-shadow: white 1px 1px 7px;
-  font-size: 60px;
+  color: #ffffff !important;
+  text-shadow: #555 1px 1px 7px;
+  font-size: 89px;
   text-align: center;
   border: none;
   /* margin: -webkit-calc(2rem - .165em)0 1rem; */
@@ -278,6 +278,27 @@ hr {
   color: #000c;
   /* margin-top: -.165em; */
   padding: 153px 0;
+}
+
+.floating-message .message .header {
+  color: #1e297a !important;
+}
+
+.title-description {
+  font-size: 23px;
+  line-height: normal;
+}
+
+img.ui.image {
+  box-shadow: #eee 1px 1px 2px 2px;
+}
+
+.title.title {
+  font-size: 35px;
+}
+
+title-inner {
+  font-size: 29px;
 }
 
 @media only screen and (min-width: 1024px) {
@@ -294,7 +315,7 @@ hr {
     background-color: #1e2978b8;
     /* padding-left: 30px; */
     /* padding-right: 30px; */
-    font-size: medium;
+    font-size: 21px;
   }
 }
 
@@ -319,7 +340,7 @@ body.pushable > .pusher {
 
 .inner-header-faq {
   height: 400px;
-  background-image: url(/images/faq-1920-400.jpg);
+  background-image: url(/images/faq-1600-400.jpg);
   background-position: center;
   background-size: cover;
 }
@@ -327,6 +348,13 @@ body.pushable > .pusher {
 .inner-header-about {
   height: 400px;
   background-image: url(/images/about-1920-400.jpg);
+  background-position: center;
+  background-size: cover;
+}
+
+.inner-header-about-2 {
+  height: 400px;
+  background-image: url(/images/about-1920-400-2.jpg);
   background-position: center;
   background-size: cover;
 }
@@ -341,7 +369,14 @@ body.pushable > .pusher {
 .inner-header-how-it-works {
   height: 400px;
   background-image: url(/images/how-to-1920-400.jpg);
-  background-position: center;
+  background-position: top;
+  background-size: cover;
+}
+
+.inner-header-contact-us {
+  height: 400px;
+  background-image: url(/images/contact-us-1440-600.jpg);
+  background-position: top;
   background-size: cover;
 }
 
@@ -504,7 +539,13 @@ h2.ui.header {
   color: #1e2979;
 }
 
-@media (max-width: 320px) {
+@media screen and (min-width: 768px) {
+  .red-title {
+    font-size: xxx-large;
+  }
+}
+
+@media screen and (max-width: 420px) {
   .faq-title {
     padding-left: 10px;
   }
@@ -517,9 +558,9 @@ h2.ui.header {
     max-width: 200px !important;
   }
 
-  .red-title {
-    font-size: x-large;
-  }
+  /* .red-title {
+    font-size: xx-large;
+  } */
 
   h2.ui.header {
     font-size: xlarge !important;
@@ -530,7 +571,7 @@ h2.ui.header {
   }
 }
 
-@media (min-width: 320px) {
+@media screen and (max-width: 320px) {
   .faq-title {
     padding-left: 10px;
   }
@@ -543,10 +584,6 @@ h2.ui.header {
     max-width: 200px !important;
   }
 
-  .red-title {
-    font-size: x-large;
-  }
-
   h2.ui.header {
     font-size: xlarge !important;
   }
@@ -554,6 +591,10 @@ h2.ui.header {
   .widgets-row {
     padding-bottom: 100px;
   }
+
+  /* .red-title {
+    font-size: x-large;
+  } */
 }
 
 .red-title {
