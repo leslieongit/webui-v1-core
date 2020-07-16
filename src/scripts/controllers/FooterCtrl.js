@@ -1,6 +1,6 @@
 app.controller('FooterCtrl', function ($browser, $http, $scope, $rootScope, Restangular, $timeout, $sce, RequestCacheService, PortalSettingsService, $translate, $translatePartialLoader) {
 
-  // themeService.themeColor();
+  // ThemeService.themeColor();
   $scope.leftMenu = [];
   $scope.middleMenu = [];
   $scope.rightMenu = [];

@@ -340,11 +340,12 @@
                 </div>
                 <div class="ten wide column">
                   <div class="color-grid main-color-setting color-setting-list" ng-show="selected_color_section">
-                    <div class="color-list ui horizontal list">
+                    <input type="color" ng-model="public_settings.site_theme_color[selected_color_section.var_name].value">
+                    <!-- div class="color-list ui horizontal list">
                       <div class="item color-item" ng-repeat="color in color_list">
                         <a ng-click="selectThemeColor(color, selected_color_section.var_name)"></a>
                       </div>
-                    </div>
+                    </div -->
                   </div>
                 </div>
               </div>
@@ -1666,6 +1667,21 @@
                 <div class="toggle-sticky ui toggle checkbox" ng-model="public_settings.site_enable_cookie_consent">
                   <input type="checkbox">
                   <label translate>tab_portalsetting_cookie_consent_label</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ui two column stackable setting-bg grid">
+            <div class="four wide column">
+              <h3 class="ui header main-font-color" translate> tab_portalsetting_unsupported_browsers_title </h3>
+              <p translate="tab_portalsetting_unsupported_browsers_notes"></p>
+            </div>
+            <div class="twelve wide column">
+              <div class="ui fluid form field">
+                <div class="toggle-sticky ui toggle checkbox" ng-model="public_settings.site_disable_unsupported_browsers">
+                  <input type="checkbox">
+                  <label translate>tab_portalsetting_unsupported_browsers_label</label>
                 </div>
               </div>
             </div>
@@ -3499,6 +3515,20 @@
               </div>
               <div class="ui fluid form field disclaimer-text-form" ng-if="public_settings.site_campaign_campaign_toggle_disclaimer_text.toggle">
                 <textarea ng-model="public_settings.site_campaign_campaign_toggle_disclaimer_text.text"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="ui two column stackable setting-bg grid campaign-disclaimer-toggle">
+            <div class="four wide column">
+              <h3 class="ui header main-font-color" translate> tab_portalsetting_hide_transaction_details_campaign_manager_title </h3>
+              <p translate="tab_portalsetting_hide_transaction_details_campaign_manager_notes"></p>
+            </div>
+            <div class="twelve wide column">
+              <div class="ui toggle checkbox" ng-model="private_settings.site_hide_transaction_details_campaign_manager">
+                <input type="checkbox" name="public">
+                <label ng-show="private_settings.site_hide_transaction_details_campaign_manager" translate>tab_portalsetting_hide_transaction_details_campaign_manager_disable_toggle_label</label>
+                <label ng-show="!private_settings.site_hide_transaction_details_campaign_manager" translate>tab_portalsetting_hide_transaction_details_campaign_manager_enable_toggle_label</label>
               </div>
             </div>
           </div>

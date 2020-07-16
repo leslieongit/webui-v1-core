@@ -74,6 +74,10 @@
 </head>
 
 <body ng-controller="MainCtrl" class="container main-color" id="{{$root.page_route}}" ng-class="theme_classes" translate-cloak ng-cloak>
+  <div class="unsupported" ng-if="isFacebookApp()">
+    <p translate>unsupported_browser_message</p>
+    <p>{{location}}</p>
+  </div> 
   <div id="loader" class="ui page dimmer">
     <div class="content">
       <div class="center">
@@ -220,6 +224,7 @@
   <script src="scripts/services/FileUploadService.js"></script>
   <script src="scripts/services/TimeStatusService.js"></script>
   <script src="scripts/services/ValidateURLService.js"></script>
+  <script src="scripts/services/ThemeService.js"></script>
   <script src="scripts/money_symbols.js"></script>
 
 

@@ -1,7 +1,7 @@
 //------------------------------------------------------
 //      PORTAL SETTINGS TAB / SETTINGS CONTROLLER
 //------------------------------------------------------
-app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location, $timeout, $window, Restangular, $translatePartialLoader, $translate, $q, SiteLogoService, themeService, UserService, DisqusShortnameService, FileUploadService, PortalSettingsService, StripeService, CurrencyService, Geolocator, LANG, AUTH_SCHEME, VideoLinkService, API_URL, ANONYMOUS_COMMENT, SOCIAL_SHARING_OPTIONS, $http) {
+app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location, $timeout, $window, Restangular, $translatePartialLoader, $translate, $q, SiteLogoService, ThemeService, UserService, DisqusShortnameService, FileUploadService, PortalSettingsService, StripeService, CurrencyService, Geolocator, LANG, AUTH_SCHEME, VideoLinkService, API_URL, ANONYMOUS_COMMENT, SOCIAL_SHARING_OPTIONS, $http) {
   $scope.froalaOptionsMain = {};
   $scope.froalaOptionsBot = {};
   $scope.froalaOptionsExplore = {};
@@ -559,6 +559,9 @@ app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location
             $scope.private_settings[value.name] = value.value;
           }
         });
+
+        updateThemeColor();
+
         // Set default value of sort if setting is undefined/null
         if (typeof $scope.public_settings.site_set_explore_default_sort == 'undefined' || $scope.public_settings.site_set_explore_default_sort == null) {
           $scope.public_settings.site_set_explore_default_sort = {
@@ -1753,7 +1756,91 @@ app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location
   }
 
   function updateThemeColor() {
-    themeService.refresh();
+    //ThemeService.refresh();
+    //legacy colors
+      legacyColors = [
+        '#FAFAFA',
+        '#DB4DDB',
+        '#94CA20',
+        '#00B5AD',
+        '#4C9EE7',
+        '#D13F2B',
+        '#FF9E35',
+        '#FFCC00',
+        '#8B69DB',
+        '#333333',
+        '#ffffff',
+        '#00caf2',
+        '#FF0081',
+      ]
+
+      var root = document.documentElement;
+      var colors = $scope.public_settings.site_theme_color;
+      if(colors.top_nav_background_color.value){
+        root.style.setProperty('--top-nav-bg-color', colors.top_nav_background_color.value);
+      }
+      else{
+        root.style.setProperty('--top-nav-bg-color', legacyColors[colors.top_nav_background_color.index]);
+        $scope.public_settings.site_theme_color.top_nav_background_color.value = legacyColors[colors.top_nav_background_color.index];
+      }
+      if(colors.top_nav_font_color.value){
+        root.style.setProperty('--top-nav-font-color', colors.top_nav_font_color.value);
+      }
+      else{
+        root.style.setProperty('--top-nav-font-color', legacyColors[colors.top_nav_font_color.index]);
+        $scope.public_settings.site_theme_color.top_nav_font_color.value = legacyColors[colors.top_nav_font_color.index];
+      }
+      if(colors.table_color.value){
+        root.style.setProperty('--table-color', colors.table_color.value);
+      }
+      else{
+        root.style.setProperty('--table-color', legacyColors[colors.table_color.index]);
+        $scope.public_settings.site_theme_color.table_color.value = legacyColors[colors.table_color.index];
+      }
+      //root.style.setProperty('--table-color-hover', colors);
+      //root.style.setProperty('--table-color-alter', colors);
+      if(colors.reward_block_color.value){
+        root.style.setProperty('--reward-color', colors.reward_block_color.value);
+      }
+      else{
+        root.style.setProperty('--reward-color', legacyColors[colors.reward_block_color.index]);
+        $scope.public_settings.site_theme_color.reward_block_color.value = legacyColors[colors.reward_block_color.index];
+      }
+      if(colors.footer_font_color.value){
+        root.style.setProperty('--footer-font-color', colors.footer_font_color.value);
+      }
+      else{
+        root.style.setProperty('--footer-font-color', legacyColors[colors.footer_font_color.index]);
+        $scope.public_settings.site_theme_color.footer_font_color.value = legacyColors[colors.footer_font_color.index];
+      }
+      if(colors.footer_background_color.value){
+        root.style.setProperty('--footer-bg-color', colors.footer_background_color.value);
+      }
+      else{
+        root.style.setProperty('--footer-bg-color', legacyColors[colors.footer_background_color.index]);
+        $scope.public_settings.site_theme_color.footer_background_color.value = legacyColors[colors.footer_background_color.index];
+      }
+      if(colors.font_color.value){
+        root.style.setProperty('--font-color', colors.font_color.value);
+      }
+      else{
+        root.style.setProperty('--font-color', legacyColors[colors.font_color.index]);
+        $scope.public_settings.site_theme_color.font_color.value = legacyColors[colors.font_color.index];
+      }
+      if(colors.button_color.value){
+        root.style.setProperty('--button-color', colors.button_color.value);
+      }
+      else{
+        root.style.setProperty('--button-color', legacyColors[colors.button_color.index]);
+        $scope.public_settings.site_theme_color.button_color.value = legacyColors[colors.button_color.index];
+      }
+      if(colors.banner_color.value){
+        root.style.setProperty('--banner-color', colors.banner_color.value);
+      }
+      else{
+        root.style.setProperty('--banner-color', legacyColors[colors.banner_color.index]);
+        $scope.public_settings.site_theme_color.banner_color.value = legacyColors[colors.banner_color.index];
+      }
   }
 
   // Decimal Notation
@@ -2048,6 +2135,9 @@ app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location
       site_campaign_campaign_toggle_disclaimer_text: $scope.public_settings.site_campaign_campaign_toggle_disclaimer_text,
 
     };
+    var privateSettings = {
+      site_hide_transaction_details_campaign_manager: $scope.private_settings.site_hide_transaction_details_campaign_manager,
+    }
     if (!$scope.public_settings.site_campaign_defaults.toggle) {
       $scope.public_settings.site_campaign_defaults.hide_fundraise = false;
     } else if ($scope.public_settings.site_campaign_defaults_runMode == 1) {
@@ -2112,8 +2202,12 @@ app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location
       }
     }
 
-    var request = Restangular.one('portal/setting/public').customPUT(publicSettings);
-    request.then(function() {
+    var requestQueue = [
+      Restangular.one('portal/setting/public').customPUT(publicSettings),
+      Restangular.one('portal/setting').customPUT(privateSettings)
+    ]
+
+    $q.all(requestQueue).then(function() {
       msg = {
         'header': "success_message_save_changes_button",
       }
@@ -2670,6 +2764,7 @@ app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location
       site_infinite_scroller: $scope.public_settings.site_infinite_scroller,
       site_default_campaign_rows: $scope.public_settings.site_default_campaign_rows,
       site_enable_cookie_consent: $scope.public_settings.site_enable_cookie_consent,
+      site_disable_unsupported_browsers: $scope.public_settings.site_disable_unsupported_browsers,
       site_tipping: $scope.public_settings.site_tipping,
       site_tip_currency: $scope.public_settings.site_tip_currency
     };
@@ -3170,6 +3265,7 @@ app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location
     width: '100%'
   };
 
+  /*
   function initialThemeColor() {
     var number_theme = 10;
     for (var i = 0; i < number_theme; i++) {
@@ -3208,21 +3304,31 @@ app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location
     setColorActive(color.index);
     initialThemeColor();
   }
+  */
 
   $scope.restoreThemeSettings = function() {
 
     $scope.public_settings.site_theme_color["banner_color"].index = 4;
+    $scope.public_settings.site_theme_color["banner_color"].value = '#4C9EE7';
     $scope.public_settings.site_theme_color["button_color"].index = 4;
+    $scope.public_settings.site_theme_color["button_color"].value = '#4C9EE7';
     $scope.public_settings.site_theme_color["font_color"].index = 4;
+    $scope.public_settings.site_theme_color["font_color"].value = '#4C9EE7';
     $scope.public_settings.site_theme_color["footer_background_color"].index = 9;
+    $scope.public_settings.site_theme_color["footer_background_color"].value = '#333333';
     $scope.public_settings.site_theme_color["footer_font_color"].index = 10;
+    $scope.public_settings.site_theme_color["footer_font_color"].value = '#ffffff';
     $scope.public_settings.site_theme_color["reward_block_color"].index = 3;
+    $scope.public_settings.site_theme_color["reward_block_color"].value = '#00B5AD';
     $scope.public_settings.site_theme_color["table_color"].index = 4;
+    $scope.public_settings.site_theme_color["table_color"].value = '#4C9EE7';
     $scope.public_settings.site_theme_color["top_nav_background_color"].index = 9;
+    $scope.public_settings.site_theme_color["top_nav_background_color"].value = '#333333';
     $scope.public_settings.site_theme_color["top_nav_font_color"].index = 10;
+    $scope.public_settings.site_theme_color["top_nav_font_color"].value = '#ffffff';
 
-    initialThemeColor();
-    $scope.selectColorSection($scope.selected_color_section);
+    //initialThemeColor();
+    //$scope.selectColorSection($scope.selected_color_section);
 
   }
 
@@ -3234,7 +3340,7 @@ app.controller('AdminPortalSettingsCtrl', function($scope, $rootScope, $location
     // pass section variable
     $scope.selected_color_section = section;
     // set active index
-    setColorActive($scope.public_settings.site_theme_color[section.var_name].index);
+    //setColorActive($scope.public_settings.site_theme_color[section.var_name].index);
   }
 
   $scope.selectSocialMedia = function(obj) {

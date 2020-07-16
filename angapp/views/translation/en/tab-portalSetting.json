@@ -47,7 +47,7 @@
   "tab_portalsetting_top_banner_video_img_thumb_note": "This image will only display on the mobile/tablet version of the Home Page.",
   "tab_portalsetting_set_video": "Preview Video URL",
   "tab_portalsetting_Theme_Color": "Theme Color",
-  "tab_portalsetting_Theme_Color_note": "Choose between the preset theme colors for different elements of the site.",
+  "tab_portalsetting_Theme_Color_note": "Choose the colors for different elements of the site.",
   "tab_portalsetting_Theme_Restore": "Restore Defaults",
   "tab_portalsetting_Select_Section": "Select a section",
   "tab_portalsetting_Website_Title": "Website Title",
@@ -788,6 +788,9 @@
   "tab_portalsetting_cookie_consent_title": "Cookie Consent Banner",
   "tab_portalsetting_cookie_consent_notes": "This option alerts users about the use of cookies on your website.",
   "tab_portalsetting_cookie_consent_label": "Enable Cookie Consent Banner",
+  "tab_portalsetting_unsupported_browsers_title": "Enable FB App and FB Messenger App Detection",
+  "tab_portalsetting_unsupported_browsers_notes": "This option shows message when Facebook App or Facebook Messenger App is detected, allowing users to copy and paste link to visit the target website.",
+  "tab_portalsetting_unsupported_browsers_label": "Enable FB App and FB Messenger App Detection",
   "tab_portalsetting_campaign_creation_displays_title": "Campaign Creation Steps Display",
   "tab_portalsetting_campaign_creation_displays_note": "Control the display of the Campaign Creation fields for each of the steps. <span style='color: red;'>WARNING</span> Before enabling these toggles please read this <a href='https://www.thrinacia.com/blog/post/enabling-alternative-layouts-for-your-crowdfunding-site' target='_blank'>article</a>.",
   "tab_portalsetting_campaign_creation_steps_global_display": "Configure the global display of the campaign steps",
@@ -831,5 +834,10 @@
   "tab_portalsetting_campaign_disclaimer_title": "Show Campaign Disclaimer",
   "tab_portalsetting_campaign_enable_disclaimer_toggle_label": "Show Campaign Disclaimer",
   "tab_portalsetting_campaign_disable_disclaimer_toggle_label": "Hide Campaign Disclaimer",
-  "tab_portalsetting_campaign_disclaimer_notes": "If this option is turned on it shows campaign disclaimer/notice. Please note that you can either use raw HTML code or plain text."
+  "tab_portalsetting_campaign_disclaimer_notes": "If this option is turned on it shows campaign disclaimer/notice. Please note that you can either use raw HTML code or plain text.",
+  "tab_portalsetting_hide_transaction_details_campaign_manager_title": "Hide Sensitive Transaction Data",
+  "tab_portalsetting_hide_transaction_details_campaign_manager_enable_toggle_label": "Show Sensitive Transaction Data",
+  "tab_portalsetting_hide_transaction_details_campaign_manager_disable_toggle_label": "Hide Sensitive Transaction Data",
+  "tab_portalsetting_hide_transaction_details_campaign_manager_notes": "Hide Sensitive Transaction Data from Campaign Manager Transaction Interface."
+
 }

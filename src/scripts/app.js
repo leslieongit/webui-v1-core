@@ -503,8 +503,11 @@ app.filter('unique', function() {
   };
 });
 
-app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular', 'API_URL', 'USER_ROLES', '$timeout', 'themeService', 'redirectService', '$translatePartialLoader', '$translate', 'RequestCacheService', 'LANG', '$rootScope', "$window", "$q", "PortalSettingsService", "SiteLogoService",
-  function($scope, $location, User, Restangular, API, roles, $timeout, themeService, redirectService, $translatePartialLoader, $translate, RequestCacheService, LANG, $rootScope, $window, $q, PortalSettingsService, SiteLogoService) {
+app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular', 'API_URL', 'USER_ROLES', '$timeout', 'ThemeService', 'redirectService', '$translatePartialLoader', '$translate', 'RequestCacheService', 'LANG', '$rootScope', "$window", "$q", "PortalSettingsService", "SiteLogoService",
+  function($scope, $location, User, Restangular, API, roles, $timeout, ThemeService, redirectService, $translatePartialLoader, $translate, RequestCacheService, LANG, $rootScope, $window, $q, PortalSettingsService, SiteLogoService) {
+
+    $scope.location = window.location.href;
+
     $scope.User = User; // Set the User data
     $scope.server = API.url;
     $scope.server_loc = API.loc;
@@ -604,6 +607,14 @@ app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular',
 
     PortalSettingsService.getSettingsObj(true).then(function(success) {
       $scope.public_setting = success.public_setting;
+      console.log($scope.public_setting);
+      if($scope.public_setting.site_disable_unsupported_browsers !== undefined && $scope.public_setting.site_disable_unsupported_browsers != false){
+        //disable facebook browser
+        $scope.isFacebookApp = function() {
+          var ua = navigator.userAgent || navigator.vendor || window.opera;
+          return (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1);
+        }
+      }
 
       $scope.site_load_icon = {};
       if ($scope.public_setting.site_load_icon !== undefined) {
@@ -744,14 +755,15 @@ app.controller('MainCtrl', ['$scope', '$location', 'UserService', 'Restangular',
 
       //initial theme color
       // assign function
-      $scope.theme_classes = themeService.themeColor();
-      $scope.top_nav_theme = themeService.topNav();
+      $scope.theme_classes = ThemeService.themeColor();
+      $scope.top_nav_theme = ThemeService.topNav();
+      ThemeService.init();
       $scope.top_nav_style = {};
       // if variable is not array, that means it is returning a promise
       if (!$.isArray($scope.theme_classes)) {
         // resolve promise then assign class
         $scope.theme_classes.then(function() {
-          $scope.theme_classes = themeService.theme_classes;
+          $scope.theme_classes = ThemeService.theme_classes;
         });
       }
     });
@@ -1088,42 +1100,6 @@ app.controller('SiteErrorCtrl', function($scope, Restangular, $location, API_URL
   $scope.goToHome = function() {
     $location.path('/');
   }
-});
-
-app.service('themeService', function(Restangular, $timeout, PortalSettingsService) {
-  var number_theme = 8;
-  var scope = {};
-  scope.theme_classes = [];
-  scope.top_nav_theme = {};
-
-
-  scope.topNav = function() {
-    PortalSettingsService.getSettingsObj().then(function(success) {
-      return success.public_setting.site_top_nav_theme;
-    });
-  }
-
-  scope.themeColor = function() {
-    return PortalSettingsService.getSettingsObj().then(function(success) {
-      scope.theme_classes = [
-        'theme-button-' + success.public_setting.site_theme_color.button_color.index,
-        'theme-table-' + success.public_setting.site_theme_color.table_color.index,
-        'theme-banner-' + success.public_setting.site_theme_color.banner_color.index,
-        'theme-font-' + success.public_setting.site_theme_color.font_color.index,
-        'theme-reward-' + success.public_setting.site_theme_color.reward_block_color.index,
-        'theme-top-nav-background-' + success.public_setting.site_theme_color.top_nav_background_color.index,
-        'theme-top-nav-font-' + success.public_setting.site_theme_color.top_nav_font_color.index,
-        'theme-footer-background-' + success.public_setting.site_theme_color.footer_background_color.index,
-        'theme-footer-font-' + success.public_setting.site_theme_color.footer_font_color.index,
-      ];
-      return scope.theme_classes;
-    });
-  }
-  scope.refresh = function() {
-    this.themeColor();
-  }
-
-  return scope;
 });
 
 app.controller('FavIconCtrl', function($scope, Restangular, API_URL, PortalSettingsService) {

@@ -15,6 +15,10 @@
 
 .theme-color-setting {
   .color-grid {
+    input{
+      height: 3rem;
+      width: 3rem;
+    }
     > .color-list {
       > .color-item:first-child {
         margin-left: 1em !important;
@@ -1616,4 +1620,18 @@ i.circular.icon {
   text-align: left;
   -webkit-transition: border-radius .1s ease,width .2s ease;
   transition: border-radius .1s ease,width .2s ease;
+}
+
+.unsupported{
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  z-index: 9999;
+  padding: 1rem;
+  text-align: center;
 }

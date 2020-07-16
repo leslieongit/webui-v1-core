@@ -96,3 +96,18 @@ $top-nav-font2: #333333;
 
 $table-alt-bg: rgba(85, 85, 85, 0.08);
 $table-hover-alt-bg: rgba(51, 51, 51, 0.2);
+
+
+/* css vars */
+$top-nav-bg-color: var(--top-nav-bg-color, $top-nav-background1);
+$top-nav-font-color: var(--top-nav-font-color, $top-nav-font1);
+$table-color: var(--table-color, $main-color-four);
+$table-color-hover: var(--table-color-hover, $main-color-four-hover);
+$table-color-alter: var(--table-color-alter, $main-color-four-table-alter);
+$reward-color: var(--reward-color, $main-color-four);
+$footer-font-color: var(--footer-font-color, $main-color-ten);
+$footer-bg-color: var(--footer-bg-color, $main-color-nine);
+$font-color: var(--font-color, $main-color-four);
+$button-color: var(--button-color, $main-color-four);
+$banner-color: var(--banner-color, $main-color-four);
+$banner-color-hover: var(--banner-color, $main-color-four-step-hover);
