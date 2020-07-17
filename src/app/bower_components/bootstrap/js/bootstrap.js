@@ -571,6 +571,7 @@
       pause: 'hover',
       wrap: true
     };
+    
     var DefaultType = {
       interval: '(number|boolean)',
       keyboard: 'boolean',

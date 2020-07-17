@@ -29,4 +29,7 @@ $(document).ready(function () {
 
     // $('[rel="tooltip"]').tooltip(); 
     
+    $('.carousel').carousel({
+        interval: 10000
+      })
 });

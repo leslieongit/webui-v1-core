@@ -352,6 +352,20 @@ body.pushable > .pusher {
   background-size: cover;
 }
 
+.inner-header-get-funded {
+  height: 400px;
+  background-image: url(/images/get-funding-1440-400.jpg);
+  background-position: center;
+  background-size: cover;
+}
+
+.inner-header-our-partners {
+  height: 400px;
+  background-image: url(/images/our-partners-1440-400.jpg);
+  background-position: center;
+  background-size: cover;
+}
+
 .inner-header-about-2 {
   height: 400px;
   background-image: url(/images/about-1920-400-2.jpg);
@@ -391,7 +405,7 @@ body.pushable > .pusher {
   background-position: center center !important;
   color: #0000 !important;
   background: url(../images/footer-logo-powered-400-500.jpg);
-  height: 200px;
+  height: 300px;
 }
 
 .left-bar {
