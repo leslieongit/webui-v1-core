@@ -45,6 +45,11 @@ app.config(function (
       templateUrl: "views/templates/login-register.html",
       title: "Register",
     })
+    .when("/register-business", {
+      // Register Business page
+      templateUrl: "views/templates/register-business.html",
+      title: "Register Business",
+    })
     .when("/login", {
       // Login page
       templateUrl: "views/templates/login-register.html",
