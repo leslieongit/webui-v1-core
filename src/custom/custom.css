@@ -559,7 +559,7 @@ h2.ui.header {
   }
 }
 
-@media screen and (max-width: 420px) {
+@media (max-width: 425px) {
   .faq-title {
     padding-left: 10px;
   }
@@ -585,7 +585,7 @@ h2.ui.header {
   }
 }
 
-@media screen and (max-width: 320px) {
+@media (max-width: 320px) {
   .faq-title {
     padding-left: 10px;
   }
@@ -595,7 +595,7 @@ h2.ui.header {
   }
 
   .main-menu.ui.inverted.menu .nav-wrap #logo img {
-    max-width: 200px !important;
+    max-width: 150px !important;
   }
 
   h2.ui.header {
@@ -619,4 +619,19 @@ h2.ui.header {
   font-style: italic;
   letter-spacing: 8px;
   font-weight: bolder;
+}
+
+/* Ended campaign highlight */
+html body.container #main-bg .campaign-thumb .campaign-card .campaign-desc .campaign-created {
+  color: #f00;
+  font-weight: 800;
+  font-size: inherit;
+}
+
+.ui.card>.content>.header:not(.ui), .ui.cards>.card>.content>.header:not(.ui) {
+  font-size: 1.5em !important;
+}
+
+.ui.card>.content>.description, .ui.cards>.card>.content>.description {
+  color: #000000e0 !important;
 }
